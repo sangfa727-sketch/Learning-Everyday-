@@ -4,10 +4,11 @@ import { readFile } from "node:fs/promises";
 import { cursivePathsFor, splitCursiveStrokes } from "./cursive-paths.js";
 
 test("cursive practice animates hand-authored strokes and traces the same paths", async () => {
-  const [ui, css, html] = await Promise.all([
+  const [ui, css, html, pathsModule] = await Promise.all([
     readFile(new URL("./curriculum-ui.js", import.meta.url), "utf8"),
     readFile(new URL("./styles.css", import.meta.url), "utf8"),
-    readFile(new URL("./index.html", import.meta.url), "utf8")
+    readFile(new URL("./index.html", import.meta.url), "utf8"),
+    readFile(new URL("./cursive-paths.js", import.meta.url), "utf8")
   ]);
   assert.match(ui, /sample\.replaceChildren\(\)/);
   assert.match(ui, /const samplePaths = cursivePathsFor\(selectedLetter\) \?\? \[\]/);
@@ -30,7 +31,8 @@ test("cursive practice animates hand-authored strokes and traces the same paths"
   assert.match(css, /@keyframes trace-script-glyph\{0%\{stroke-dashoffset:1000;fill:transparent\}82%\{stroke-dashoffset:0;fill:transparent\}100%\{stroke-dashoffset:0;fill:rgba\(71,123,98,\.08\)\}\}/);
   assert.match(css, /trace-script-glyph/);
   assert.match(css, /letter-alphabet-row/);
-  assert.match(ui, /function cursivePathsFor\(letter\)/);
+  assert.match(pathsModule, /export function cursivePathsFor\(letter\)/);
+  assert.match(pathsModule, /export function splitCursiveStrokes\(paths\)/);
   assert.match(ui, /const CALLIGRAPHY_PATH_OVERRIDES = Object\.freeze\(\{/);
   assert.match(ui, /function calligraphyPathsFor\(letter\)/);
   assert.match(ui, /const handPaths = selectedStyle === "cursive"/);
