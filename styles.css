@@ -215,7 +215,7 @@ body[data-page="home"] #skills-level-page{display:block}body[data-page="home"] .
 .start-practice-button{margin-top:16px;width:100%;min-height:48px}
 .change-level-link{display:inline-flex;align-items:center;min-height:36px;margin:0 0 12px;color:#42664a;font-size:12px;font-weight:750;text-decoration:underline;text-underline-offset:3px}
 .letter-sample.style-print{font-family:Arial,sans-serif;font-style:normal;font-weight:700}
-.letter-sample.style-cursive{font-family:"Segoe Print","Comic Sans MS",cursive;font-style:italic;font-weight:500;transform:rotate(-5deg)}
+.letter-sample.style-cursive{font-family:"Cambria Math","STIX Two Math","Noto Sans Math","Segoe UI Symbol",serif;font-style:normal;font-weight:400;transform:none}
 .letter-sample.style-calligraphy{font-family:"URW Chancery L","Brush Script MT","Apple Chancery",cursive;font-style:italic;font-weight:800;-webkit-text-stroke:.7px currentColor;text-shadow:1px 0 currentColor}
 .letter-template-glyph{font-size:76px;fill:none;stroke:#7c9a7a;stroke-width:1.2;stroke-dasharray:2 2}
 .letter-template-glyph.style-cursive{font-family:"Segoe Print","Comic Sans MS",cursive;font-style:italic;font-weight:500;stroke-width:1}
