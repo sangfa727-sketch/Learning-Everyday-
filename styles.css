@@ -157,3 +157,13 @@ body[data-page="writing"] #practice-panel #lesson-text,body[data-page="writing"]
 .practice-controls{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}
 .practice-controls>*{flex:1 1 180px}
 #practice-exercise-number{margin:8px 0 12px}
+
+
+/* A dedicated, reachable progress page rather than progress controls hidden on every route. */
+.progress-nav-link{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 14px;border:1px solid #dfe6dc;border-radius:13px;background:#f7faf4;color:var(--forest);font-size:12px;font-weight:750;text-decoration:none;white-space:nowrap}
+.progress-nav-link:hover,.progress-nav-link:focus-visible{background:#eaf2e5;border-color:#b9cdb8;outline-offset:3px}
+body[data-page="progress"] #curriculum-workbench .curriculum-header,
+body[data-page="progress"] #curriculum-workbench .curriculum-grid,
+body[data-page="progress"] #curriculum-workbench .letter-practice,
+body[data-page="progress"] #practice-panel{display:none}
+body[data-page="progress"] #curriculum-workbench .progress-tools{display:block;margin-top:0}
