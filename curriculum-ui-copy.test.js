@@ -10,8 +10,10 @@ test("practice card title follows the selected skill instead of repeating the fo
   assert.doesNotMatch(html, /Four skills · six levels/i);
   assert.match(html, /id="practice-heading">Reading practice</);
   assert.match(ui, /skillLabels\[activeSkill\]/);
-  assert.match(ui, /Choose your /);
-  assert.match(ui, /A1–C2/);
+  assert.match(ui, /Skills & Levels to change your skill or level/);
+  assert.match(html, /id="skills-level-page"/);
+  assert.match(html, /id="level-options"/);
+  assert.match(ui, /button\.dataset\.level = level\.id/);
   assert.match(ui, /ကျွမ်းကျင်မှုအလိုက် လေ့ကျင့်ခန်း/);
   assert.match(ui, /စာဖတ်ခြင်း/);
   assert.match(ui, /နားထောင်ခြင်း/);
