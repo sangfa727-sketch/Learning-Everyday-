@@ -26,10 +26,12 @@ export function smoothPoints(points) {
     const previous = points[index - 1];
     const current = points[index];
     const next = points[index + 1];
+    // Conservative one-pass smoothing: 15% neighbour influence on each side.
+    // This removes small mouse jitter while keeping the writer's shape and corners.
     output.push({
       ...current,
-      x: (previous.x + 2 * current.x + next.x) / 4,
-      y: (previous.y + 2 * current.y + next.y) / 4
+      x: previous.x * 0.15 + current.x * 0.7 + next.x * 0.15,
+      y: previous.y * 0.15 + current.y * 0.7 + next.y * 0.15
     });
   }
   output.push({ ...points[points.length - 1] });
