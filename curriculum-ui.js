@@ -137,6 +137,13 @@ function renderLevelOptions() {
 function renderPractice() {
   const practice = activePractice();
   const level = LEVELS.find((item) => item.id === selectedLevel);
+  const skillLabels = language === "my"
+    ? { reading: "စာဖတ်ခြင်း", listening: "နားထောင်ခြင်း", writing: "စာရေးခြင်း", speaking: "စကားပြောခြင်း" }
+    : { reading: "Reading", listening: "Listening", writing: "Writing", speaking: "Speaking" };
+  $("#practice-heading").textContent = skillLabels[activeSkill] + (language === "my" ? " လေ့ကျင့်ခန်း" : " practice");
+  $("#practice-heading").nextElementSibling.textContent = language === "my"
+    ? skillLabels[activeSkill] + " အတွက် A1 မှ C2 အထိ အဆင့်ကို ရွေးချယ်ပြီး လေ့ကျင့်ခန်းလုပ်ပါ။"
+    : "Choose your " + skillLabels[activeSkill] + " level (A1–C2), then complete the exercise.";
   $("#level-practice-title").textContent = language === "my" ? practice.my : practice.title;
   $("#level-practice-level").textContent = `${level.id} · ${labelForLevel(level)}`;
   $("#level-practice-prompt").textContent = practice.prompt;
@@ -282,8 +289,8 @@ function setLanguage(next) {
       curriculumIntro: "Explore everyday vocabulary, then practise reading, listening, writing and speaking from Beginner to Proficient.",
       vocabularyTitle: "Vocabulary by topic",
       vocabularyIntro: "Choose a real-life topic. Tap a word to see its Myanmar meaning and an example sentence.",
-      practiceTitle: "Four skills · six levels",
-      practiceIntro: "Choose a level, then practise the activity shown on this page.",
+      practiceTitle: "Practice by skill",
+      practiceIntro: "Choose a level for this skill, then work through the exercise.",
       letterTitle: "Letter writing studio",
       letterIntro: "Practise all 26 uppercase and lowercase letters. Choose print, cursive, or calligraphy, then use the tracing board.",
       chooseLetter: "Choose a letter",
@@ -301,8 +308,8 @@ function setLanguage(next) {
       curriculumIntro: "နေ့စဉ်သုံး ဝေါဟာရများကို လေ့လာပြီး အစပြုသူမှ ကျွမ်းကျင်အဆင့်အထိ ဖတ်ခြင်း၊ နားထောင်ခြင်း၊ ရေးခြင်းနှင့် ပြောခြင်းကို လေ့ကျင့်ပါ။",
       vocabularyTitle: "အမျိုးအစားအလိုက် ဝေါဟာရ",
       vocabularyIntro: "နေ့စဉ်ဘဝအကြောင်းအရာကို ရွေးပါ။ စကားလုံးကိုနှိပ်၍ မြန်မာအဓိပ္ပာယ်နှင့် ဥပမာဝါကျကို ကြည့်ပါ။",
-      practiceTitle: "ကျွမ်းကျင်မှု ၄ မျိုး · အဆင့် ၆ ဆင့်",
-      practiceIntro: "အဆင့်တစ်ခုကို ရွေးချယ်ပြီး ဤစာမျက်နှာရှိ လေ့ကျင့်ခန်းကို လုပ်ဆောင်ပါ။",
+      practiceTitle: "ကျွမ်းကျင်မှုအလိုက် လေ့ကျင့်ခန်း",
+      practiceIntro: "ဤကျွမ်းကျင်မှုအတွက် အဆင့်တစ်ခုကို ရွေးပြီး လေ့ကျင့်ခန်းကို ဆက်လုပ်ပါ။",
       letterTitle: "အက္ခရာရေးသားမှု လေ့ကျင့်ခန်း",
       letterIntro: "အင်္ဂလိပ်စာလုံးအကြီး၊ အသေး ၂၆ လုံးစီကို လေ့ကျင့်ပါ။ Print၊ Cursive သို့မဟုတ် Calligraphy ကိုရွေးပြီး tracing board တွင် လိုက်ရေးပါ။",
       chooseLetter: "အက္ခရာရွေးပါ",
