@@ -1,0 +1,19 @@
+{
+  "name": "Learning Everyday",
+  "short_name": "Learning",
+  "description": "Offline-first English practice for Myanmar learners.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f7f3",
+  "theme_color": "#183b35",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
