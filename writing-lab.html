@@ -209,7 +209,7 @@ function parseSvgPath(raw){
     if(!Number.isFinite(length)||length<1||!box||box.width<0.01||box.height<0.01){path.remove();continue;}
     const scale=Math.min(100/box.width,100/box.height),ox=(100-box.width*scale)/2-box.x*scale,oy=(100-box.height*scale)/2-box.y*scale;
     const count=Math.max(8,Math.min(400,Math.ceil(length/1.5))),pts=[];
-    for(let i=0;i<=count;i++){const p=path.getPointAtLength(length*i/count);pts.push({x:Math.max(0,Math.min(100,p.x*scale+ox)),y:Math.max(0,Math.min(100,p.y*scale+oy)});}
+    for(let i=0;i<=count;i++){const p=path.getPointAtLength(length*i/count);pts.push({x:Math.max(0,Math.min(100,p.x*scale+ox)),y:Math.max(0,Math.min(100,p.y*scale+oy))});}
     const simplified=pts.filter((p,i)=>i===0||i===pts.length-1||Math.hypot(p.x-pts[i-1].x,p.y-pts[i-1].y)>0.8);
     if(simplified.length>1)result.push({points:simplified,start:0});path.remove();
   }} finally {probe.remove();}
