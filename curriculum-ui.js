@@ -282,8 +282,7 @@ function renderLetterGuide() {
       sampleSvg.setAttribute("aria-hidden", "true");
       const orderedSamplePaths = samplePaths.flatMap((d) =>
         d.trim().split(/(?=M\s*[-\d.])/).map((part) => part.trim()).filter(Boolean)
-      );        d.trim().split(/(?=M\\s*[-\\d.])/).map((part) => part.trim()).filter(Boolean)
-      );
+      );;
       orderedSamplePaths.forEach((d, index) => {
         const path = document.createElementNS(ns, "path");
         path.setAttribute("d", d);
