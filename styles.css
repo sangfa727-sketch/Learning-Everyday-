@@ -344,6 +344,9 @@ body:not([data-page="home"]) .writing-lab-entry { display: none !important; }
 body[data-page="reading"] #curriculum-workbench {
   display: block !important;
 }
+body[data-page="reading"] #curriculum-workbench .curriculum-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
 body[data-page="reading"] #curriculum-workbench > .curriculum-header,
 body[data-page="reading"] #curriculum-workbench .curriculum-card[aria-labelledby="practice-heading"],
 body[data-page="reading"] #curriculum-workbench .letter-practice,
