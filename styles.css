@@ -134,7 +134,7 @@
 .page-heading-copy .eyebrow{margin:0 0 7px}
 .page-heading-copy h1{margin:0;color:var(--forest);font:800 clamp(25px,4vw,38px)/1.15 Manrope,ui-sans-serif,sans-serif;letter-spacing:-1.1px}
 .page-heading-copy>p:last-child{margin:8px 0 0;color:var(--muted);font-size:14px;line-height:1.7}
-body[data-page="home"] #curriculum-workbench,body[data-page="home"] #practice-panel{display:none}
+body[data-page="home"] #practice-panel{display:none}
 body:not([data-page="home"]) .hero,body:not([data-page="home"]) .section-block{display:none}
 body[data-page="reading"] #curriculum-workbench .letter-practice,body[data-page="reading"] #curriculum-workbench .progress-tools{display:none}
 body[data-page="listening"] #curriculum-workbench{display:none}
@@ -199,7 +199,7 @@ body[data-page="progress"] #curriculum-workbench .progress-tools{display:block;m
 .skills-nav-link:hover,.skills-nav-link:focus-visible{background:#f1f6eb;border-color:#b9cdb8;outline-offset:3px}
 body[data-page="skills"] #skills-level-page{display:block}
 body[data-page="skills"] #curriculum-workbench,body[data-page="skills"] #practice-panel{display:none}
-body[data-page="home"] #skills-level-page{display:none}
+body[data-page="home"] #skills-level-page{display:block}body[data-page="home"] .skills-level-page .skill-level-picker{display:none}
 .skills-level-page{padding:clamp(18px,3vw,28px);border:1px solid #e1e8de;border-radius:24px;background:linear-gradient(145deg,#fff,#f8faf5);box-shadow:var(--shadow)}
 .skills-level-page .section-heading{margin-bottom:18px}
 .skill-level-picker{margin-top:26px;padding-top:22px;border-top:1px solid var(--line)}
