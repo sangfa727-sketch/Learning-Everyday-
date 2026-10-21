@@ -43,6 +43,13 @@ test("stabilizer zero disables curve rendering and Curve Pen follows the selecte
 });
 
 
+test("Natural Pressure Pen respects stabilizer strength while Original Freehand remains raw", async () => {
+  const html = await readFile(new URL("./writing-lab.html", import.meta.url), "utf8");
+  assert.match(html, /const useSmooth = !raw && strength\(\) > 0 && \(smooth \|\| mode === "stabilized" \|\| mode === "natural" \|\| mode === "curve"\)/);
+  assert.match(html, /const mode = raw \? "freehand" : penModeSelect\.value/);
+  assert.match(html, /const useSmooth = !raw && strength\(\) > 0/);
+});
+
 test("original preview renders raw captured strokes independently of selected pen mode", async () => {
   const html = await readFile(new URL("./writing-lab.html", import.meta.url), "utf8");
   assert.match(html, /function drawStroke\(context, stroke, width, height, smooth = false, progress = 1, raw = false\)/);
