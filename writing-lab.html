@@ -78,7 +78,7 @@ function drawTarget(context, width, height, letter, style) {
 }
 function drawStroke(context, stroke, width, height, smooth = false, progress = 1, raw = false) {
   const mode = raw ? "freehand" : penModeSelect.value;
-  const useSmooth = !raw && strength() > 0 && (smooth || mode === "stabilized" || mode === "curve");
+  const useSmooth = !raw && strength() > 0 && (smooth || mode === "stabilized" || mode === "natural" || mode === "curve");
   const useCurve = mode === "curve" && strength() > 0;
   const points = useSmooth ? smoothPoints(stroke.points, strength()) : stroke.points;
   if (!points.length) return;
