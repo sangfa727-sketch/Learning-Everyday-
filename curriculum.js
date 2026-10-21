@@ -75,6 +75,8 @@ export const SKILL_PRACTICE = {
   }
 };
 
+export const ALPHABET = Object.freeze([..."ABCDEFGHIJKLMNOPQRSTUVWXYZ", ..."abcdefghijklmnopqrstuvwxyz"]);
+
 export const LETTER_GUIDES = {
   A: { style: "Print uppercase", start: "Start at the top, move down-left, lift, then down-right; add the middle bar.", my: "အပေါ်ဆုံးမှစ၍ ဘယ်အောက်သို့ ဆင်းပါ။ လက်မြှောက်ပြီး ညာအောက်သို့ ဆင်းကာ အလယ်မျဉ်းဆွဲပါ။", paths: ["M50 12 L20 88", "M50 12 L80 88", "M32 61 L68 61"] },
   a: { style: "Print lowercase", start: "Begin with the round bowl, move counter-clockwise, close the shape, then draw the right stem.", my: "ဝိုင်းပုံကို ဘယ်ဘက်မှစ၍ လှည့်ဆွဲပြီး ပိတ်ပါ။ ထို့နောက် ညာဘက်တိုင်ကို ဆွဲပါ။", paths: ["M68 48 C68 26 30 26 30 51 C30 76 68 76 68 51 L68 27 L68 78"] },

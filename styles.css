@@ -116,3 +116,36 @@
 @media(max-width:420px){.vocabulary-list{grid-template-columns:1fr}.letter-guide-layout{grid-template-columns:90px minmax(0,1fr);gap:10px}.letter-preview{min-height:115px}.letter-sample{font-size:64px}.letter-practice-controls{grid-template-columns:1fr}.curriculum-card h3{font-size:16px}}
 
 .sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+
+/* Full alphabet tracing board */
+.letter-template-glyph{font-family:Arial,sans-serif;font-size:76px;fill:none;stroke:#7c9a7a;stroke-width:1.2;stroke-dasharray:2 2}
+.tracing-board-wrap{margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
+.tracing-board-wrap h4{margin:0;color:var(--forest);font:750 15px/1.4 Manrope,ui-sans-serif,sans-serif}
+.letter-tracing{display:block;width:100%;height:230px;margin:10px 0 12px;border:1px solid #dfe7da;border-radius:14px;background:repeating-linear-gradient(0deg,#fff 0,#fff 31px,#f4f7f1 32px,#fff 33px);touch-action:none;cursor:crosshair}
+@media(max-width:600px){.letter-tracing{height:190px}.letter-guide-layout{grid-template-columns:1fr}}
+
+
+/* Focused skill pages and hash-based navigation; works with the offline app shell. */
+.page-navigation{width:min(100% - 44px,1080px);margin:28px auto 0;padding:20px 24px;display:flex;align-items:flex-start;gap:28px;background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
+.page-navigation[hidden]{display:none}
+.page-home-link{flex:0 0 auto;display:inline-flex;align-items:center;min-height:42px;padding:0 13px;border:1px solid var(--line);border-radius:12px;color:var(--forest);text-decoration:none;font-size:13px;font-weight:750}
+.page-home-link:hover,.page-home-link:focus-visible{background:var(--soft);outline-offset:3px}
+.page-heading-copy{min-width:0}
+.page-heading-copy .eyebrow{margin:0 0 7px}
+.page-heading-copy h1{margin:0;color:var(--forest);font:800 clamp(25px,4vw,38px)/1.15 Manrope,ui-sans-serif,sans-serif;letter-spacing:-1.1px}
+.page-heading-copy>p:last-child{margin:8px 0 0;color:var(--muted);font-size:14px;line-height:1.7}
+body[data-page="home"] #curriculum-workbench,body[data-page="home"] #practice-panel{display:none}
+body:not([data-page="home"]) .hero,body:not([data-page="home"]) .section-block{display:none}
+body[data-page="reading"] #curriculum-workbench .letter-practice,body[data-page="reading"] #curriculum-workbench .progress-tools{display:none}
+body[data-page="listening"] #curriculum-workbench{display:none}
+body[data-page="writing"] #curriculum-workbench .curriculum-card:first-child,body[data-page="writing"] #curriculum-workbench .progress-tools{display:none}
+body[data-page="speaking"] #curriculum-workbench .curriculum-card:first-child,body[data-page="speaking"] #curriculum-workbench .letter-practice,body[data-page="speaking"] #curriculum-workbench .progress-tools{display:none}
+body:not([data-page="home"]) #main-content{padding-top:22px}
+body[data-page="home"] .page-navigation{display:none}
+.skill-card{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.skill-card:hover{transform:translateY(-3px);box-shadow:0 14px 28px rgba(28,57,46,.09)}
+.skill-card:focus-visible{outline:3px solid #789a62;outline-offset:3px}
+@media(max-width:600px){.page-navigation{width:calc(100% - 28px);margin-top:14px;padding:16px;gap:12px;flex-direction:column;border-radius:16px}.page-home-link{min-height:40px}.page-heading-copy h1{font-size:27px}.page-heading-copy>p:last-child{font-size:13px}body:not([data-page="home"]) #main-content{padding-top:14px}}
+@media(prefers-reduced-motion:reduce){.skill-card{transition:none}.skill-card:hover{transform:none}}
+
+body[data-page="writing"] #practice-panel #lesson-text,body[data-page="writing"] #practice-panel .reading-tip,body[data-page="writing"] #practice-panel #word-card,body[data-page="writing"] #practice-panel #pdf-note,body[data-page="speaking"] #practice-panel #lesson-text,body[data-page="speaking"] #practice-panel .reading-tip,body[data-page="speaking"] #practice-panel #word-card,body[data-page="speaking"] #practice-panel #pdf-note{display:none}
