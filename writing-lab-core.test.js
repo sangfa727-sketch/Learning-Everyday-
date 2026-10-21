@@ -56,3 +56,34 @@ test("saved sample list safely round-trips and ignores invalid storage", () => {
   assert.deepEqual(parseSavedSamples("{bad json"), []);
   assert.deepEqual(parseSavedSamples(JSON.stringify([{targetLetter:"?",style:"print",kind:"learning-everyday-handwriting-sample",strokes:[]}])), []);
 });
+
+test("conservative smoothing keeps a straight line straight", () => {
+  const points = [
+    {x:0,y:0.5,t:0,pressure:0.5},
+    {x:0.25,y:0.5,t:10,pressure:0.5},
+    {x:0.5,y:0.5,t:20,pressure:0.5},
+    {x:0.75,y:0.5,t:30,pressure:0.5},
+    {x:1,y:0.5,t:40,pressure:0.5}
+  ];
+  const smooth = smoothPoints(points);
+  assert.ok(smooth.every(point => Math.abs(point.y - 0.5) < 1e-12));
+  assert.deepEqual(smooth[0], points[0]);
+  assert.deepEqual(smooth.at(-1), points.at(-1));
+});
+
+test("conservative smoothing reduces a small wobble without replacing the drawn path", () => {
+  const points = [
+    {x:0,y:0,t:0,pressure:0.5},
+    {x:0.25,y:0.02,t:10,pressure:0.5},
+    {x:0.5,y:-0.015,t:20,pressure:0.5},
+    {x:0.75,y:0.015,t:30,pressure:0.5},
+    {x:1,y:0,t:40,pressure:0.5}
+  ];
+  const originalCopy = structuredClone(points);
+  const smooth = smoothPoints(points);
+  assert.deepEqual(points, originalCopy, "raw captured points must not be mutated");
+  assert.ok(Math.abs(smooth[1].y) < Math.abs(points[1].y));
+  assert.ok(Math.abs(smooth[2].y) < Math.abs(points[2].y));
+  assert.ok(Math.abs(smooth[3].y) < Math.abs(points[3].y));
+  assert.ok(Math.abs(smooth[2].y - points[2].y) < 0.02, "shape change must remain small");
+});

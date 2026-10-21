@@ -20,7 +20,7 @@ h1{font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.15;margin:22px 0 8px}h2{font
 <body><main>
 <div class="top"><a class="brand" href="./">← Learning Everyday</a><span class="tag">Local-first handwriting records</span></div>
 <h1>Smart Writing Lab</h1>
-<p>အက္ခရာတစ်လုံးကို ရွေးပြီး လက်ချောင်း သို့မဟုတ် Stylus ဖြင့် ရေးပါ။ Stroke တစ်ကြောင်းချင်းစီ၏ စတင်/ဆုံးမှတ်၊ အစဉ်၊ အချိန်နှင့် လမ်းကြောင်းကို သိမ်းပြီး Animation ပြန်ကြည့်နိုင်သည်။</p>
+<p>အက္ခရာတစ်လုံးကို ရွေးပြီး လက်ချောင်း သို့မဟုတ် Stylus ဖြင့် ရေးပါ။ Stroke တစ်ကြောင်းချင်းစီ၏ စတင်/ဆုံးမှတ်၊ အစဉ်၊ အချိန်နှင့် မူရင်းလမ်းကြောင်းကို သိမ်းပြီး Animation ပြန်ကြည့်နိုင်သည်။ ချောမွေ့မှုကို အနည်းငယ်သာ အသုံးပြုပြီး သင်ရေးထားသောပုံစံကို အစားမထိုးပါ။</p>
 <div class="panel">
 <div class="controls">
 <div class="field"><label for="letter">ရည်ရွယ်ထားသော English အက္ခရာ</label><select id="letter" aria-label="Choose target English letter"></select></div>
@@ -37,7 +37,7 @@ h1{font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.15;margin:22px 0 8px}h2{font
 <div class="panel"><h2>မူရင်းလက်ရေးနှင့် ချောမွေ့ပြန်ဖော်မှု</h2><div class="preview">
 <div class="preview-box"><h3>မူရင်းလမ်းကြောင်း</h3><canvas id="original" class="preview-canvas" aria-label="Original captured strokes"></canvas></div>
 <div class="preview-box"><h3>ချောမွေ့ပြန်ဖော်ထားသောလမ်းကြောင်း</h3><canvas id="smoothed" class="preview-canvas" aria-label="Smoothed captured strokes"></canvas></div>
-</div><p class="small">မူရင်းမှတ်တမ်းကို မပြောင်းလဲဘဲ သိမ်းထားပြီး ပြသချိန်တွင်သာ curve smoothing ပြုလုပ်သည်။ ရွေးထားသောရေးဟန်ကို metadata အဖြစ် သိမ်းသည်။ ပုံစံတိကျမှုအတွက် အလိုအလျောက် handwriting recognition/template matching ကို နောက်ထပ်တည်ဆောက်ရန် လိုအပ်သည်။</p></div>
+</div><p class="small">မူရင်းမှတ်တမ်းကို မပြောင်းလဲဘဲ သိမ်းထားပြီး ပြသချိန်တွင်သာ အနည်းငယ် conservative smoothing ပြုလုပ်သည်။ အကွေးကို အကွေး၊ အဖြောင့်ကို အဖြောင့်အတိုင်း ထိန်းရန် ရည်ရွယ်ထားပြီး ရေးထားသောအက္ခရာကို အလိုအလျောက် ပြန်မဆွဲပါ။ ရွေးထားသောရေးဟန်ကို metadata အဖြစ် သိမ်းသည်။ ပုံစံတိကျမှုအတွက် အလိုအလျောက် handwriting recognition/template matching ကို နောက်ထပ်တည်ဆောက်ရန် လိုအပ်သည်။</p></div>
 <div class="panel"><div class="controls" style="justify-content:space-between;align-items:center"><h2 style="margin:0">သိမ်းထားသော အက္ခရာမှတ်တမ်းများ</h2><button id="export" class="secondary">မှတ်တမ်းများ JSON ထုတ်</button></div><div id="saved-list" class="sample-list"></div><p class="small">မှတ်တမ်းများကို ဤစက်၏ browser local storage ထဲတွင်သာ သိမ်းသည်။ Server သို့ အလိုအလျောက် မပို့ပါ။ Browser data ကို ရှင်းလင်းလျှင် local မှတ်တမ်းများ ပျောက်နိုင်သောကြောင့် JSON export ကို backup အဖြစ် သိမ်းနိုင်သည်။</p></div>
 <p class="footer">Smart Writing Lab · Local prototype · not yet an automatic handwriting-recognition system.</p>
 </main>
