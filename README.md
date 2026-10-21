@@ -53,16 +53,16 @@ Serve the repository over localhost or HTTPS to test service-worker registration
 4. [ ] Verify CI and complete manual browser/device accessibility, offline reload, and Android voice/rotation smoke tests.
 5. [x] Add local PDF text extraction; explicitly detect and explain scanned/image-only PDFs.
 6. [x] Add 16 everyday vocabulary categories and two exercises for each skill at every A1–C2 level; continue expanding topic coverage and grammar.
-7. [ ] Expand animated stroke-order guides across the full alphabet and add interactive uppercase/lowercase, cursive, and calligraphy tracing.
+7. [x] Add animated visual stroke guides for all uppercase and lowercase letters, plus interactive tracing and print/cursive/calligraphy guidance.
 8. [ ] Improve speaking practice with a clear capability boundary for browser speech recognition versus offline pronunciation support.
-9. [x] Add privacy-conscious local progress persistence, JSON export, and an explicit-confirmation clear control.
+9. [x] Add privacy-conscious local progress persistence, individual exercise completion tracking, a detailed progress dashboard, JSON export, and an explicit-confirmation clear control.
 10. [ ] Evaluate Capacitor packaging for Android APK after core PWA behavior is stable.
 
 ## Known limitations
 
-- OCR, full-alphabet stroke-order animation, interactive handwriting tracing, persistent progress, and APK packaging are not implemented yet. Cursive and calligraphy currently provide style guidance and previews rather than a full pen-pressure simulator. PDF parsing loads its library from a pinned CDN on first use; the service worker caches the two pinned parser assets for later offline use after a successful online load.
+- OCR and APK packaging are not implemented. The alphabet animations are visual stroke guides; cursive and calligraphy currently provide style guidance rather than distinct style-specific stroke paths or a full pen-pressure simulator. PDF parsing loads its library from a pinned CDN on first use; the service worker caches the two pinned parser assets for later offline use after a successful online load.
 - Browser speech recognition may send audio to a browser/vendor service and may require internet; it is optional and is not advertised as an offline capability.
-- The starter dictionary is a learning prototype, not a comprehensive dictionary. Vocabulary coverage and exercise variety are still being expanded.
+- The starter dictionary and 16-topic vocabulary set are a learning prototype, not a comprehensive dictionary. Vocabulary coverage and exercise variety should continue to expand.
 - A PWA normally needs HTTPS for installation/service workers outside localhost. A separately packaged APK can be installed without a domain, but needs an Android build/signing and distribution workflow.
 
 ## Quality checks
