@@ -1,4 +1,5 @@
 import { LEVELS, VOCABULARY_CATEGORIES, SKILL_PRACTICE, LETTER_GUIDES, getPractice } from "./curriculum.js";
+import { loadProgress, saveProgress, markPracticeComplete, clearProgress, exportProgress } from "./progress-state.js";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const ns = "http://www.w3.org/2000/svg";
@@ -9,6 +10,15 @@ let selectedStyle = "print";
 let selectedWord = null;
 let activeSkill = "reading";
 let language = document.documentElement.lang === "my" ? "my" : "en";
+let progress = loadProgress();
+
+function renderProgress() {
+  const count = Object.keys(progress.completed).length;
+  const summary = $("#progress-summary");
+  if (summary) summary.textContent = language === "my"
+    ? `ပြီးမြောက်သော လေ့ကျင့်ခန်း ${count} ခု · မှတ်တမ်းကို ဤစက်ပေါ်တွင်သာ သိမ်းထားသည်`
+    : `${count} completed skill-level practices · saved on this device only`;
+}
 
 const styleInfo = {
   print: { en: "Print: use separate, clear strokes. Follow the numbered movement guide.", my: "ပုံနှိပ်စာလုံးပုံစံ — မျဉ်းတစ်ကြောင်းစီ ရှင်းရှင်းဆွဲပြီး လမ်းညွှန်အတိုင်း လိုက်ပါ။" },
@@ -204,6 +214,10 @@ function setLanguage(next) {
   $("#practice-action").textContent = copy.listen;
   $("#level-practice-answer").placeholder = copy.answerPlaceholder;
   $("#practice-speaking-note").textContent = copy.speakingNote;
+  $("#complete-practice").textContent = next === "my" ? "ဤလေ့ကျင့်ခန်း ပြီးမြောက်ကြောင်း မှတ်ရန်" : "Mark practice complete";
+  $("#export-progress").textContent = next === "my" ? "မှတ်တမ်း Export ထုတ်ရန်" : "Export progress";
+  $("#clear-progress").textContent = next === "my" ? "မှတ်တမ်းရှင်းရန်" : "Clear progress";
+  renderProgress();
   const styleOptions = $("#letter-style").options;
   styleOptions[0].textContent = next === "my" ? "ပုံနှိပ်စာလုံး · အကြီး / အသေး" : "Print · Uppercase / lowercase";
   styleOptions[1].textContent = next === "my" ? "Cursive · ဆက်ရေးဟန်" : "Cursive";
@@ -247,6 +261,50 @@ $("#letter-select").addEventListener("change", (event) => { selectedLetter = eve
 $("#letter-style").addEventListener("change", (event) => { selectedStyle = event.target.value; renderLetterGuide(); });
 $("#replay-letter").addEventListener("click", () => renderLetterGuide());
 
+$("#complete-practice").addEventListener("click", () => {
+  try {
+    const nextProgress = markPracticeComplete(progress, activeSkill, selectedLevel);
+    if (!saveProgress(nextProgress)) {
+      setStatus(language === "my" ? "မှတ်တမ်းကို ဤစက်တွင် သိမ်း၍မရပါ။ Storage ခွင့်ပြုချက်ကို စစ်ပါ။" : "Progress could not be saved on this device. Check storage availability.");
+      return;
+    }
+    progress = nextProgress;
+    renderProgress();
+    setStatus(language === "my" ? "လေ့ကျင့်ခန်းပြီးမြောက်မှုကို သိမ်းဆည်းပြီးပါပြီ။" : "Practice completion saved on this device.");
+  } catch {
+    setStatus(language === "my" ? "မှတ်တမ်းသိမ်းရာတွင် အမှားဖြစ်နေသည်။" : "Could not record this completion.");
+  }
+});
+
+$("#export-progress").addEventListener("click", () => {
+  try {
+    const blob = new Blob([exportProgress(progress)], { type: "application/json;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "learning-everyday-progress.json";
+    link.click();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    setStatus(language === "my" ? "မှတ်တမ်းဖိုင်ကို Export ထုတ်ပြီးပါပြီ။" : "Progress export started.");
+  } catch {
+    setStatus(language === "my" ? "မှတ်တမ်း Export မလုပ်နိုင်ပါ။" : "Progress export is not available in this browser.");
+  }
+});
+
+$("#clear-progress").addEventListener("click", () => {
+  const confirmed = window.confirm(language === "my"
+    ? "ဤစက်ပေါ်ရှိ Learning Everyday လေ့ကျင့်မှုမှတ်တမ်းအားလုံးကို ရှင်းမည်လား။"
+    : "Clear all Learning Everyday progress saved on this device?");
+  if (!confirmed) return;
+  if (!clearProgress()) {
+    setStatus(language === "my" ? "မှတ်တမ်းကို မရှင်းနိုင်ပါ။" : "Progress could not be cleared.");
+    return;
+  }
+  progress = loadProgress();
+  renderProgress();
+  setStatus(language === "my" ? "လေ့ကျင့်မှုမှတ်တမ်းကို ရှင်းပြီးပါပြီ။" : "Learning progress cleared from this device.");
+});
+
 const languageButton = $("#language-toggle");
 languageButton.addEventListener("click", () => window.setTimeout(() => setLanguage(document.documentElement.lang === "my" ? "my" : "en"), 0));
 new MutationObserver(() => setLanguage(document.documentElement.lang === "my" ? "my" : "en"))
@@ -258,3 +316,4 @@ renderLevelOptions();
 renderLetterOptions();
 renderPractice();
 renderLetterGuide();
+renderProgress();
