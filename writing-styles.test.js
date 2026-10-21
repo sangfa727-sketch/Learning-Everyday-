@@ -18,7 +18,8 @@ test("cursive sample, animation, and tracing use the same Script glyph", async (
   assert.match(ui, /Lowercase a–z/);
   assert.match(html, /id="letter-alphabet-grid"/);
   assert.match(css, /\.letter-template-glyph\.style-cursive/);
-  assert.match(css, /\.letter-template-glyph\.style-cursive\{[^}]*stroke-dasharray:1000;stroke-dashoffset:1000;fill:transparent;animation:trace-script-glyph 1\.8s ease-out forwards/);\n  assert.match(css, /@keyframes trace-script-glyph\{0%\{stroke-dashoffset:1000;fill:transparent\}82%\{stroke-dashoffset:0;fill:transparent\}100%\{stroke-dashoffset:0;fill:rgba\(71,123,98,\.08\)\}\}/);
+  assert.match(css, /\.letter-template-glyph\.style-cursive\{[^}]*stroke-dasharray:1000;stroke-dashoffset:1000;fill:transparent;animation:trace-script-glyph 1\.8s ease-out forwards/);
+  assert.match(css, /@keyframes trace-script-glyph\{0%\{stroke-dashoffset:1000;fill:transparent\}82%\{stroke-dashoffset:0;fill:transparent\}100%\{stroke-dashoffset:0;fill:rgba\(71,123,98,\.08\)\}\}/);
   assert.match(css, /trace-script-glyph/);
   assert.match(css, /letter-alphabet-row/);
   assert.match(ui, /function cursivePathsFor\(letter\)/);
