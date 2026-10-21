@@ -49,7 +49,7 @@ Serve the repository over localhost or HTTPS to test service-worker registration
 2. [x] Refine dashboard hierarchy, responsive skill cards, lesson controls, accessibility focus states, and offline-safe typography.
 3. [x] Add app-shell caching, manifest, and baseline unit tests.
 4. [ ] Verify CI and perform browser/device accessibility and offline smoke tests.
-5. [ ] Add local PDF text extraction; explicitly detect and explain scanned/image-only PDFs.
+5. [x] Add local PDF text extraction; explicitly detect and explain scanned/image-only PDFs.
 6. [ ] Expand offline dictionary and structured beginner-to-advanced vocabulary, grammar, reading, and sentence lessons.
 7. [ ] Add letter tracing, uppercase/lowercase writing, cursive and calligraphy practice.
 8. [ ] Improve speaking practice with a clear capability boundary for browser speech recognition versus offline pronunciation support.
