@@ -239,3 +239,15 @@ body[data-page="home"] #skills-level-page{display:block}body[data-page="home"] .
 body:not(.skills-levels-page) .skill-level-picker{display:none!important}
 body.skills-levels-page .skill-level-picker{display:block}
 body:not(.skills-levels-page) #curriculum-workbench .skill-level-picker{display:none!important}
+
+/* Route-level correction: the picker belongs to Skills & Levels, not every practice page. */
+body[data-page="skills"] #skills-level-page{display:block!important}
+body[data-page="skills"] #curriculum-workbench,
+body[data-page="skills"] #practice-panel{display:none!important}
+body[data-page="skills"] .skill-level-picker{display:block!important}
+body:not([data-page="skills"]) #skills-level-page{display:none!important}
+body[data-page="home"] #skills-level-page{display:block!important}
+@media(max-width:760px){
+  .header-actions{flex-wrap:wrap;justify-content:flex-end;gap:7px}
+  .skills-nav-link{font-size:11px;white-space:nowrap}
+}
