@@ -118,3 +118,32 @@ test("robust smoothing retains the overall direction of a broad curve", () => {
   assert.ok(smooth[2].y > smooth[3].y);
   assert.ok(smooth[3].y > smooth[4].y);
 });
+
+
+test("stabilization strength zero preserves every captured coordinate", () => {
+  const points = [
+    {x:0,y:0,t:0,pressure:0.5},
+    {x:0.25,y:0.02,t:10,pressure:0.6},
+    {x:0.5,y:-0.015,t:20,pressure:0.7},
+    {x:0.75,y:0.015,t:30,pressure:0.8},
+    {x:1,y:0,t:40,pressure:0.5}
+  ];
+  const smooth = smoothPoints(points, 0);
+  assert.deepEqual(smooth, points);
+  assert.notEqual(smooth, points, "render output must be a separate array");
+});
+
+test("higher stabilization strength suppresses more small wobble without mutating raw points", () => {
+  const points = [
+    {x:0,y:0,t:0,pressure:0.5},
+    {x:0.25,y:0.02,t:10,pressure:0.5},
+    {x:0.5,y:-0.015,t:20,pressure:0.5},
+    {x:0.75,y:0.015,t:30,pressure:0.5},
+    {x:1,y:0,t:40,pressure:0.5}
+  ];
+  const raw = structuredClone(points);
+  const light = smoothPoints(points, 0.25);
+  const strong = smoothPoints(points, 1);
+  assert.ok(Math.abs(strong[2].y) <= Math.abs(light[2].y));
+  assert.deepEqual(points, raw);
+});
