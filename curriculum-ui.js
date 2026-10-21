@@ -239,7 +239,8 @@ function renderLetterGuide() {
   baseline.setAttribute("y1", "88"); baseline.setAttribute("y2", "88");
   baseline.setAttribute("class", "letter-baseline");
   svg.append(baseline);
-  if (guide.paths.length) {
+  const stylePaths = selectedStyle === "print" ? guide.paths : (CURSIVE_LOWERCASE_PATHS[selectedLetter] ?? guide.paths);
+  if (stylePaths.length) {
     const strokeGroup = document.createElementNS(ns, "g");
     strokeGroup.setAttribute("class", `letter-guide-strokes style-${selectedStyle}`);
     if (selectedStyle === "cursive") strokeGroup.setAttribute("transform", "skewX(-7) translate(5 0)");
@@ -257,7 +258,7 @@ function renderLetterGuide() {
     });
     svg.append(strokeGroup);
     const start = document.createElementNS(ns, "circle");
-    const firstMove = guide.paths[0]?.match(/^M\s*([\d.]+)[ ,]+([\d.]+)/);
+    const firstMove = stylePaths[0]?.match(/^M\s*([\d.]+)[ ,]+([\d.]+)/);
     start.setAttribute("cx", firstMove?.[1] ?? "50");
     start.setAttribute("cy", firstMove?.[2] ?? "12");
     start.setAttribute("r", "3");
