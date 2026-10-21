@@ -269,9 +269,35 @@ function renderLetterGuide() {
     paths: []
   };
   const sample = $("#letter-sample");
-  sample.textContent = selectedStyle === "cursive" ? (CURSIVE_GLYPHS[selectedLetter] ?? selectedLetter) : selectedLetter;
+  sample.replaceChildren();
   sample.classList.remove("style-print", "style-cursive", "style-calligraphy");
   sample.classList.add(`style-${selectedStyle}`);
+  if (selectedStyle === "cursive") {
+    // Render the same hand-drawn paths used by the animation, not a Unicode math font.
+    const samplePaths = cursivePathsFor(selectedLetter) ?? [];
+    if (samplePaths.length) {
+      const sampleSvg = document.createElementNS(ns, "svg");
+      sampleSvg.setAttribute("viewBox", "0 0 100 100");
+      sampleSvg.setAttribute("class", "letter-sample-svg");
+      sampleSvg.setAttribute("aria-hidden", "true");
+      const orderedSamplePaths = samplePaths.flatMap((d) =>
+        d.trim().split(/(?=M\\s*[-\\d.])/).map((part) => part.trim()).filter(Boolean)
+      );
+      orderedSamplePaths.forEach((d, index) => {
+        const path = document.createElementNS(ns, "path");
+        path.setAttribute("d", d);
+        path.setAttribute("pathLength", "1");
+        path.setAttribute("class", "letter-sample-stroke");
+        path.style.animationDelay = `${index * 650}ms`;
+        sampleSvg.append(path);
+      });
+      sample.append(sampleSvg);
+    } else {
+      sample.textContent = CURSIVE_GLYPHS[selectedLetter] ?? selectedLetter;
+    }
+  } else {
+    sample.textContent = selectedLetter;
+  }
   renderAlphabetGrid();
   $("#letter-style-note").textContent = styleInfo[selectedStyle][language];
   const styleStart = selectedStyle === "cursive"
