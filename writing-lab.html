@@ -98,29 +98,38 @@ function drawCursiveGuide(context, width, height, letter, animated = null) {
   if (!paths) return false;
   context.save();
   context.lineCap = "round"; context.lineJoin = "round";
+  // Keep glyph proportions square on wide desktop canvases and narrow phones.
+  const guideSize = Math.min(width, height) * 0.78;
+  const offsetX = (width - guideSize) / 2, offsetY = (height - guideSize) / 2;
+  const toCanvas = (point) => ({ x: offsetX + point.x * guideSize, y: offsetY + point.y * guideSize });
   const drawOne = (points, progress, color, lineWidth) => {
     const end = Math.max(1, Math.floor((points.length - 1) * progress));
-    context.beginPath(); context.moveTo(points[0].x * width, points[0].y * height);
-    for (let i = 1; i <= end; i++) context.lineTo(points[i].x * width, points[i].y * height);
+    const startPoint = toCanvas(points[0]);
+    context.beginPath(); context.moveTo(startPoint.x, startPoint.y);
+    for (let i = 1; i <= end; i++) {
+      const point = toCanvas(points[i]);
+      context.lineTo(point.x, point.y);
+    }
     context.strokeStyle = color; context.lineWidth = lineWidth; context.stroke();
-    return points[end];
+    return toCanvas(points[end]);
   };
   paths.forEach((pathData, index) => {
     const points = sampledGuidePath(pathData);
     if (animated === null) {
       drawOne(points, 1, "rgba(36,85,74,.28)", 3.2);
-      const start = points[0];
-      context.beginPath(); context.arc(start.x * width, start.y * height, 8, 0, Math.PI * 2);
+      const start = toCanvas(points[0]);
+      context.beginPath(); context.arc(start.x, start.y, 8, 0, Math.PI * 2);
       context.fillStyle = "#24554a"; context.fill();
       context.fillStyle = "#fff"; context.font = "bold 10px system-ui,sans-serif";
       context.textAlign = "center"; context.textBaseline = "middle";
       context.fillText(String(index + 1), start.x * width, start.y * height);
-      const end = points[points.length - 1], before = points[Math.max(0, points.length - 5)];
+      const end = toCanvas(points[points.length - 1]);
+      const before = toCanvas(points[Math.max(0, points.length - 5)]);
       const angle = Math.atan2(end.y - before.y, end.x - before.x);
-      context.beginPath(); context.moveTo(end.x * width, end.y * height);
-      context.lineTo(end.x * width - 8 * Math.cos(angle - .55), end.y * height - 8 * Math.sin(angle - .55));
-      context.moveTo(end.x * width, end.y * height);
-      context.lineTo(end.x * width - 8 * Math.cos(angle + .55), end.y * height - 8 * Math.sin(angle + .55));
+      context.beginPath(); context.moveTo(end.x, end.y);
+      context.lineTo(end.x - 8 * Math.cos(angle - .55), end.y - 8 * Math.sin(angle - .55));
+      context.moveTo(end.x, end.y);
+      context.lineTo(end.x - 8 * Math.cos(angle + .55), end.y - 8 * Math.sin(angle + .55));
       context.strokeStyle = "#24554a"; context.lineWidth = 1.8; context.stroke();
     } else if (index < animated.strokeIndex) {
       drawOne(points, 1, "#24554a", 3.4);
