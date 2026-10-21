@@ -37,7 +37,7 @@ export const VOCABULARY_CATEGORIES = [
     ["notebook", "မှတ်စုစာအုပ်", "Write the answer in your notebook."], ["pencil", "ခဲတံ", "Use a pencil to draw."],
     ["eraser", "ခဲဖျက်", "I need an eraser."], ["lesson", "သင်ခန်းစာ", "Today's lesson is useful."],
     ["question", "မေးခွန်း", "Please answer the question."], ["dictionary", "အဘိဓာန်", "Look up the word in a dictionary."], ["backpack", "ကျောပိုးအိတ်", "My backpack is heavy."], ["ruler", "ပေတံ", "Draw a straight line with a ruler."]
-  ]}
+  ]},
 
   { id: "bathroom", en: "Bathroom and personal care", my: "ရေချိုးခန်းနှင့် ကိုယ်ရေးကိုယ်တာ", words: [
     ["towel", "မျက်နှာသုတ်ပဝါ", "Please bring a clean towel."], ["soap", "ဆပ်ပြာ", "Wash your hands with soap."], ["toothbrush", "သွားတိုက်တံ", "My toothbrush is beside the sink."], ["toothpaste", "သွားတိုက်ဆေး", "We need more toothpaste."], ["shampoo", "ခေါင်းလျှော်ရည်", "This shampoo smells fresh."], ["comb", "ဘီး", "She keeps a comb in her bag."], ["hairbrush", "ဆံပင်ဖြီးဘီး", "I use a hairbrush every morning."], ["sink", "လက်ဆေးခွက်", "The sink is clean."]
