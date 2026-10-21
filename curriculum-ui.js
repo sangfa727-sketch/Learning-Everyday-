@@ -351,13 +351,27 @@ function renderLetterGuide() {
       }
     });
     svg.append(strokeGroup);
-    const start = document.createElementNS(ns, "circle");
-    const firstMove = stylePaths[0]?.match(/^M\s*([\d.]+)[ ,]+([\d.]+)/);
-    start.setAttribute("cx", firstMove?.[1] ?? "50");
-    start.setAttribute("cy", firstMove?.[2] ?? "12");
-    start.setAttribute("r", "3");
-    start.setAttribute("class", "letter-start-dot");
-    svg.append(start);
+    // Mark each pen-down start so disconnected strokes and pen lifts are visible.
+    orderedStrokePaths.forEach((d, index) => {
+      const move = d.match(/^M\\s*([-\\d.]+)[ ,]+([-\\d.]+)/);
+      if (!move) return;
+      const x = Number(move[1]);
+      const y = Number(move[2]);
+      const startMarker = document.createElementNS(ns, "circle");
+      startMarker.setAttribute("cx", String(x));
+      startMarker.setAttribute("cy", String(y));
+      startMarker.setAttribute("r", "2.4");
+      startMarker.setAttribute("class", "letter-start-dot");
+      startMarker.setAttribute("aria-label", `Stroke ${index + 1} starts here`);
+      svg.append(startMarker);
+      const number = document.createElementNS(ns, "text");
+      number.setAttribute("x", String(Math.min(96, Math.max(4, x + 3.5))));
+      number.setAttribute("y", String(Math.max(7, y - 3.5)));
+      number.setAttribute("class", "letter-stroke-number");
+      number.textContent = String(index + 1);
+      number.setAttribute("aria-hidden", "true");
+      svg.append(number);
+    });
 
   } else {
     const glyph = document.createElementNS(ns, "text");
