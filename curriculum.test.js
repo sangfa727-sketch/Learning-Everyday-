@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { LEVELS, VOCABULARY_CATEGORIES, SKILL_PRACTICE, LETTER_GUIDES, getPractice } from "./curriculum.js";
+import { LEVELS, VOCABULARY_CATEGORIES, SKILL_PRACTICE, LETTER_GUIDES, ALPHABET, getPractice } from "./curriculum.js";
 
 test("vocabulary categories have unique ids and bilingual words with examples", () => {
   assert.ok(VOCABULARY_CATEGORIES.length >= 5);
@@ -28,4 +28,11 @@ test("letter guides have animated stroke paths and bilingual start instructions"
     assert.ok(guide.start && guide.my && guide.paths.length > 0);
     assert.ok(guide.paths.every((path) => path.startsWith("M")));
   }
+});
+
+test("alphabet practice includes every uppercase and lowercase English letter exactly once", () => {
+  assert.equal(ALPHABET.length, 52);
+  assert.equal(new Set(ALPHABET).size, 52);
+  assert.deepEqual(ALPHABET.slice(0, 26), [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"]);
+  assert.deepEqual(ALPHABET.slice(26), [..."abcdefghijklmnopqrstuvwxyz"]);
 });
