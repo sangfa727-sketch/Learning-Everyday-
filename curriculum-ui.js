@@ -275,7 +275,7 @@ function renderLetterGuide() {
   renderAlphabetGrid();
   $("#letter-style-note").textContent = styleInfo[selectedStyle][language];
   const styleStart = selectedStyle === "cursive"
-    ? (language === "my" ? "Cursive: စာလုံး၏ ဝင်မျဉ်းမှစပြီး သင့်တော်သည့်နေရာတွင် ဘောပင်မမြှောက်ဘဲ နောက်စာလုံးသို့ ဆက်ပါ။ " : "Cursive: begin with an entry stroke and connect into the next letter where the form allows. ")
+    ? (language === "my" ? "Cursive: အပေါ်က Animation သည် သင်ပေးထားသော Script စာလုံးပုံစံကို outline အတိုင်းပြသသည်။ ဘောပင်စတင်ရာနှင့် stroke အစီအစဉ်ကို သီးခြားပြင်ဆင်နေဆဲဖြစ်သည်။ " : "Cursive: the animation traces the exact supplied Script glyph outline; authentic pen-stroke order is still being refined. ")
     : selectedStyle === "calligraphy"
       ? (language === "my" ? "Calligraphy: ဝင်မျဉ်းကို ဖိအားပေါ့ပေါ့ဖြင့်စပါ။ အောက်ဆင်းမျဉ်းတွင် ဖိအားတိုးပြီး အပေါ်တက်မျဉ်းတွင် လျှော့ပါ။ " : "Calligraphy: start the entry stroke lightly, add pressure on downstrokes, and release pressure on upstrokes. ")
       : "";
