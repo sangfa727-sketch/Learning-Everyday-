@@ -24,11 +24,11 @@ h1{font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.15;margin:22px 0 8px}h2{font
 <div class="panel">
 <div class="controls">
 <div class="field"><label for="letter">ရည်ရွယ်ထားသော English အက္ခရာ</label><select id="letter" aria-label="Choose target English letter"></select></div>
-<div class="field"><label for="style">ရေးဟန်</label><select id="style"><option value="print">Print</option><option value="cursive">Cursive</option><option value="calligraphy">Calligraphy</option></select></div>
+<div class="field"><label for="style">ရေးဟန်</label><select id="style"><option value="print">Print</option><option value="cursive">Cursive · stroke guide</option><option value="calligraphy">Calligraphy</option></select></div>
 <div class="field"><label for="pen-mode">Pen Assist</label><select id="pen-mode"><option value="stabilized">Stabilized Pen</option><option value="natural">Natural Pressure Pen</option><option value="curve">Curve Pen</option><option value="freehand">Original Freehand</option></select></div>
 <div class="range-field"><label for="stabilizer">တုန်ခါမှုထိန်းချုပ်မှု</label><input id="stabilizer" type="range" min="0" max="100" step="5" value="65"><div class="range-note"><span>သဘာဝအတိုင်း</span><strong id="stabilizer-value">65%</strong><span>ပိုချောမွေ့</span></div></div>
 </div>
-<div class="notice" style="margin-top:12px">ရွေးထားသောအက္ခရာကို မှတ်တမ်းတွင် ချိတ်ဆက်သိမ်းမည်။ လက်ရှိဗားရှင်းသည် သင်ရေးသောပုံကို ရွေးထားသည့်အက္ခရာနှင့် အလိုအလျောက်တိုက်စစ်ပြီး မှန်/မမှန် အတည်ပြုနိုင်သေးခြင်း မရှိပါ။</div>
+<div class="notice" style="margin-top:12px">Cursive ကိုရွေးလျှင် အက္ခရာတစ်လုံးချင်းစီ၏ stroke လမ်းကြောင်းနှင့် အစဉ်နံပါတ်ကို ပြပေးမည်။ “ရေးနည်း Animation” ဖြင့် မျဉ်းတစ်ကြောင်းချင်းစီ ရေးသွားပုံကို ကြည့်နိုင်သည်။ သင်ရေးထားသောပုံကို အလိုအလျောက်မှန်/မမှန် စစ်ဆေးခြင်းကိုတော့ မထည့်ရသေးပါ။</div>
 <div class="canvas-wrap"><canvas id="draw" aria-label="Draw the selected English letter here"></canvas></div>
 <div class="canvas-label"><span id="target-note">Target letter: a · Print</span><span id="counts">Stroke 0 · Point 0</span></div>
 <div class="controls" style="margin-top:12px">
@@ -77,14 +77,19 @@ function sampledGuidePath(pathData) {
   const svgNS = "http://www.w3.org/2000/svg";
   const svg = document.createElementNS(svgNS, "svg");
   const path = document.createElementNS(svgNS, "path");
+  svg.setAttribute("viewBox", "0 0 100 100");
+  svg.setAttribute("width", "100"); svg.setAttribute("height", "100");
+  svg.style.cssText = "position:absolute;width:0;height:0;overflow:hidden;pointer-events:none";
   path.setAttribute("d", pathData); svg.append(path);
-  // SVG geometry APIs provide consistent sampling for the animated pen path.
+  // Attach briefly so SVG geometry APIs behave consistently across browsers.
+  document.body.append(svg);
   const length = path.getTotalLength();
   const count = Math.max(24, Math.ceil(length / 2));
   const points = Array.from({length: count + 1}, (_, index) => {
     const point = path.getPointAtLength(length * index / count);
     return {x: point.x / 100, y: point.y / 100};
   });
+  svg.remove();
   guidePointCache.set(pathData, points);
   return points;
 }
