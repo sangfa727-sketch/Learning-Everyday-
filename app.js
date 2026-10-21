@@ -3,7 +3,18 @@ import { readLocalValue, writeLocalValue } from "./local-state.js";
 import { extractPdfText } from "./pdf-import.js";
 
 const $ = (selector) => document.querySelector(selector);
-let story = "Maya has a small garden. Every morning, she waters the flowers. A yellow bird visits the garden and sings in the tree. Maya feels happy when she hears the song.";
+const DEFAULT_STORY = "Maya has a small garden. Every morning, she waters the flowers. A yellow bird visits the garden and sings in the tree. Maya feels happy when she hears the song.";
+let readingStory = DEFAULT_STORY;
+let story = DEFAULT_STORY;
+let activeListeningStoryId = null;
+const LISTENING_STORIES = [
+  { id: "garden-bird", title: "Maya’s Garden", myTitle: "Maya ၏ ဥယျာဉ်", level: "A1", category: "Nature", myCategory: "သဘာဝ", icon: "🌱", summary: "A little bird brings joy to a quiet garden.", mySummary: "ငှက်ကလေးတစ်ကောင်က ဥယျာဉ်လေးထဲ ပျော်ရွှင်မှုယူလာပုံ။", text: DEFAULT_STORY },
+  { id: "market-morning", title: "A Morning at the Market", myTitle: "ဈေးထဲက မနက်ခင်း", level: "A1", category: "Everyday life", myCategory: "နေ့စဉ်ဘဝ", icon: "🧺", summary: "Nora visits the market to buy fruit for her family.", mySummary: "Nora က မိသားစုအတွက် သစ်သီးဝယ်ရန် ဈေးသို့သွားသည်။", text: "Nora goes to the market early in the morning. She buys three apples, some bananas, and a loaf of bread. The fruit seller smiles and puts everything in a small bag. Nora walks home and prepares breakfast for her family." },
+  { id: "rainy-day", title: "The Rainy Afternoon", myTitle: "မိုးရွာသော နေ့လယ်ခင်း", level: "A1", category: "Weather", myCategory: "ရာသီဥတု", icon: "🌧️", summary: "A rainy afternoon becomes a cosy time for reading.", mySummary: "မိုးရွာတဲ့ နေ့လယ်ခင်းကို စာဖတ်ရင်း သာယာစွာ ဖြတ်သန်းပုံ။", text: "Dark clouds cover the sky after lunch. Ben brings the clothes inside before the rain begins. He makes a cup of warm tea and sits beside the window with a book. The rain is loud, but the house feels peaceful." },
+  { id: "lost-puppy", title: "The Lost Puppy", myTitle: "ပျောက်နေသော ခွေးကလေး", level: "A2", category: "Animals", myCategory: "တိရစ္ဆာန်များ", icon: "🐶", summary: "Two neighbours work together to help a lost puppy.", mySummary: "အိမ်နီးချင်းနှစ်ဦးက ပျောက်နေသော ခွေးကလေးကို ကူညီရှာဖွေသည်။", text: "On her way home, Lina hears a soft sound near a shop. A small puppy is sitting beside a box and looks frightened. Lina asks a neighbour for help. They check the puppy’s collar and call its owner. Soon, a happy family arrives to take the puppy home." },
+  { id: "school-trip", title: "A Day at the Museum", myTitle: "ပြတိုက်သို့ လေ့လာရေးခရီး", level: "A2", category: "Learning", myCategory: "လေ့လာရေး", icon: "🏛️", summary: "Students discover how people lived long ago.", mySummary: "ကျောင်းသားများက ရှေးခေတ်လူများ၏ နေထိုင်ပုံကို လေ့လာကြသည်။", text: "The class visits a local museum on Friday. Their guide shows them old tools, maps, and photographs. The students write notes and ask questions about daily life in the past. Before leaving, each student chooses one object to describe to the class." },
+  { id: "village-library", title: "The Little Village Library", myTitle: "ရွာလေး၏ စာကြည့်တိုက်", level: "B1", category: "Community", myCategory: "လူမှုအသိုင်းအဝိုင်း", icon: "📚", summary: "A community creates a welcoming place to share books.", mySummary: "လူမှုအသိုင်းအဝိုင်းက စာအုပ်များ မျှဝေရန် နေရာကောင်းတစ်ခု ဖန်တီးသည်။", text: "For years, the children in the village had few books to read. One teacher suggested turning an empty room near the market into a small library. Families donated books, and volunteers repaired the shelves. Now children meet there after school to read, study, and share stories with one another." }
+];
 const translations = {
   en: { homeLink:"← Home", skillsLink:"Skills & Levels",chooseLevel:"Choose your CEFR level",chooseLevelSub:"Select one of the six levels, then start the selected skill.",startPractice:"Start selected practice →",changeLevel:"Change skill or level",progressLink:"Progress", eyebrow:"YOUR DAILY ENGLISH PRACTICE",daily:"A little practice goes a long way",minutes:"Start with 5 minutes",chooseSub:"Pick one and start right where you are.",lessonType:"A SHORT READING",beginner:"Beginner",backTop:"Back to top ↑",headline:"Small steps.<br>Stronger English.",intro:"Learn at your pace, even when you are offline.",offline:"Designed for offline learning",start:"GET STARTED",choose:"Choose a skill",reading:"Reading",readingDesc:"Stories and vocabulary",listening:"Listening",listeningDesc:"Listen with device voice",writing:"Writing",writingDesc:"Letters and sentences",speaking:"Speaking",speakingDesc:"Speak aloud and practice",practice:"PRACTICE ROOM",tapHint:"Tap a word in the story to explore its meaning.",word:"WORD",close:"Close",listenStory:"Listen to story",stop:"Stop",speed:"Speed",writePrompt:"Write this sentence: “I learn a little every day.”",speakPrompt:"Read the sentence aloud: “I learn a little every day.”",startSpeaking:"Start speaking practice",pdfTitle:"Bring your own story",pdfBody:"Choose a text-based PDF to read it aloud. The document is processed on this device and is never uploaded. The PDF reader downloads on first use and is cached for later offline use.",pdfChoose:"Choose PDF",pdfLoading:"Reading PDF on this device…",pdfSuccess:"PDF text loaded. Tap any word to look it up, or listen to the story.",pdfError:"Could not read this PDF.",privacy:"Your practice stays on this device in this first version.",characters:"characters",unknown:"No offline definition is available for this word yet.",voiceNote:"Your browser's installed English voice is used. Voice availability varies by device.",noSpeech:"Speech synthesis is not available in this browser.",listeningTitle:"Listen and follow the story",writingTitle:"Practice writing",speakingTitle:"Speaking practice",readTitle:"Read a short story",speakUnsupported:"Speech recognition is not supported by this browser. You can still practice aloud without recording.",permission:"Microphone access was not available. Check your browser permission settings." },
   my: { homeLink:"← ပင်မစာမျက်နှာ", skillsLink:"ကျွမ်းကျင်မှုနှင့် အဆင့်များ",chooseLevel:"CEFR အဆင့်ရွေးပါ",chooseLevelSub:"အဆင့် ၆ ဆင့်ထဲမှ ရွေးပြီး ရွေးထားသော ကျွမ်းကျင်မှုကို စတင်ပါ။",startPractice:"ရွေးထားသော လေ့ကျင့်ခန်း စတင်ရန် →",changeLevel:"ကျွမ်းကျင်မှု သို့မဟုတ် အဆင့် ပြောင်းရန်",progressLink:"လေ့လာမှုတိုးတက်မှု", eyebrow:"နေ့စဉ် အင်္ဂလိပ်စာ လေ့ကျင့်ခန်း",daily:"နေ့စဉ် နည်းနည်းစီ လေ့ကျင့်ခြင်းက တိုးတက်မှုကို ဖြစ်စေသည်",minutes:"၅ မိနစ်မှ စတင်ပါ",chooseSub:"မိမိနှင့် သင့်တော်သော ကဏ္ဍတစ်ခုကို ရွေးပြီး စတင်ပါ။",lessonType:"စာဖတ်လေ့ကျင့်ခန်းတို",beginner:"အစပြုသူ",backTop:"အပေါ်သို့ ပြန်သွားရန် ↑",headline:"အင်္ဂလိပ်စာ ကောင်းလာဖို့<br>နေ့စဉ် တစ်လှမ်းချင်း လှမ်းကြစို့။",intro:"အင်တာနက်မရှိချိန်မှာလည်း ကိုယ့်အရှိန်နဲ့ကိုယ် သင်ယူပါ။",offline:"အင်တာနက်မရှိဘဲ သင်ယူနိုင်ရန် ဒီဇိုင်းလုပ်ထားသည်",start:"စတင်လေ့လာရန်",choose:"ကျွမ်းကျင်မှုတစ်ခု ရွေးပါ",reading:"စာဖတ်ခြင်း",readingDesc:"ပုံပြင်နှင့် ဝေါဟာရ",listening:"နားထောင်ခြင်း",listeningDesc:"ဖုန်းအသံဖြင့် နားထောင်ရန်",writing:"စာရေးခြင်း",writingDesc:"အက္ခရာနှင့် ဝါကျများ",speaking:"စကားပြောခြင်း",speakingDesc:"အသံထွက် လေ့ကျင့်ရန်",practice:"လေ့ကျင့်ခန်း",tapHint:"စကားလုံးအဓိပ္ပာယ်ကြည့်ရန် စကားလုံးကို ထိပါ။",word:"စကားလုံး",close:"ပိတ်ရန်",listenStory:"ပုံပြင်နားထောင်ရန်",stop:"ရပ်ရန်",speed:"အမြန်နှုန်း",writePrompt:"ဤဝါကျကို ရေးပါ — “I learn a little every day.”",speakPrompt:"ဤဝါကျကို အသံထွက်ဖတ်ပါ — “I learn a little every day.”",startSpeaking:"စကားပြောလေ့ကျင့်မှု စတင်ရန်",pdfTitle:"ကိုယ်ပိုင်ပုံပြင် ထည့်သွင်းရန်",pdfBody:"စာသားပါသော PDF ကို ရွေးပြီး ဖုန်းပေါ်တွင် ဖတ်ရှုနားထောင်နိုင်သည်။ PDF ဖိုင်ကို server သို့ upload မလုပ်ပါ။ PDF ဖတ်ရှုသည့် library ကို ပထမဆုံးအသုံးပြုချိန်တွင် အင်တာနက်ဖြင့် ရယူပြီး နောက်ပိုင်း offline အသုံးပြုရန် cache သိမ်းထားသည်။",pdfChoose:"PDF ရွေးရန်",pdfLoading:"PDF ကို ဤစက်ပေါ်တွင် ဖတ်နေသည်…",pdfSuccess:"PDF စာသားထည့်သွင်းပြီးပါပြီ။ စကားလုံးကိုထိ၍ အဓိပ္ပာယ်ကြည့်နိုင်သလို အသံဖြင့်လည်း နားထောင်နိုင်သည်။",pdfError:"ဤ PDF ကို ဖတ်၍မရပါ။",privacy:"ယခုဗားရှင်းတွင် သင်၏လေ့ကျင့်မှုကို ဤစက်ပေါ်တွင်သာ ထားရှိသည်။",characters:"လုံး",unknown:"ဤစကားလုံးအတွက် offline အဓိပ္ပာယ် မထည့်ရသေးပါ။",voiceNote:"ဖုန်းတွင် ထည့်သွင်းထားသော English အသံကို အသုံးပြုသည်။ အသံရရှိမှုသည် စက်ပေါ်မူတည်သည်။",noSpeech:"ဤ browser တွင် အသံထွက်ဖတ်ခြင်း မရနိုင်ပါ။",listeningTitle:"ပုံပြင်ကို နားထောင်ပြီး လိုက်ဖတ်ပါ",writingTitle:"စာရေးလေ့ကျင့်ရန်",speakingTitle:"စကားပြောလေ့ကျင့်မှု",readTitle:"ပုံပြင်တိုတစ်ပုဒ် ဖတ်ရန်",speakUnsupported:"ဤ browser တွင် အသံမှ စာသားပြောင်းသည့်စနစ် မရနိုင်ပါ။ အသံထွက်လေ့ကျင့်နိုင်သေးသည်။",permission:"မိုက်ခရိုဖုန်းခွင့်ပြုချက် မရရှိပါ။ Browser ခွင့်ပြုချက်များကို စစ်ဆေးပါ။" }
@@ -47,11 +58,104 @@ function renderPage() {
       button.setAttribute("aria-pressed", "false");
     });
   }
+  syncListeningView(page);
 }
 window.addEventListener("hashchange", () => {
   renderPage();
   window.scrollTo({ top: 0, behavior: "auto" });
 });
+
+function renderListeningLibrary() {
+  const grid = $("#listening-story-grid");
+  if (!grid) return;
+  const isMyanmar = language === "my";
+  grid.replaceChildren();
+  for (const item of LISTENING_STORIES) {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "listening-story-card";
+    card.dataset.storyId = item.id;
+    card.setAttribute("aria-label", `${isMyanmar ? item.myTitle : item.title}, ${item.level}`);
+    const art = document.createElement("span");
+    art.className = "story-card-art";
+    art.setAttribute("aria-hidden", "true");
+    art.textContent = item.icon;
+    const meta = document.createElement("span");
+    meta.className = "story-card-meta";
+    const level = document.createElement("span");
+    level.className = "story-level-pill";
+    level.textContent = item.level;
+    const category = document.createElement("span");
+    category.className = "story-card-category";
+    category.textContent = isMyanmar ? item.myCategory : item.category;
+    meta.append(level, category);
+    const title = document.createElement("span");
+    title.className = "story-card-title";
+    title.textContent = isMyanmar ? item.myTitle : item.title;
+    const summary = document.createElement("span");
+    summary.className = "story-card-summary";
+    summary.textContent = isMyanmar ? item.mySummary : item.summary;
+    const action = document.createElement("span");
+    action.className = "story-card-action";
+    action.textContent = isMyanmar ? "ဖတ်ရှုနားထောင်ရန် →" : "Read & listen →";
+    card.append(art, meta, title, summary, action);
+    card.addEventListener("click", () => {
+      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+      location.hash = `#/listening/${item.id}`;
+    });
+    grid.append(card);
+  }
+  $("#listening-library-title").textContent = isMyanmar ? "ပုံပြင်စာကြည့်တိုက်" : "Story library";
+  $("[data-library-eyebrow]").textContent = isMyanmar ? "ပုံပြင်များ စုစည်းမှု" : "STORY COLLECTION";
+  $("[data-library-intro]").textContent = isMyanmar ? "ပုံပြင်ကတ်တစ်ခုကို ရွေးပြီး ဖတ်ရှုနားထောင်နိုင်သော စာမျက်နှာသို့ ဝင်ပါ။" : "Choose a story card to open its reading and listening page.";
+  $("[data-library-count]").textContent = isMyanmar ? `ပုံပြင် ${LISTENING_STORIES.length} ပုဒ်` : `${LISTENING_STORIES.length} STORIES`;
+  $("#back-to-story-library").textContent = isMyanmar ? "← ပုံပြင်စာကြည့်တိုက်သို့" : "← All stories";
+}
+
+function syncListeningView(page = currentPage()) {
+  const library = $("#listening-library");
+  const panel = $("#practice-panel");
+  const back = $("#back-to-story-library");
+  if (!library || !panel || !back) return;
+  const route = location.hash.slice(1).split("/").filter(Boolean);
+  if (page !== "listening") {
+    library.hidden = true;
+    panel.hidden = false;
+    back.hidden = true;
+    if (activeListeningStoryId) {
+      story = readingStory;
+      activeListeningStoryId = null;
+      renderStory();
+    }
+    return;
+  }
+  const selected = LISTENING_STORIES.find((item) => item.id === route[1]);
+  if (!selected) {
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    activeListeningStoryId = null;
+    story = readingStory;
+    renderStory();
+    renderListeningLibrary();
+    library.hidden = false;
+    panel.hidden = true;
+    back.hidden = true;
+    return;
+  }
+  if (activeListeningStoryId !== selected.id) {
+    activeListeningStoryId = selected.id;
+    story = selected.text;
+    renderStory();
+    $("#word-card").hidden = true;
+    $("#status-message").textContent = translations[language].voiceNote;
+  }
+  library.hidden = true;
+  panel.hidden = false;
+  back.hidden = false;
+  $("#panel-title").textContent = language === "my" ? selected.myTitle : selected.title;
+  $(".panel-heading .eyebrow").textContent = language === "my" ? "နားထောင်လေ့ကျင့်ခန်း" : "LISTENING STORY";
+  $("#lesson-level-tag").textContent = `${selected.level} · ${selected.level === "A1" ? (language === "my" ? "အစပြုသူ" : "Beginner") : selected.level === "A2" ? (language === "my" ? "အခြေခံ" : "Elementary") : (language === "my" ? "အလယ်အလတ်" : "Intermediate")}`;
+  $(".lesson-number").textContent = language === "my" ? "ပုံပြင်" : "STORY";
+}
 
 function renderStory() {
   const container = $("#lesson-text");
@@ -204,6 +308,10 @@ document.querySelectorAll("[data-skill]").forEach((button) => button.addEventLis
 }));
 $("#language-toggle").addEventListener("click", () => setLanguage(language === "en" ? "my" : "en"));
 $("#play-button").addEventListener("click", speakStory);
+$("#back-to-story-library").addEventListener("click", () => {
+  if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+  location.hash = "#/listening";
+});
 $("#stop-button").addEventListener("click", () => { if ("speechSynthesis" in window) window.speechSynthesis.cancel(); $("#play-button").disabled = false; $("#status-message").textContent = translations[language].voiceNote; });
 $("#close-word").addEventListener("click", () => { $("#word-card").hidden = true; });
 $("#writing-input").value = readLocalValue("le.writingDraft", "");
@@ -224,6 +332,7 @@ $("#pdf-file").addEventListener("change", async (event) => {
     const pdfjs = await import("https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs");
     pdfjs.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.min.mjs";
     story = await extractPdfText(file, pdfjs);
+    readingStory = story;
     renderStory();
     $("#word-card").hidden = true;
     status.textContent = translations[language].pdfSuccess;

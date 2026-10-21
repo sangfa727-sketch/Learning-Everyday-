@@ -152,9 +152,22 @@
       </section>
       <p id="curriculum-status" class="status-message" role="status">Choose a topic and practise at your own pace.</p>
     </section>
+    <section id="listening-library" class="listening-library" aria-labelledby="listening-library-title" hidden>
+      <div class="story-library-heading">
+        <div>
+          <p class="eyebrow" data-library-eyebrow>STORY COLLECTION</p>
+          <h2 id="listening-library-title" data-library-title>Choose a story</h2>
+          <p class="story-library-intro" data-library-intro>Pick a story card to open its reading and listening page.</p>
+        </div>
+        <span class="story-library-count" data-library-count>6 STORIES</span>
+      </div>
+      <div id="listening-story-grid" class="listening-story-grid" aria-live="polite"></div>
+    </section>
+
     <section id="practice-panel" class="practice-panel" aria-labelledby="panel-title">
+      <button id="back-to-story-library" class="story-library-back" type="button" hidden>← All stories</button>
       <div class="panel-topline"><span class="panel-label"><span class="panel-label-dot"></span><span data-i18n="practice">YOUR PRACTICE SPACE</span></span><span class="lesson-number">LESSON 01</span></div>
-      <div class="panel-heading"><div><p class="eyebrow" data-i18n="lessonType">A SHORT READING</p><h2 id="panel-title">Read a short story</h2></div><span class="level-tag"><span class="level-dot"></span>A1 <span data-i18n="beginner">Beginner</span></span></div>
+      <div class="panel-heading"><div><p class="eyebrow" data-i18n="lessonType">A SHORT READING</p><h2 id="panel-title">Read a short story</h2></div><span id="lesson-level-tag" class="level-tag"><span class="level-dot"></span>A1 <span data-i18n="beginner">Beginner</span></span></div>
       <div class="lesson-divider"></div>
       <p id="lesson-text" class="lesson-text">Maya has a small garden. Every morning, she waters the flowers. A yellow bird visits the garden and sings in the tree. Maya feels happy when she hears the song.</p>
       <div class="reading-tip"><span class="tip-icon" aria-hidden="true">✦</span><p class="hint" data-i18n="tapHint">Tap a word in the story to explore its meaning.</p></div>
