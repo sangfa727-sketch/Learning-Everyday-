@@ -73,4 +73,5 @@ test("shared cursive stroke data covers all 52 letters and keeps lowercase a and
   }
   assert.notDeepEqual(cursivePathsFor("a"), cursivePathsFor("o"));
   assert.notEqual(splitCursiveStrokes(cursivePathsFor("a")).join("|"), splitCursiveStrokes(cursivePathsFor("o")).join("|"));
+  assert.ok(splitCursiveStrokes(cursivePathsFor("E")).length > cursivePathsFor("E").length, "multiple SVG move commands must become separate pen-down strokes");
 });
