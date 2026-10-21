@@ -1,17 +1,10 @@
-import { LEVELS, VOCABULARY_CATEGORIES, SKILL_PRACTICE, LETTER_GUIDES, ALPHABET, getPractice, getPracticeCount } from "./curriculum.js";
+import { LEVELS, VOCABULARY_CATEGORIES, SKILL_PRACTICE, LETTER_GUIDES, ALPHABET, CURSIVE_GLYPHS, getPractice, getPracticeCount } from "./curriculum.js";
 import { loadProgress, saveProgress, markPracticeComplete, clearProgress, exportProgress } from "./progress-state.js";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const ns = "http://www.w3.org/2000/svg";
 
-const SCRIPT_CURSIVE_GLYPHS = Object.freeze({
-  A: "𝒜", B: "ℬ", C: "𝒞", D: "𝒟", E: "ℰ", F: "ℱ", G: "𝒢", H: "ℋ", I: "ℐ",
-  J: "𝒥", K: "𝒦", L: "ℒ", M: "ℳ", N: "𝒩", O: "𝒪", P: "𝒫", Q: "𝒬", R: "ℛ",
-  S: "𝒮", T: "𝒯", U: "𝒰", V: "𝒱", W: "𝒲", X: "𝒳", Y: "𝒴", Z: "𝒵",
-  a: "𝒶", b: "𝒷", c: "𝒸", d: "𝒹", e: "ℯ", f: "𝒻", g: "ℊ", h: "𝒽", i: "𝒾",
-  j: "𝒿", k: "𝓀", l: "𝓁", m: "𝓂", n: "𝓃", o: "ℴ", p: "𝓅", q: "𝓆", r: "𝓇",
-  s: "𝓈", t: "𝓉", u: "𝓊", v: "𝓋", w: "𝓌", x: "𝓍", y: "𝓎", z: "𝓏"
-});
+
 let selectedCategory = VOCABULARY_CATEGORIES[0].id;
 let selectedLevel = "A1";
 let selectedExerciseIndex = 0;
@@ -276,7 +269,7 @@ function renderLetterGuide() {
     paths: []
   };
   const sample = $("#letter-sample");
-  sample.textContent = selectedStyle === "cursive" ? (SCRIPT_CURSIVE_GLYPHS[selectedLetter] ?? selectedLetter) : selectedLetter;
+  sample.textContent = selectedStyle === "cursive" ? (CURSIVE_GLYPHS[selectedLetter] ?? selectedLetter) : selectedLetter;
   sample.classList.remove("style-print", "style-cursive", "style-calligraphy");
   sample.classList.add(`style-${selectedStyle}`);
   $("#letter-style-note").textContent = styleInfo[selectedStyle][language];
