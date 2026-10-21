@@ -29,6 +29,18 @@ h1{font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.15;margin:22px 0 8px}h2{font
 .letter-picker-grid button[aria-pressed="true"]{background:#e3eee3;border-width:2px;border-color:var(--green)}
 @media(max-width:520px){.script-reference{grid-template-columns:1fr}.script-reference-stage,.script-reference-stage svg{height:160px;min-height:160px}.letter-picker-grid{gap:2px}.letter-picker-grid button{min-height:30px;padding:1px 0;font-size:.8rem}}
 @media(prefers-reduced-motion:reduce){.script-reference-glyph{animation:none!important;stroke-dashoffset:0!important}.script-reference-text.is-animating{animation:none;stroke-dashoffset:0;fill:rgba(71,123,98,.08)}}
+
+.path-editor-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;margin-top:12px}
+.path-editor-grid textarea{width:100%;min-height:105px;border:1px solid #cbd8cc;border-radius:10px;padding:10px;font:13px/1.5 ui-monospace,monospace;color:var(--ink);resize:vertical}
+.path-editor-stage{border:1px solid var(--line);border-radius:12px;background:repeating-linear-gradient(to bottom,#fff 0,#fff 42px,#e4ebe5 43px,#fff 44px);min-height:220px;overflow:hidden}
+.path-editor-stage svg{display:block;width:100%;height:220px;touch-action:none}
+.path-edit-path{fill:none;stroke:#477b62;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.path-edit-path.animating{stroke-dasharray:1;stroke-dashoffset:1;animation:path-edit-trace 1.1s ease-out forwards}
+.path-edit-point{fill:#fff;stroke:#b14f27;stroke-width:1.8;cursor:grab;touch-action:none;vector-effect:non-scaling-stroke}
+.path-edit-point:active{cursor:grabbing}.path-edit-label{font: bold 5px system-ui,sans-serif;fill:#8c3217;text-anchor:middle;pointer-events:none}
+.path-point-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;border:1px solid var(--line);border-radius:9px;padding:7px;margin-top:6px}.path-point-row strong{flex:1}.path-point-row button{min-height:32px;padding:4px 9px}
+@keyframes path-edit-trace{to{stroke-dashoffset:0}}
+@media(max-width:600px){.path-editor-grid{grid-template-columns:1fr}.path-editor-stage svg{height:200px}}
 </style>
 </head>
 <body><main>
@@ -58,6 +70,17 @@ h1{font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.15;margin:22px 0 8px}h2{font
 <div class="script-reference-stage"><svg id="script-reference-svg" viewBox="0 0 200 180" role="img" aria-label="Animated reference letter"><text id="script-reference-glyph" class="script-reference-text" x="100" y="88">𝒶</text></svg></div>
 <div class="script-reference-copy"><div class="sample-letter" id="script-reference-plain">a</div><strong id="script-reference-name">Lowercase a · Cursive</strong><p class="small" id="script-reference-note">နမူနာစာလုံးနှင့် animation ကို စစ်ဆေးပါ။</p><button id="replay-reference" type="button">နမူနာ Animation ပြန်ကြည့်</button></div>
 </div>
+</div>
+
+<div class="panel" id="paste-path-editor">
+<h2>Paste → Path → Animation Points → Code</h2>
+<p class="small">A–Z / a–z စာလုံးတစ်လုံးကို Paste လုပ်ပါ။ စာလုံးကို outline path အဖြစ်ပြောင်းပြီး နံပါတ်ပါ point များကို ဆွဲရွှေ့နိုင်သည်။ SVG path code ကို တိုက်ရိုက် Paste လုပ်လည်းရသည်။ Font မှ outline ပြောင်းခြင်းသည် လက်ရေး centerline ကို မခန့်မှန်းနိုင်သောကြောင့် ရလာသော path ကို စစ်ဆေးပြင်ဆင်ရန်လိုသည်။</p>
+<label for="paste-letter-input">စာလုံး သို့မဟုတ် SVG path ကို Paste လုပ်ရန်</label>
+<textarea id="paste-letter-input" placeholder="ဥပမာ: a  သို့မဟုတ် M 10 20 L 30 40 ..."></textarea>
+<div class="controls" style="margin-top:8px"><button id="convert-pasted-path" type="button">Path ဖန်တီး / ပြန်ဖန်တီး</button><button id="replay-pasted-path" class="secondary" type="button">Animation ကြည့်</button><button id="save-pasted-path" type="button">Code မှတ်တမ်းထုတ်</button></div>
+<p id="paste-path-status" class="status" role="status" aria-live="polite"></p>
+<div class="path-editor-grid"><div><h3 style="margin:0">Path နှင့် Animation points</h3><p class="small">အနီရောင် နံပါတ်အမှတ်ကို ဆွဲရွှေ့ပါ။ အမှတ်တစ်ခုစီသည် သက်ဆိုင်ရာ path ရဲ့ စတင်ရာနေရာကို သတ်မှတ်သည်။ Stroke အစဉ်ကို ↑ ↓ ဖြင့်ပြောင်းနိုင်သည်။</p><div class="path-editor-stage"><svg id="editable-path-svg" viewBox="0 0 100 100" role="img" aria-label="Editable letter path and numbered animation points"></svg></div><div id="path-point-list"></div></div>
+<div><h3 style="margin:0">ထုတ်ယူမည့် Path Code</h3><p class="small">SVG path နဲ့ animation point အစီအစဉ်ပါဝင်သော JSON ကို export လုပ်နိုင်သည်။</p><textarea id="generated-path-code" readonly placeholder="Path ဖန်တီးပြီးလျှင် code ဒီနေရာတွင် ပေါ်လာမည်။"></textarea><button id="copy-path-code" class="secondary" type="button" style="margin-top:8px">Code ကို Copy</button></div></div>
 </div>
 <div class="panel"><h2>မူရင်းလက်ရေးနှင့် ချောမွေ့ပြန်ဖော်မှု</h2><div class="preview">
 <div class="preview-box"><h3>မူရင်းလမ်းကြောင်း</h3><canvas id="original" class="preview-canvas" aria-label="Original captured strokes"></canvas></div>
@@ -134,6 +157,82 @@ function renderReference() {
   letterPicker.querySelectorAll("button").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.letter === letter)));
 }
 $("replay-reference").addEventListener("click", renderReference);
+
+// Paste-to-path editor: converts a pasted glyph to vector outline contours or accepts SVG path data.
+const pasteInput = $("paste-letter-input"), pathSvg = $("editable-path-svg");
+let editableContours = [], editableOrder = [], activePointDrag = null, pathAnimationToken = 0;
+const svgNS = "http://www.w3.org/2000/svg";
+function contourPath(points) { return points.map((p,i)=>(i?"L":"M")+p.x.toFixed(2)+" "+p.y.toFixed(2)).join(" ")+" Z"; }
+function simplifyContour(points) {
+  if (points.length < 4) return points;
+  const out=[];
+  for (let i=0;i<points.length;i++) { const a=points[(i+points.length-1)%points.length], b=points[i], c=points[(i+1)%points.length];
+    const cross=(b.x-a.x)*(c.y-b.y)-(b.y-a.y)*(c.x-b.x);
+    if (Math.abs(cross)>0.12 || i===0) out.push(b);
+  }
+  return out.length>=3?out:points;
+}
+function glyphContours(letter) {
+  const raster=document.createElement("canvas"); raster.width=128; raster.height=128;
+  const rctx=raster.getContext("2d",{willReadFrequently:true}); rctx.fillStyle="#fff"; rctx.fillRect(0,0,128,128);
+  rctx.fillStyle="#000"; rctx.textAlign="center"; rctx.textBaseline="middle";
+  const style=styleSelect.value;
+  rctx.font=style==="cursive"?'82px "Cambria Math","STIX Two Math","Noto Sans Math","Segoe UI Symbol",serif':style==="calligraphy"?'italic 82px cursive':'700 82px Arial,sans-serif';
+  const glyph=style==="cursive"?(CURSIVE_GLYPHS[letter]??letter):letter;
+  rctx.fillText(glyph,64,65);
+  const data=rctx.getImageData(0,0,128,128).data, occupied=new Uint8Array(128*128);
+  for(let y=0;y<128;y++) for(let x=0;x<128;x++){const i=(y*128+x)*4; if(data[i]<150&&data[i+3]>20) occupied[y*128+x]=1;}
+  const edges=[], byStart=new Map();
+  const add=(ax,ay,bx,by)=>{const e={a:{x:ax,y:ay},b:{x:bx,y:by},used:false};edges.push(e);const k=ax+","+ay;if(!byStart.has(k))byStart.set(k,[]);byStart.get(k).push(e);};
+  const ink=(x,y)=>x>=0&&x<128&&y>=0&&y<128&&occupied[y*128+x];
+  for(let y=0;y<128;y++)for(let x=0;x<128;x++)if(ink(x,y)){
+    if(!ink(x,y-1))add(x,y,x+1,y); if(!ink(x+1,y))add(x+1,y,x+1,y+1);
+    if(!ink(x,y+1))add(x+1,y+1,x,y+1); if(!ink(x-1,y))add(x,y+1,x,y);
+  }
+  const contours=[];
+  for(const first of edges){if(first.used)continue;const pts=[first.a];let edge=first,guard=0;
+    while(edge&&!edge.used&&guard++<20000){edge.used=true;pts.push(edge.b);if(edge.b.x===first.a.x&&edge.b.y===first.a.y)break;
+      const candidates=(byStart.get(edge.b.x+","+edge.b.y)||[]).filter(e=>!e.used); if(!candidates.length){edge=null;break;}
+      const dx=edge.b.x-edge.a.x,dy=edge.b.y-edge.a.y;
+      candidates.sort((p,q)=>{const score=e=>{const ex=e.b.x-e.a.x,ey=e.b.y-e.a.y;return Math.atan2(dx*ey-dy*ex,dx*ex+dy*ey)};return score(q)-score(p)}); edge=candidates[0];
+    }
+    if(pts.length>8){const mapped=pts.map(p=>({x:(p.x/128)*100,y:(p.y/128)*100}));const simple=simplifyContour(mapped);if(simple.length>2)contours.push({points:simple,start:0});}
+  }
+  return contours.sort((a,b)=>Math.abs(area(b.points))-Math.abs(area(a.points))).slice(0,24);
+}
+function area(points){let sum=0;for(let i=0;i<points.length;i++){const a=points[i],b=points[(i+1)%points.length];sum+=a.x*b.y-b.x*a.y;}return Math.abs(sum/2)}
+function parseSvgPath(raw){
+  const cleaned=raw.trim(); if(!/[Mm]/.test(cleaned)||!/^[\sMmLlHhVvCcSsQqTtAaZz0-9eE+.,-]+$/.test(cleaned))return null;
+  const chunks=cleaned.split(/(?=[Mm])/).map(s=>s.trim()).filter(Boolean);const result=[];
+  for(const d of chunks){const nums=d.match(/[-+]?(?:\d*\.\d+|\d+\.?\d*)(?:e[-+]?\d+)?/gi)?.map(Number)||[];if(nums.length<4||nums.length%2!==0)continue;const pts=[];for(let i=0;i<nums.length-1;i+=2)pts.push({x:Math.max(0,Math.min(100,nums[i])),y:Math.max(0,Math.min(100,nums[i+1]))});if(pts.length>1)result.push({points:pts,start:0});}
+  return result.length?result:null;
+}
+function rotateContour(contour){const pts=contour.points;const start=((contour.start||0)%pts.length+pts.length)%pts.length;return [...pts.slice(start),...pts.slice(0,start)];}
+function pathData(contour){return contourPath(rotateContour(contour));}
+function renderEditablePaths(animate=false){
+  pathAnimationToken++;const token=pathAnimationToken;pathSvg.replaceChildren();
+  editableOrder.forEach((idx,order)=>{const contour=editableContours[idx];if(!contour)return;const path=document.createElementNS(svgNS,"path");path.setAttribute("d",pathData(contour));path.setAttribute("class","path-edit-path"+(animate?" animating":""));path.setAttribute("pathLength","1");path.style.animationDelay=(order*650)+"ms";pathSvg.append(path);
+    const p=rotateContour(contour)[0];const circle=document.createElementNS(svgNS,"circle");circle.setAttribute("cx",p.x);circle.setAttribute("cy",p.y);circle.setAttribute("r","3");circle.setAttribute("class","path-edit-point");circle.dataset.contour=idx;pathSvg.append(circle);
+    const label=document.createElementNS(svgNS,"text");label.setAttribute("x",p.x);label.setAttribute("y",p.y-4);label.setAttribute("class","path-edit-label");label.textContent=String(order+1);pathSvg.append(label);
+  });
+  renderPointList(); updatePathCode();
+}
+function renderPointList(){const list=$("path-point-list");list.replaceChildren();editableOrder.forEach((idx,order)=>{const row=document.createElement("div");row.className="path-point-row";const label=document.createElement("strong");label.textContent=(order+1)+". Animation point · path "+(idx+1);const up=document.createElement("button");up.type="button";up.className="secondary";up.textContent="↑";up.disabled=order===0;up.onclick=()=>{[editableOrder[order-1],editableOrder[order]]=[editableOrder[order],editableOrder[order-1]];renderEditablePaths();};const down=document.createElement("button");down.type="button";down.className="secondary";down.textContent="↓";down.disabled=order===editableOrder.length-1;down.onclick=()=>{[editableOrder[order+1],editableOrder[order]]=[editableOrder[order],editableOrder[order+1]];renderEditablePaths();};row.append(label,up,down);list.append(row);});}
+function updatePathCode(){const letter=pasteInput.value.trim();const code={schemaVersion:1,kind:"learning-everyday-editable-letter-path",source:letter,style:styleSelect.value,paths:editableOrder.map((idx,order)=>({order:order+1,d:pathData(editableContours[idx]),startPoint:rotateContour(editableContours[idx])[0]}))};$("generated-path-code").value=editableContours.length?JSON.stringify(code,null,2):"";}
+function createPastedPath(){const raw=pasteInput.value.trim();if(!raw){$("paste-path-status").textContent="စာလုံးတစ်လုံး သို့မဟုတ် SVG path ကို အရင် Paste လုပ်ပါ။";return;}
+  let contours=parseSvgPath(raw),source="SVG path";if(!contours){const letters=[...raw].filter(ch=>/[A-Za-z]/.test(ch));if(letters.length!==1||[...raw].some(ch=>!/[A-Za-z\s]/.test(ch))){$("paste-path-status").textContent="A–Z / a–z စာလုံးတစ်လုံးတည်း သို့မဟုတ် SVG path data ကို ထည့်ပါ။";return;}const letter=letters[0];letterSelect.value=letter;captureLetter=letter;contours=glyphContours(letter);source="pasted glyph";}
+  if(!contours.length){$("paste-path-status").textContent="Path မဖန်တီးနိုင်ပါ။ ပိုရှင်းသော font/စာလုံးကို သုံးပါ သို့မဟုတ် SVG path data ကို Paste လုပ်ပါ။";return;}
+  editableContours=contours;editableOrder=contours.map((_,i)=>i);renderEditablePaths();$("paste-path-status").textContent=source+" မှ path "+contours.length+" ခု ဖန်တီးပြီးပါပြီ။ နံပါတ်အမှတ်ကို ဆွဲရွှေ့၍ start point ပြောင်းပါ။ Font outline သည် လက်ရေး centerline မဟုတ်ပါ။";
+}
+$("convert-pasted-path").addEventListener("click",createPastedPath);
+pasteInput.addEventListener("paste",()=>setTimeout(createPastedPath,0));
+pathSvg.addEventListener("pointerdown",event=>{const target=event.target;if(!target.classList.contains("path-edit-point"))return;activePointDrag=Number(target.dataset.contour);pathSvg.setPointerCapture?.(event.pointerId);event.preventDefault();});
+pathSvg.addEventListener("pointermove",event=>{if(activePointDrag===null)return;const rect=pathSvg.getBoundingClientRect();const x=Math.max(0,Math.min(100,(event.clientX-rect.left)/rect.width*100));const y=Math.max(0,Math.min(100,(event.clientY-rect.top)/rect.height*100));const contour=editableContours[activePointDrag];let best=0,dist=Infinity;contour.points.forEach((p,i)=>{const d=(p.x-x)**2+(p.y-y)**2;if(d<dist){dist=d;best=i;}});contour.start=best;renderEditablePaths();});
+pathSvg.addEventListener("pointerup",()=>{activePointDrag=null;});pathSvg.addEventListener("pointercancel",()=>{activePointDrag=null;});
+$("replay-pasted-path").addEventListener("click",()=>renderEditablePaths(true));
+$("save-pasted-path").addEventListener("click",()=>{if(!editableContours.length){$("paste-path-status").textContent="Code ထုတ်ရန် path ကို အရင်ဖန်တီးပါ။";return;}const blob=new Blob([$("generated-path-code").value],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="learning-everyday-letter-path.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);$("paste-path-status").textContent="Path နဲ့ animation point များပါသော JSON code ကို ထုတ်ပေးပြီးပါပြီ။";});
+$("copy-path-code").addEventListener("click",async()=>{const code=$("generated-path-code").value;if(!code){$("paste-path-status").textContent="Copy လုပ်ရန် code မရှိသေးပါ။";return;}try{await navigator.clipboard.writeText(code);$("paste-path-status").textContent="Path code ကို Copy လုပ်ပြီးပါပြီ။";}catch{$("generated-path-code").focus();$("generated-path-code").select();$("paste-path-status").textContent="အလိုအလျောက် Copy မရပါ။ Code အကွက်ကို select လုပ်ထားပါတယ်။ Copy လုပ်ပါ။";}});
+
 let strokes = [], activeStroke = null, drawing = false, replayToken = 0, sampleStartedAt = 0;
 const penModeSelect = $("pen-mode"), stabilizerInput = $("stabilizer");
 const strength = () => Number(stabilizerInput.value) / 100;
