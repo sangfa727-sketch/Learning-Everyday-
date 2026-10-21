@@ -159,7 +159,7 @@ function renderLetterGuide() {
   start.setAttribute("r", "3");
   start.setAttribute("class", "letter-start-dot");
   if (guide.paths.length) svg.append(start);
-  $("#letter-stroke-count").textContent = selectedStyle === "print"
+  $("#letter-stroke-count").textContent = guide.paths.length && selectedStyle === "print"
     ? (language === "my" ? `မျဉ်း ${guide.paths.length} ကြောင်း · တစ်ကြောင်းချင်း လှုပ်ရှားမှုကို ကြည့်ပါ` : `${guide.paths.length} strokes · Watch each movement in order`)
     : (language === "my" ? (guide.paths.length ? "လှုပ်ရှားမှုသည် ပုံနှိပ်စာလုံးအခြေခံလမ်းညွှန်ဖြစ်သည်။ စတိုင်အလိုက် အထက်ပါညွှန်ကြားချက်ကို လိုက်နာပါ။" : "ဤစာလုံးအတွက် လမ်းညွှန်ပုံစံကို ပြထားသည်။ အောက်ရှိ tracing board တွင် လိုက်ရေးပါ။") : (guide.paths.length ? "Animation is the print reference; follow the style-specific directions above." : "Template preview only; trace the letter on the practice board below."));
   renderTraceTemplate();
