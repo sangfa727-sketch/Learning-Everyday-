@@ -246,3 +246,14 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
     $("#status-message").textContent = "Offline caching could not be enabled in this browser.";
   }));
 }
+
+
+// Hide the Smart Writing Lab entry after the learner explicitly exports a sample.
+// The flag stays on this device only; the lab remains directly accessible by URL.
+try {
+  if (window.localStorage.getItem("le.writingLab.sampleExported") === "1") {
+    document.querySelector('a[href="./writing-lab.html"]')?.setAttribute("hidden", "");
+  }
+} catch {
+  // Storage may be unavailable in private browsing; keep the link visible.
+}
