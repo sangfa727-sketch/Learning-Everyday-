@@ -62,3 +62,17 @@ test("Listening Practice opens with a story library before the story reader", ()
   assert.match(css, /\.listening-story-grid\s*\{[^}]*grid-template-columns: repeat\(3/);
   assert.match(css, /@media \(max-width: 560px\)/);
 });
+
+
+test("Tapping a story word exposes pronunciation and Myanmar meaning controls", () => {
+  assert.match(html, /id="pronounce-word"/);
+  assert.match(html, /id="word-myanmar-translation"/);
+  assert.match(app, /function pronounceWord\(word\)/);
+  assert.match(app, /new SpeechSynthesisUtterance\(word\)/);
+  assert.match(app, /function showWord\(word\)/);
+  assert.match(app, /entry\?\.my/);
+  assert.match(app, /pronounceWord\(word\)/);
+  assert.match(app, /#pronounce-word.*pronounceWord/);
+  assert.match(css, /\.word-myanmar-translation/);
+  assert.match(css, /\.word-card-actions/);
+});
