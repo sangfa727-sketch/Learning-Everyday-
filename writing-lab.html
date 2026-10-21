@@ -76,9 +76,9 @@ function drawTarget(context, width, height, letter, style) {
   context.font = style === "print" ? "700 " + Math.min(height * 0.78, width * 0.42) + "px system-ui, sans-serif" : "italic 700 " + Math.min(height * 0.78, width * 0.42) + "px cursive";
   context.fillText(letter, width / 2, height / 2); context.restore();
 }
-function drawStroke(context, stroke, width, height, smooth = false, progress = 1) {
-  const mode = penModeSelect.value;
-  const useSmooth = strength() > 0 && (smooth || mode === "stabilized" || mode === "curve");
+function drawStroke(context, stroke, width, height, smooth = false, progress = 1, raw = false) {
+  const mode = raw ? "freehand" : penModeSelect.value;
+  const useSmooth = !raw && strength() > 0 && (smooth || mode === "stabilized" || mode === "curve");
   const useCurve = mode === "curve" && strength() > 0;
   const points = useSmooth ? smoothPoints(stroke.points, strength()) : stroke.points;
   if (!points.length) return;
@@ -120,7 +120,7 @@ function drawStroke(context, stroke, width, height, smooth = false, progress = 1
 function paintCanvas(el, context, source, smooth) {
   const rect = el.getBoundingClientRect(); context.clearRect(0, 0, rect.width, rect.height);
   if (el === canvas) drawTarget(context, rect.width, rect.height, captureLetter, captureStyle);
-  source.forEach((stroke) => drawStroke(context, stroke, rect.width, rect.height, smooth));
+  source.forEach((stroke) => drawStroke(context, stroke, rect.width, rect.height, smooth, 1, el === originalCanvas));
 }
 function render() {
   paintCanvas(canvas, ctx, strokes, false);
