@@ -11,6 +11,8 @@ test("Smart Writing Lab paste-to-path editor exposes conversion, draggable order
     assert.match(html, new RegExp('id="' + id + '"'), "missing editor control: " + id);
   }
   assert.match(html, /function glyphContours\(letter\)/);
+  assert.match(html, /normalizePastedLetter\(raw\)/);
+  assert.match(html, /writing-lab-unicode\.js/);
   assert.match(html, /function parseSvgPath\(raw\)/);
   assert.match(html, /const master=document\.createElementNS\(svgNS,"path"\)/);
   assert.match(html, /box=master\.getBBox\(\)/);
