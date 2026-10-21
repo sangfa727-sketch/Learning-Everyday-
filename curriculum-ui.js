@@ -1,10 +1,11 @@
-import { LEVELS, VOCABULARY_CATEGORIES, SKILL_PRACTICE, LETTER_GUIDES, ALPHABET, getPractice } from "./curriculum.js";
+import { LEVELS, VOCABULARY_CATEGORIES, SKILL_PRACTICE, LETTER_GUIDES, ALPHABET, getPractice, getPracticeCount } from "./curriculum.js";
 import { loadProgress, saveProgress, markPracticeComplete, clearProgress, exportProgress } from "./progress-state.js";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const ns = "http://www.w3.org/2000/svg";
 let selectedCategory = VOCABULARY_CATEGORIES[0].id;
 let selectedLevel = "A1";
+let selectedExerciseIndex = 0;
 let selectedLetter = "A";
 let selectedStyle = "print";
 let selectedWord = null;
@@ -33,7 +34,7 @@ function categoryLabel(category) {
   return language === "my" ? category.my : category.en;
 }
 function activePractice() {
-  return getPractice(activeSkill, selectedLevel);
+  return getPractice(activeSkill, selectedLevel, selectedExerciseIndex) ?? getPractice(activeSkill, selectedLevel, 0);
 }
 function setStatus(message) {
   const node = $("#curriculum-status");
@@ -105,9 +106,11 @@ function renderPractice() {
   $("#level-practice-answer").placeholder = language === "my" ? "ဤနေရာတွင် လေ့ကျင့်ပါ…" : "Write your answer or notes here…";
   $("#practice-answer-wrap").hidden = activeSkill !== "writing" && activeSkill !== "reading";
   $("#practice-speaking-note").hidden = activeSkill !== "speaking";
-  $("#practice-action").textContent = activeSkill === "speaking"
-    ? (language === "my" ? "ဝါကျကို နားထောင်ရန်" : "Listen to model")
-    : (language === "my" ? "နမူနာကို နားထောင်ရန်" : "Listen to model");
+  $("#practice-action").textContent = language === "my" ? "နမူနာအသံ နားထောင်ရန်" : "Listen to model";
+  const nextButton = $("#next-practice");
+  if (nextButton) { nextButton.hidden = getPracticeCount(activeSkill, selectedLevel) < 2; nextButton.textContent = language === "my" ? "နောက်လေ့ကျင့်ခန်း →" : "Next exercise →"; }
+  const number = $("#practice-exercise-number");
+  if (number) number.textContent = language === "my" ? "လေ့ကျင့်ခန်း " + (selectedExerciseIndex + 1) + "/" + getPracticeCount(activeSkill, selectedLevel) : "Exercise " + (selectedExerciseIndex + 1) + " of " + getPracticeCount(activeSkill, selectedLevel);
 }
 
 function makeSvgPath(d, index) {
@@ -307,6 +310,7 @@ function setLanguage(next) {
 
 document.querySelectorAll("[data-skill]").forEach((button) => button.addEventListener("click", () => {
   activeSkill = button.dataset.skill;
+  selectedExerciseIndex = 0;
   renderPractice();
 }));
 $("#vocabulary-category").addEventListener("change", (event) => {
@@ -317,8 +321,26 @@ $("#vocabulary-category").addEventListener("change", (event) => {
 });
 $("#practice-level").addEventListener("change", (event) => {
   selectedLevel = event.target.value;
+  selectedExerciseIndex = 0;
   renderPractice();
 });
+$("#next-practice").addEventListener("click", () => {
+  const count = getPracticeCount(activeSkill, selectedLevel);
+  if (count < 2) return;
+  selectedExerciseIndex = (selectedExerciseIndex + 1) % count;
+  renderPractice();
+});
+
+function preferredEnglishVoice() {
+  if (!("speechSynthesis" in window)) return null;
+  const voices = window.speechSynthesis.getVoices();
+  const select = $("#voice-select");
+  const selected = select && select.value !== "" ? voices[Number(select.value)] : null;
+  if (selected && /^en([_-]|$)/i.test(selected.lang)) return selected;
+  const english = voices.filter((voice) => /^en([_-]|$)/i.test(voice.lang));
+  return english.find((voice) => /natural|neural|online|google|microsoft|samantha|aria|jenny|guy|ava/i.test(voice.name)) ?? english.find((voice) => /^en-US$/i.test(voice.lang)) ?? english[0] ?? null;
+}
+
 $("#practice-action").addEventListener("click", () => {
   const text = activePractice().prompt;
   if (!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) {
@@ -327,8 +349,10 @@ $("#practice-action").addEventListener("click", () => {
   }
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "en-US";
-  utterance.rate = 0.9;
+  const voice = preferredEnglishVoice();
+  utterance.lang = voice?.lang || "en-US";
+  if (voice) utterance.voice = voice;
+  utterance.rate = Number($("#speech-speed")?.value || 0.9);
   utterance.onstart = () => setStatus(language === "my" ? "လေ့ကျင့်ခန်းကို နားထောင်နေသည်…" : "Playing the model sentence…");
   utterance.onend = () => setStatus(language === "my" ? "နားထောင်ပြီး လိုက်လေ့ကျင့်ပါ။" : "Now repeat or answer the exercise.");
   window.speechSynthesis.speak(utterance);
