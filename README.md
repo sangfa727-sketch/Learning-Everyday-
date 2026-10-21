@@ -7,16 +7,16 @@ A mobile-first, offline-first English-learning Progressive Web App (PWA) for Mya
 - Responsive app shell for phone and desktop screens.
 - English/Myanmar interface toggle.
 - Sample A1 reading story with keyboard-accessible word buttons.
-- Topic-based vocabulary in household, electrical appliances, kitchen, food and drink, clothing, and school categories, with Myanmar meanings and example sentences.
-- Levelled reading, listening, writing, and speaking exercises across A1–C2 (Beginner to Proficient).
-- Letter-writing studio with animated sample stroke paths for A/a, B/b, and C/c; print, cursive, and calligraphy guidance.
+- Topic-based vocabulary across 11 everyday categories (88 words), with Myanmar meanings and example sentences.
+- Two distinct reading, listening, writing, and speaking exercises for every CEFR level from A1 to C2 (48 skill-level exercises total).
+- Letter-writing studio with animated stroke guides for A/a, B/b, and C/c; template tracing for all 52 uppercase/lowercase letters; print, cursive, and calligraphy guidance. Full stroke-order animation for the remaining letters is still planned.
 - Conservative offline lookup for common inflected words (for example, `flowers` → `flower`).
 - Device text-to-speech with speed controls and stop action; voice availability depends on the browser and installed voices.
 - Local PDF text extraction (up to 15 MB and 50 pages), page-by-page reading, selectable word lookup, and device TTS; PDF bytes and extracted text are processed in memory on the device and are not uploaded. Scanned/image-only PDFs are detected and reported because OCR is not included.
 - Writing practice with a Unicode-aware character counter and locally saved draft.
 - Local persistence for interface language and writing draft, with storage failures handled safely.
 - Optional browser speech-recognition practice where supported; it is not required for core use.
-- PWA manifest, app icon, service worker, and app-shell caching.
+- PWA manifest, app icon, service worker, and versioned app-shell caching for all local JavaScript modules, including locally stored progress.
 - Zero-dependency Node.js unit tests and GitHub Actions test workflow.
 
 ## UI/UX design direction
@@ -50,19 +50,19 @@ Serve the repository over localhost or HTTPS to test service-worker registration
 1. [x] Establish mobile-first shell, bilingual toggle, sample reading, local dictionary lookup, device TTS, writing and optional speaking practice.
 2. [x] Refine dashboard hierarchy, responsive skill cards, lesson controls, accessibility focus states, and offline-safe typography.
 3. [x] Add app-shell caching, manifest, and baseline unit tests.
-4. [ ] Verify CI and perform browser/device accessibility and offline smoke tests.
+4. [ ] Verify CI and complete manual browser/device accessibility, offline reload, and Android voice/rotation smoke tests.
 5. [x] Add local PDF text extraction; explicitly detect and explain scanned/image-only PDFs.
-6. [x] Add categorized everyday vocabulary and an initial A1–C2 exercise for each of the four skills; continue expanding topic coverage and grammar.
+6. [x] Add 11 everyday vocabulary categories and two exercises for each skill at every A1–C2 level; continue expanding topic coverage and grammar.
 7. [ ] Expand animated stroke-order guides across the full alphabet and add interactive uppercase/lowercase, cursive, and calligraphy tracing.
 8. [ ] Improve speaking practice with a clear capability boundary for browser speech recognition versus offline pronunciation support.
-9. [ ] Add progress persistence and export/clear controls with privacy-conscious local storage.
+9. [x] Add privacy-conscious local progress persistence, JSON export, and an explicit-confirmation clear control.
 10. [ ] Evaluate Capacitor packaging for Android APK after core PWA behavior is stable.
 
 ## Known limitations
 
 - OCR, full-alphabet stroke-order animation, interactive handwriting tracing, persistent progress, and APK packaging are not implemented yet. Cursive and calligraphy currently provide style guidance and previews rather than a full pen-pressure simulator. PDF parsing loads its library from a pinned CDN on first use; the service worker caches the two pinned parser assets for later offline use after a successful online load.
 - Browser speech recognition may send audio to a browser/vendor service and may require internet; it is optional and is not advertised as an offline capability.
-- The starter dictionary is a learning prototype, not a comprehensive dictionary.
+- The starter dictionary is a learning prototype, not a comprehensive dictionary. Vocabulary coverage and exercise variety are still being expanded.
 - A PWA normally needs HTTPS for installation/service workers outside localhost. A separately packaged APK can be installed without a domain, but needs an Android build/signing and distribution workflow.
 
 ## Quality checks
