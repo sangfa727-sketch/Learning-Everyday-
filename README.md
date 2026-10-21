@@ -7,7 +7,7 @@ A mobile-first, offline-first English-learning Progressive Web App (PWA) for Mya
 - Responsive app shell for phone and desktop screens.
 - English/Myanmar interface toggle.
 - Sample A1 reading story with keyboard-accessible word buttons.
-- Topic-based vocabulary across 11 everyday categories (88 words), with Myanmar meanings and example sentences.
+- Topic-based vocabulary across 16 everyday categories (128 words), with Myanmar meanings and example sentences.
 - Two distinct reading, listening, writing, and speaking exercises for every CEFR level from A1 to C2 (48 skill-level exercises total).
 - Letter-writing studio with animated stroke guides for A/a, B/b, and C/c; template tracing for all 52 uppercase/lowercase letters; print, cursive, and calligraphy guidance. Full stroke-order animation for the remaining letters is still planned.
 - Conservative offline lookup for common inflected words (for example, `flowers` → `flower`).
@@ -52,7 +52,7 @@ Serve the repository over localhost or HTTPS to test service-worker registration
 3. [x] Add app-shell caching, manifest, and baseline unit tests.
 4. [ ] Verify CI and complete manual browser/device accessibility, offline reload, and Android voice/rotation smoke tests.
 5. [x] Add local PDF text extraction; explicitly detect and explain scanned/image-only PDFs.
-6. [x] Add 11 everyday vocabulary categories and two exercises for each skill at every A1–C2 level; continue expanding topic coverage and grammar.
+6. [x] Add 16 everyday vocabulary categories and two exercises for each skill at every A1–C2 level; continue expanding topic coverage and grammar.
 7. [ ] Expand animated stroke-order guides across the full alphabet and add interactive uppercase/lowercase, cursive, and calligraphy tracing.
 8. [ ] Improve speaking practice with a clear capability boundary for browser speech recognition versus offline pronunciation support.
 9. [x] Add privacy-conscious local progress persistence, JSON export, and an explicit-confirmation clear control.
