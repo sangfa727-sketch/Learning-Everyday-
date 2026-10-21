@@ -196,7 +196,8 @@ function renderTraceTemplate() {
   context.strokeStyle = "rgba(90, 124, 91, 0.28)";
   context.strokeText(selectedLetter, rect.width / 2, rect.height * 0.76);
 }
-\nfunction renderLetterOptions() {
+
+function renderLetterOptions() {
   const letterSelect = $("#letter-select");
   letterSelect.replaceChildren();
   for (const letter of ALPHABET) {
