@@ -12,6 +12,10 @@ test("Smart Writing Lab paste-to-path editor exposes conversion, draggable order
   }
   assert.match(html, /function glyphContours\(letter\)/);
   assert.match(html, /function parseSvgPath\(raw\)/);
+  assert.match(html, /const master=document\.createElementNS\(svgNS,"path"\)/);
+  assert.match(html, /const authored=styleSelect\.value==="cursive"\?cursivePathsFor\(letter\):null/);
+  assert.match(html, /hand-authored cursive centerline/);
+  assert.match(html, /preserve multi-path geometry/);
   assert.match(html, /path\.getPointAtLength\(length\*i\/count\)/);
   assert.match(html, /pathSvg\.addEventListener\("pointermove"/);
   assert.match(html, /getScreenCTM\(\)\.inverse\(\)/);
