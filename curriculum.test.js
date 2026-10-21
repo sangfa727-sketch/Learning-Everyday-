@@ -1,12 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { LEVELS, VOCABULARY_CATEGORIES, SKILL_PRACTICE, LETTER_GUIDES, ALPHABET, getPractice } from "./curriculum.js";
+import { LEVELS, VOCABULARY_CATEGORIES, SKILL_PRACTICE, EXTRA_SKILL_PRACTICE, LETTER_GUIDES, ALPHABET, getPractice, getPracticeCount } from "./curriculum.js";
 
 test("vocabulary categories have unique ids and bilingual words with examples", () => {
-  assert.ok(VOCABULARY_CATEGORIES.length >= 5);
+  assert.ok(VOCABULARY_CATEGORIES.length >= 10);
   assert.equal(new Set(VOCABULARY_CATEGORIES.map((category) => category.id)).size, VOCABULARY_CATEGORIES.length);
   for (const category of VOCABULARY_CATEGORIES) {
-    assert.ok(category.en && category.my && category.words.length >= 5);
+    assert.ok(category.en && category.my && category.words.length >= 8);
     for (const [word, meaning, example] of category.words) assert.ok(word && meaning && example);
   }
 });
@@ -20,6 +20,21 @@ test("all four skills have a non-empty exercise for every CEFR level", () => {
   }
   assert.equal(getPractice("speaking", "C2").title, "Discuss trade-offs");
   assert.equal(getPractice("unknown", "A1"), null);
+});
+
+test("every skill and CEFR level has a second bilingual practice exercise", () => {
+  for (const skillName of ["reading", "listening", "writing", "speaking"]) {
+    for (const level of LEVELS) {
+      const first = getPractice(skillName, level.id, 0);
+      const second = getPractice(skillName, level.id, 1);
+      assert.ok(first && second, skillName + " " + level.id + " should have two exercises");
+      assert.notEqual(first.prompt, second.prompt);
+      assert.ok(second.title && second.task && second.myTask);
+      assert.equal(getPracticeCount(skillName, level.id), 2);
+      assert.equal(EXTRA_SKILL_PRACTICE[skillName][level.id].prompt, second.prompt);
+    }
+  }
+  assert.equal(getPractice("reading", "A1", 2), null);
 });
 
 test("letter guides have animated stroke paths and bilingual start instructions", () => {

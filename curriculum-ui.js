@@ -1,10 +1,11 @@
-import { LEVELS, VOCABULARY_CATEGORIES, SKILL_PRACTICE, LETTER_GUIDES, ALPHABET, getPractice } from "./curriculum.js";
+import { LEVELS, VOCABULARY_CATEGORIES, SKILL_PRACTICE, LETTER_GUIDES, ALPHABET, getPractice, getPracticeCount } from "./curriculum.js";
 import { loadProgress, saveProgress, markPracticeComplete, clearProgress, exportProgress } from "./progress-state.js";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const ns = "http://www.w3.org/2000/svg";
 let selectedCategory = VOCABULARY_CATEGORIES[0].id;
 let selectedLevel = "A1";
+let selectedExerciseIndex = 0;
 let selectedLetter = "A";
 let selectedStyle = "print";
 let selectedWord = null;
@@ -33,7 +34,7 @@ function categoryLabel(category) {
   return language === "my" ? category.my : category.en;
 }
 function activePractice() {
-  return getPractice(activeSkill, selectedLevel);
+  return getPractice(activeSkill, selectedLevel, selectedExerciseIndex) ?? getPractice(activeSkill, selectedLevel, 0);
 }
 function setStatus(message) {
   const node = $("#curriculum-status");
@@ -105,9 +106,11 @@ function renderPractice() {
   $("#level-practice-answer").placeholder = language === "my" ? "ဤနေရာတွင် လေ့ကျင့်ပါ…" : "Write your answer or notes here…";
   $("#practice-answer-wrap").hidden = activeSkill !== "writing" && activeSkill !== "reading";
   $("#practice-speaking-note").hidden = activeSkill !== "speaking";
-  $("#practice-action").textContent = activeSkill === "speaking"
-    ? (language === "my" ? "ဝါကျကို နားထောင်ရန်" : "Listen to model")
-    : (language === "my" ? "နမူနာကို နားထောင်ရန်" : "Listen to model");
+  $("#practice-action").textContent = language === "my" ? "နမူနာအသံ နားထောင်ရန်" : "Listen to model";
+  const nextButton = $("#next-practice");
+  if (nextButton) { nextButton.hidden = getPracticeCount(activeSkill, selectedLevel) < 2; nextButton.textContent = language === "my" ? "နောက်လေ့ကျင့်ခန်း →" : "Next exercise →"; }
+  const number = $("#practice-exercise-number");
+  if (number) number.textContent = language === "my" ? "လေ့ကျင့်ခန်း " + (selectedExerciseIndex + 1) + "/" + getPracticeCount(activeSkill, selectedLevel) : "Exercise " + (selectedExerciseIndex + 1) + " of " + getPracticeCount(activeSkill, selectedLevel);
 }
 
 function makeSvgPath(d, index) {
@@ -196,6 +199,27 @@ function renderTraceTemplate() {
   context.lineWidth = 1.5;
   context.strokeStyle = "rgba(90, 124, 91, 0.28)";
   context.strokeText(selectedLetter, rect.width / 2, rect.height * 0.76);
+
+  // Repaint learner strokes after the canvas backing store is resized.
+  for (const stroke of traceStrokes) {
+    if (stroke.points.length < 1) continue;
+    context.beginPath();
+    context.strokeStyle = stroke.style === "calligraphy" ? "#24554a" : "#477b62";
+    context.lineWidth = stroke.style === "calligraphy" ? 5 : stroke.style === "cursive" ? 3.5 : 4;
+    context.lineCap = "round";
+    context.lineJoin = "round";
+    stroke.points.forEach((point, index) => {
+      const x = point.x * rect.width;
+      const y = point.y * rect.height;
+      if (index === 0) context.moveTo(x, y);
+      else context.lineTo(x, y);
+    });
+    if (stroke.points.length === 1) {
+      const point = stroke.points[0];
+      context.lineTo(point.x * rect.width + 0.1, point.y * rect.height + 0.1);
+    }
+    context.stroke();
+  }
 }
 
 function renderLetterOptions() {
@@ -286,6 +310,7 @@ function setLanguage(next) {
 
 document.querySelectorAll("[data-skill]").forEach((button) => button.addEventListener("click", () => {
   activeSkill = button.dataset.skill;
+  selectedExerciseIndex = 0;
   renderPractice();
 }));
 $("#vocabulary-category").addEventListener("change", (event) => {
@@ -296,8 +321,26 @@ $("#vocabulary-category").addEventListener("change", (event) => {
 });
 $("#practice-level").addEventListener("change", (event) => {
   selectedLevel = event.target.value;
+  selectedExerciseIndex = 0;
   renderPractice();
 });
+$("#next-practice").addEventListener("click", () => {
+  const count = getPracticeCount(activeSkill, selectedLevel);
+  if (count < 2) return;
+  selectedExerciseIndex = (selectedExerciseIndex + 1) % count;
+  renderPractice();
+});
+
+function preferredEnglishVoice() {
+  if (!("speechSynthesis" in window)) return null;
+  const voices = window.speechSynthesis.getVoices();
+  const select = $("#voice-select");
+  const selected = select && select.value !== "" ? voices[Number(select.value)] : null;
+  if (selected && /^en([_-]|$)/i.test(selected.lang)) return selected;
+  const english = voices.filter((voice) => /^en([_-]|$)/i.test(voice.lang));
+  return english.find((voice) => /natural|neural|online|google|microsoft|samantha|aria|jenny|guy|ava/i.test(voice.name)) ?? english.find((voice) => /^en-US$/i.test(voice.lang)) ?? english[0] ?? null;
+}
+
 $("#practice-action").addEventListener("click", () => {
   const text = activePractice().prompt;
   if (!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) {
@@ -306,44 +349,67 @@ $("#practice-action").addEventListener("click", () => {
   }
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "en-US";
-  utterance.rate = 0.9;
+  const voice = preferredEnglishVoice();
+  utterance.lang = voice?.lang || "en-US";
+  if (voice) utterance.voice = voice;
+  utterance.rate = Number($("#speech-speed")?.value || 0.9);
   utterance.onstart = () => setStatus(language === "my" ? "လေ့ကျင့်ခန်းကို နားထောင်နေသည်…" : "Playing the model sentence…");
   utterance.onend = () => setStatus(language === "my" ? "နားထောင်ပြီး လိုက်လေ့ကျင့်ပါ။" : "Now repeat or answer the exercise.");
   window.speechSynthesis.speak(utterance);
 });
-$("#letter-select").addEventListener("change", (event) => { selectedLetter = event.target.value; renderLetterGuide(); });
-$("#letter-style").addEventListener("change", (event) => { selectedStyle = event.target.value; renderLetterGuide(); });
+$("#letter-select").addEventListener("change", (event) => {
+  selectedLetter = event.target.value;
+  traceStrokes = [];
+  renderLetterGuide();
+});
+$("#letter-style").addEventListener("change", (event) => {
+  selectedStyle = event.target.value;
+  traceStrokes = [];
+  renderLetterGuide();
+});
 $("#replay-letter").addEventListener("click", () => { renderLetterGuide(); setStatus(language === "my" ? "လမ်းညွှန်ကို ပြန်ဖော်ပြပြီးပါပြီ။ အောက်တွင် လက်ဖြင့်လိုက်ရေးပါ။" : "Guide refreshed. Trace the faint letter on the board below."); });
 
 const tracingCanvas = $("#letter-tracing");
 let traceDrawing = false;
 let traceLastPoint = null;
+let traceStrokes = [];
 tracingCanvas.addEventListener("pointerdown", (event) => {
   const rect = tracingCanvas.getBoundingClientRect();
   const context = tracingCanvas.getContext("2d");
-  if (!context) return;
+  if (!context || !rect.width || !rect.height) return;
   traceDrawing = true;
   traceLastPoint = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+  traceStrokes.push({
+    style: selectedStyle,
+    points: [{ x: traceLastPoint.x / rect.width, y: traceLastPoint.y / rect.height }]
+  });
   tracingCanvas.setPointerCapture(event.pointerId);
-  context.beginPath(); context.moveTo(traceLastPoint.x, traceLastPoint.y);
+  context.beginPath();
+  context.moveTo(traceLastPoint.x, traceLastPoint.y);
 });
 tracingCanvas.addEventListener("pointermove", (event) => {
   if (!traceDrawing || !traceLastPoint) return;
   const rect = tracingCanvas.getBoundingClientRect();
   const context = tracingCanvas.getContext("2d");
-  if (!context) return;
+  if (!context || !rect.width || !rect.height) return;
   const point = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+  const stroke = traceStrokes[traceStrokes.length - 1];
+  stroke.points.push({ x: point.x / rect.width, y: point.y / rect.height });
   context.strokeStyle = selectedStyle === "calligraphy" ? "#24554a" : "#477b62";
   context.lineWidth = selectedStyle === "calligraphy" ? 5 : selectedStyle === "cursive" ? 3.5 : 4;
-  context.lineCap = "round"; context.lineJoin = "round";
-  context.lineTo(point.x, point.y); context.stroke();
+  context.lineCap = "round";
+  context.lineJoin = "round";
+  context.lineTo(point.x, point.y);
+  context.stroke();
   traceLastPoint = point;
 });
 const stopTrace = () => { traceDrawing = false; traceLastPoint = null; };
 tracingCanvas.addEventListener("pointerup", stopTrace);
 tracingCanvas.addEventListener("pointercancel", stopTrace);
-$("#clear-tracing").addEventListener("click", () => renderTraceTemplate());
+$("#clear-tracing").addEventListener("click", () => {
+  traceStrokes = [];
+  renderTraceTemplate();
+});
 window.addEventListener("resize", () => renderTraceTemplate());
 
 $("#complete-practice").addEventListener("click", () => {

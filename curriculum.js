@@ -11,32 +11,48 @@ export const VOCABULARY_CATEGORIES = [
   { id: "home", en: "Household items", my: "အိမ်သုံးပစ္စည်းများ", words: [
     ["chair", "ကုလားထိုင်", "Please sit on the chair."], ["table", "စားပွဲ", "The keys are on the table."],
     ["lamp", "မီးအိမ်", "Turn on the lamp."], ["mirror", "မှန်", "The mirror is beside the door."],
-    ["pillow", "ခေါင်းအုံး", "I need a soft pillow."], ["blanket", "စောင်", "The blanket is warm."]
+    ["pillow", "ခေါင်းအုံး", "I need a soft pillow."], ["blanket", "စောင်", "The blanket is warm."], ["shelf", "စင်", "Put the books on the shelf."], ["curtain", "လိုက်ကာ", "Close the curtain at night."]
   ]},
   { id: "electrical", en: "Electrical appliances", my: "လျှပ်စစ်ပစ္စည်းများ", words: [
     ["fan", "ပန်ကာ", "The fan is running."], ["refrigerator", "ရေခဲသေတ္တာ", "Keep the milk in the refrigerator."],
     ["washing machine", "အဝတ်လျှော်စက်", "The washing machine is full."], ["television", "ရုပ်မြင်သံကြား", "We watch television at night."],
-    ["iron", "မီးပူ", "The iron is hot."], ["charger", "အားသွင်းကိရိယာ", "My phone charger is here."]
+    ["iron", "မီးပူ", "The iron is hot."], ["charger", "အားသွင်းကိရိယာ", "My phone charger is here."], ["microwave", "မိုက်ခရိုဝေ့ဖ်", "Heat the soup in the microwave."], ["vacuum cleaner", "ဖုန်စုပ်စက်", "Use the vacuum cleaner on the carpet."]
   ]},
   { id: "kitchen", en: "Kitchen", my: "မီးဖိုချောင်", words: [
     ["spoon", "ဇွန်း", "Use a spoon to stir the soup."], ["fork", "ခက်ရင်း", "Put the fork beside the plate."],
     ["knife", "ဓား", "This knife is sharp."], ["plate", "ပန်းကန်ပြား", "The plate is clean."],
-    ["kettle", "ရေနွေးအိုး", "The kettle is boiling."], ["frying pan", "ဒယ်အိုး", "Heat the frying pan."]
+    ["kettle", "ရေနွေးအိုး", "The kettle is boiling."], ["frying pan", "ဒယ်အိုး", "Heat the frying pan."], ["cutting board", "လှီးဖြတ်ဘုတ်", "Place the carrot on the cutting board."], ["spatula", "ဟင်းလှန်ဇွန်း", "Use a spatula to turn the egg."]
   ]},
   { id: "food", en: "Food and drink", my: "အစားအစာနှင့် သောက်စရာ", words: [
     ["rice", "ထမင်း၊ ဆန်", "We eat rice for lunch."], ["bread", "ပေါင်မုန့်", "I would like some bread."],
     ["water", "ရေ", "Please drink more water."], ["milk", "နို့", "The child drinks milk."],
-    ["vegetable", "ဟင်းသီးဟင်းရွက်", "Fresh vegetables are healthy."], ["fruit", "သစ်သီး", "Fruit makes a good snack."]
+    ["vegetable", "ဟင်းသီးဟင်းရွက်", "Fresh vegetables are healthy."], ["fruit", "သစ်သီး", "Fruit makes a good snack."], ["egg", "ကြက်ဥ", "I eat an egg for breakfast."], ["juice", "ဖျော်ရည်", "Would you like a glass of juice?"]
   ]},
   { id: "clothing", en: "Clothing", my: "အဝတ်အစား", words: [
     ["shirt", "ရှပ်အင်္ကျီ", "My shirt is blue."], ["trousers", "ဘောင်းဘီရှည်", "These trousers are comfortable."],
     ["shoes", "ဖိနပ်", "Please take off your shoes."], ["jacket", "ဂျာကင်အင်္ကျီ", "Wear a jacket outside."],
-    ["dress", "ဂါဝန်", "She is wearing a red dress."], ["belt", "ခါးပတ်", "My belt is black."]
+    ["dress", "ဂါဝန်", "She is wearing a red dress."], ["belt", "ခါးပတ်", "My belt is black."], ["socks", "ခြေအိတ်", "These socks are clean."], ["hat", "ဦးထုပ်", "Wear a hat in the sun."]
   ]},
   { id: "school", en: "School and study", my: "ကျောင်းနှင့် စာသင်ကြားရေး", words: [
     ["notebook", "မှတ်စုစာအုပ်", "Write the answer in your notebook."], ["pencil", "ခဲတံ", "Use a pencil to draw."],
     ["eraser", "ခဲဖျက်", "I need an eraser."], ["lesson", "သင်ခန်းစာ", "Today's lesson is useful."],
-    ["question", "မေးခွန်း", "Please answer the question."], ["dictionary", "အဘိဓာန်", "Look up the word in a dictionary."]
+    ["question", "မေးခွန်း", "Please answer the question."], ["dictionary", "အဘိဓာန်", "Look up the word in a dictionary."], ["backpack", "ကျောပိုးအိတ်", "My backpack is heavy."], ["ruler", "ပေတံ", "Draw a straight line with a ruler."]
+  ]},
+
+  { id: "bathroom", en: "Bathroom and personal care", my: "ရေချိုးခန်းနှင့် ကိုယ်ရေးကိုယ်တာ", words: [
+    ["towel", "မျက်နှာသုတ်ပဝါ", "Please bring a clean towel."], ["soap", "ဆပ်ပြာ", "Wash your hands with soap."], ["toothbrush", "သွားတိုက်တံ", "My toothbrush is beside the sink."], ["toothpaste", "သွားတိုက်ဆေး", "We need more toothpaste."], ["shampoo", "ခေါင်းလျှော်ရည်", "This shampoo smells fresh."], ["comb", "ဘီး", "She keeps a comb in her bag."], ["hairbrush", "ဆံပင်ဖြီးဘီး", "I use a hairbrush every morning."], ["sink", "လက်ဆေးခွက်", "The sink is clean."]
+  ]},
+  { id: "transport", en: "Transport and travel", my: "သယ်ယူပို့ဆောင်ရေးနှင့် ခရီးသွား", words: [
+    ["bus", "ဘတ်စ်ကား", "I take the bus to work."], ["train", "ရထား", "The train arrives at six."], ["bicycle", "စက်ဘီး", "She rides her bicycle to school."], ["motorbike", "ဆိုင်ကယ်", "Wear a helmet on a motorbike."], ["ticket", "လက်မှတ်", "Keep your ticket until the end of the trip."], ["station", "ဘူတာရုံ", "Meet me at the station."], ["traffic lights", "မီးပွိုင့်", "Stop when the traffic lights are red."], ["passenger", "ခရီးသည်", "Every passenger needs a seat."]
+  ]},
+  { id: "weather", en: "Weather and nature", my: "ရာသီဥတုနှင့် သဘာဝ", words: [
+    ["sunny", "နေသာသော", "It is sunny this morning."], ["cloudy", "တိမ်ထူသော", "The sky looks cloudy."], ["rainy", "မိုးရွာသော", "Take an umbrella on a rainy day."], ["windy", "လေတိုက်သော", "It is too windy to fly a kite."], ["storm", "မုန်တိုင်း", "The storm may arrive tonight."], ["river", "မြစ်", "The village is beside a river."], ["mountain", "တောင်", "We can see a mountain in the distance."], ["forest", "သစ်တော", "Many birds live in the forest."]
+  ]},
+  { id: "work", en: "Work and occupations", my: "အလုပ်နှင့် အလုပ်အကိုင်", words: [
+    ["teacher", "ဆရာ၊ ဆရာမ", "The teacher explains the lesson."], ["nurse", "သူနာပြု", "The nurse helps the patient."], ["farmer", "လယ်သမား", "The farmer grows rice."], ["driver", "ယာဉ်မောင်း", "The driver checks the bus."], ["manager", "မန်နေဂျာ", "The manager leads the team."], ["meeting", "အစည်းအဝေး", "Our meeting starts at nine."], ["salary", "လစာ", "She saves part of her salary."], ["schedule", "အချိန်ဇယား", "Check the schedule before you leave."]
+  ]},
+  { id: "health", en: "Health and feelings", my: "ကျန်းမာရေးနှင့် ခံစားချက်", words: [
+    ["headache", "ခေါင်းကိုက်ခြင်း", "I have a mild headache."], ["fever", "ဖျားနာခြင်း", "He stayed home because of a fever."], ["tired", "ပင်ပန်းသော", "I feel tired after work."], ["thirsty", "ရေဆာသော", "I am thirsty after the walk."], ["worried", "စိုးရိမ်သော", "She is worried about the exam."], ["excited", "စိတ်လှုပ်ရှားပျော်ရွှင်သော", "We are excited about the trip."], ["appointment", "ချိန်းဆိုမှု", "I have a doctor's appointment tomorrow."], ["medicine", "ဆေးဝါး", "Take medicine only as directed."]
   ]}
 ];
 
@@ -75,6 +91,41 @@ export const SKILL_PRACTICE = {
   }
 };
 
+export const EXTRA_SKILL_PRACTICE = {
+reading:{
+A1:{title:"Read a simple message",my:"စာတိုကို ဖတ်ပါ",prompt:"Tom has a blue bag and two books.",task:"What colour is Tom's bag, and how many books does he have?",myTask:"Tom ၏အိတ်က ဘာအရောင်လဲ၊ စာအုပ်ဘယ်နှအုပ်ရှိသလဲ။"},
+A2:{title:"Follow a short note",my:"မှတ်စုတိုကို နားလည်ပါ",prompt:"Please put the clean cups in the cupboard before our guests arrive.",task:"What should be done before the guests arrive?",myTask:"ဧည့်သည်မရောက်ခင် ဘာလုပ်ရမလဲ။"},
+B1:{title:"Find the main idea",my:"အဓိကအကြောင်းအရာကို ရှာပါ",prompt:"Maya cycles to work because the bus is slow and expensive.",task:"Give two reasons Maya changed her commute.",myTask:"Maya သွားလာပုံပြောင်းရသည့် အကြောင်းရင်း ၂ ခုကို ပြောပါ။"},
+B2:{title:"Compare viewpoints",my:"အမြင်များကို နှိုင်းယှဉ်ပါ",prompt:"Some people buy durable products, while others choose cheaper items they can replace easily.",task:"Describe the two viewpoints and one trade-off.",myTask:"အမြင် ၂ မျိုးနှင့် အပေးအယူတစ်ခုကို ဖော်ပြပါ။"},
+C1:{title:"Evaluate evidence",my:"အထောက်အထားကို သုံးသပ်ပါ",prompt:"Flexible schedules improved reported satisfaction, although the study did not measure productivity.",task:"What does the study support, and what remains uncertain?",myTask:"လေ့လာမှုက ဘာကို ထောက်ခံပြီး ဘာက မသေချာသေးသလဲ။"},
+C2:{title:"Analyze the author's stance",my:"စာရေးသူ၏ ရပ်တည်ချက်ကို ခွဲခြမ်းပါ",prompt:"The proposal has merit, but its promised savings depend on assumptions that have yet to be tested.",task:"Explain the author's cautious stance and key qualification.",myTask:"စာရေးသူ၏ သတိထားသောအမြင်နှင့် ကန့်သတ်ချက်ကို ရှင်းပြပါ."}
+},
+listening:{
+A1:{title:"Listen for a number",my:"နံပါတ်ကို နားထောင်ပါ",prompt:"I have three red apples.",task:"Say the number and colour you hear.",myTask:"ကြားရသော အရေအတွက်နှင့် အရောင်ကို ပြောပါ။"},
+A2:{title:"Follow a direction",my:"လမ်းညွှန်ချက်ကို နားထောင်ပါ",prompt:"Walk past the bank and turn left at the pharmacy.",task:"Repeat both directions in order.",myTask:"လမ်းညွှန်ချက် ၂ ခုကို အစဉ်လိုက် ပြန်ပြောပါ။"},
+B1:{title:"Catch a change of plan",my:"အစီအစဉ်ပြောင်းလဲမှုကို ဖမ်းယူပါ",prompt:"We planned to eat outside, but the rain means dinner will be indoors.",task:"What was the original plan, and what changed it?",myTask:"မူလအစီအစဉ်က ဘာလဲ၊ ဘာကြောင့်ပြောင်းသွားသလဲ။"},
+B2:{title:"Notice the condition",my:"အခြေအနေကို နားထောင်ပါ",prompt:"You can borrow my laptop if you save your work and return it by Friday.",task:"Name both conditions for borrowing the laptop.",myTask:"လက်ပ်တော့ငှားရန် လိုအပ်သည့် အခြေအနေ ၂ ခုကို ပြောပါ။"},
+C1:{title:"Recognize polite disagreement",my:"ယဉ်ကျေးသော သဘောမတူမှုကို နားလည်ပါ",prompt:"I see why that option appeals to you; I am not convinced it addresses the main risk.",task:"What does the speaker accept, and what do they question?",myTask:"ပြောသူက ဘာကို လက်ခံပြီး ဘာကို သံသယရှိသလဲ။"},
+C2:{title:"Infer the speaker's priority",my:"ပြောသူ၏ ဦးစားပေးမှုကို ခန့်မှန်းပါ",prompt:"We could launch on Monday, but I would rather delay than release something our support team cannot maintain.",task:"Infer the speaker's priority and justify your answer.",myTask:"ပြောသူ၏ ဦးစားပေးမှုကို အကြောင်းပြချက်နှင့်တကွ ခန့်မှန်းပါ။"}
+},
+writing:{
+A1:{title:"Write about a favourite thing",my:"ကြိုက်နှစ်သက်သောအရာအကြောင်း ရေးပါ",prompt:"My favourite food is rice.",task:"Write one sentence about a food you like.",myTask:"ကြိုက်သောအစားအစာအကြောင်း ဝါကျတစ်ကြောင်းရေးပါ။"},
+A2:{title:"Describe your day",my:"တစ်နေ့တာကို ဖော်ပြပါ",prompt:"I wake up at seven and walk to school.",task:"Write three short sentences about your morning.",myTask:"မနက်ခင်းအကြောင်း ဝါကျတို ၃ ကြောင်းရေးပါ။"},
+B1:{title:"Write a useful message",my:"အသုံးဝင်သောစာတိုရေးပါ",prompt:"Could you please send me the meeting time?",task:"Write a polite message asking for information and giving a reason.",myTask:"အချက်အလက်တောင်းပြီး အကြောင်းပြချက်ပါသော ယဉ်ကျေးသည့်စာတိုရေးပါ။"},
+B2:{title:"Explain a decision",my:"ဆုံးဖြတ်ချက်ကို ရှင်းပြပါ",prompt:"I chose the train because it was reliable, even though it took longer.",task:"Write a paragraph explaining a choice with a concession.",myTask:"အလျှော့ပေးသည့်အချက်ပါသော ဆုံးဖြတ်ချက်ရှင်းလင်းစာပိုဒ်ရေးပါ။"},
+C1:{title:"Write a balanced proposal",my:"မျှတသော အဆိုပြုချက်ရေးပါ",prompt:"A four-day workweek may improve wellbeing if workloads are redesigned realistically.",task:"Write a proposal with benefits, risks, and a practical safeguard.",myTask:"အကျိုးကျေးဇူး၊ အန္တရာယ်နှင့် လက်တွေ့ကာကွယ်ချက်ပါသော အဆိုပြုချက်ရေးပါ။"},
+C2:{title:"Revise for precision",my:"တိကျမှုအတွက် ပြန်လည်ပြင်ဆင်ပါ",prompt:"The plan is good and will help many people.",task:"Rewrite with specific benefits and a carefully qualified claim.",myTask:"တိကျသောအကျိုးကျေးဇူးနှင့် ကန့်သတ်ဖော်ပြချက်ပါအောင် ပြန်ရေးပါ။"}
+},
+speaking:{
+A1:{title:"Introduce yourself",my:"ကိုယ့်ကိုယ်ကို မိတ်ဆက်ပါ",prompt:"Hello, my name is Alex. I live in Mandalay.",task:"Say your name and where you live.",myTask:"မိမိအမည်နှင့် နေထိုင်ရာကို ပြောပါ။"},
+A2:{title:"Ask for help politely",my:"ယဉ်ကျေးစွာ အကူအညီတောင်းပါ",prompt:"Excuse me, could you help me find the bus stop?",task:"Practise the request, then ask for a nearby place.",myTask:"တောင်းဆိုချက်ကို လေ့ကျင့်ပြီး အနီးရှိနေရာတစ်ခုကို မေးပါ။"},
+B1:{title:"Tell a short story",my:"အဖြစ်အပျက်တိုကို ပြောပါ",prompt:"Last weekend, I visited a market and tried a new dish.",task:"Tell a 30-second story using first, then, and finally.",myTask:"first, then, finally သုံးပြီး စက္ကန့် ၃၀ စာ ပြောပါ။"},
+B2:{title:"Compare two choices",my:"ရွေးချယ်စရာ ၂ ခုကို နှိုင်းယှဉ်ပါ",prompt:"I prefer public transport to driving because it is less stressful.",task:"Compare two options and support your preference with reasons.",myTask:"ရွေးချယ်စရာ ၂ ခုကို နှိုင်းယှဉ်ပြီး အကြောင်းပြချက်ပေးပါ။"},
+C1:{title:"Respond to a concern",my:"စိုးရိမ်ချက်ကို တုံ့ပြန်ပါ",prompt:"That is a fair concern; we could reduce the risk by testing the idea on a small scale first.",task:"Acknowledge a concern and offer a reasoned response.",myTask:"စိုးရိမ်ချက်ကို အသိအမှတ်ပြုပြီး အကြောင်းပြချက်ရှိသော တုံ့ပြန်မှု ပေးပါ။"},
+C2:{title:"Defend a nuanced position",my:"အမြင်တစ်ခုကို အချက်အလက်နှင့် ကာကွယ်ပြောဆိုပါ",prompt:"Convenience matters, but it should not automatically outweigh long-term cost, accessibility, or environmental impact.",task:"Give a 60-second argument with a counterargument and qualified conclusion.",myTask:"ဆန့်ကျင်ဘက်အမြင်နှင့် ကန့်သတ်ထားသော နိဂုံးပါသည့် ၁ မိနစ်စာ အကြောင်းပြချက်ပြောပါ။"}
+}
+};
+
 export const ALPHABET = Object.freeze([..."ABCDEFGHIJKLMNOPQRSTUVWXYZ", ..."abcdefghijklmnopqrstuvwxyz"]);
 
 export const LETTER_GUIDES = {
@@ -86,6 +137,12 @@ export const LETTER_GUIDES = {
   c: { style: "Print lowercase", start: "Start near the upper-right of the bowl, curve left and down, then return toward the opening.", my: "ဝိုင်းပုံ၏ အပေါ်ညာဘက်မှစ၍ ဘယ်ဘက်၊ အောက်ဘက်သို့ ကွေးဆွဲပြီး အဖွင့်နေရာသို့ ပြန်တက်ပါ။", paths: ["M72 35 C46 17 26 34 27 53 C27 76 49 83 72 68"] }
 };
 
-export function getPractice(skill, level) {
-  return SKILL_PRACTICE[skill]?.[level] ?? null;
+export function getPractice(skill, level, exerciseIndex = 0) {
+  if (exerciseIndex === 0) return SKILL_PRACTICE[skill]?.[level] ?? null;
+  if (exerciseIndex === 1) return EXTRA_SKILL_PRACTICE[skill]?.[level] ?? null;
+  return null;
+}
+
+export function getPracticeCount(skill, level) {
+  return Number(Boolean(getPractice(skill, level, 0))) + Number(Boolean(getPractice(skill, level, 1)));
 }

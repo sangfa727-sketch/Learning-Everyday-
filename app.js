@@ -110,6 +110,52 @@ function updateSkill(skill) {
   document.querySelector("[data-i18n='lessonType']").textContent = lessonLabels[skill];
 }
 
+let englishVoices = [];
+
+function refreshEnglishVoices() {
+  if (!("speechSynthesis" in window)) return;
+  englishVoices = window.speechSynthesis.getVoices();
+  const select = $("#voice-select");
+  if (!select) return;
+  const previous = select.value;
+  const english = englishVoices.map((voice, index) => ({ voice, index })).filter((item) => /^en([_-]|$)/i.test(item.voice.lang));
+  select.replaceChildren();
+  const automatic = document.createElement("option");
+  automatic.value = "";
+  automatic.textContent = "Automatic (best available)";
+  select.append(automatic);
+  for (const item of english) {
+    const option = document.createElement("option");
+    option.value = String(item.index);
+    option.textContent = item.voice.name + " · " + item.voice.lang + (item.voice.localService ? " · device" : " · system");
+    select.append(option);
+  }
+  if ([...select.options].some((option) => option.value === previous)) select.value = previous;
+  else {
+    const best = english.find((item) => /natural|neural|online|google|microsoft|samantha|aria|jenny|guy|ava/i.test(item.voice.name)) ?? english.find((item) => /^en-US$/i.test(item.voice.lang)) ?? english[0];
+    if (best) select.value = String(best.index);
+  }
+}
+
+function selectedEnglishVoice() {
+  if (!("speechSynthesis" in window)) return null;
+  const voices = window.speechSynthesis.getVoices();
+  const select = $("#voice-select");
+  const chosen = select && select.value !== "" ? voices[Number(select.value)] : null;
+  if (chosen && /^en([_-]|$)/i.test(chosen.lang)) return chosen;
+  const english = voices.filter((voice) => /^en([_-]|$)/i.test(voice.lang));
+  return english.find((voice) => /natural|neural|online|google|microsoft|samantha|aria|jenny|guy|ava/i.test(voice.name)) ?? english.find((voice) => /^en-US$/i.test(voice.lang)) ?? english[0] ?? null;
+}
+
+if ("speechSynthesis" in window) {
+  refreshEnglishVoices();
+  window.speechSynthesis.addEventListener?.("voiceschanged", refreshEnglishVoices);
+  $("#voice-select")?.addEventListener("change", () => {
+    const voice = selectedEnglishVoice();
+    $("#status-message").textContent = voice ? "Selected " + voice.name + " (" + voice.lang + "). Quality depends on your device's installed voices." : "No English voice is available. Check your device's text-to-speech settings.";
+  });
+}
+
 function speakStory() {
   if (!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) {
     $("#status-message").textContent = translations[language].noSpeech;
@@ -117,7 +163,9 @@ function speakStory() {
   }
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(story);
-  utterance.lang = "en-US";
+  const voice = selectedEnglishVoice();
+  utterance.lang = voice?.lang || "en-US";
+  if (voice) utterance.voice = voice;
   utterance.rate = clampSpeechRate($("#speech-speed").value);
   utterance.onstart = () => { $("#play-button").disabled = true; $("#status-message").textContent = language === "my" ? "နားထောင်နေသည်…" : "Playing story…"; };
   utterance.onend = () => { $("#play-button").disabled = false; $("#status-message").textContent = translations[language].voiceNote; };
