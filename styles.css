@@ -373,3 +373,12 @@ body[data-page="reading"] #curriculum-workbench > #curriculum-status {
 @keyframes trace-script-glyph{0%{stroke-dashoffset:1000;fill:transparent}82%{stroke-dashoffset:0;fill:transparent}100%{stroke-dashoffset:0;fill:rgba(71,123,98,.08)}}
 @media(max-width:420px){.letter-alphabet-row{gap:2px}.letter-alphabet-choice{min-height:30px;font-size:13px;border-radius:5px}}
 @media(prefers-reduced-motion:reduce){.letter-template-glyph.style-cursive{animation:none;stroke-dashoffset:0;fill:rgba(71,123,98,.08)}}
+
+
+/* Cursive sample is drawn from the same stroke paths as the guide, not a fallback font glyph. */
+.letter-sample.style-cursive{display:grid;place-items:center;width:100%;min-height:145px;font-size:0}
+.letter-sample-svg{display:block;width:min(100%,180px);height:132px;overflow:visible}
+.letter-sample-stroke{fill:none;stroke:#254b3e;stroke-width:3.1;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;animation:trace-letter 1.15s ease-out forwards}
+.letter-sample-stroke:nth-of-type(2){animation-delay:.65s}
+.letter-sample-stroke:nth-of-type(3){animation-delay:1.3s}
+@media(prefers-reduced-motion:reduce){.letter-sample-stroke{animation:none!important;stroke-dashoffset:0!important}}
