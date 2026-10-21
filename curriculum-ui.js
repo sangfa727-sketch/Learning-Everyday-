@@ -266,6 +266,7 @@ function renderLetterGuide() {
     ? `${language === "my" ? "ပုံနှိပ်စာလုံး" : "Print stroke guide"} · ${selectedLetter}`
     : `${selectedStyle === "cursive" ? "Cursive" : "Calligraphy"} · ${selectedLetter}`;
 
+  const stylePaths = selectedStyle === "print" ? guide.paths : (cursivePathsFor(selectedLetter) ?? guide.paths);
   const svg = $("#letter-animation");
   svg.replaceChildren();
   const baseline = document.createElementNS(ns, "line");
@@ -273,7 +274,6 @@ function renderLetterGuide() {
   baseline.setAttribute("y1", "88"); baseline.setAttribute("y2", "88");
   baseline.setAttribute("class", "letter-baseline");
   svg.append(baseline);
-  const stylePaths = selectedStyle === "print" ? guide.paths : (cursivePathsFor(selectedLetter) ?? guide.paths);
   if (stylePaths.length) {
     const strokeGroup = document.createElementNS(ns, "g");
     strokeGroup.setAttribute("class", `letter-guide-strokes style-${selectedStyle}`);
@@ -316,12 +316,13 @@ function renderLetterGuide() {
     glyph.textContent = selectedLetter;
     svg.append(glyph);
   }
-  $("#letter-stroke-count").textContent = guide.paths.length
+  const visibleStrokeCount = stylePaths.length;
+  $("#letter-stroke-count").textContent = visibleStrokeCount
     ? selectedStyle === "print"
-      ? (language === "my" ? `မျဉ်း ${guide.paths.length} ကြောင်း · အစဉ်လိုက် မျဉ်းဆွဲလှုပ်ရှားမှု` : `${guide.paths.length} strokes · Animated in writing order`)
+      ? (language === "my" ? `မျဉ်း ${visibleStrokeCount} ကြောင်း · အစဉ်လိုက် မျဉ်းဆွဲလှုပ်ရှားမှု` : `${visibleStrokeCount} strokes · Animated in writing order`)
       : selectedStyle === "cursive"
-        ? (language === "my" ? `Cursive မျဉ်း ${guide.paths.length} ကြောင်း · စောင်းရေးဟန်နှင့် ဆက်ရေးဝင်/ထွက်မျဉ်း` : `Cursive guide · ${guide.paths.length} animated strokes with a slanted entry/exit style`)
-        : (language === "my" ? `Calligraphy မျဉ်း ${guide.paths.length} ကြောင်း · အထူမျဉ်းနှင့် အလင်းအတွင်းမျဉ်း` : `Calligraphy guide · ${guide.paths.length} animated strokes with a thick-and-thin overlay`)
+        ? (language === "my" ? `Cursive မျဉ်း ${visibleStrokeCount} ကြောင်း · စောင်းရေးဟန်နှင့် ဆက်ရေးဝင်/ထွက်မျဉ်း` : `Cursive guide · ${visibleStrokeCount} animated strokes with a slanted entry/exit style`)
+        : (language === "my" ? `Calligraphy မျဉ်း ${visibleStrokeCount} ကြောင်း · အထူမျဉ်းနှင့် အလင်းအတွင်းမျဉ်း` : `Calligraphy guide · ${visibleStrokeCount} animated strokes with a thick-and-thin overlay`)
     : (language === "my" ? "လမ်းညွှန်ပုံစံကို ပြထားသည်။ အောက်ရှိ tracing board တွင် လိုက်ရေးပါ။" : "Template preview only; trace the letter on the practice board below.");
   renderTraceTemplate();
 }
