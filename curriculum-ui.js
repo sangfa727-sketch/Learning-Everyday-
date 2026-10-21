@@ -310,11 +310,13 @@ function renderLetterGuide() {
     orderedStrokePaths.forEach((d, index) => {
       const path = makeSvgPath(d, index);
       path.classList.add(`style-${selectedStyle}`);
+      path.style.animationDuration = "620ms";
       path.style.animationDelay = `${index * 650}ms`;
       strokeGroup.append(path);
       if (selectedStyle === "calligraphy") {
         const highlight = makeSvgPath(d, index);
         highlight.classList.add("calligraphy-highlight");
+        highlight.style.animationDuration = "620ms";
         highlight.style.animationDelay = `${index * 650}ms`;
         strokeGroup.append(highlight);
       }
@@ -327,16 +329,7 @@ function renderLetterGuide() {
     start.setAttribute("r", "3");
     start.setAttribute("class", "letter-start-dot");
     svg.append(start);
-    if (selectedStyle === "cursive") {
-      const entry = document.createElementNS(ns, "path");
-      entry.setAttribute("d", "M 12 79 C 19 69, 24 71, 30 78");
-      entry.setAttribute("class", "letter-style-flourish");
-      svg.append(entry);
-      const exit = document.createElementNS(ns, "path");
-      exit.setAttribute("d", "M 68 78 C 76 84, 83 82, 89 73");
-      exit.setAttribute("class", "letter-style-flourish");
-      svg.append(exit);
-    }
+
   } else {
     const glyph = document.createElementNS(ns, "text");
     glyph.setAttribute("x", "50"); glyph.setAttribute("y", "76");
