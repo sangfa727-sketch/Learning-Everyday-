@@ -14,7 +14,7 @@ test("cursive practice animates hand-authored strokes and traces the same paths"
   assert.match(ui, /const samplePaths = cursivePathsFor\(selectedLetter\) \?\? \[\]/);
   assert.match(ui, /letter-sample-svg/);
   assert.match(ui, /letter-sample-stroke/);
-  assert.match(ui, /const stylePaths = selectedStyle === "print"/);
+  assert.match(ui, /const stylePaths = selectedStyle === "cursive"/);
   assert.match(ui, /cursivePathsFor\(selectedLetter\)/);
   assert.match(ui, /Cursive · \$\{visibleStrokeCount\} hand-drawn strokes animated in sequence/);
   assert.match(ui, /glyph\.textContent = selectedStyle === "cursive" \? \(CURSIVE_GLYPHS\[selectedLetter\] \?\? selectedLetter\)/);
@@ -73,5 +73,7 @@ test("shared cursive stroke data covers all 52 letters and keeps lowercase a and
   }
   assert.notDeepEqual(cursivePathsFor("a"), cursivePathsFor("o"));
   assert.notEqual(splitCursiveStrokes(cursivePathsFor("a")).join("|"), splitCursiveStrokes(cursivePathsFor("o")).join("|"));
+  assert.match(cursivePathsFor("a")[0], /C51 59 52 68 52 77/);
+  assert.match(cursivePathsFor("o")[0], /C54 60 58 73 66 79/);
   assert.ok(splitCursiveStrokes(cursivePathsFor("E")).length > cursivePathsFor("E").length, "multiple SVG move commands must become separate pen-down strokes");
 });
