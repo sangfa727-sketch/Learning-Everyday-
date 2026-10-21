@@ -16,7 +16,8 @@ test("cursive practice animates hand-authored strokes and traces the same paths"
   assert.match(ui, /cursivePathsFor\(selectedLetter\)/);
   assert.match(ui, /Cursive · \$\{visibleStrokeCount\} hand-drawn strokes animated in sequence/);
   assert.match(ui, /glyph\.textContent = selectedStyle === "cursive" \? \(CURSIVE_GLYPHS\[selectedLetter\] \?\? selectedLetter\)/);
-  assert.match(ui, /const traceGlyph = selectedStyle === "cursive" \? \(CURSIVE_GLYPHS\[selectedLetter\] \?\? selectedLetter\)/);
+  assert.match(ui, /Font glyph is only a fallback when no hand-authored stroke paths exist/);
+  assert.match(ui, /context\.strokeText\(selectedLetter, rect\.width \/ 2, rect\.height \* 0\.76\)/);
   assert.match(ui, /function renderAlphabetGrid\(\)/);
   assert.match(ui, /letter-alphabet-choice/);
   assert.match(ui, /Uppercase A–Z/);
