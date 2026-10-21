@@ -24,7 +24,7 @@ test("print, cursive, and calligraphy animate letter stroke paths distinctly", a
   for (const letter of "ABCDEFGHIJKLMNOPQRSTUVWXYZ") {
     assert.ok(ui.includes("  " + letter + ": ["), `missing hand-authored cursive capital for ${letter}`);
   }
-  assert.ok(ui.includes('const handPaths = selectedStyle === "print" ? null : cursivePathsFor(selectedLetter)'));
+  assert.ok(ui.includes('const handPaths = selectedStyle === "print" ? null : selectedStyle === "calligraphy" ? calligraphyPathsFor(selectedLetter) : cursivePathsFor(selectedLetter)'));
   assert.match(ui, /letter-guide-strokes style-/);
   assert.match(ui, /path\.classList\.add/);
   assert.match(ui, /calligraphy-highlight/);
