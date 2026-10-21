@@ -8,10 +8,13 @@ test("progress has a reachable bilingual route and dedicated page layout", async
     readFile(new URL("./index.html", import.meta.url), "utf8"),
     readFile(new URL("./styles.css", import.meta.url), "utf8")
   ]);
-  assert.match(app, /"home", "reading", "listening", "writing", "speaking", "progress"/);
+  assert.match(app, /"home", "skills", "reading", "listening", "writing", "speaking", "progress"/);
   assert.match(app, /progressLink:"Progress"/);
   assert.match(app, /progressLink:"လေ့လာမှုတိုးတက်မှု"/);
   assert.match(html, /href="#\/progress"[^>]*data-i18n="progressLink"/);
+  assert.match(html, /href="#\/skills"[^>]*data-i18n="skillsLink"/);
+  assert.match(app, /skillsLink:"Skills & Levels"/);
+  assert.match(css, /body\[data-page="skills"\] #skills-level-page\{display:block\}/);
   assert.match(css, /body\[data-page="progress"\] #curriculum-workbench \.progress-tools\{display:block/);
   assert.match(css, /body\[data-page="progress"\] #practice-panel\{display:none/);
 });
