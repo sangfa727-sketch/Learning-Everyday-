@@ -234,3 +234,127 @@ body[data-page="home"] #skills-level-page{display:block}body[data-page="home"] .
 .letter-template-glyph.style-calligraphy{font-family:"Brush Script MT","URW Chancery L","Apple Chancery",cursive;font-style:italic;font-weight:800;stroke-width:3.2;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:trace-letter 1.8s ease-out forwards}
 .letter-tracing{touch-action:none}
 @media(prefers-reduced-motion:reduce){.letter-guide-strokes .letter-stroke,.letter-style-flourish,.letter-template-glyph{animation:none!important;stroke-dashoffset:0!important}}
+
+/* Keep the CEFR picker on its dedicated Skills & Levels page only. */
+body:not(.skills-levels-page) .skill-level-picker{display:none!important}
+body.skills-levels-page .skill-level-picker{display:block}
+body:not(.skills-levels-page) #curriculum-workbench .skill-level-picker{display:none!important}
+
+/* Route-level correction: the picker belongs to Skills & Levels, not every practice page. */
+body[data-page="skills"] #skills-level-page{display:block!important}
+body[data-page="skills"] #curriculum-workbench,
+body[data-page="skills"] #practice-panel{display:none!important}
+body[data-page="skills"] .skill-level-picker{display:block!important}
+body:not([data-page="skills"]) #skills-level-page{display:none!important}
+body[data-page="home"] #skills-level-page{display:block!important}
+@media(max-width:760px){
+  .header-actions{flex-wrap:wrap;justify-content:flex-end;gap:7px}
+  .skills-nav-link{font-size:11px;white-space:nowrap}
+}
+
+
+/* Route visibility fix: show one focused learning experience per page. */
+body[data-page="writing"] #curriculum-workbench {
+  display: block !important;
+  margin-top: 0;
+}
+body[data-page="writing"] #curriculum-workbench > .curriculum-header,
+body[data-page="writing"] #curriculum-workbench > .curriculum-grid,
+body[data-page="writing"] #curriculum-workbench > .progress-tools,
+body[data-page="writing"] #curriculum-workbench > #curriculum-status,
+body[data-page="writing"] #practice-panel {
+  display: none !important;
+}
+body[data-page="writing"] #curriculum-workbench #smart-writing-lab {
+  display: block !important;
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+body[data-page="listening"] #curriculum-workbench,
+body[data-page="speaking"] #curriculum-workbench {
+  display: none !important;
+}
+body[data-page="skills"] #curriculum-workbench,
+body[data-page="skills"] #practice-panel,
+body[data-page="home"] #curriculum-workbench,
+body[data-page="home"] #practice-panel {
+  display: none !important;
+}
+
+/* Keep global hero and four-skill selector on Home only; show skill selector on its dedicated route. */
+body:not([data-page="home"]) .hero {
+  display: none !important;
+}
+body[data-page="reading"] #skills-level-page,
+body[data-page="listening"] #skills-level-page,
+body[data-page="writing"] #skills-level-page,
+body[data-page="speaking"] #skills-level-page,
+body[data-page="progress"] #skills-level-page {
+  display: none !important;
+}
+body[data-page="reading"] #curriculum-workbench,
+body[data-page="skills"] #curriculum-workbench,
+body[data-page="skills"] #practice-panel,
+body[data-page="progress"] #practice-panel {
+  display: none !important;
+}
+body[data-page="progress"] #curriculum-workbench > .curriculum-header,
+body[data-page="progress"] #curriculum-workbench > .curriculum-grid,
+body[data-page="progress"] #curriculum-workbench > #smart-writing-lab,
+body[data-page="progress"] #curriculum-workbench > #curriculum-status {
+  display: none !important;
+}
+
+/* Hidden controls must remain hidden even if component styles change later. */
+#writing-exercise[hidden],
+#speaking-exercise[hidden],
+#pdf-note[hidden],
+#player-controls[hidden],
+#practice-answer-wrap[hidden],
+#practice-speaking-note[hidden] {
+  display: none !important;
+}
+
+
+body:not([data-page="home"]) .writing-lab-entry { display: none !important; }
+
+/* Make Smart Writing Lab unmistakable on Home until the first sample is exported. */
+.writing-lab-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin: 0 0 28px;
+  padding: clamp(18px, 3vw, 26px);
+  border: 1px solid #cbdcc5;
+  border-radius: 20px;
+  background: linear-gradient(115deg, #edf5e7 0%, #ffffff 78%);
+  box-shadow: 0 10px 28px rgba(28,57,46,.07);
+}
+.writing-lab-entry-copy { min-width: 0; }
+.writing-lab-entry .eyebrow { margin-bottom: 8px; color: #52724e; }
+.writing-lab-entry h2 { margin: 0; color: var(--forest); font: 800 clamp(22px, 3vw, 30px)/1.15 Manrope, ui-sans-serif, sans-serif; letter-spacing: -.7px; }
+.writing-lab-entry p:not(.eyebrow) { max-width: 610px; margin: 9px 0 0; color: #647568; font-size: 13px; line-height: 1.7; }
+.writing-lab-entry-action { display: inline-flex; align-items: center; justify-content: center; gap: 10px; flex: 0 0 auto; min-height: 46px; padding: 0 17px; border-radius: 12px; background: var(--forest); color: #fff; text-decoration: none; font-size: 12px; font-weight: 800; box-shadow: 0 5px 12px #173c351b; }
+.writing-lab-entry-action:hover { background: #24574b; }
+.writing-lab-entry-action:focus-visible { outline: 3px solid #9dbd6a; outline-offset: 3px; }
+
+/* Reading keeps its real story exercise; remove the duplicate curriculum practice card. */
+body[data-page="reading"] #curriculum-workbench {
+  display: block !important;
+}
+body[data-page="reading"] #curriculum-workbench .curriculum-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+body[data-page="reading"] #curriculum-workbench > .curriculum-header,
+body[data-page="reading"] #curriculum-workbench .curriculum-card[aria-labelledby="practice-heading"],
+body[data-page="reading"] #curriculum-workbench .letter-practice,
+body[data-page="reading"] #curriculum-workbench .progress-tools,
+body[data-page="reading"] #curriculum-workbench > #curriculum-status {
+  display: none !important;
+}
+@media (max-width: 600px) {
+  .writing-lab-entry { align-items: stretch; flex-direction: column; gap: 15px; margin-bottom: 22px; }
+  .writing-lab-entry-action { width: 100%; }
+}

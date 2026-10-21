@@ -60,7 +60,7 @@ Serve the repository over localhost or HTTPS to test service-worker registration
 
 ## Known limitations
 
-- OCR and APK packaging are not implemented. The alphabet animations are visual stroke guides; cursive and calligraphy currently provide style guidance rather than distinct style-specific stroke paths or a full pen-pressure simulator. PDF parsing loads its library from a pinned CDN on first use; the service worker caches the two pinned parser assets for later offline use after a successful online load.
+- OCR and APK packaging are not implemented. Print, cursive, and calligraphy now use separate visual stroke guides, including hand-authored flowing paths for all 26 uppercase and 26 lowercase letters in cursive/calligraphy modes. These guides are practice aids, not a verified universal stroke-order curriculum or a full pen-pressure simulator. PDF parsing loads its library from a pinned CDN on first use; the service worker caches the two pinned parser assets for later offline use after a successful online load.
 - Browser speech recognition may send audio to a browser/vendor service and may require internet; it is optional and is not advertised as an offline capability.
 - The starter dictionary and 16-topic vocabulary set are a learning prototype, not a comprehensive dictionary. Vocabulary coverage and exercise variety should continue to expand.
 - A PWA normally needs HTTPS for installation/service workers outside localhost. A separately packaged APK can be installed without a domain, but needs an Android build/signing and distribution workflow.

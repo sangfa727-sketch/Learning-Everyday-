@@ -14,10 +14,17 @@ test("print, cursive, and calligraphy animate letter stroke paths distinctly", a
   }
   assert.ok(ui.includes("const CURSIVE_UPPERCASE_PATHS = Object.freeze({"));
   assert.ok(ui.includes("function cursivePathsFor(letter)"));
+  assert.match(ui, /const CALLIGRAPHY_PATH_OVERRIDES = Object\.freeze\(\{/);
+  assert.match(ui, /function calligraphyPathsFor\(letter\)/);
+  for (const letter of ["a", "o", "f", "A", "F"]) {
+    assert.match(ui, new RegExp("^  " + letter + ": \\[", "m"), `missing distinct calligraphy exemplar for ${letter}`);
+  }
+  assert.match(ui, /selectedStyle === "calligraphy" \? \(calligraphyPathsFor\(selectedLetter\) \?\? guide\.paths\)/);
+  assert.match(ui, /selectedStyle === "calligraphy" \? calligraphyPathsFor\(selectedLetter\) : cursivePathsFor\(selectedLetter\)/);
   for (const letter of "ABCDEFGHIJKLMNOPQRSTUVWXYZ") {
     assert.ok(ui.includes("  " + letter + ": ["), `missing hand-authored cursive capital for ${letter}`);
   }
-  assert.ok(ui.includes('const handPaths = selectedStyle === "print" ? null : cursivePathsFor(selectedLetter)'));
+  assert.ok(ui.includes('const handPaths = selectedStyle === "print" ? null : selectedStyle === "calligraphy" ? calligraphyPathsFor(selectedLetter) : cursivePathsFor(selectedLetter)'));
   assert.match(ui, /letter-guide-strokes style-/);
   assert.match(ui, /path\.classList\.add/);
   assert.match(ui, /calligraphy-highlight/);

@@ -241,6 +241,21 @@ const CURSIVE_UPPERCASE_PATHS = Object.freeze({
   Z: ["M26 24 C43 19 60 20 76 24 C59 42 42 61 25 78 C43 82 62 80 80 74"]
 });
 
+// Calligraphy has its own capital/lowercase forms where the pen movement changes,
+// not just a thicker rendering of the cursive centerline. These hand-authored
+// exemplars prioritize a legible entry, main form, and exit stroke.
+const CALLIGRAPHY_PATH_OVERRIDES = Object.freeze({
+  a: ["M14 68 C22 54 39 50 49 59 C59 68 53 80 41 81 C28 82 21 72 28 61 C35 51 48 54 53 64", "M53 64 C58 73 56 82 64 82 C72 82 79 74 86 66"],
+  o: ["M18 68 C26 55 39 51 49 58 C59 65 57 77 46 81 C34 85 23 77 25 66 C27 56 37 52 46 56", "M46 56 C55 61 60 72 66 78 C72 82 79 74 86 66"],
+  f: ["M17 82 C28 66 39 45 42 27 C44 14 56 10 64 20 C71 29 64 39 56 46 C48 53 40 57 32 61", "M12 58 C29 51 48 50 68 53", "M38 49 C34 64 29 80 22 92 C18 99 11 97 9 91"],
+  A: ["M10 79 C24 57 37 29 49 13 C61 34 67 59 77 78 C80 84 85 80 90 72", "M29 55 C42 48 57 47 68 51", "M48 14 C43 8 39 10 38 16"],
+  F: ["M24 82 C28 59 31 37 34 18 C47 11 61 16 64 27 C67 38 54 46 36 48", "M22 51 C39 45 57 45 73 49", "M39 49 C34 65 29 81 23 92 C18 100 11 98 9 91", "M34 18 C40 10 47 8 53 12"]
+});
+
+function calligraphyPathsFor(letter) {
+  return CALLIGRAPHY_PATH_OVERRIDES[letter] ?? cursivePathsFor(letter);
+}
+
 function cursivePathsFor(letter) {
   return CURSIVE_LOWERCASE_PATHS[letter] ?? CURSIVE_UPPERCASE_PATHS[letter] ?? null;
 }
@@ -266,6 +281,7 @@ function renderLetterGuide() {
     ? `${language === "my" ? "ပုံနှိပ်စာလုံး" : "Print stroke guide"} · ${selectedLetter}`
     : `${selectedStyle === "cursive" ? "Cursive" : "Calligraphy"} · ${selectedLetter}`;
 
+  const stylePaths = selectedStyle === "print" ? guide.paths : selectedStyle === "calligraphy" ? (calligraphyPathsFor(selectedLetter) ?? guide.paths) : (cursivePathsFor(selectedLetter) ?? guide.paths);
   const svg = $("#letter-animation");
   svg.replaceChildren();
   const baseline = document.createElementNS(ns, "line");
@@ -273,7 +289,6 @@ function renderLetterGuide() {
   baseline.setAttribute("y1", "88"); baseline.setAttribute("y2", "88");
   baseline.setAttribute("class", "letter-baseline");
   svg.append(baseline);
-  const stylePaths = selectedStyle === "print" ? guide.paths : (cursivePathsFor(selectedLetter) ?? guide.paths);
   if (stylePaths.length) {
     const strokeGroup = document.createElementNS(ns, "g");
     strokeGroup.setAttribute("class", `letter-guide-strokes style-${selectedStyle}`);
@@ -316,12 +331,13 @@ function renderLetterGuide() {
     glyph.textContent = selectedLetter;
     svg.append(glyph);
   }
-  $("#letter-stroke-count").textContent = guide.paths.length
+  const visibleStrokeCount = stylePaths.length;
+  $("#letter-stroke-count").textContent = visibleStrokeCount
     ? selectedStyle === "print"
-      ? (language === "my" ? `မျဉ်း ${guide.paths.length} ကြောင်း · အစဉ်လိုက် မျဉ်းဆွဲလှုပ်ရှားမှု` : `${guide.paths.length} strokes · Animated in writing order`)
+      ? (language === "my" ? `မျဉ်း ${visibleStrokeCount} ကြောင်း · အစဉ်လိုက် မျဉ်းဆွဲလှုပ်ရှားမှု` : `${visibleStrokeCount} strokes · Animated in writing order`)
       : selectedStyle === "cursive"
-        ? (language === "my" ? `Cursive မျဉ်း ${guide.paths.length} ကြောင်း · စောင်းရေးဟန်နှင့် ဆက်ရေးဝင်/ထွက်မျဉ်း` : `Cursive guide · ${guide.paths.length} animated strokes with a slanted entry/exit style`)
-        : (language === "my" ? `Calligraphy မျဉ်း ${guide.paths.length} ကြောင်း · အထူမျဉ်းနှင့် အလင်းအတွင်းမျဉ်း` : `Calligraphy guide · ${guide.paths.length} animated strokes with a thick-and-thin overlay`)
+        ? (language === "my" ? `Cursive မျဉ်း ${visibleStrokeCount} ကြောင်း · စောင်းရေးဟန်နှင့် ဆက်ရေးဝင်/ထွက်မျဉ်း` : `Cursive guide · ${visibleStrokeCount} animated strokes with a slanted entry/exit style`)
+        : (language === "my" ? `Calligraphy မျဉ်း ${visibleStrokeCount} ကြောင်း · အထူမျဉ်းနှင့် အလင်းအတွင်းမျဉ်း` : `Calligraphy guide · ${visibleStrokeCount} animated strokes with a thick-and-thin overlay`)
     : (language === "my" ? "လမ်းညွှန်ပုံစံကို ပြထားသည်။ အောက်ရှိ tracing board တွင် လိုက်ရေးပါ။" : "Template preview only; trace the letter on the practice board below.");
   renderTraceTemplate();
 }
@@ -347,7 +363,7 @@ function renderTraceTemplate() {
   context.lineTo(rect.width - 12, rect.height * 0.78);
   context.stroke();
   context.setLineDash([]);
-  const handPaths = selectedStyle === "print" ? null : cursivePathsFor(selectedLetter);
+  const handPaths = selectedStyle === "print" ? null : selectedStyle === "calligraphy" ? calligraphyPathsFor(selectedLetter) : cursivePathsFor(selectedLetter);
   if (handPaths && typeof Path2D === "function") {
     const size = Math.min(rect.width * 0.78, rect.height * 0.78);
     context.save();
@@ -435,8 +451,8 @@ function setLanguage(next) {
       vocabularyIntro: "Choose a real-life topic. Tap a word to see its Myanmar meaning and an example sentence.",
       practiceTitle: "Practice by skill",
       practiceIntro: "Practise at the selected level. Use Skills & Levels to change your skill or level.",
-      letterTitle: "Letter writing studio",
-      letterIntro: "Practise all 26 uppercase and lowercase letters. Choose print, cursive, or calligraphy, then use the tracing board.",
+      letterTitle: "Smart Writing Lab",
+      letterIntro: "Practise uppercase and lowercase letters with guided stroke animation and finger tracing. Choose print, cursive, or calligraphy.",
       chooseLetter: "Choose a letter",
       chooseStyle: "Writing style",
       replay: "Replay stroke animation",
@@ -454,8 +470,8 @@ function setLanguage(next) {
       vocabularyIntro: "နေ့စဉ်ဘဝအကြောင်းအရာကို ရွေးပါ။ စကားလုံးကိုနှိပ်၍ မြန်မာအဓိပ္ပာယ်နှင့် ဥပမာဝါကျကို ကြည့်ပါ။",
       practiceTitle: "ကျွမ်းကျင်မှုအလိုက် လေ့ကျင့်ခန်း",
       practiceIntro: "ရွေးထားသောအဆင့်တွင် လေ့ကျင့်ပါ။ ကျွမ်းကျင်မှု သို့မဟုတ် အဆင့်ပြောင်းရန် သက်ဆိုင်ရာစာမျက်နှာသို့ သွားပါ။",
-      letterTitle: "အက္ခရာရေးသားမှု လေ့ကျင့်ခန်း",
-      letterIntro: "အင်္ဂလိပ်စာလုံးအကြီး၊ အသေး ၂၆ လုံးစီကို လေ့ကျင့်ပါ။ Print၊ Cursive သို့မဟုတ် Calligraphy ကိုရွေးပြီး tracing board တွင် လိုက်ရေးပါ။",
+      letterTitle: "Smart Writing Lab · လက်ရေးလေ့ကျင့်ခန်း",
+      letterIntro: "စာလုံးအကြီး၊ အသေးများကို လမ်းညွှန် Animation နှင့် လက်ချောင်းဖြင့် လိုက်ရေးပါ။ Print၊ Cursive သို့မဟုတ် Calligraphy ကို ရွေးနိုင်သည်။",
       chooseLetter: "အက္ခရာရွေးပါ",
       chooseStyle: "ရေးသားမှုပုံစံ",
       replay: "မျဉ်းဆွဲလှုပ်ရှားမှု ပြန်ကြည့်ရန်",
@@ -511,8 +527,16 @@ document.querySelectorAll("[data-skill]").forEach((button) => button.addEventLis
 $("#start-selected-practice").addEventListener("click", () => {
   location.hash = `#/${activeSkill}`;
 });
+function syncSkillLevelPage() {
+  const page = location.hash.slice(1).split("/").filter(Boolean)[0] || "home";
+  document.body.classList.toggle("skills-levels-page", page === "skills");
+  const picker = $(".skill-level-picker");
+  if (picker) picker.setAttribute("aria-hidden", page === "skills" ? "false" : "true");
+}
+syncSkillLevelPage();
 window.addEventListener("hashchange", () => {
   const page = location.hash.slice(1).split("/").filter(Boolean)[0];
+  syncSkillLevelPage();
   if (["reading", "listening", "writing", "speaking"].includes(page)) {
     activeSkill = page;
     renderPractice();

@@ -246,3 +246,23 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
     $("#status-message").textContent = "Offline caching could not be enabled in this browser.";
   }));
 }
+
+
+// Keep the Smart Writing Lab highly visible until a sample has been exported.
+const writingLabExportKey = "le.writingLab.sampleExported.v3";
+function syncWritingLabEntryVisibility() {
+  try {
+    const exported = window.localStorage.getItem(writingLabExportKey) === "1";
+    document.querySelectorAll("[data-writing-lab-entry]").forEach((entry) => {
+      if (exported) entry.setAttribute("hidden", "");
+      else entry.removeAttribute("hidden");
+    });
+  } catch {
+    // Storage may be unavailable in private browsing; keep the entry visible.
+  }
+}
+syncWritingLabEntryVisibility();
+window.addEventListener("pageshow", syncWritingLabEntryVisibility);
+window.addEventListener("storage", (event) => {
+  if (event.key === writingLabExportKey || event.key === null) syncWritingLabEntryVisibility();
+});
