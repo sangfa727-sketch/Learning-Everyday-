@@ -16,9 +16,10 @@ function isValidProgress(value) {
   );
 }
 
-export function loadProgress(storage = globalThis.localStorage) {
+export function loadProgress(storage) {
   try {
-    const raw = storage.getItem(PROGRESS_STORAGE_KEY);
+    const target = storage ?? globalThis.localStorage;
+    const raw = target.getItem(PROGRESS_STORAGE_KEY);
     if (raw === null) return emptyProgress();
     const parsed = JSON.parse(raw);
     return isValidProgress(parsed) ? { version: 1, completed: { ...parsed.completed } } : emptyProgress();
@@ -27,10 +28,11 @@ export function loadProgress(storage = globalThis.localStorage) {
   }
 }
 
-export function saveProgress(progress, storage = globalThis.localStorage) {
+export function saveProgress(progress, storage) {
   if (!isValidProgress(progress)) return false;
   try {
-    storage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(progress));
+    const target = storage ?? globalThis.localStorage;
+    target.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(progress));
     return true;
   } catch {
     return false;
@@ -48,9 +50,10 @@ export function markPracticeComplete(progress, skill, level, completedAt = new D
   };
 }
 
-export function clearProgress(storage = globalThis.localStorage) {
+export function clearProgress(storage) {
   try {
-    storage.removeItem(PROGRESS_STORAGE_KEY);
+    const target = storage ?? globalThis.localStorage;
+    target.removeItem(PROGRESS_STORAGE_KEY);
     return true;
   } catch {
     return false;
