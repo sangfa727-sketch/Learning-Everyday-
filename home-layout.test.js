@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
-test("home page keeps the original skill cards and learning workbench visible", async () => {
+test("home page keeps skill cards visible and hides the curriculum workbench", async () => {
   const [html, css, ui] = await Promise.all([
     readFile(new URL("./index.html", import.meta.url), "utf8"),
     readFile(new URL("./styles.css", import.meta.url), "utf8"),
