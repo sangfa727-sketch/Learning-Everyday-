@@ -1,4 +1,4 @@
-const CACHE_NAME = "learning-everyday-shell-v12";
+const CACHE_NAME = "learning-everyday-shell-v13";
 const APP_CACHE_PREFIX = "learning-everyday-";
 const APP_SHELL = ["./", "./index.html", "./writing-lab.html", "./writing-lab-core.js", "./styles.css", "./app.js", "./learning-core.js", "./local-state.js", "./pdf-import.js", "./curriculum.js", "./curriculum-ui.js", "./progress-state.js", "./manifest.webmanifest", "./icon.svg"];
 
