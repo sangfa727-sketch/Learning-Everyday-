@@ -203,8 +203,16 @@ function glyphContours(letter) {
 function area(points){let sum=0;for(let i=0;i<points.length;i++){const a=points[i],b=points[(i+1)%points.length];sum+=a.x*b.y-b.x*a.y;}return Math.abs(sum/2)}
 function parseSvgPath(raw){
   const cleaned=raw.trim(); if(!/[Mm]/.test(cleaned)||!/^[\sMmLlHhVvCcSsQqTtAaZz0-9eE+.,-]+$/.test(cleaned))return null;
-  const chunks=cleaned.split(/(?=[Mm])/).map(s=>s.trim()).filter(Boolean);const result=[];
-  for(const d of chunks){const nums=d.match(/[-+]?(?:\d*\.\d+|\d+\.?\d*)(?:e[-+]?\d+)?/gi)?.map(Number)||[];if(nums.length<4||nums.length%2!==0)continue;const pts=[];for(let i=0;i<nums.length-1;i+=2)pts.push({x:Math.max(0,Math.min(100,nums[i])),y:Math.max(0,Math.min(100,nums[i+1]))});if(pts.length>1)result.push({points:pts,start:0});}
+  const chunks=cleaned.split(/(?=[Mm])/).map(s=>s.trim()).filter(Boolean), result=[];
+  const probe=document.createElementNS(svgNS,"svg");probe.setAttribute("viewBox","0 0 100 100");probe.style.cssText="position:fixed;left:-10000px;top:-10000px;width:100px;height:100px;visibility:hidden";document.body.append(probe);
+  try { for(const d of chunks){const path=document.createElementNS(svgNS,"path");path.setAttribute("d",d);probe.append(path);let length=0,box;try{length=path.getTotalLength();box=path.getBBox();}catch{path.remove();continue;}
+    if(!Number.isFinite(length)||length<1||!box||box.width<0.01||box.height<0.01){path.remove();continue;}
+    const scale=Math.min(100/box.width,100/box.height),ox=(100-box.width*scale)/2-box.x*scale,oy=(100-box.height*scale)/2-box.y*scale;
+    const count=Math.max(8,Math.min(400,Math.ceil(length/1.5))),pts=[];
+    for(let i=0;i<=count;i++){const p=path.getPointAtLength(length*i/count);pts.push({x:Math.max(0,Math.min(100,p.x*scale+ox)),y:Math.max(0,Math.min(100,p.y*scale+oy)});}
+    const simplified=pts.filter((p,i)=>i===0||i===pts.length-1||Math.hypot(p.x-pts[i-1].x,p.y-pts[i-1].y)>0.8);
+    if(simplified.length>1)result.push({points:simplified,start:0});path.remove();
+  }} finally {probe.remove();}
   return result.length?result:null;
 }
 function rotateContour(contour){const pts=contour.points;const start=((contour.start||0)%pts.length+pts.length)%pts.length;return [...pts.slice(start),...pts.slice(0,start)];}
@@ -227,7 +235,7 @@ function createPastedPath(){const raw=pasteInput.value.trim();if(!raw){$("paste-
 $("convert-pasted-path").addEventListener("click",createPastedPath);
 pasteInput.addEventListener("paste",()=>setTimeout(createPastedPath,0));
 pathSvg.addEventListener("pointerdown",event=>{const target=event.target;if(!target.classList.contains("path-edit-point"))return;activePointDrag=Number(target.dataset.contour);pathSvg.setPointerCapture?.(event.pointerId);event.preventDefault();});
-pathSvg.addEventListener("pointermove",event=>{if(activePointDrag===null)return;const rect=pathSvg.getBoundingClientRect();const x=Math.max(0,Math.min(100,(event.clientX-rect.left)/rect.width*100));const y=Math.max(0,Math.min(100,(event.clientY-rect.top)/rect.height*100));const contour=editableContours[activePointDrag];let best=0,dist=Infinity;contour.points.forEach((p,i)=>{const d=(p.x-x)**2+(p.y-y)**2;if(d<dist){dist=d;best=i;}});contour.start=best;renderEditablePaths();});
+pathSvg.addEventListener("pointermove",event=>{if(activePointDrag===null)return;const svgPoint=pathSvg.createSVGPoint();svgPoint.x=event.clientX;svgPoint.y=event.clientY;const local=svgPoint.matrixTransform(pathSvg.getScreenCTM().inverse());const x=Math.max(0,Math.min(100,local.x));const y=Math.max(0,Math.min(100,local.y));const contour=editableContours[activePointDrag];let best=0,dist=Infinity;contour.points.forEach((p,i)=>{const d=(p.x-x)**2+(p.y-y)**2;if(d<dist){dist=d;best=i;}});contour.start=best;renderEditablePaths();});
 pathSvg.addEventListener("pointerup",()=>{activePointDrag=null;});pathSvg.addEventListener("pointercancel",()=>{activePointDrag=null;});
 $("replay-pasted-path").addEventListener("click",()=>renderEditablePaths(true));
 $("save-pasted-path").addEventListener("click",()=>{if(!editableContours.length){$("paste-path-status").textContent="Code ထုတ်ရန် path ကို အရင်ဖန်တီးပါ။";return;}const blob=new Blob([$("generated-path-code").value],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="learning-everyday-letter-path.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);$("paste-path-status").textContent="Path နဲ့ animation point များပါသော JSON code ကို ထုတ်ပေးပြီးပါပြီ။";});
