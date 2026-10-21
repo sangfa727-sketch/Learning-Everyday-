@@ -392,3 +392,16 @@ body[data-page="reading"] #curriculum-workbench > #curriculum-status {
 .script-letter{display:flex;align-items:flex-end;justify-content:center;min-width:0;height:46px;padding-bottom:1px;color:#294f40;font-family:"Cambria Math","STIX Two Math","Noto Sans Math","Segoe UI Symbol",serif;font-size:clamp(18px,3.2vw,29px);font-weight:400;line-height:1.1;white-space:nowrap}
 #legacy-letter-tools[hidden]{display:none!important}
 @media(max-width:420px){.script-alphabet-paper{grid-template-columns:repeat(13,minmax(0,1fr));gap:0;padding-inline:3px}.script-letter{font-size:clamp(15px,4.4vw,19px);height:40px}.script-alphabet-paper{background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 37px,#cbdcc8 38px,#cbdcc8 39px,#fffef9 40px)}}
+
+/* Writing Practice: switch between animated Print strokes and ruled-paper Handwriting samples. */
+.writing-mode-controls{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 8px}
+.writing-mode-controls button[aria-pressed="true"]{background:#173c35;color:#fff;border-color:#173c35}
+#smart-writing-lab[hidden],#show-writing-card[hidden]{display:none!important}
+#legacy-letter-tools[hidden]{display:none!important}
+#legacy-letter-tools .letter-practice-controls label:nth-child(2),
+#legacy-letter-tools .letter-preview,
+#legacy-letter-tools .tracing-board-wrap{display:none!important}
+#legacy-letter-tools .letter-guide-layout{grid-template-columns:minmax(0,1fr)}
+#legacy-letter-tools .letter-animation{max-height:220px;min-height:160px;background:#fffef9;border:1px solid #e0e8d9;border-radius:12px;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 43px,#cbdcc8 44px,#cbdcc8 45px,#fffef9 46px)}
+.show-writing-card{margin:12px 0 18px}
+@media(max-width:420px){.writing-mode-controls{gap:6px}.writing-mode-controls button{min-height:40px;padding-inline:11px}#legacy-letter-tools .letter-animation{min-height:140px}}
