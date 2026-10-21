@@ -11,32 +11,32 @@ export const VOCABULARY_CATEGORIES = [
   { id: "home", en: "Household items", my: "အိမ်သုံးပစ္စည်းများ", words: [
     ["chair", "ကုလားထိုင်", "Please sit on the chair."], ["table", "စားပွဲ", "The keys are on the table."],
     ["lamp", "မီးအိမ်", "Turn on the lamp."], ["mirror", "မှန်", "The mirror is beside the door."],
-    ["pillow", "ခေါင်းအုံး", "I need a soft pillow."], ["blanket", "စောင်", "The blanket is warm."]
+    ["pillow", "ခေါင်းအုံး", "I need a soft pillow."], ["blanket", "စောင်", "The blanket is warm."], ["shelf", "စင်", "Put the books on the shelf."], ["curtain", "လိုက်ကာ", "Close the curtain at night."]
   ]},
   { id: "electrical", en: "Electrical appliances", my: "လျှပ်စစ်ပစ္စည်းများ", words: [
     ["fan", "ပန်ကာ", "The fan is running."], ["refrigerator", "ရေခဲသေတ္တာ", "Keep the milk in the refrigerator."],
     ["washing machine", "အဝတ်လျှော်စက်", "The washing machine is full."], ["television", "ရုပ်မြင်သံကြား", "We watch television at night."],
-    ["iron", "မီးပူ", "The iron is hot."], ["charger", "အားသွင်းကိရိယာ", "My phone charger is here."]
+    ["iron", "မီးပူ", "The iron is hot."], ["charger", "အားသွင်းကိရိယာ", "My phone charger is here."], ["microwave", "မိုက်ခရိုဝေ့ဖ်", "Heat the soup in the microwave."], ["vacuum cleaner", "ဖုန်စုပ်စက်", "Use the vacuum cleaner on the carpet."]
   ]},
   { id: "kitchen", en: "Kitchen", my: "မီးဖိုချောင်", words: [
     ["spoon", "ဇွန်း", "Use a spoon to stir the soup."], ["fork", "ခက်ရင်း", "Put the fork beside the plate."],
     ["knife", "ဓား", "This knife is sharp."], ["plate", "ပန်းကန်ပြား", "The plate is clean."],
-    ["kettle", "ရေနွေးအိုး", "The kettle is boiling."], ["frying pan", "ဒယ်အိုး", "Heat the frying pan."]
+    ["kettle", "ရေနွေးအိုး", "The kettle is boiling."], ["frying pan", "ဒယ်အိုး", "Heat the frying pan."], ["cutting board", "လှီးဖြတ်ဘုတ်", "Place the carrot on the cutting board."], ["spatula", "ဟင်းလှန်ဇွန်း", "Use a spatula to turn the egg."]
   ]},
   { id: "food", en: "Food and drink", my: "အစားအစာနှင့် သောက်စရာ", words: [
     ["rice", "ထမင်း၊ ဆန်", "We eat rice for lunch."], ["bread", "ပေါင်မုန့်", "I would like some bread."],
     ["water", "ရေ", "Please drink more water."], ["milk", "နို့", "The child drinks milk."],
-    ["vegetable", "ဟင်းသီးဟင်းရွက်", "Fresh vegetables are healthy."], ["fruit", "သစ်သီး", "Fruit makes a good snack."]
+    ["vegetable", "ဟင်းသီးဟင်းရွက်", "Fresh vegetables are healthy."], ["fruit", "သစ်သီး", "Fruit makes a good snack."], ["egg", "ကြက်ဥ", "I eat an egg for breakfast."], ["juice", "ဖျော်ရည်", "Would you like a glass of juice?"]
   ]},
   { id: "clothing", en: "Clothing", my: "အဝတ်အစား", words: [
     ["shirt", "ရှပ်အင်္ကျီ", "My shirt is blue."], ["trousers", "ဘောင်းဘီရှည်", "These trousers are comfortable."],
     ["shoes", "ဖိနပ်", "Please take off your shoes."], ["jacket", "ဂျာကင်အင်္ကျီ", "Wear a jacket outside."],
-    ["dress", "ဂါဝန်", "She is wearing a red dress."], ["belt", "ခါးပတ်", "My belt is black."]
+    ["dress", "ဂါဝန်", "She is wearing a red dress."], ["belt", "ခါးပတ်", "My belt is black."], ["socks", "ခြေအိတ်", "These socks are clean."], ["hat", "ဦးထုပ်", "Wear a hat in the sun."]
   ]},
   { id: "school", en: "School and study", my: "ကျောင်းနှင့် စာသင်ကြားရေး", words: [
     ["notebook", "မှတ်စုစာအုပ်", "Write the answer in your notebook."], ["pencil", "ခဲတံ", "Use a pencil to draw."],
     ["eraser", "ခဲဖျက်", "I need an eraser."], ["lesson", "သင်ခန်းစာ", "Today's lesson is useful."],
-    ["question", "မေးခွန်း", "Please answer the question."], ["dictionary", "အဘိဓာန်", "Look up the word in a dictionary."]
+    ["question", "မေးခွန်း", "Please answer the question."], ["dictionary", "အဘိဓာန်", "Look up the word in a dictionary."], ["backpack", "ကျောပိုးအိတ်", "My backpack is heavy."], ["ruler", "ပေတံ", "Draw a straight line with a ruler."]
   ]}
 
   { id: "bathroom", en: "Bathroom and personal care", my: "ရေချိုးခန်းနှင့် ကိုယ်ရေးကိုယ်တာ", words: [
