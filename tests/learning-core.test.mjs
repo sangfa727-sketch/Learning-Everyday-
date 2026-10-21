@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { DICTIONARY, normalizeWord, lookupWord, tokenizeStory, countCharacters, clampSpeechRate } from "../learning-core.js";
+import { readLocalValue, writeLocalValue } from "../local-state.js";
 
 test("normalizes punctuation and case for word lookup", () => {
   assert.equal(normalizeWord("Garden,"), "garden");
@@ -41,4 +42,24 @@ test("speech rate is clamped and invalid values fall back safely", () => {
   assert.equal(clampSpeechRate(0), 0.5);
   assert.equal(clampSpeechRate(9), 2);
   assert.equal(clampSpeechRate("not a number"), 1);
+});
+
+test("local state helpers save and restore values using injected storage", () => {
+  const values = new Map();
+  const storage = {
+    getItem: (key) => values.has(key) ? values.get(key) : null,
+    setItem: (key, value) => values.set(key, String(value))
+  };
+  assert.equal(readLocalValue("language", "en", storage), "en");
+  assert.equal(writeLocalValue("language", "my", storage), true);
+  assert.equal(readLocalValue("language", "en", storage), "my");
+});
+
+test("local state helpers fail safely when storage is unavailable", () => {
+  const brokenStorage = {
+    getItem: () => { throw new Error("storage blocked"); },
+    setItem: () => { throw new Error("storage blocked"); }
+  };
+  assert.equal(readLocalValue("draft", "", brokenStorage), "");
+  assert.equal(writeLocalValue("draft", "text", brokenStorage), false);
 });
