@@ -10,6 +10,7 @@ A mobile-first, offline-first English-learning Progressive Web App (PWA) for Mya
 - Local English definitions, example usage, and Myanmar meanings for a small starter vocabulary set.
 - Conservative offline lookup for common inflected words (for example, `flowers` → `flower`).
 - Device text-to-speech with speed controls and stop action; voice availability depends on the browser and installed voices.
+- Local PDF text extraction (up to 15 MB and 50 pages), page-by-page reading, selectable word lookup, and device TTS; PDF bytes and extracted text are processed in memory on the device and are not uploaded. Scanned/image-only PDFs are detected and reported because OCR is not included.
 - Writing practice with a Unicode-aware character counter and locally saved draft.
 - Local persistence for interface language and writing draft, with storage failures handled safely.
 - Optional browser speech-recognition practice where supported; it is not required for core use.
@@ -57,7 +58,7 @@ Serve the repository over localhost or HTTPS to test service-worker registration
 
 ## Known limitations
 
-- PDF import, OCR, robust dictionary coverage, handwriting tracing, persistent progress, and APK packaging are not implemented yet.
+- OCR, robust dictionary coverage, handwriting tracing, persistent progress, and APK packaging are not implemented yet. PDF parsing currently loads its library from a pinned CDN on first use, so the parser itself is not guaranteed to be available offline.
 - Browser speech recognition may send audio to a browser/vendor service and may require internet; it is optional and is not advertised as an offline capability.
 - The starter dictionary is a learning prototype, not a comprehensive dictionary.
 - A PWA normally needs HTTPS for installation/service workers outside localhost. A separately packaged APK can be installed without a domain, but needs an Android build/signing and distribution workflow.
