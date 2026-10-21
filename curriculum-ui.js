@@ -19,6 +19,45 @@ function renderProgress() {
   if (summary) summary.textContent = language === "my"
     ? `ပြီးမြောက်သော လေ့ကျင့်ခန်း ${count} ခု · မှတ်တမ်းကို ဤစက်ပေါ်တွင်သာ သိမ်းထားသည်`
     : `${count} completed exercises · saved on this device only`;
+  const details = $("#progress-details");
+  if (!details) return;
+  details.replaceChildren();
+  const skillNames = language === "my"
+    ? { reading: "စာဖတ်ခြင်း", listening: "နားထောင်ခြင်း", writing: "စာရေးခြင်း", speaking: "စကားပြောခြင်း" }
+    : { reading: "Reading", listening: "Listening", writing: "Writing", speaking: "Speaking" };
+  for (const skill of ["reading", "listening", "writing", "speaking"]) {
+    const section = document.createElement("section");
+    section.className = "progress-skill";
+    const heading = document.createElement("h4");
+    heading.className = "progress-skill-title";
+    heading.textContent = skillNames[skill];
+    section.append(heading);
+    const rows = document.createElement("div");
+    rows.className = "progress-level-list";
+    for (const level of LEVELS) {
+      const row = document.createElement("div");
+      row.className = "progress-level-row";
+      const label = document.createElement("span");
+      label.className = "progress-level-label";
+      label.textContent = level.id;
+      const exercises = document.createElement("div");
+      exercises.className = "progress-exercises";
+      for (let index = 0; index < getPracticeCount(skill, level.id); index += 1) {
+        const completed = Object.hasOwn(progress.completed, `${skill}:${level.id}:${index}`);
+        const chip = document.createElement("span");
+        chip.className = completed ? "progress-exercise is-complete" : "progress-exercise";
+        chip.textContent = completed
+          ? (language === "my" ? `လေ့ကျင့်ခန်း ${index + 1} ✓` : `Exercise ${index + 1} ✓`)
+          : (language === "my" ? `လေ့ကျင့်ခန်း ${index + 1} · မပြီးသေး` : `Exercise ${index + 1} · Not yet`);
+        chip.setAttribute("aria-label", chip.textContent);
+        exercises.append(chip);
+      }
+      row.append(label, exercises);
+      rows.append(row);
+    }
+    section.append(rows);
+    details.append(section);
+  }
 }
 
 const styleInfo = {
