@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { LEVELS, VOCABULARY_CATEGORIES, SKILL_PRACTICE, EXTRA_SKILL_PRACTICE, LETTER_GUIDES, ALPHABET, getPractice, getPracticeCount } from "./curriculum.js";
+import { LEVELS, VOCABULARY_CATEGORIES, SKILL_PRACTICE, EXTRA_SKILL_PRACTICE, LETTER_GUIDES, ALPHABET, CURSIVE_GLYPHS, getPractice, getPracticeCount } from "./curriculum.js";
 
 test("vocabulary categories have unique ids and bilingual words with examples", () => {
   assert.ok(VOCABULARY_CATEGORIES.length >= 16);
@@ -52,4 +52,30 @@ test("alphabet practice includes every uppercase and lowercase English letter ex
   assert.equal(new Set(ALPHABET).size, 52);
   assert.deepEqual(ALPHABET.slice(0, 26), [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"]);
   assert.deepEqual(ALPHABET.slice(26), [..."abcdefghijklmnopqrstuvwxyz"]);
+});
+
+test("script cursive sample glyphs cover all 52 letters and match the supplied style", () => {
+  assert.deepEqual(Object.keys(CURSIVE_GLYPHS).sort(), [...ALPHABET].sort());
+  assert.equal(new Set(Object.values(CURSIVE_GLYPHS)).size, 52);
+  assert.equal(CURSIVE_GLYPHS.A, "𝒜");
+  assert.equal(CURSIVE_GLYPHS.B, "ℬ");
+  assert.equal(CURSIVE_GLYPHS.H, "ℋ");
+  assert.equal(CURSIVE_GLYPHS.M, "ℳ");
+  assert.equal(CURSIVE_GLYPHS.R, "ℛ");
+  assert.equal(CURSIVE_GLYPHS.a, "𝒶");
+  assert.equal(CURSIVE_GLYPHS.e, "ℯ");
+  assert.equal(CURSIVE_GLYPHS.g, "ℊ");
+  assert.equal(CURSIVE_GLYPHS.o, "ℴ");
+});
+
+
+test("cursive alphabet mapping covers uppercase and lowercase without collisions", () => {
+  const uppercase = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"];
+  const lowercase = [..."abcdefghijklmnopqrstuvwxyz"];
+  assert.deepEqual(Object.keys(CURSIVE_GLYPHS).filter((letter) => letter === letter.toUpperCase()), uppercase);
+  assert.deepEqual(Object.keys(CURSIVE_GLYPHS).filter((letter) => letter !== letter.toUpperCase()), lowercase);
+  assert.equal(CURSIVE_GLYPHS.a, "𝒶");
+  assert.equal(CURSIVE_GLYPHS.o, "ℴ");
+  assert.notEqual(CURSIVE_GLYPHS.a, CURSIVE_GLYPHS.o);
+  for (const letter of ALPHABET) assert.ok(CURSIVE_GLYPHS[letter], `Missing script glyph for ${letter}`);
 });
