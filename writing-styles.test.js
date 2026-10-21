@@ -60,7 +60,7 @@ test("Smart Writing Lab visibly exposes all 52 letters and the selected Script g
   assert.match(lab, /class", "script-reference-glyph"/);
   assert.match(lab, /context\.stroke\(new Path2D\(d\)\)/);
   assert.match(lab, /import \{ cursivePathsFor, splitCursiveStrokes \} from "\.\/cursive-paths\.js"/);
-  assert.match(lab, /renderSavedList\(\); renderModeLabel\(\); resizeAll\(\); renderReference\(\)/);
+  assert.match(lab, /renderSavedList\(\); renderSavedPaths\(\); renderModeLabel\(\); resizeAll\(\); renderReference\(\)/);
 });
 
 
