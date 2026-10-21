@@ -28,7 +28,7 @@ export function smoothPoints(points, strength = 1) {
   // 1) remove isolated reversals (large pointer spikes) without flattening real turns;
   // 2) apply a strength-controlled low-pass filter for smaller hand/mouse jitter.
   const filtered = points.map((point) => ({ ...point }));
-  const spikeTolerance = 0.004 + (1 - level) * 0.018;
+  const spikeTolerance = 0.04 + (1 - level) * 0.03;
   for (let i = 1; i < points.length - 1; i++) {
     const previous = points[i - 1];
     const current = points[i];
