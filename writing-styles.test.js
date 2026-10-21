@@ -12,7 +12,12 @@ test("print, cursive, and calligraphy animate letter stroke paths distinctly", a
   for (const letter of "abcdefghijklmnopqrstuvwxyz") {
     assert.match(ui, new RegExp("^  " + letter + ": \\[", "m"), `missing hand-authored cursive form for ${letter}`);
   }
-  assert.match(ui, /const handPaths = selectedStyle === "print" \? null : CURSIVE_LOWERCASE_PATHS\[selectedLetter\]/);
+  assert.match(ui, /const CURSIVE_UPPERCASE_PATHS = Object\\.freeze\\(\\{/);
+  assert.match(ui, /function cursivePathsFor\\(letter\\)/);
+  for (const letter of "ABCDEFGHIJKLMNOPQRSTUVWXYZ") {
+    assert.ok(ui.includes("  " + letter + ": ["), `missing hand-authored cursive capital for ${letter}`);
+  }
+  assert.match(ui, /const handPaths = selectedStyle === "print" \\? null : cursivePathsFor\\(selectedLetter\\)/);
   assert.match(ui, /letter-guide-strokes style-/);
   assert.match(ui, /path\.classList\.add/);
   assert.match(ui, /calligraphy-highlight/);
