@@ -211,6 +211,40 @@ const CURSIVE_LOWERCASE_PATHS = Object.freeze({
   z: ["M17 58 C34 55 52 55 69 58 C57 67 43 76 28 81 C45 82 63 80 82 73"]
 });
 
+// Hand-authored cursive capitals use curved, flowing forms instead of the print centerlines.
+const CURSIVE_UPPERCASE_PATHS = Object.freeze({
+  A: ["M12 78 C24 58 35 31 48 17 C57 30 63 57 72 77 C75 84 82 82 88 73", "M32 53 C44 48 55 48 65 51"],
+  B: ["M20 80 C22 59 25 37 28 17 C43 15 58 18 60 31 C62 43 48 49 30 49 C48 45 68 48 70 64 C72 80 47 84 20 80"],
+  C: ["M76 29 C63 16 46 14 33 25 C18 38 18 65 33 76 C46 86 63 81 79 68"],
+  D: ["M21 80 C23 59 25 38 27 18 C45 14 64 24 69 43 C75 65 57 82 21 80"],
+  E: ["M70 21 C54 15 37 16 27 27 C19 38 23 48 39 48 C52 48 61 45 67 42 M26 48 C24 63 31 77 48 80 C59 82 70 77 80 68"],
+  F: ["M24 80 C28 59 30 39 33 20 C48 14 61 19 62 30 C63 41 50 47 35 48 M23 50 C39 46 55 46 70 49 M40 48 C36 64 31 79 24 91 C19 98 12 96 13 89"],
+  G: ["M77 28 C63 16 45 16 32 28 C18 41 20 66 34 76 C48 86 65 79 76 68 L76 54 L57 55"],
+  H: ["M20 80 C24 58 27 38 30 18 C32 11 40 14 39 23 L31 54 C44 44 57 43 64 49 C70 55 63 69 60 80 M33 51 C46 46 61 47 75 53"],
+  I: ["M36 22 C44 17 52 18 59 22 M46 22 C42 42 37 63 33 80 C44 82 55 80 66 75"],
+  J: ["M61 22 C51 18 42 19 33 23 M49 22 C44 45 41 70 32 84 C25 96 14 93 15 84"],
+  K: ["M22 80 C26 58 29 37 32 18 C34 11 42 14 41 23 L33 53 C45 43 57 35 68 27 M42 48 C51 61 62 72 78 78"],
+  L: ["M33 19 C31 39 27 61 23 78 C39 84 58 80 78 67"],
+  M: ["M16 79 C20 57 24 35 28 18 C37 31 44 48 49 62 C56 44 63 28 72 17 C76 38 80 59 84 78"],
+  N: ["M19 79 C23 57 27 35 31 18 C44 37 56 58 69 78 C72 57 76 37 80 18"],
+  O: ["M51 17 C31 15 20 34 21 52 C22 72 35 83 51 80 C68 77 77 58 75 40 C73 25 63 17 51 17"],
+  P: ["M23 80 C27 59 30 38 32 18 C47 14 63 19 65 33 C67 48 50 54 30 51"],
+  Q: ["M51 17 C31 15 20 34 21 52 C22 72 35 83 51 80 C68 77 77 58 75 40 C73 25 63 17 51 17 M52 64 C60 74 69 83 83 88"],
+  R: ["M23 80 C27 59 30 38 32 18 C47 14 63 19 65 33 C67 47 50 54 30 51 M43 52 C52 63 64 73 80 79"],
+  S: ["M70 25 C58 15 42 16 32 26 C21 37 35 45 48 49 C64 54 72 62 64 73 C55 84 36 82 22 73"],
+  T: ["M22 24 C39 18 57 18 75 23 M49 22 C44 42 38 63 32 81"],
+  U: ["M27 20 C24 40 22 62 32 74 C43 87 59 79 64 65 C69 52 72 35 75 20"],
+  V: ["M23 21 C31 42 39 64 48 81 C60 61 70 40 80 21"],
+  W: ["M15 22 C22 42 28 63 35 80 C44 63 50 48 56 36 C60 52 65 67 70 80 C79 60 85 41 90 22"],
+  X: ["M25 23 C39 39 54 59 76 79 M75 23 C58 40 42 61 23 79"],
+  Y: ["M22 23 C33 39 42 50 51 58 C60 46 69 35 79 22 M51 58 C46 68 41 76 35 84"],
+  Z: ["M26 24 C43 19 60 20 76 24 C59 42 42 61 25 78 C43 82 62 80 80 74"]
+});
+
+function cursivePathsFor(letter) {
+  return CURSIVE_LOWERCASE_PATHS[letter] ?? CURSIVE_UPPERCASE_PATHS[letter] ?? null;
+}
+
 function renderLetterGuide() {
   const guide = LETTER_GUIDES[selectedLetter] ?? {
     start: `Trace the ${selectedLetter === selectedLetter.toUpperCase() ? "uppercase" : "lowercase"} letter slowly, following the faint template.`,
@@ -239,7 +273,7 @@ function renderLetterGuide() {
   baseline.setAttribute("y1", "88"); baseline.setAttribute("y2", "88");
   baseline.setAttribute("class", "letter-baseline");
   svg.append(baseline);
-  const stylePaths = selectedStyle === "print" ? guide.paths : (CURSIVE_LOWERCASE_PATHS[selectedLetter] ?? guide.paths);
+  const stylePaths = selectedStyle === "print" ? guide.paths : (cursivePathsFor(selectedLetter) ?? guide.paths);
   if (stylePaths.length) {
     const strokeGroup = document.createElementNS(ns, "g");
     strokeGroup.setAttribute("class", `letter-guide-strokes style-${selectedStyle}`);
@@ -313,7 +347,7 @@ function renderTraceTemplate() {
   context.lineTo(rect.width - 12, rect.height * 0.78);
   context.stroke();
   context.setLineDash([]);
-  const handPaths = selectedStyle === "print" ? null : CURSIVE_LOWERCASE_PATHS[selectedLetter];
+  const handPaths = selectedStyle === "print" ? null : cursivePathsFor(selectedLetter);
   if (handPaths && typeof Path2D === "function") {
     const size = Math.min(rect.width * 0.78, rect.height * 0.78);
     context.save();
