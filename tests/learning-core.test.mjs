@@ -14,6 +14,14 @@ test("dictionary is a local, non-empty source for the sample story", () => {
   for (const word of ["garden", "morning", "flower", "bird", "happy"]) assert.ok(lookupWord(word));
 });
 
+test("looks up common inflected forms without a network request", () => {
+  assert.equal(lookupWord("flowers")?.my, "ပန်း");
+  assert.equal(lookupWord("waters")?.my, "ရေလောင်းသည်");
+  assert.equal(lookupWord("visits")?.my, "လာရောက်လည်ပတ်သည်");
+  assert.equal(lookupWord("singing")?.my, "သီချင်းဆိုသည်");
+  assert.equal(lookupWord("unknowns"), null);
+});
+
 test("tokenization preserves all story text and whitespace", () => {
   const input = "A bird sings!";
   const tokens = tokenizeStory(input);
