@@ -12,10 +12,10 @@ test("Smart Writing Lab is reachable, route-focused, and refreshed from cache", 
     readFile(new URL("./curriculum-ui.js", import.meta.url), "utf8")
   ]);
 
-  assert.match(html, /id="writing-lab-nav-link" class="skills-nav-link" data-writing-lab-entry href="\.\/writing-lab\.html">Smart Writing Lab<\/a>/);
+  assert.match(html, /id="writing-lab-nav-link" class="skills-nav-link" data-writing-lab-entry href="\.\/writing-lab\.html#paste-path-editor">Smart Writing Lab<\/a>/);
   assert.match(html, /id="writing-lab-entry" class="writing-lab-entry"[^>]*data-writing-lab-entry/);
   assert.match(html, /<h2 id="writing-lab-entry-title">Smart Writing Lab<\/h2>/);
-  assert.match(html, /class="writing-lab-entry-action" href="\.\/writing-lab\.html">Open Smart Writing Lab/);
+  assert.match(html, /class="writing-lab-entry-action" href="\.\/writing-lab\.html#paste-path-editor">Open Smart Writing Lab/);
   assert.match(html, /id="smart-writing-lab"/);
   assert.match(curriculum, /letterTitle: "Smart Writing Lab"/);
   assert.match(css, /body\[data-page="writing"\] #curriculum-workbench #smart-writing-lab/);
