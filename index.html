@@ -71,6 +71,44 @@
       </div>
     </section>
 
+    <section id="curriculum-workbench" class="curriculum-workbench" aria-labelledby="curriculum-title">
+      <div class="curriculum-header">
+        <div><p class="eyebrow">LEARN BY TOPIC · PRACTISE BY LEVEL</p><h2 id="curriculum-title">Build skills step by step</h2><p>Explore everyday vocabulary, then practise reading, listening, writing and speaking from Beginner to Proficient.</p></div>
+        <span class="section-index">02 <span>/ LEARN</span></span>
+      </div>
+      <div class="curriculum-grid">
+        <section class="curriculum-card" aria-labelledby="vocabulary-heading">
+          <h3 id="vocabulary-heading">Vocabulary by topic</h3><p class="curriculum-muted">Choose a real-life topic. Tap a word to see its Myanmar meaning and an example sentence.</p>
+          <label class="sr-only" for="vocabulary-category">Vocabulary topic</label><select id="vocabulary-category" class="curriculum-select"></select>
+          <h4 id="vocabulary-category-title" class="curriculum-category-title">Household items</h4>
+          <div id="vocabulary-list" class="vocabulary-list" aria-live="polite"></div>
+          <div id="vocabulary-detail" class="vocabulary-detail" hidden><strong id="vocabulary-meaning"></strong><p id="vocabulary-example"></p></div>
+        </section>
+        <section class="curriculum-card" aria-labelledby="practice-heading">
+          <h3 id="practice-heading">Four skills · six levels</h3><p class="curriculum-muted">Select a level, then use the skill cards above to change the exercise.</p>
+          <label class="sr-only" for="practice-level">English proficiency level</label><select id="practice-level" class="curriculum-select"></select>
+          <div class="level-practice-top"><h4 id="level-practice-title">Find the object</h4><span id="level-practice-level" class="level-tag">A1 · Beginner</span></div>
+          <div id="level-practice-prompt" class="level-practice-prompt"></div>
+          <p id="level-practice-task" class="level-practice-task"></p>
+          <div id="practice-answer-wrap" hidden><label class="sr-only" for="level-practice-answer">Your writing answer</label><textarea id="level-practice-answer" class="practice-answer" rows="3" placeholder="Write your answer here"></textarea></div>
+          <button id="practice-action" class="practice-action" type="button">Listen to model</button>
+          <p id="practice-speaking-note" class="practice-speaking-note" hidden>Try saying your answer aloud. Browser microphone recognition is optional and may require an internet connection.</p>
+        </section>
+      </div>
+      <section class="curriculum-card letter-practice" aria-labelledby="letter-practice-heading">
+        <h3 id="letter-practice-heading">Letter writing studio</h3><p class="curriculum-muted">Practise uppercase and lowercase print, then explore cursive and calligraphy. The animated guide shows the sample stroke sequence.</p>
+        <div class="letter-practice-controls">
+          <label><span class="curriculum-muted">Choose a letter</span><select id="letter-select" class="curriculum-select" aria-label="Choose a letter"></select></label>
+          <label><span class="curriculum-muted">Writing style</span><select id="letter-style" class="curriculum-select"><option value="print">Print · Uppercase / lowercase</option><option value="cursive">Cursive</option><option value="calligraphy">Calligraphy</option></select></label>
+        </div>
+        <div class="letter-guide-layout">
+          <div class="letter-preview"><span id="letter-sample" class="letter-sample" aria-hidden="true">A</span></div>
+          <div><h4 id="letter-guide-title" class="letter-guide-title">Print · A</h4><svg id="letter-animation" class="letter-animation" viewBox="0 0 100 100" role="img" aria-label="Animated letter stroke guide"></svg><p id="letter-start-instruction" class="letter-start-instruction"></p><p id="letter-stroke-count" class="letter-stroke-count"></p><button id="replay-letter" class="letter-replay" type="button">Replay stroke animation</button></div>
+        </div>
+        <p id="letter-style-note" class="letter-style-note"></p>
+      </section>
+      <p id="curriculum-status" class="status-message" role="status">Choose a topic and practise at your own pace.</p>
+    </section>
     <section id="practice-panel" class="practice-panel" aria-labelledby="panel-title">
       <div class="panel-topline"><span class="panel-label"><span class="panel-label-dot"></span><span data-i18n="practice">YOUR PRACTICE SPACE</span></span><span class="lesson-number">LESSON 01</span></div>
       <div class="panel-heading"><div><p class="eyebrow" data-i18n="lessonType">A SHORT READING</p><h2 id="panel-title">Read a short story</h2></div><span class="level-tag"><span class="level-dot"></span>A1 <span data-i18n="beginner">Beginner</span></span></div>
@@ -94,5 +132,6 @@
     <footer><a class="footer-brand" href="./"><span class="footer-mark">le</span> Learning Everyday</a><span data-i18n="privacy">Your practice stays on this device in this first version.</span><a class="back-top" href="#main-content" data-i18n="backTop">Back to top ↑</a></footer>
   </main>
   <script type="module" src="./app.js"></script>
+  <script type="module" src="./curriculum-ui.js"></script>
 </body>
 </html>
