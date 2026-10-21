@@ -74,7 +74,7 @@ h1{font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.15;margin:22px 0 8px}h2{font
 
 <div class="panel" id="paste-path-editor">
 <h2>Paste → Path → Animation Points → Code</h2>
-<p class="small">A–Z / a–z စာလုံးတစ်လုံးကို Paste လုပ်ပါ။ စာလုံးကို outline path အဖြစ်ပြောင်းပြီး နံပါတ်ပါ point များကို ဆွဲရွှေ့နိုင်သည်။ SVG path code ကို တိုက်ရိုက် Paste လုပ်လည်းရသည်။ Font မှ outline ပြောင်းခြင်းသည် လက်ရေး centerline ကို မခန့်မှန်းနိုင်သောကြောင့် ရလာသော path ကို စစ်ဆေးပြင်ဆင်ရန်လိုသည်။</p>
+<p class="small">A–Z / a–z စာလုံးတစ်လုံးကို Paste လုပ်ပါ။ Cursive ရေးဟန်ရွေးထားပါက ရှိပြီးသား hand-authored centerline ကို အသုံးပြုမည်။ အခြားရေးဟန်များတွင် font outline အဖြစ်ပြောင်းမည်။ SVG path code ကို တိုက်ရိုက် Paste လုပ်လည်းရသည်။ Font မှ outline ပြောင်းခြင်းသည် လက်ရေး centerline ကို မခန့်မှန်းနိုင်သောကြောင့် ရလာသော path ကို စစ်ဆေးပြင်ဆင်ရန်လိုသည်။</p>
 <label for="paste-letter-input">စာလုံး သို့မဟုတ် SVG path ကို Paste လုပ်ရန်</label>
 <textarea id="paste-letter-input" placeholder="ဥပမာ: a  သို့မဟုတ် M 10 20 L 30 40 ..."></textarea>
 <div class="controls" style="margin-top:8px"><button id="convert-pasted-path" type="button">Path ဖန်တီး / ပြန်ဖန်တီး</button><button id="replay-pasted-path" class="secondary" type="button">Animation ကြည့်</button><button id="save-pasted-path" type="button">ဒီစက်တွင် သိမ်း + JSON ထုတ်</button></div>
@@ -203,17 +203,23 @@ function glyphContours(letter) {
 }
 function area(points){let sum=0;for(let i=0;i<points.length;i++){const a=points[i],b=points[(i+1)%points.length];sum+=a.x*b.y-b.x*a.y;}return Math.abs(sum/2)}
 function parseSvgPath(raw){
-  const cleaned=raw.trim(); if(!/[Mm]/.test(cleaned)||!/^[\sMmLlHhVvCcSsQqTtAaZz0-9eE+.,-]+$/.test(cleaned))return null;
+  const cleaned=raw.trim(); if(!/[Mm]/.test(cleaned)||!/^[\\sMmLlHhVvCcSsQqTtAaZz0-9eE+.,-]+$/.test(cleaned))return null;
   const chunks=cleaned.split(/(?=[Mm])/).map(s=>s.trim()).filter(Boolean), result=[];
   const probe=document.createElementNS(svgNS,"svg");probe.setAttribute("viewBox","0 0 100 100");probe.style.cssText="position:fixed;left:-10000px;top:-10000px;width:100px;height:100px;visibility:hidden";document.body.append(probe);
-  try { for(const d of chunks){const path=document.createElementNS(svgNS,"path");path.setAttribute("d",d);probe.append(path);let length=0,box;try{length=path.getTotalLength();box=path.getBBox();}catch{path.remove();continue;}
-    if(!Number.isFinite(length)||length<1||!box||box.width<0.01||box.height<0.01){path.remove();continue;}
+  try {
+    const master=document.createElementNS(svgNS,"path");master.setAttribute("d",cleaned);probe.append(master);
+    let box;try{box=master.getBBox();}catch{return null;}
+    if(!box||box.width<0.01||box.height<0.01)return null;
     const scale=Math.min(100/box.width,100/box.height),ox=(100-box.width*scale)/2-box.x*scale,oy=(100-box.height*scale)/2-box.y*scale;
-    const count=Math.max(8,Math.min(400,Math.ceil(length/1.5))),pts=[];
-    for(let i=0;i<=count;i++){const p=path.getPointAtLength(length*i/count);pts.push({x:Math.max(0,Math.min(100,p.x*scale+ox)),y:Math.max(0,Math.min(100,p.y*scale+oy))});}
-    const simplified=pts.filter((p,i)=>i===0||i===pts.length-1||Math.hypot(p.x-pts[i-1].x,p.y-pts[i-1].y)>0.8);
-    if(simplified.length>1)result.push({points:simplified,start:0});path.remove();
-  }} finally {probe.remove();}
+    master.remove();
+    for(const d of chunks){const path=document.createElementNS(svgNS,"path");path.setAttribute("d",d);probe.append(path);let length=0;try{length=path.getTotalLength();}catch{path.remove();continue;}
+      if(!Number.isFinite(length)||length<1){path.remove();continue;}
+      const count=Math.max(8,Math.min(400,Math.ceil(length/1.5))),pts=[];
+      for(let i=0;i<=count;i++){const p=path.getPointAtLength(length*i/count);pts.push({x:Math.max(0,Math.min(100,p.x*scale+ox)),y:Math.max(0,Math.min(100,p.y*scale+oy))});}
+      const simplified=pts.filter((p,i)=>i===0||i===pts.length-1||Math.hypot(p.x-pts[i-1].x,p.y-pts[i-1].y)>0.8);
+      if(simplified.length>1)result.push({points:simplified,start:0});path.remove();
+    }
+  } finally {probe.remove();}
   return result.length?result:null;
 }
 function rotateContour(contour){const pts=contour.points;const start=((contour.start||0)%pts.length+pts.length)%pts.length;return [...pts.slice(start),...pts.slice(0,start)];}
@@ -229,9 +235,13 @@ function renderEditablePaths(animate=false){
 function renderPointList(){const list=$("path-point-list");list.replaceChildren();editableOrder.forEach((idx,order)=>{const row=document.createElement("div");row.className="path-point-row";const label=document.createElement("strong");label.textContent=(order+1)+". Animation point · path "+(idx+1);const up=document.createElement("button");up.type="button";up.className="secondary";up.textContent="↑";up.disabled=order===0;up.onclick=()=>{[editableOrder[order-1],editableOrder[order]]=[editableOrder[order],editableOrder[order-1]];renderEditablePaths();};const down=document.createElement("button");down.type="button";down.className="secondary";down.textContent="↓";down.disabled=order===editableOrder.length-1;down.onclick=()=>{[editableOrder[order+1],editableOrder[order]]=[editableOrder[order],editableOrder[order+1]];renderEditablePaths();};row.append(label,up,down);list.append(row);});}
 function updatePathCode(){const letter=pasteInput.value.trim();const code={schemaVersion:1,kind:"learning-everyday-editable-letter-path",source:letter,style:styleSelect.value,paths:editableOrder.map((idx,order)=>({order:order+1,d:pathData(editableContours[idx]),startPoint:rotateContour(editableContours[idx])[0]}))};$("generated-path-code").value=editableContours.length?JSON.stringify(code,null,2):"";}
 function createPastedPath(){const raw=pasteInput.value.trim();if(!raw){$("paste-path-status").textContent="စာလုံးတစ်လုံး သို့မဟုတ် SVG path ကို အရင် Paste လုပ်ပါ။";return;}
-  let contours=parseSvgPath(raw),source="SVG path";if(!contours){const letters=[...raw].filter(ch=>/[A-Za-z]/.test(ch));if(letters.length!==1||[...raw].some(ch=>!/[A-Za-z\s]/.test(ch))){$("paste-path-status").textContent="A–Z / a–z စာလုံးတစ်လုံးတည်း သို့မဟုတ် SVG path data ကို ထည့်ပါ။";return;}const letter=letters[0];letterSelect.value=letter;captureLetter=letter;contours=glyphContours(letter);source="pasted glyph";}
-  if(!contours.length){$("paste-path-status").textContent="Path မဖန်တီးနိုင်ပါ။ ပိုရှင်းသော font/စာလုံးကို သုံးပါ သို့မဟုတ် SVG path data ကို Paste လုပ်ပါ။";return;}
-  editableContours=contours;editableOrder=contours.map((_,i)=>i);renderEditablePaths();$("paste-path-status").textContent=source+" မှ path "+contours.length+" ခု ဖန်တီးပြီးပါပြီ။ နံပါတ်အမှတ်ကို ဆွဲရွှေ့၍ start point ပြောင်းပါ။ Font outline သည် လက်ရေး centerline မဟုတ်ပါ။";
+  let contours=parseSvgPath(raw),source="SVG path";if(!contours){const letters=[...raw].filter(ch=>/[A-Za-z]/.test(ch));if(letters.length!==1||[...raw].some(ch=>!/[A-Za-z\\s]/.test(ch))){$("paste-path-status").textContent="A–Z / a–z စာလုံးတစ်လုံးတည်း သို့မဟုတ် SVG path data ကို ထည့်ပါ။";return;}const letter=letters[0];letterSelect.value=letter;captureLetter=letter;
+    const authored=styleSelect.value==="cursive"?cursivePathsFor(letter):null;
+    contours=authored?.length?parseSvgPath(authored.join(" ")):glyphContours(letter);
+    source=authored?.length?"hand-authored cursive centerline":"pasted glyph outline";
+  }
+  if(!contours?.length){$("paste-path-status").textContent="Path မဖန်တီးနိုင်ပါ။ ပိုရှင်းသော font/စာလုံးကို သုံးပါ သို့မဟုတ် SVG path data ကို Paste လုပ်ပါ။";return;}
+  editableContours=contours;editableOrder=contours.map((_,i)=>i);renderEditablePaths();$("paste-path-status").textContent=source+" မှ path "+contours.length+" ခု ဖန်တီးပြီးပါပြီ။ နံပါတ်အမှတ်ကို ဆွဲရွှေ့၍ start point ပြောင်းပါ။ "+(source==="hand-authored cursive centerline"?"ဤ path များသည် ရှိပြီးသား cursive centerline များဖြစ်သည်။":"Font outline သည် လက်ရေး centerline မဟုတ်ပါ။");
 }
 $("convert-pasted-path").addEventListener("click",createPastedPath);
 let pastedLetterTimer;
