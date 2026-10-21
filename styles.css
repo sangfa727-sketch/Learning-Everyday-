@@ -192,3 +192,34 @@ body[data-page="progress"] #curriculum-workbench .progress-tools{display:block;m
 .progress-exercise{display:inline-flex;align-items:center;min-height:28px;border:1px solid #e1e5dd;border-radius:9px;padding:4px 7px;font-size:10px;line-height:1.3;color:var(--muted,#657267);background:#f7f8f5}
 .progress-exercise.is-complete{border-color:#b8d2b6;background:#eaf4e7;color:#245b3c;font-weight:750}
 @media(max-width:560px){.progress-details{grid-template-columns:minmax(0,1fr)}.progress-skill{padding:12px}.progress-exercise{font-size:11px}}
+
+
+/* Central skill and CEFR selection lives only on the Skills & Levels page. */
+.skills-nav-link{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 14px;border:1px solid #dfe6dc;border-radius:13px;background:#fff;color:var(--forest);font-size:12px;font-weight:750;text-decoration:none;white-space:nowrap}
+.skills-nav-link:hover,.skills-nav-link:focus-visible{background:#f1f6eb;border-color:#b9cdb8;outline-offset:3px}
+body[data-page="skills"] #skills-level-page{display:block}
+body[data-page="skills"] #curriculum-workbench,body[data-page="skills"] #practice-panel{display:none}
+body[data-page="home"] #skills-level-page{display:none}
+.skills-level-page{padding:clamp(18px,3vw,28px);border:1px solid #e1e8de;border-radius:24px;background:linear-gradient(145deg,#fff,#f8faf5);box-shadow:var(--shadow)}
+.skills-level-page .section-heading{margin-bottom:18px}
+.skill-level-picker{margin-top:26px;padding-top:22px;border-top:1px solid var(--line)}
+.skill-level-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.skill-level-heading h3{margin:0;color:var(--forest);font-size:18px}
+.skill-level-heading p{margin:6px 0 0}
+.level-choice-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.level-choice{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:6px;min-height:86px;padding:13px;border:1px solid #e1e8de;border-radius:14px;background:#fff;color:#314a3b;text-align:left;cursor:pointer}
+.level-choice strong{font-size:18px;letter-spacing:-.4px}
+.level-choice span{font-size:11px;color:var(--muted);line-height:1.35}
+.level-choice[aria-pressed="true"]{border-color:#6f967a;background:#edf5e9;box-shadow:inset 0 0 0 1px #6f967a}
+.level-choice:focus-visible{outline:3px solid #9bbd69;outline-offset:2px}
+.start-practice-button{margin-top:16px;width:100%;min-height:48px}
+.change-level-link{display:inline-flex;align-items:center;min-height:36px;margin:0 0 12px;color:#42664a;font-size:12px;font-weight:750;text-decoration:underline;text-underline-offset:3px}
+.letter-sample.style-print{font-family:Arial,sans-serif;font-style:normal;font-weight:700}
+.letter-sample.style-cursive{font-family:"Segoe Print","Comic Sans MS",cursive;font-style:italic;font-weight:500;transform:rotate(-5deg)}
+.letter-sample.style-calligraphy{font-family:"URW Chancery L","Brush Script MT","Apple Chancery",cursive;font-style:italic;font-weight:800;-webkit-text-stroke:.7px currentColor;text-shadow:1px 0 currentColor}
+.letter-template-glyph{font-size:76px;fill:none;stroke:#7c9a7a;stroke-width:1.2;stroke-dasharray:2 2}
+.letter-template-glyph.style-cursive{font-family:"Segoe Print","Comic Sans MS",cursive;font-style:italic;font-weight:500;stroke-width:1}
+.letter-template-glyph.style-calligraphy{font-family:"URW Chancery L","Brush Script MT","Apple Chancery",cursive;font-style:italic;font-weight:800;stroke-width:2.4;stroke-dasharray:none}
+.letter-style-flourish{fill:none;stroke:#7c9a7a;stroke-width:1.3;stroke-linecap:round;stroke-dasharray:2 2}
+@media(max-width:760px){.skills-level-page{padding:16px;border-radius:20px}.level-choice-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.level-choice{min-height:76px;padding:11px}.skills-nav-link,.progress-nav-link{padding:0 10px;font-size:11px}}
+@media(max-width:420px){.header-actions{gap:7px}.skills-nav-link,.progress-nav-link{min-height:38px;padding:0 8px;font-size:10px}.skill-level-heading{align-items:flex-start;flex-direction:column}}
