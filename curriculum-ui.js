@@ -414,17 +414,12 @@ function renderTraceTemplate() {
     for (const d of handPaths) context.stroke(new Path2D(d));
     context.restore();
   } else {
+    // Font glyph is only a fallback when no hand-authored stroke paths exist.
     context.textAlign = "center";
     context.textBaseline = "alphabetic";
     const fontSize = Math.max(72, Math.min(180, rect.height * 0.68, rect.width * 0.55));
-    const font = selectedStyle === "cursive" ? `${fontSize}px "Cambria Math", "STIX Two Math", "Noto Sans Math", "Segoe UI Symbol", serif`
-      : selectedStyle === "calligraphy" ? `italic bold ${fontSize}px "URW Chancery L", "Brush Script MT", "Apple Chancery", cursive`
-      : `${fontSize}px Arial, sans-serif`;
-    context.font = font;
-    context.lineWidth = selectedStyle === "calligraphy" ? 2.8 : selectedStyle === "cursive" ? 1.1 : 1.5;
-    context.strokeStyle = "rgba(90, 124, 91, 0.32)";
-    const traceGlyph = selectedStyle === "cursive" ? (CURSIVE_GLYPHS[selectedLetter] ?? selectedLetter) : selectedLetter;
-    context.strokeText(traceGlyph, rect.width / 2, rect.height * 0.76);
+    context.font = `${selectedStyle === "cursive" ? "italic " : ""}${fontSize}px Georgia, serif`;
+    context.strokeText(selectedLetter, rect.width / 2, rect.height * 0.76);
     if (selectedStyle === "calligraphy") {
       context.fillStyle = "rgba(90, 124, 91, 0.08)";
       context.fillText(selectedLetter, rect.width / 2, rect.height * 0.76);
