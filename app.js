@@ -22,7 +22,7 @@ const pageCopy = {
 };
 const validPages = new Set(["home", "reading", "listening", "writing", "speaking"]);
 function currentPage() {
-  const route = location.hash.match(/^#\\/(home|reading|listening|writing|speaking)\\/?$/)?.[1];
+  const route = location.hash.slice(1).split("/").filter(Boolean)[0];
   return validPages.has(route) ? route : "home";
 }
 function renderPage() {
