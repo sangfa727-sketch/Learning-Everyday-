@@ -8,7 +8,10 @@ test("cursive practice animates hand-authored strokes and traces the same paths"
     readFile(new URL("./styles.css", import.meta.url), "utf8"),
     readFile(new URL("./index.html", import.meta.url), "utf8")
   ]);
-  assert.match(ui, /sample\.textContent = selectedStyle === "cursive" \? \(CURSIVE_GLYPHS\[selectedLetter\] \?\? selectedLetter\)/);
+  assert.match(ui, /sample\.replaceChildren\(\)/);
+  assert.match(ui, /const samplePaths = cursivePathsFor\(selectedLetter\) \?\? \[\]/);
+  assert.match(ui, /letter-sample-svg/);
+  assert.match(ui, /letter-sample-stroke/);
   assert.match(ui, /const stylePaths = selectedStyle === "print"/);
   assert.match(ui, /cursivePathsFor\(selectedLetter\)/);
   assert.match(ui, /Cursive · \$\{visibleStrokeCount\} hand-drawn strokes animated in sequence/);
@@ -20,7 +23,8 @@ test("cursive practice animates hand-authored strokes and traces the same paths"
   assert.match(ui, /Lowercase a–z/);
   assert.match(html, /id="letter-alphabet-grid"/);
   assert.match(css, /\.letter-template-glyph\.style-cursive/);
-  assert.match(css, /\.letter-template-glyph\.style-cursive\{[^}]*stroke-dasharray:1000;stroke-dashoffset:1000;fill:transparent;animation:trace-script-glyph 1\.8s ease-out forwards/);
+  assert.match(css, /\.letter-sample-svg/);
+  assert.match(css, /\.letter-sample-stroke/);
   assert.match(css, /@keyframes trace-script-glyph\{0%\{stroke-dashoffset:1000;fill:transparent\}82%\{stroke-dashoffset:0;fill:transparent\}100%\{stroke-dashoffset:0;fill:rgba\(71,123,98,\.08\)\}\}/);
   assert.match(css, /trace-script-glyph/);
   assert.match(css, /letter-alphabet-row/);
