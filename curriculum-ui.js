@@ -226,7 +226,10 @@ function setLanguage(next) {
       replay: "Replay stroke animation",
       listen: "Listen to model",
       answerPlaceholder: "Write your answer or notes here…",
-      speakingNote: "Say your response aloud. The speaking practice controls in the lesson panel below offer optional browser microphone recognition where supported."
+      speakingNote: "Say your response aloud. The speaking practice controls in the lesson panel below offer optional browser microphone recognition where supported.",
+      traceTitle: "Trace and practise",
+      traceIntro: "Follow the faint letter with your finger or mouse. This drawing stays in the current page and is not uploaded.",
+      clearTrace: "Clear tracing"
     },
     my: {
       curriculumTitle: "အဆင့်လိုက် ကျွမ်းကျင်မှုများ တည်ဆောက်ပါ",
@@ -242,7 +245,10 @@ function setLanguage(next) {
       replay: "မျဉ်းဆွဲလှုပ်ရှားမှု ပြန်ကြည့်ရန်",
       listen: "နမူနာအသံ နားထောင်ရန်",
       answerPlaceholder: "ဤနေရာတွင် အဖြေ သို့မဟုတ် မှတ်စုရေးပါ…",
-      speakingNote: "အဖြေကို အသံထွက်ပြောပါ။ အောက်ရှိ Speaking လေ့ကျင့်ခန်းတွင် browser က ပံ့ပိုးပါက မိုက်ခရိုဖုန်းဖြင့် စမ်းသပ်နိုင်သည်။"
+      speakingNote: "အဖြေကို အသံထွက်ပြောပါ။ အောက်ရှိ Speaking လေ့ကျင့်ခန်းတွင် browser က ပံ့ပိုးပါက မိုက်ခရိုဖုန်းဖြင့် စမ်းသပ်နိုင်သည်။",
+      traceTitle: "စာလုံးကို လိုက်ရေးလေ့ကျင့်ပါ",
+      traceIntro: "ဖျော့ဖျော့ပြထားသော စာလုံးကို လက်ချောင်း သို့မဟုတ် mouse ဖြင့် လိုက်ရေးပါ။ ရေးဆွဲချက်ကို ဤစာမျက်နှာတွင်သာ ထားရှိပြီး upload မလုပ်ပါ။",
+      clearTrace: "လေ့ကျင့်မှုကို ရှင်းရန်"
     }
   }[next];
   $("#curriculum-title").textContent = copy.curriculumTitle;
@@ -259,6 +265,9 @@ function setLanguage(next) {
   $("#practice-action").textContent = copy.listen;
   $("#level-practice-answer").placeholder = copy.answerPlaceholder;
   $("#practice-speaking-note").textContent = copy.speakingNote;
+  $("#tracing-heading").textContent = copy.traceTitle;
+  $("#letter-tracing").previousElementSibling.textContent = copy.traceIntro;
+  $("#clear-tracing").textContent = copy.clearTrace;
   $("#complete-practice").textContent = next === "my" ? "ဤလေ့ကျင့်ခန်း ပြီးမြောက်ကြောင်း မှတ်ရန်" : "Mark practice complete";
   $("#export-progress").textContent = next === "my" ? "မှတ်တမ်း Export ထုတ်ရန်" : "Export progress";
   $("#clear-progress").textContent = next === "my" ? "မှတ်တမ်းရှင်းရန်" : "Clear progress";
