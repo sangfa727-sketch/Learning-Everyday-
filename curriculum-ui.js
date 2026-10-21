@@ -18,7 +18,7 @@ function renderProgress() {
   const summary = $("#progress-summary");
   if (summary) summary.textContent = language === "my"
     ? `ပြီးမြောက်သော လေ့ကျင့်ခန်း ${count} ခု · မှတ်တမ်းကို ဤစက်ပေါ်တွင်သာ သိမ်းထားသည်`
-    : `${count} completed skill-level practices · saved on this device only`;
+    : `${count} completed exercises · saved on this device only`;
 }
 
 const styleInfo = {
@@ -415,7 +415,7 @@ window.addEventListener("resize", () => renderTraceTemplate());
 
 $("#complete-practice").addEventListener("click", () => {
   try {
-    const nextProgress = markPracticeComplete(progress, activeSkill, selectedLevel);
+    const nextProgress = markPracticeComplete(progress, activeSkill, selectedLevel, selectedExerciseIndex);
     if (!saveProgress(nextProgress)) {
       setStatus(language === "my" ? "မှတ်တမ်းကို ဤစက်တွင် သိမ်း၍မရပါ။ Storage ခွင့်ပြုချက်ကို စစ်ပါ။" : "Progress could not be saved on this device. Check storage availability.");
       return;
