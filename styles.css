@@ -295,7 +295,6 @@ body[data-page="progress"] #skills-level-page {
 }
 body[data-page="reading"] #curriculum-workbench,
 body[data-page="skills"] #curriculum-workbench,
-body[data-page="reading"] #practice-panel,
 body[data-page="skills"] #practice-panel,
 body[data-page="progress"] #practice-panel {
   display: none !important;
