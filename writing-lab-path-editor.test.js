@@ -20,8 +20,8 @@ test("Smart Writing Lab paste-to-path editor exposes conversion, draggable order
   assert.match(html, /navigator\.clipboard\.writeText\(code\)/);
   assert.match(html, /Font outline သည် လက်ရေး centerline မဟုတ်ပါ/);
   assert.match(html, /id="saved-path-library"/);
-  assert.match(html, /le\\.writingLab\\.savedLetterPaths\\.v1/);
-  assert.match(html, /function renderSavedPaths\\(\\)/);
+  assert.match(html, /le\.writingLab\.savedLetterPaths\.v1/);
+  assert.match(html, /function renderSavedPaths\(\)/);
   assert.match(html, /saved-path-list/);
   assert.match(html, /သိမ်းထားသော path ကို ပြန်ဖွင့်ပြီးပါပြီ/);
 });
