@@ -164,7 +164,7 @@ $("replay-reference").addEventListener("click", renderReference);
 const pasteInput = $("paste-letter-input"), pathSvg = $("editable-path-svg");
 let editableContours = [], editableOrder = [], activePointDrag = null, pathAnimationToken = 0;
 const svgNS = "http://www.w3.org/2000/svg";
-function contourPath(points) { return points.map((p,i)=>(i?"L":"M")+p.x.toFixed(2)+" "+p.y.toFixed(2)).join(" ")+" Z"; }
+function contourPath(points, closed = true) { return points.map((p,i)=>(i?"L":"M")+p.x.toFixed(2)+" "+p.y.toFixed(2)).join(" ")+(closed?" Z":""); }
 function simplifyContour(points) {
   if (points.length < 4) return points;
   const out=[];
@@ -198,7 +198,7 @@ function glyphContours(letter) {
       const dx=edge.b.x-edge.a.x,dy=edge.b.y-edge.a.y;
       candidates.sort((p,q)=>{const score=e=>{const ex=e.b.x-e.a.x,ey=e.b.y-e.a.y;return Math.atan2(dx*ey-dy*ex,dx*ex+dy*ey)};return score(q)-score(p)}); edge=candidates[0];
     }
-    if(pts.length>8){const mapped=pts.map(p=>({x:(p.x/128)*100,y:(p.y/128)*100}));const simple=simplifyContour(mapped);if(simple.length>2)contours.push({points:simple,start:0});}
+    if(pts.length>8){const mapped=pts.map(p=>({x:(p.x/128)*100,y:(p.y/128)*100}));const simple=simplifyContour(mapped);if(simple.length>2)contours.push({points:simple,start:0,closed:true});}
   }
   return contours.sort((a,b)=>Math.abs(area(b.points))-Math.abs(area(a.points))).slice(0,24);
 }
@@ -218,13 +218,13 @@ function parseSvgPath(raw){
       const count=Math.max(8,Math.min(400,Math.ceil(length/1.5))),pts=[];
       for(let i=0;i<=count;i++){const p=path.getPointAtLength(length*i/count);pts.push({x:Math.max(0,Math.min(100,p.x*scale+ox)),y:Math.max(0,Math.min(100,p.y*scale+oy))});}
       const simplified=pts.filter((p,i)=>i===0||i===pts.length-1||Math.hypot(p.x-pts[i-1].x,p.y-pts[i-1].y)>0.8);
-      if(simplified.length>1)result.push({points:simplified,start:0});path.remove();
+      if(simplified.length>1)result.push({points:simplified,start:0,closed:/[Zz]\s*$/.test(d)});path.remove();
     }
   } finally {probe.remove();}
   return result.length?result:null;
 }
 function rotateContour(contour){const pts=contour.points;const start=((contour.start||0)%pts.length+pts.length)%pts.length;return [...pts.slice(start),...pts.slice(0,start)];}
-function pathData(contour){return contourPath(rotateContour(contour));}
+function pathData(contour){return contourPath(rotateContour(contour),contour.closed!==false);}
 function renderEditablePaths(animate=false){
   pathAnimationToken++;const token=pathAnimationToken;pathSvg.replaceChildren();
   editableOrder.forEach((idx,order)=>{const contour=editableContours[idx];if(!contour)return;const path=document.createElementNS(svgNS,"path");path.setAttribute("d",pathData(contour));path.setAttribute("class","path-edit-path"+(animate?" animating":""));path.setAttribute("pathLength","1");path.style.animationDelay=(order*650)+"ms";pathSvg.append(path);
@@ -233,8 +233,8 @@ function renderEditablePaths(animate=false){
   });
   renderPointList(); updatePathCode();
 }
-function renderPointList(){const list=$("path-point-list");list.replaceChildren();editableOrder.forEach((idx,order)=>{const row=document.createElement("div");row.className="path-point-row";const label=document.createElement("strong");label.textContent=(order+1)+". Animation point · path "+(idx+1);const up=document.createElement("button");up.type="button";up.className="secondary";up.textContent="↑";up.disabled=order===0;up.onclick=()=>{[editableOrder[order-1],editableOrder[order]]=[editableOrder[order],editableOrder[order-1]];renderEditablePaths();};const down=document.createElement("button");down.type="button";down.className="secondary";down.textContent="↓";down.disabled=order===editableOrder.length-1;down.onclick=()=>{[editableOrder[order+1],editableOrder[order]]=[editableOrder[order],editableOrder[order+1]];renderEditablePaths();};row.append(label,up,down);list.append(row);});}
-function updatePathCode(){const letter=pasteInput.value.trim();const code={schemaVersion:1,kind:"learning-everyday-editable-letter-path",source:letter,style:styleSelect.value,paths:editableOrder.map((idx,order)=>({order:order+1,d:pathData(editableContours[idx]),startPoint:rotateContour(editableContours[idx])[0]}))};$("generated-path-code").value=editableContours.length?JSON.stringify(code,null,2):"";}
+function renderPointList(){const list=$("path-point-list");list.replaceChildren();editableOrder.forEach((idx,order)=>{const row=document.createElement("div");row.className="path-point-row";const label=document.createElement("strong");label.textContent=(order+1)+". Animation point · path "+(idx+1)+(editableContours[idx]?.closed===false?" · stroke start fixed":"");const up=document.createElement("button");up.type="button";up.className="secondary";up.textContent="↑";up.disabled=order===0;up.onclick=()=>{[editableOrder[order-1],editableOrder[order]]=[editableOrder[order],editableOrder[order-1]];renderEditablePaths();};const down=document.createElement("button");down.type="button";down.className="secondary";down.textContent="↓";down.disabled=order===editableOrder.length-1;down.onclick=()=>{[editableOrder[order+1],editableOrder[order]]=[editableOrder[order],editableOrder[order+1]];renderEditablePaths();};row.append(label,up,down);list.append(row);});}
+function updatePathCode(){const letter=pasteInput.value.trim();const code={schemaVersion:1,kind:"learning-everyday-editable-letter-path",source:letter,style:styleSelect.value,paths:editableOrder.map((idx,order)=>({order:order+1,d:pathData(editableContours[idx]),closed:editableContours[idx].closed!==false,startPoint:rotateContour(editableContours[idx])[0]}))};$("generated-path-code").value=editableContours.length?JSON.stringify(code,null,2):"";}
 function createPastedPath(){const raw=pasteInput.value.trim();if(!raw){$("paste-path-status").textContent="စာလုံးတစ်လုံး သို့မဟုတ် SVG path ကို အရင် Paste လုပ်ပါ။";return;}
   let contours=parseSvgPath(raw),source="SVG path";if(!contours){const letter=normalizePastedLetter(raw);if(!letter){$("paste-path-status").textContent="A–Z / a–z သို့မဟုတ် 𝒜 / 𝒶 ကဲ့သို့ Script အက္ခရာ တစ်လုံးတည်းကို ထည့်ပါ။";return;}letterSelect.value=letter;captureLetter=letter;
     const authored=styleSelect.value==="cursive"?cursivePathsFor(letter):null;
@@ -257,7 +257,7 @@ pasteInput.addEventListener("paste",()=>{
     if(normalizePastedLetter(raw)) createPastedPath();
   },0);
 });
-pathSvg.addEventListener("pointerdown",event=>{const target=event.target;if(!target.classList.contains("path-edit-point"))return;activePointDrag=Number(target.dataset.contour);pathSvg.setPointerCapture?.(event.pointerId);event.preventDefault();});
+pathSvg.addEventListener("pointerdown",event=>{const target=event.target;if(!target.classList.contains("path-edit-point"))return;const idx=Number(target.dataset.contour);if(editableContours[idx]?.closed===false){$("paste-path-status").textContent="ဤ cursive centerline ၏ stroke အစနှင့် ဦးတည်ချက်ကို မှန်ကန်စေရန် မပြောင်းထားပါ။";event.preventDefault();return;}activePointDrag=idx;pathSvg.setPointerCapture?.(event.pointerId);event.preventDefault();});
 pathSvg.addEventListener("pointermove",event=>{if(activePointDrag===null)return;const svgPoint=pathSvg.createSVGPoint();svgPoint.x=event.clientX;svgPoint.y=event.clientY;const local=svgPoint.matrixTransform(pathSvg.getScreenCTM().inverse());const x=Math.max(0,Math.min(100,local.x));const y=Math.max(0,Math.min(100,local.y));const contour=editableContours[activePointDrag];let best=0,dist=Infinity;contour.points.forEach((p,i)=>{const d=(p.x-x)**2+(p.y-y)**2;if(d<dist){dist=d;best=i;}});contour.start=best;renderEditablePaths();});
 pathSvg.addEventListener("pointerup",()=>{activePointDrag=null;});pathSvg.addEventListener("pointercancel",()=>{activePointDrag=null;});
 $("replay-pasted-path").addEventListener("click",()=>renderEditablePaths(true));
@@ -269,7 +269,7 @@ function isValidSavedPath(item) {
       !Array.isArray(item.order) || item.contours.length < 1 || item.contours.length > 24 ||
       item.order.length !== item.contours.length) return false;
   const pointCountsValid = item.contours.every((contour) =>
-    contour && Array.isArray(contour.points) && contour.points.length >= 3 &&
+    contour && (contour.closed===undefined || typeof contour.closed==="boolean") && Array.isArray(contour.points) && contour.points.length >= 3 &&
     Number.isInteger(contour.start) && contour.start >= 0 && contour.start < contour.points.length &&
     contour.points.every((point) => point && Number.isFinite(point.x) && Number.isFinite(point.y) &&
       point.x >= 0 && point.x <= 100 && point.y >= 0 && point.y <= 100)
@@ -323,6 +323,7 @@ function renderSavedPaths() {
       }
       editableContours = item.contours.map((contour) => ({
         start: contour.start,
+        closed: contour.closed!==false,
         points: contour.points.map((point) => ({ x: point.x, y: point.y }))
       }));
       editableOrder = item.order.slice();
@@ -366,6 +367,7 @@ $("save-pasted-path").addEventListener("click", () => {
     savedAt: new Date().toISOString(),
     contours: editableContours.map((contour) => ({
       start: Number.isInteger(contour.start) ? contour.start : 0,
+      closed: contour.closed!==false,
       points: contour.points.map((point) => ({ x: point.x, y: point.y }))
     })),
     order: editableOrder.slice(),

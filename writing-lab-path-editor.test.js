@@ -18,6 +18,11 @@ test("Smart Writing Lab paste-to-path editor exposes conversion, draggable order
   assert.match(html, /box=master\.getBBox\(\)/);
   assert.match(html, /const authored=styleSelect\.value==="cursive"\?cursivePathsFor\(letter\):null/);
   assert.match(html, /hand-authored cursive centerline/);
+  assert.match(html, /function contourPath\(points, closed = true\)/);
+  assert.match(html, /closed:\/\[Zz\]\\s\*\$\//);
+  assert.match(html, /contour\.closed!==false/);
+  assert.match(html, /stroke start fixed/);
+  assert.match(html, /ဤ cursive centerline ၏ stroke အစ/);
   assert.match(html, /path\.getPointAtLength\(length\*i\/count\)/);
   assert.match(html, /pathSvg\.addEventListener\("pointermove"/);
   assert.match(html, /getScreenCTM\(\)\.inverse\(\)/);
