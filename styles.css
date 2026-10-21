@@ -234,3 +234,8 @@ body[data-page="home"] #skills-level-page{display:block}body[data-page="home"] .
 .letter-template-glyph.style-calligraphy{font-family:"Brush Script MT","URW Chancery L","Apple Chancery",cursive;font-style:italic;font-weight:800;stroke-width:3.2;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:trace-letter 1.8s ease-out forwards}
 .letter-tracing{touch-action:none}
 @media(prefers-reduced-motion:reduce){.letter-guide-strokes .letter-stroke,.letter-style-flourish,.letter-template-glyph{animation:none!important;stroke-dashoffset:0!important}}
+
+/* Keep the CEFR picker on its dedicated Skills & Levels page only. */
+body:not(.skills-levels-page) .skill-level-picker{display:none!important}
+body.skills-levels-page .skill-level-picker{display:block}
+body:not(.skills-levels-page) #curriculum-workbench .skill-level-picker{display:none!important}
