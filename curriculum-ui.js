@@ -527,8 +527,16 @@ document.querySelectorAll("[data-skill]").forEach((button) => button.addEventLis
 $("#start-selected-practice").addEventListener("click", () => {
   location.hash = `#/${activeSkill}`;
 });
+function syncSkillLevelPage() {
+  const page = location.hash.slice(1).split("/").filter(Boolean)[0] || "home";
+  document.body.classList.toggle("skills-levels-page", page === "skills");
+  const picker = $(".skill-level-picker");
+  if (picker) picker.setAttribute("aria-hidden", page === "skills" ? "false" : "true");
+}
+syncSkillLevelPage();
 window.addEventListener("hashchange", () => {
   const page = location.hash.slice(1).split("/").filter(Boolean)[0];
+  syncSkillLevelPage();
   if (["reading", "listening", "writing", "speaking"].includes(page)) {
     activeSkill = page;
     renderPractice();
