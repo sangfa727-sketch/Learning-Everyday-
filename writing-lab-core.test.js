@@ -147,3 +147,47 @@ test("higher stabilization strength suppresses more small wobble without mutatin
   assert.ok(Math.abs(strong[2].y) <= Math.abs(light[2].y));
   assert.deepEqual(points, raw);
 });
+
+
+test("maximum stabilization visibly suppresses repeated small pointer jitter", () => {
+  const points = [
+    {x:0,y:0.5,t:0,pressure:0.5},
+    {x:0.2,y:0.515,t:10,pressure:0.5},
+    {x:0.4,y:0.486,t:20,pressure:0.5},
+    {x:0.6,y:0.514,t:30,pressure:0.5},
+    {x:0.8,y:0.487,t:40,pressure:0.5},
+    {x:1,y:0.5,t:50,pressure:0.5}
+  ];
+  const rawDeviation = points.slice(1,-1).reduce((sum,p)=>sum+Math.abs(p.y-0.5),0);
+  const smooth = smoothPoints(points, 1);
+  const smoothDeviation = smooth.slice(1,-1).reduce((sum,p)=>sum+Math.abs(p.y-0.5),0);
+  assert.ok(smoothDeviation < rawDeviation * 0.7, `expected meaningful visible reduction: ${smoothDeviation} < ${rawDeviation * 0.7}`);
+  assert.deepEqual(smooth[0], points[0]);
+  assert.deepEqual(smooth.at(-1), points.at(-1));
+});
+
+test("strong stabilization suppresses a sharp isolated pointer spike", () => {
+  const points = [
+    {x:0,y:0.5,t:0,pressure:0.5},
+    {x:0.2,y:0.5,t:10,pressure:0.5},
+    {x:0.4,y:0.5,t:20,pressure:0.5},
+    {x:0.6,y:0.96,t:30,pressure:0.5},
+    {x:0.8,y:0.5,t:40,pressure:0.5},
+    {x:1,y:0.5,t:50,pressure:0.5}
+  ];
+  const smooth = smoothPoints(points, 1);
+  assert.ok(Math.abs(smooth[3].y - 0.5) < 0.1, "large isolated jump should be rejected");
+});
+
+test("corner preservation keeps a deliberate right-angle turn recognizable", () => {
+  const points = [
+    {x:0.1,y:0.1,t:0,pressure:0.5},
+    {x:0.4,y:0.1,t:10,pressure:0.5},
+    {x:0.7,y:0.1,t:20,pressure:0.5},
+    {x:0.7,y:0.4,t:30,pressure:0.5},
+    {x:0.7,y:0.7,t:40,pressure:0.5}
+  ];
+  const smooth = smoothPoints(points, 1);
+  assert.ok(Math.abs(smooth[2].x - 0.7) < 0.1);
+  assert.ok(Math.abs(smooth[2].y - 0.1) < 0.1);
+});
