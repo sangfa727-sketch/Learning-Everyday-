@@ -167,3 +167,15 @@ body[data-page="progress"] #curriculum-workbench .curriculum-grid,
 body[data-page="progress"] #curriculum-workbench .letter-practice,
 body[data-page="progress"] #practice-panel{display:none}
 body[data-page="progress"] #curriculum-workbench .progress-tools{display:block;margin-top:0}
+
+/* Keep the persistent progress link and language switch usable on narrow phones. */
+@media(max-width:760px){
+  .header-actions{gap:8px}
+  .progress-nav-link{min-height:38px;padding:0 10px;font-size:11px}
+  .language-toggle{min-height:38px;padding:0 10px}
+}
+@media(max-width:380px){
+  .brand-copy{font-size:12px;gap:3px}
+  .brand-mark{width:33px;height:33px}
+  .topbar{padding:0 12px}
+}
