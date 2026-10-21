@@ -30,7 +30,7 @@ test("cursive practice animates hand-authored strokes and traces the same paths"
   assert.match(ui, /const handPaths = selectedStyle === "cursive"/);
   assert.match(ui, /follow the hand-drawn centerline strokes in order/);
   assert.match(ui, /function traceStrokeWidth\(style, pressure = 0\.5\)/);
-  assert.match(ui, /drawTraceSegment\(context, stroke, previous, normalizedPoint/);
+  assert.match(ui, /drawTraceSegment\\(context, stroke, previous, point, width, height\\)/);
   assert.match(css, /\.letter-guide-strokes\.style-calligraphy/);
   assert.match(css, /\.letter-stroke\.calligraphy-highlight/);
   assert.match(css, /prefers-reduced-motion:reduce/);
