@@ -18,3 +18,16 @@ test("Smart Writing Lab inline module script has valid JavaScript syntax", async
     await rm(directory, { recursive: true, force: true });
   }
 });
+
+
+test("Smart Writing Lab exposes pen assistance modes and an adjustable stabilizer", async () => {
+  const html = await readFile(new URL("./writing-lab.html", import.meta.url), "utf8");
+  assert.match(html, /id="pen-mode"/);
+  assert.match(html, /value="stabilized"/);
+  assert.match(html, /value="natural"/);
+  assert.match(html, /value="curve"/);
+  assert.match(html, /value="freehand"/);
+  assert.match(html, /id="stabilizer"[^>]*type="range"/);
+  assert.match(html, /point\.pressure = Number/);
+  assert.match(html, /context\.lineWidth = Math\.max\(1\.2, baseWidth \* pressureFactor \* speedFactor\)/);
+});
