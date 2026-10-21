@@ -87,3 +87,63 @@ test("conservative smoothing reduces a small wobble without replacing the drawn 
   assert.ok(Math.abs(smooth[3].y) < Math.abs(points[3].y));
   assert.ok(Math.abs(smooth[2].y - points[2].y) < 0.02, "shape change must remain small");
 });
+
+
+test("robust smoothing reduces a large isolated mouse jump while preserving endpoints", () => {
+  const points = [
+    {x:0,y:0.5,t:0,pressure:0.5},
+    {x:0.2,y:0.5,t:10,pressure:0.5},
+    {x:0.4,y:0.5,t:20,pressure:0.5},
+    {x:0.6,y:0.95,t:30,pressure:0.5},
+    {x:0.8,y:0.5,t:40,pressure:0.5},
+    {x:1,y:0.5,t:50,pressure:0.5}
+  ];
+  const smooth = smoothPoints(points);
+  assert.deepEqual(smooth[0], points[0]);
+  assert.deepEqual(smooth.at(-1), points.at(-1));
+  assert.ok(Math.abs(smooth[3].y - 0.5) < Math.abs(points[3].y - 0.5));
+});
+
+test("robust smoothing retains the overall direction of a broad curve", () => {
+  const points = [
+    {x:0,y:0.9,t:0,pressure:0.5},
+    {x:0.2,y:0.7,t:10,pressure:0.5},
+    {x:0.4,y:0.45,t:20,pressure:0.5},
+    {x:0.6,y:0.25,t:30,pressure:0.5},
+    {x:0.8,y:0.1,t:40,pressure:0.5},
+    {x:1,y:0.05,t:50,pressure:0.5}
+  ];
+  const smooth = smoothPoints(points);
+  assert.ok(smooth[1].y > smooth[2].y);
+  assert.ok(smooth[2].y > smooth[3].y);
+  assert.ok(smooth[3].y > smooth[4].y);
+});
+
+
+test("stabilization strength zero preserves every captured coordinate", () => {
+  const points = [
+    {x:0,y:0,t:0,pressure:0.5},
+    {x:0.25,y:0.02,t:10,pressure:0.6},
+    {x:0.5,y:-0.015,t:20,pressure:0.7},
+    {x:0.75,y:0.015,t:30,pressure:0.8},
+    {x:1,y:0,t:40,pressure:0.5}
+  ];
+  const smooth = smoothPoints(points, 0);
+  assert.deepEqual(smooth, points);
+  assert.notEqual(smooth, points, "render output must be a separate array");
+});
+
+test("higher stabilization strength suppresses more small wobble without mutating raw points", () => {
+  const points = [
+    {x:0,y:0,t:0,pressure:0.5},
+    {x:0.25,y:0.02,t:10,pressure:0.5},
+    {x:0.5,y:-0.015,t:20,pressure:0.5},
+    {x:0.75,y:0.015,t:30,pressure:0.5},
+    {x:1,y:0,t:40,pressure:0.5}
+  ];
+  const raw = structuredClone(points);
+  const light = smoothPoints(points, 0.25);
+  const strong = smoothPoints(points, 1);
+  assert.ok(Math.abs(strong[2].y) <= Math.abs(light[2].y));
+  assert.deepEqual(points, raw);
+});

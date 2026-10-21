@@ -10,7 +10,7 @@
 *{box-sizing:border-box}body{margin:0;background:#f5f7f1;color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
 main{width:min(100% - 24px,980px);margin:0 auto;padding:20px 0 48px}.top{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}.brand{font-weight:800;color:var(--green);text-decoration:none}.tag{font-size:.8rem;background:#e3eee3;padding:5px 10px;border-radius:99px}
 h1{font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.15;margin:22px 0 8px}h2{font-size:1.15rem;margin:0 0 8px}p{margin:8px 0;color:var(--muted)}.panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:clamp(14px,3vw,24px);margin-top:16px;box-shadow:0 10px 30px #20352f0a}
-.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:end}.field{display:grid;gap:5px;flex:1;min-width:135px}label{font-size:.9rem;font-weight:650}select,button{font:inherit;border-radius:11px;min-height:44px}select{border:1px solid #cbd8cc;background:white;padding:8px;color:var(--ink);width:100%}button{border:1px solid var(--green);background:var(--green);color:white;padding:9px 14px;font-weight:650;cursor:pointer}button.secondary{background:white;color:var(--green)}button:disabled{opacity:.45;cursor:not-allowed}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:end}.field{display:grid;gap:5px;flex:1;min-width:135px}label{font-size:.9rem;font-weight:650}select,button{font:inherit;border-radius:11px;min-height:44px}select{border:1px solid #cbd8cc;background:white;padding:8px;color:var(--ink);width:100%}.range-field{display:grid;gap:5px;flex:1;min-width:180px}.range-field input{width:100%;accent-color:var(--green)}.range-note{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted)}button{border:1px solid var(--green);background:var(--green);color:white;padding:9px 14px;font-weight:650;cursor:pointer}button.secondary{background:white;color:var(--green)}button:disabled{opacity:.45;cursor:not-allowed}
 .canvas-wrap{margin-top:14px;position:relative;border:1px solid #dce5db;border-radius:14px;overflow:hidden;background:repeating-linear-gradient(to bottom,#fff 0,#fff 47px,#dfe8e3 48px,#fff 49px)}canvas{display:block;width:100%;height:270px;touch-action:none;cursor:crosshair}.canvas-label{font-size:.8rem;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:7px;color:var(--muted)}
 .preview{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.preview-box{border:1px solid var(--line);border-radius:13px;padding:12px}.preview-box h3{font-size:1rem;margin:0}.preview-canvas{height:180px;background:repeating-linear-gradient(to bottom,#fff 0,#fff 43px,#e4ebe5 44px,#fff 45px);border-radius:8px;margin-top:8px}
 .notice{background:#f7f5e9;border:1px solid #e8e0bd;border-radius:12px;padding:12px;color:#645a31;font-size:.92rem}.status{min-height:1.5em;font-size:.92rem;color:var(--green)}.small{font-size:.85rem}.footer{margin-top:18px;font-size:.85rem;color:var(--muted)}.sample-list{display:grid;gap:8px;margin-top:12px}.sample-row{display:flex;gap:10px;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:10px;padding:10px}.sample-letter{font-size:1.5rem;font-weight:750;min-width:38px;color:var(--green)}.sample-meta{flex:1;min-width:0}.sample-meta strong{display:block}.sample-meta span{font-size:.82rem;color:var(--muted)}.empty{padding:12px;border:1px dashed var(--line);border-radius:10px;color:var(--muted);font-size:.9rem}
@@ -25,6 +25,8 @@ h1{font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.15;margin:22px 0 8px}h2{font
 <div class="controls">
 <div class="field"><label for="letter">ရည်ရွယ်ထားသော English အက္ခရာ</label><select id="letter" aria-label="Choose target English letter"></select></div>
 <div class="field"><label for="style">ရေးဟန်</label><select id="style"><option value="print">Print</option><option value="cursive">Cursive</option><option value="calligraphy">Calligraphy</option></select></div>
+<div class="field"><label for="pen-mode">Pen Assist</label><select id="pen-mode"><option value="stabilized">Stabilized Pen</option><option value="natural">Natural Pressure Pen</option><option value="curve">Curve Pen</option><option value="freehand">Original Freehand</option></select></div>
+<div class="range-field"><label for="stabilizer">တုန်ခါမှုထိန်းချုပ်မှု</label><input id="stabilizer" type="range" min="0" max="100" step="5" value="65"><div class="range-note"><span>သဘာဝအတိုင်း</span><strong id="stabilizer-value">65%</strong><span>ပိုချောမွေ့</span></div></div>
 </div>
 <div class="notice" style="margin-top:12px">ရွေးထားသောအက္ခရာကို မှတ်တမ်းတွင် ချိတ်ဆက်သိမ်းမည်။ လက်ရှိဗားရှင်းသည် သင်ရေးသောပုံကို ရွေးထားသည့်အက္ခရာနှင့် အလိုအလျောက်တိုက်စစ်ပြီး မှန်/မမှန် အတည်ပြုနိုင်သေးခြင်း မရှိပါ။</div>
 <div class="canvas-wrap"><canvas id="draw" aria-label="Draw the selected English letter here"></canvas></div>
@@ -37,7 +39,7 @@ h1{font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.15;margin:22px 0 8px}h2{font
 <div class="panel"><h2>မူရင်းလက်ရေးနှင့် ချောမွေ့ပြန်ဖော်မှု</h2><div class="preview">
 <div class="preview-box"><h3>မူရင်းလမ်းကြောင်း</h3><canvas id="original" class="preview-canvas" aria-label="Original captured strokes"></canvas></div>
 <div class="preview-box"><h3>ချောမွေ့ပြန်ဖော်ထားသောလမ်းကြောင်း</h3><canvas id="smoothed" class="preview-canvas" aria-label="Smoothed captured strokes"></canvas></div>
-</div><p class="small">မူရင်းမှတ်တမ်းကို မပြောင်းလဲဘဲ သိမ်းထားပြီး ပြသချိန်တွင်သာ အနည်းငယ် conservative smoothing ပြုလုပ်သည်။ အကွေးကို အကွေး၊ အဖြောင့်ကို အဖြောင့်အတိုင်း ထိန်းရန် ရည်ရွယ်ထားပြီး ရေးထားသောအက္ခရာကို အလိုအလျောက် ပြန်မဆွဲပါ။ ရွေးထားသောရေးဟန်ကို metadata အဖြစ် သိမ်းသည်။ ပုံစံတိကျမှုအတွက် အလိုအလျောက် handwriting recognition/template matching ကို နောက်ထပ်တည်ဆောက်ရန် လိုအပ်သည်။</p></div>
+</div><p class="small">Stabilized Pen သည် လက်တုန်ခါမှုကို လျှော့ပြီး Curve Pen သည် လမ်းကြောင်းကို ပိုမိုချောမွေ့သော curve ဖြင့် ပြသသည်။ Natural Pressure Pen တွင် pen pressure ရရှိပါက အသုံးပြုပြီး mouse ဖြင့်ရေးလျှင် အမြန်နှုန်းနှင့် အကွေ့အပေါ် မူတည်၍ အထူအပါးကို ခန့်မှန်းပေးသည်။ မူရင်း stroke မှတ်တမ်းကို မပြောင်းလဲပါ။</p></div>
 <div class="panel"><div class="controls" style="justify-content:space-between;align-items:center"><h2 style="margin:0">သိမ်းထားသော အက္ခရာမှတ်တမ်းများ</h2><button id="export" class="secondary">မှတ်တမ်းများ JSON ထုတ်</button></div><div id="saved-list" class="sample-list"></div><p class="small">မှတ်တမ်းများကို ဤစက်၏ browser local storage ထဲတွင်သာ သိမ်းသည်။ Server သို့ အလိုအလျောက် မပို့ပါ။ Browser data ကို ရှင်းလင်းလျှင် local မှတ်တမ်းများ ပျောက်နိုင်သောကြောင့် JSON export ကို backup အဖြစ် သိမ်းနိုင်သည်။</p></div>
 <p class="footer">Smart Writing Lab · Local prototype · not yet an automatic handwriting-recognition system.</p>
 </main>
@@ -56,6 +58,9 @@ for (const group of [{label:"Uppercase",letters:LETTERS.slice(0,26)},{label:"Low
 }
 letterSelect.value = "a";
 let strokes = [], activeStroke = null, drawing = false, replayToken = 0, sampleStartedAt = 0;
+const penModeSelect = $("pen-mode"), stabilizerInput = $("stabilizer");
+const strength = () => Number(stabilizerInput.value) / 100;
+function renderModeLabel() { $("stabilizer-value").textContent = stabilizerInput.value + "%"; }
 let captureLetter = letterSelect.value, captureStyle = styleSelect.value;
 function readSavedSamples() { try { return parseSavedSamples(localStorage.getItem(SAVED_SAMPLES_KEY)); } catch { return []; } }
 const savedSamples = readSavedSamples();
@@ -72,17 +77,20 @@ function drawTarget(context, width, height, letter, style) {
   context.fillText(letter, width / 2, height / 2); context.restore();
 }
 function drawStroke(context, stroke, width, height, smooth = false, progress = 1) {
-  const points = smooth ? smoothPoints(stroke.points) : stroke.points;
+  const mode = penModeSelect.value;
+  const useSmooth = smooth || mode === "stabilized" || mode === "curve";
+  const points = useSmooth ? smoothPoints(stroke.points, mode === "curve" ? Math.max(strength(), 0.85) : strength()) : stroke.points;
   if (!points.length) return;
   const segmentCount = Math.max(1, Math.min(points.length - 1, Math.floor((points.length - 1) * progress)));
   context.save(); context.strokeStyle = stroke.style === "calligraphy" ? "#24554a" : stroke.style === "cursive" ? "#476f9b" : "#315f9b";
   context.fillStyle = context.strokeStyle; context.lineCap = "round"; context.lineJoin = "round";
-  context.lineWidth = stroke.style === "calligraphy" ? 4.1 : 3.0;
+  const baseWidth = stroke.style === "calligraphy" ? 4.1 : 3.0;
+  context.lineWidth = baseWidth;
   if (points.length === 1) {
     context.beginPath(); context.arc(points[0].x * width, points[0].y * height, context.lineWidth / 2, 0, Math.PI * 2); context.fill();
   } else {
     context.beginPath(); context.moveTo(points[0].x * width, points[0].y * height);
-    if (smooth && points.length > 2) {
+    if (useSmooth && points.length > 2) {
       for (let i = 1; i < segmentCount; i++) {
         const current = points[i], next = points[Math.min(i + 1, points.length - 1)];
         context.quadraticCurveTo(current.x * width, current.y * height, (current.x + next.x) * width / 2, (current.y + next.y) * height / 2);
@@ -91,7 +99,20 @@ function drawStroke(context, stroke, width, height, smooth = false, progress = 1
     } else {
       for (let i = 1; i <= segmentCount; i++) context.lineTo(points[i].x * width, points[i].y * height);
     }
-    context.stroke();
+    if (mode === "natural") {
+      // Vary each segment width to simulate pen pressure on mouse input as well as stylus.
+      for (let i = 1; i <= segmentCount; i++) {
+        const a = points[i - 1], b = points[i];
+        const distance = Math.hypot((b.x - a.x) * width, (b.y - a.y) * height);
+        const elapsed = Math.max(1, Math.abs((b.t ?? 0) - (a.t ?? 0)));
+        const speed = distance / elapsed;
+        const pressure = Number.isFinite(b.pressure) && b.pressure > 0 ? b.pressure : 0.5;
+        const pressureFactor = 0.65 + pressure * 0.7;
+        const speedFactor = Math.max(0.62, Math.min(1.25, 1.1 - speed * 0.12));
+        context.lineWidth = Math.max(1.2, baseWidth * pressureFactor * speedFactor);
+        context.beginPath(); context.moveTo(a.x * width, a.y * height); context.lineTo(b.x * width, b.y * height); context.stroke();
+      }
+    } else context.stroke();
   }
   context.restore();
 }
@@ -128,7 +149,14 @@ canvas.addEventListener("pointerdown", (event) => {
 canvas.addEventListener("pointermove", (event) => {
   if (!drawing || !activeStroke) return;
   const point = pointFromEvent(event), last = activeStroke.points.at(-1);
-  if (Math.hypot(point.x - last.x, point.y - last.y) > 0.0007) activeStroke.points.push(point);
+  if (Math.hypot(point.x - last.x, point.y - last.y) > 0.0007) {
+    if (event.pointerType === "mouse" && (!Number.isFinite(event.pressure) || event.pressure === 0.5)) {
+      const rect = canvas.getBoundingClientRect();
+      const speed = Math.hypot((point.x-last.x)*rect.width,(point.y-last.y)*rect.height) / Math.max(1,point.t-last.t);
+      point.pressure = Number(Math.max(0.18,Math.min(0.92,0.78-speed*0.22)).toFixed(3));
+    }
+    activeStroke.points.push(point);
+  }
   render();
 });
 function endStroke() { if (!drawing) return; drawing = false; if (activeStroke?.points.length) strokes.push(activeStroke); activeStroke = null; render(); }
@@ -143,6 +171,8 @@ function guardSelectionChange(select, previous) {
 }
 letterSelect.addEventListener("change", () => guardSelectionChange(letterSelect, captureLetter));
 styleSelect.addEventListener("change", () => guardSelectionChange(styleSelect, captureStyle));
+penModeSelect.addEventListener("change", () => { render(); });
+stabilizerInput.addEventListener("input", () => { renderModeLabel(); render(); });
 $("undo").addEventListener("click", () => { strokes.pop(); if (!strokes.length) sampleStartedAt = 0; render(); });
 $("clear").addEventListener("click", () => { resetSample(); $("status").textContent = "အသစ်သော အက္ခရာမှတ်တမ်းအတွက် အဆင်သင့်ဖြစ်ပါပြီ။"; });
 $("save").addEventListener("click", () => {
@@ -197,7 +227,7 @@ $("export").addEventListener("click", () => {
 });
 function resizeAll() { [canvas,originalCanvas,smoothCanvas].forEach((el)=>setupCanvas(el,el.getContext("2d"))); render(); }
 window.addEventListener("resize",resizeAll);
-renderSavedList(); resizeAll();
+renderSavedList(); renderModeLabel(); resizeAll();
 })();
 </script>
 </body></html>

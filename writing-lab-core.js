@@ -19,23 +19,47 @@ export function normalizePoint(clientX, clientY, rect, timestamp, pressure = 0.5
   };
 }
 
-export function smoothPoints(points) {
+export function smoothPoints(points, strength = 1) {
   if (!Array.isArray(points) || points.length < 3) return (points ?? []).map((point) => ({ ...point }));
-  const output = [{ ...points[0] }];
-  for (let index = 1; index < points.length - 1; index += 1) {
-    const previous = points[index - 1];
-    const current = points[index];
-    const next = points[index + 1];
-    // Conservative one-pass smoothing: 15% neighbour influence on each side.
-    // This removes small mouse jitter while keeping the writer's shape and corners.
-    output.push({
-      ...current,
-      x: previous.x * 0.15 + current.x * 0.7 + next.x * 0.15,
-      y: previous.y * 0.15 + current.y * 0.7 + next.y * 0.15
-    });
-  }
-  output.push({ ...points[points.length - 1] });
-  return output;
+  const level = Number.isFinite(strength) ? Math.max(0, Math.min(1, strength)) : 1;
+  if (level === 0) return points.map((point) => ({ ...point }));
+
+  // Replace only clear, isolated spikes. Small deviations may be intentional
+  // handwriting detail, so they remain untouched by the outlier-rejection pass.
+  const median = (values) => {
+    const sorted = [...values].sort((a, b) => a - b);
+    return sorted[Math.floor(sorted.length / 2)];
+  };
+  const outlierThreshold = 0.08 + (1 - level) * 0.12; // normalized canvas units
+  const filtered = points.map((point, index) => {
+    if (index === 0 || index === points.length - 1) return { ...point };
+    const from = Math.max(0, index - 2);
+    const to = Math.min(points.length - 1, index + 2);
+    const window = points.slice(from, to + 1);
+    const medianX = median(window.map((item) => item.x));
+    const medianY = median(window.map((item) => item.y));
+    const isIsolatedSpike =
+      Math.hypot(point.x - medianX, point.y - medianY) > outlierThreshold;
+    return {
+      ...point,
+      x: isIsolatedSpike ? medianX : point.x,
+      y: isIsolatedSpike ? medianY : point.y
+    };
+  });
+
+  // Light smoothing limits fine jitter while retaining local letter shape.
+  // Raw captured strokes are never mutated; timing and pressure stay unchanged.
+  return filtered.map((point, index) => {
+    if (index === 0 || index === filtered.length - 1) return { ...point };
+    const previous = filtered[index - 1];
+    const next = filtered[index + 1];
+    const neighborWeight = 0.2 * level;
+    return {
+      ...point,
+      x: previous.x * neighborWeight + point.x * (1 - 2 * neighborWeight) + next.x * neighborWeight,
+      y: previous.y * neighborWeight + point.y * (1 - 2 * neighborWeight) + next.y * neighborWeight
+    };
+  });
 }
 
 export function getStrokeEndpoints(points) {
