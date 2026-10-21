@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs";
 
 const html = readFileSync(new URL("./index.html", import.meta.url), "utf8");
 const ui = readFileSync(new URL("./curriculum-ui.js", import.meta.url), "utf8");
+const app = readFileSync(new URL("./app.js", import.meta.url), "utf8");
 const css = readFileSync(new URL("./styles.css", import.meta.url), "utf8");
 
 test("Writing Practice exposes exactly Print and Handwriting mode controls", () => {
@@ -43,4 +44,21 @@ test("Handwriting mode retains both ruled-paper script alphabets", () => {
   assert.match(css, /\.script-letter-card\s*\{[\s\S]*?aspect-ratio:\s*1\s*\/\s*1/);
   assert.match(ui, /writing-mode-print.*setWritingMode\("print"\)/);
   assert.match(ui, /writing-mode-handwriting.*setWritingMode\("handwriting"\)/);
+});
+
+
+test("Listening Practice opens with a story library before the story reader", () => {
+  assert.match(html, /id="listening-library"[^>]*hidden/);
+  assert.match(html, /id="listening-story-grid"/);
+  assert.match(html, /id="back-to-story-library"[^>]*hidden/);
+  assert.match(app, /const LISTENING_STORIES = \[/);
+  assert.equal((app.match(/\{ id: "/g) ?? []).length, 6);
+  assert.match(app, /function renderListeningLibrary\(\)/);
+  assert.match(app, /function syncListeningView\(/);
+  assert.match(app, /location\.hash = `#\/listening\/\$\{item\.id\}`/);
+  assert.match(app, /library\.hidden = false;\s*panel\.hidden = true;/);
+  assert.match(app, /library\.hidden = true;\s*panel\.hidden = false;/);
+  assert.match(app, /readingStory = story;/);
+  assert.match(css, /\.listening-story-grid\s*\{[^}]*grid-template-columns: repeat\(3/);
+  assert.match(css, /@media \(max-width: 560px\)/);
 });
