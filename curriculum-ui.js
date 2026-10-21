@@ -123,15 +123,28 @@ function renderVocabulary() {
 }
 
 function renderLevelOptions() {
-  const select = $("#practice-level");
-  select.replaceChildren();
+  const container = $("#level-options");
+  if (!container) return;
+  container.replaceChildren();
   for (const level of LEVELS) {
-    const option = document.createElement("option");
-    option.value = level.id;
-    option.textContent = `${level.id} · ${labelForLevel(level)}`;
-    select.append(option);
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "level-choice";
+    button.setAttribute("aria-pressed", String(level.id === selectedLevel));
+    button.dataset.level = level.id;
+    const code = document.createElement("strong");
+    code.textContent = level.id;
+    const name = document.createElement("span");
+    name.textContent = labelForLevel(level);
+    button.append(code, name);
+    button.addEventListener("click", () => {
+      selectedLevel = level.id;
+      selectedExerciseIndex = 0;
+      renderLevelOptions();
+      renderPractice();
+    });
+    container.append(button);
   }
-  select.value = selectedLevel;
 }
 
 function renderPractice() {
@@ -142,8 +155,8 @@ function renderPractice() {
     : { reading: "Reading", listening: "Listening", writing: "Writing", speaking: "Speaking" };
   $("#practice-heading").textContent = skillLabels[activeSkill] + (language === "my" ? " လေ့ကျင့်ခန်း" : " practice");
   $("#practice-heading").nextElementSibling.textContent = language === "my"
-    ? skillLabels[activeSkill] + " အတွက် A1 မှ C2 အထိ အဆင့်ကို ရွေးချယ်ပြီး လေ့ကျင့်ခန်းလုပ်ပါ။"
-    : "Choose your " + skillLabels[activeSkill] + " level (A1–C2), then complete the exercise.";
+    ? skillLabels[activeSkill] + " လေ့ကျင့်ခန်းကို ရွေးထားသောအဆင့်တွင် လုပ်ပါ။ အဆင့်ပြောင်းရန် ကျွမ်းကျင်မှုနှင့် အဆင့်များစာမျက်နှာသို့ သွားပါ။"
+    : "Practise at the selected level. Use Skills & Levels to change your skill or level.";
   $("#level-practice-title").textContent = language === "my" ? practice.my : practice.title;
   $("#level-practice-level").textContent = `${level.id} · ${labelForLevel(level)}`;
   $("#level-practice-prompt").textContent = practice.prompt;
@@ -174,7 +187,10 @@ function renderLetterGuide() {
     my: `ဖျော့ဖျော့လမ်းညွှန်စာလုံးအတိုင်း ${selectedLetter === selectedLetter.toUpperCase() ? "စာလုံးအကြီး" : "စာလုံးအသေး"} ကို ဖြည်းဖြည်းလိုက်ရေးပါ။`,
     paths: []
   };
-  $("#letter-sample").textContent = selectedLetter;
+  const sample = $("#letter-sample");
+  sample.textContent = selectedLetter;
+  sample.classList.remove("style-print", "style-cursive", "style-calligraphy");
+  sample.classList.add(`style-${selectedStyle}`);
   $("#letter-style-note").textContent = styleInfo[selectedStyle][language];
   const styleStart = selectedStyle === "cursive"
     ? (language === "my" ? "Cursive: စာလုံး၏ ဝင်မျဉ်းမှစပြီး သင့်တော်သည့်နေရာတွင် ဘောပင်မမြှောက်ဘဲ နောက်စာလုံးသို့ ဆက်ပါ။ " : "Cursive: begin with an entry stroke and connect into the next letter where the form allows. ")
@@ -193,25 +209,40 @@ function renderLetterGuide() {
   baseline.setAttribute("y1", "88"); baseline.setAttribute("y2", "88");
   baseline.setAttribute("class", "letter-baseline");
   svg.append(baseline);
-  if (guide.paths.length) {
+  if (selectedStyle === "print" && guide.paths.length) {
     guide.paths.forEach((d, index) => svg.append(makeSvgPath(d, index)));
+    const start = document.createElementNS(ns, "circle");
+    const firstMove = guide.paths[0]?.match(/^M\s*([\d.]+)[ ,]+([\d.]+)/);
+    start.setAttribute("cx", firstMove?.[1] ?? "50");
+    start.setAttribute("cy", firstMove?.[2] ?? "12");
+    start.setAttribute("r", "3");
+    start.setAttribute("class", "letter-start-dot");
+    svg.append(start);
   } else {
     const glyph = document.createElementNS(ns, "text");
     glyph.setAttribute("x", "50"); glyph.setAttribute("y", "76");
-    glyph.setAttribute("text-anchor", "middle"); glyph.setAttribute("class", "letter-template-glyph");
+    glyph.setAttribute("text-anchor", "middle");
+    glyph.setAttribute("class", `letter-template-glyph style-${selectedStyle}`);
     glyph.textContent = selectedLetter;
     svg.append(glyph);
+    if (selectedStyle === "cursive") {
+      const entry = document.createElementNS(ns, "path");
+      entry.setAttribute("d", "M 12 79 C 19 69, 24 71, 30 78");
+      entry.setAttribute("class", "letter-style-flourish");
+      svg.append(entry);
+      const exit = document.createElementNS(ns, "path");
+      exit.setAttribute("d", "M 68 78 C 76 84, 83 82, 89 73");
+      exit.setAttribute("class", "letter-style-flourish");
+      svg.append(exit);
+    }
   }
-  const start = document.createElementNS(ns, "circle");
-  const firstMove = guide.paths[0]?.match(/^M\s*([\d.]+)[ ,]+([\d.]+)/);
-  start.setAttribute("cx", firstMove?.[1] ?? "50");
-  start.setAttribute("cy", firstMove?.[2] ?? "12");
-  start.setAttribute("r", "3");
-  start.setAttribute("class", "letter-start-dot");
-  if (guide.paths.length) svg.append(start);
-  $("#letter-stroke-count").textContent = guide.paths.length && selectedStyle === "print"
+  $("#letter-stroke-count").textContent = selectedStyle === "print" && guide.paths.length
     ? (language === "my" ? `မျဉ်း ${guide.paths.length} ကြောင်း · တစ်ကြောင်းချင်း လှုပ်ရှားမှုကို ကြည့်ပါ` : `${guide.paths.length} strokes · Watch each movement in order`)
-    : (language === "my" ? (guide.paths.length ? "လှုပ်ရှားမှုသည် ပုံနှိပ်စာလုံးအခြေခံလမ်းညွှန်ဖြစ်သည်။ စတိုင်အလိုက် အထက်ပါညွှန်ကြားချက်ကို လိုက်နာပါ။" : "ဤစာလုံးအတွက် လမ်းညွှန်ပုံစံကို ပြထားသည်။ အောက်ရှိ tracing board တွင် လိုက်ရေးပါ။") : (guide.paths.length ? "Animation is the print reference; follow the style-specific directions above." : "Template preview only; trace the letter on the practice board below."));
+    : selectedStyle === "cursive"
+      ? (language === "my" ? "Cursive နမူနာပုံစံ · စာလုံးကို စောင်းရေးပြီး သင့်တော်သည့်နေရာတွင် နောက်စာလုံးသို့ ဆက်ရေးပါ။" : "Cursive letterform preview · Use a slanted form and connect to the next letter where appropriate.")
+      : selectedStyle === "calligraphy"
+        ? (language === "my" ? "Calligraphy နမူနာပုံစံ · အပေါ်တက်မျဉ်းကို ပေါ့ပေါ့၊ အောက်ဆင်းမျဉ်းကို ဖိအားပို၍ ရေးပါ။" : "Calligraphy letterform preview · Keep upstrokes light and downstrokes heavier; pressure is not measured by the device.")
+        : (language === "my" ? "ဤစာလုံးအတွက် လမ်းညွှန်ပုံစံကို ပြထားသည်။ အောက်ရှိ tracing board တွင် လိုက်ရေးပါ။" : "Template preview only; trace the letter on the practice board below.");
   renderTraceTemplate();
 }
 
@@ -239,13 +270,17 @@ function renderTraceTemplate() {
   context.textAlign = "center";
   context.textBaseline = "alphabetic";
   const fontSize = Math.max(72, Math.min(180, rect.height * 0.68, rect.width * 0.55));
-  const font = selectedStyle === "cursive" ? `italic ${fontSize}px cursive`
-    : selectedStyle === "calligraphy" ? `bold ${fontSize}px Georgia, serif`
+  const font = selectedStyle === "cursive" ? `italic ${fontSize}px "Segoe Print", "Comic Sans MS", cursive`
+    : selectedStyle === "calligraphy" ? `italic bold ${fontSize}px "URW Chancery L", "Brush Script MT", "Apple Chancery", cursive`
     : `${fontSize}px Arial, sans-serif`;
   context.font = font;
-  context.lineWidth = 1.5;
-  context.strokeStyle = "rgba(90, 124, 91, 0.28)";
+  context.lineWidth = selectedStyle === "calligraphy" ? 2.8 : selectedStyle === "cursive" ? 1.1 : 1.5;
+  context.strokeStyle = "rgba(90, 124, 91, 0.32)";
   context.strokeText(selectedLetter, rect.width / 2, rect.height * 0.76);
+  if (selectedStyle === "calligraphy") {
+    context.fillStyle = "rgba(90, 124, 91, 0.08)";
+    context.fillText(selectedLetter, rect.width / 2, rect.height * 0.76);
+  }
 
   // Repaint learner strokes after the canvas backing store is resized.
   for (const stroke of traceStrokes) {
@@ -290,7 +325,7 @@ function setLanguage(next) {
       vocabularyTitle: "Vocabulary by topic",
       vocabularyIntro: "Choose a real-life topic. Tap a word to see its Myanmar meaning and an example sentence.",
       practiceTitle: "Practice by skill",
-      practiceIntro: "Choose a level for this skill, then work through the exercise.",
+      practiceIntro: "Practise at the selected level. Use Skills & Levels to change your skill or level.",
       letterTitle: "Letter writing studio",
       letterIntro: "Practise all 26 uppercase and lowercase letters. Choose print, cursive, or calligraphy, then use the tracing board.",
       chooseLetter: "Choose a letter",
@@ -309,7 +344,7 @@ function setLanguage(next) {
       vocabularyTitle: "အမျိုးအစားအလိုက် ဝေါဟာရ",
       vocabularyIntro: "နေ့စဉ်ဘဝအကြောင်းအရာကို ရွေးပါ။ စကားလုံးကိုနှိပ်၍ မြန်မာအဓိပ္ပာယ်နှင့် ဥပမာဝါကျကို ကြည့်ပါ။",
       practiceTitle: "ကျွမ်းကျင်မှုအလိုက် လေ့ကျင့်ခန်း",
-      practiceIntro: "ဤကျွမ်းကျင်မှုအတွက် အဆင့်တစ်ခုကို ရွေးပြီး လေ့ကျင့်ခန်းကို ဆက်လုပ်ပါ။",
+      practiceIntro: "ရွေးထားသောအဆင့်တွင် လေ့ကျင့်ပါ။ ကျွမ်းကျင်မှု သို့မဟုတ် အဆင့်ပြောင်းရန် သက်ဆိုင်ရာစာမျက်နှာသို့ သွားပါ။",
       letterTitle: "အက္ခရာရေးသားမှု လေ့ကျင့်ခန်း",
       letterIntro: "အင်္ဂလိပ်စာလုံးအကြီး၊ အသေး ၂၆ လုံးစီကို လေ့ကျင့်ပါ။ Print၊ Cursive သို့မဟုတ် Calligraphy ကိုရွေးပြီး tracing board တွင် လိုက်ရေးပါ။",
       chooseLetter: "အက္ခရာရွေးပါ",
@@ -360,17 +395,23 @@ document.querySelectorAll("[data-skill]").forEach((button) => button.addEventLis
   selectedExerciseIndex = 0;
   renderPractice();
 }));
+$("#start-selected-practice").addEventListener("click", () => {
+  location.hash = `#/${activeSkill}`;
+});
+window.addEventListener("hashchange", () => {
+  const page = location.hash.slice(1).split("/").filter(Boolean)[0];
+  if (["reading", "listening", "writing", "speaking"].includes(page)) {
+    activeSkill = page;
+    renderPractice();
+  }
+});
 $("#vocabulary-category").addEventListener("change", (event) => {
   selectedCategory = event.target.value;
   selectedWord = null;
   $("#vocabulary-detail").hidden = true;
   renderVocabulary();
 });
-$("#practice-level").addEventListener("change", (event) => {
-  selectedLevel = event.target.value;
-  selectedExerciseIndex = 0;
-  renderPractice();
-});
+
 $("#next-practice").addEventListener("click", () => {
   const count = getPracticeCount(activeSkill, selectedLevel);
   if (count < 2) return;
