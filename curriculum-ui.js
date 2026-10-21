@@ -188,9 +188,10 @@ function renderTraceTemplate() {
   context.setLineDash([]);
   context.textAlign = "center";
   context.textBaseline = "alphabetic";
-  const font = selectedStyle === "cursive" ? "italic 180px cursive"
-    : selectedStyle === "calligraphy" ? "bold 180px Georgia, serif"
-    : "180px Arial, sans-serif";
+  const fontSize = Math.max(72, Math.min(180, rect.height * 0.68, rect.width * 0.55));
+  const font = selectedStyle === "cursive" ? `italic ${fontSize}px cursive`
+    : selectedStyle === "calligraphy" ? `bold ${fontSize}px Georgia, serif`
+    : `${fontSize}px Arial, sans-serif`;
   context.font = font;
   context.lineWidth = 1.5;
   context.strokeStyle = "rgba(90, 124, 91, 0.28)";
