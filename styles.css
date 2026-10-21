@@ -281,6 +281,32 @@ body[data-page="home"] #curriculum-workbench,
 body[data-page="home"] #practice-panel {
   display: none !important;
 }
+
+/* Keep global hero and four-skill selector on Home only; show skill selector on its dedicated route. */
+body:not([data-page="home"]) .hero {
+  display: none !important;
+}
+body[data-page="reading"] #skills-level-page,
+body[data-page="listening"] #skills-level-page,
+body[data-page="writing"] #skills-level-page,
+body[data-page="speaking"] #skills-level-page,
+body[data-page="progress"] #skills-level-page {
+  display: none !important;
+}
+body[data-page="reading"] #curriculum-workbench,
+body[data-page="skills"] #curriculum-workbench,
+body[data-page="reading"] #practice-panel,
+body[data-page="skills"] #practice-panel,
+body[data-page="progress"] #practice-panel {
+  display: none !important;
+}
+body[data-page="progress"] #curriculum-workbench > .curriculum-header,
+body[data-page="progress"] #curriculum-workbench > .curriculum-grid,
+body[data-page="progress"] #curriculum-workbench > #smart-writing-lab,
+body[data-page="progress"] #curriculum-workbench > #curriculum-status {
+  display: none !important;
+}
+
 /* Hidden controls must remain hidden even if component styles change later. */
 #writing-exercise[hidden],
 #speaking-exercise[hidden],
