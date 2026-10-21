@@ -32,7 +32,7 @@ h1{font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.15;margin:22px 0 8px}h2{font
 <div class="canvas-wrap"><canvas id="draw" aria-label="Draw the selected English letter here"></canvas></div>
 <div class="canvas-label"><span id="target-note">Target letter: a · Print</span><span id="counts">Stroke 0 · Point 0</span></div>
 <div class="controls" style="margin-top:12px">
-<button id="undo" class="secondary" disabled>နောက်ဆုံးမျဉ်း ပြန်ဖျက်</button><button id="clear" class="secondary">အသစ်စရေး / ရှင်း</button><button id="replay">Animation ပြန်ကြည့်</button><button id="save">ဒီအက္ခရာကို Save</button>
+<button id="undo" class="secondary" disabled>နောက်ဆုံးမျဉ်း ပြန်ဖျက်</button><button id="clear" class="secondary">အသစ်စရေး / ရှင်း</button><button id="replay-guide" class="secondary">ရေးနည်း Animation</button><button id="replay">ကိုယ်ရေးထားတာ ပြန်ကြည့်</button><button id="save">ဒီအက္ခရာကို Save</button>
 </div>
 <p id="status" class="status" role="status" aria-live="polite"></p>
 </div>
@@ -45,6 +45,7 @@ h1{font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.15;margin:22px 0 8px}h2{font
 </main>
 <script type="module">
 import { LETTERS, normalizePoint, smoothPoints, buildSample, parseSavedSamples, serializeSavedSamples, SAVED_SAMPLES_KEY } from "./writing-lab-core.js";
+import { getCursiveGuide } from "./writing-lab-guides.js";
 (() => {
 const $ = (id) => document.getElementById(id);
 const canvas = $("draw"), ctx = canvas.getContext("2d");
@@ -70,7 +71,63 @@ function setupCanvas(el, context) {
   el.width = Math.round(rect.width * dpr); el.height = Math.round(rect.height * dpr);
   context.setTransform(dpr, 0, 0, dpr, 0, 0);
 }
+const guidePointCache = new Map();
+function sampledGuidePath(pathData) {
+  if (guidePointCache.has(pathData)) return guidePointCache.get(pathData);
+  const svgNS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(svgNS, "svg");
+  const path = document.createElementNS(svgNS, "path");
+  path.setAttribute("d", pathData); svg.append(path);
+  // SVG geometry APIs provide consistent sampling for the animated pen path.
+  const length = path.getTotalLength();
+  const count = Math.max(24, Math.ceil(length / 2));
+  const points = Array.from({length: count + 1}, (_, index) => {
+    const point = path.getPointAtLength(length * index / count);
+    return {x: point.x / 100, y: point.y / 100};
+  });
+  guidePointCache.set(pathData, points);
+  return points;
+}
+function drawCursiveGuide(context, width, height, letter, animated = null) {
+  const paths = getCursiveGuide(letter);
+  if (!paths) return false;
+  context.save();
+  context.lineCap = "round"; context.lineJoin = "round";
+  const drawOne = (points, progress, color, lineWidth) => {
+    const end = Math.max(1, Math.floor((points.length - 1) * progress));
+    context.beginPath(); context.moveTo(points[0].x * width, points[0].y * height);
+    for (let i = 1; i <= end; i++) context.lineTo(points[i].x * width, points[i].y * height);
+    context.strokeStyle = color; context.lineWidth = lineWidth; context.stroke();
+    return points[end];
+  };
+  paths.forEach((pathData, index) => {
+    const points = sampledGuidePath(pathData);
+    if (animated === null) {
+      drawOne(points, 1, "rgba(36,85,74,.28)", 3.2);
+      const start = points[0];
+      context.beginPath(); context.arc(start.x * width, start.y * height, 8, 0, Math.PI * 2);
+      context.fillStyle = "#24554a"; context.fill();
+      context.fillStyle = "#fff"; context.font = "bold 10px system-ui,sans-serif";
+      context.textAlign = "center"; context.textBaseline = "middle";
+      context.fillText(String(index + 1), start.x * width, start.y * height);
+      const end = points[points.length - 1], before = points[Math.max(0, points.length - 5)];
+      const angle = Math.atan2(end.y - before.y, end.x - before.x);
+      context.beginPath(); context.moveTo(end.x * width, end.y * height);
+      context.lineTo(end.x * width - 8 * Math.cos(angle - .55), end.y * height - 8 * Math.sin(angle - .55));
+      context.moveTo(end.x * width, end.y * height);
+      context.lineTo(end.x * width - 8 * Math.cos(angle + .55), end.y * height - 8 * Math.sin(angle + .55));
+      context.strokeStyle = "#24554a"; context.lineWidth = 1.8; context.stroke();
+    } else if (index < animated.strokeIndex) {
+      drawOne(points, 1, "#24554a", 3.4);
+    } else if (index === animated.strokeIndex) {
+      drawOne(points, animated.progress, "#24554a", 3.8);
+    }
+  });
+  context.restore();
+  return true;
+}
 function drawTarget(context, width, height, letter, style) {
+  if (style === "cursive" && drawCursiveGuide(context, width, height, letter)) return;
   context.save(); context.globalAlpha = 0.13; context.fillStyle = "#547568";
   context.textAlign = "center"; context.textBaseline = "middle";
   context.font = style === "print" ? "700 " + Math.min(height * 0.78, width * 0.42) + "px system-ui, sans-serif" : "italic 700 " + Math.min(height * 0.78, width * 0.42) + "px cursive";
@@ -188,6 +245,30 @@ $("save").addEventListener("click", () => {
     renderSavedList(); resetSample();
     $("status").textContent = "အက္ခရာ " + sample.targetLetter + " (" + sample.style + ") ကို local မှတ်တမ်းထဲ သိမ်းပြီးပါပြီ။ အလိုအလျောက် အက္ခရာမှန်/မမှန် အတည်ပြုထားခြင်း မဟုတ်ပါ။";
   } catch (error) { $("status").textContent = "မှတ်တမ်းသိမ်းမရပါ။ Browser storage နေရာ/ခွင့်ပြုချက်ကို စစ်ပါ။"; }
+});
+$("replay-guide").addEventListener("click", async () => {
+  if (captureStyle !== "cursive") {
+    $("status").textContent = "ရေးနည်း Animation ကို ကြည့်ရန် ရေးဟန်မှာ Cursive ကို ရွေးပါ။";
+    return;
+  }
+  const paths = getCursiveGuide(captureLetter);
+  if (!paths?.length) {
+    $("status").textContent = "ဒီအက္ခရာအတွက် လမ်းညွှန်မရှိသေးပါ။";
+    return;
+  }
+  const token = ++replayToken, rect = canvas.getBoundingClientRect();
+  const frame = () => { ctx.clearRect(0, 0, rect.width, rect.height); };
+  for (let index = 0; index < paths.length; index++) {
+    const points = sampledGuidePath(paths[index]);
+    const frames = Math.max(18, Math.min(48, Math.ceil(points.length / 2)));
+    for (let step = 1; step <= frames; step++) {
+      if (token !== replayToken) return;
+      frame();
+      drawCursiveGuide(ctx, rect.width, rect.height, captureLetter, {strokeIndex:index,progress:step/frames});
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+    }
+  }
+  $("status").textContent = captureLetter + " အက္ခရာ၏ stroke order animation ပြီးပါပြီ။ အစက်ထဲက နံပါတ်က ရေးရမည့်အစဉ်ကို ပြပါတယ်။";
 });
 $("replay").addEventListener("click", async () => {
   if (!strokes.length) { $("status").textContent = "Animation ပြန်ကြည့်ရန် အရင်ရေးပါ။"; return; }
