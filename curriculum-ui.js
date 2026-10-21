@@ -353,7 +353,7 @@ function renderLetterGuide() {
     svg.append(strokeGroup);
     // Mark each pen-down start so disconnected strokes and pen lifts are visible.
     orderedStrokePaths.forEach((d, index) => {
-      const move = d.match(/^M\\s*([-\\d.]+)[ ,]+([-\\d.]+)/);
+      const move = d.match(/^M\s*([-\d.]+)[ ,]+([-\d.]+)/);
       if (!move) return;
       const x = Number(move[1]);
       const y = Number(move[2]);
