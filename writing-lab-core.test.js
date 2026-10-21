@@ -4,6 +4,7 @@ import {
   LETTERS, WRITING_STYLES, normalizePoint, smoothPoints, getStrokeEndpoints,
   buildSample, parseSavedSamples, serializeSavedSamples
 } from "./writing-lab-core.js";
+import { CURSIVE_GUIDES, getCursiveGuide } from "./writing-lab-guides.js";
 
 test("all 52 English uppercase and lowercase letters are available", () => {
   assert.equal(LETTERS.length, 52);
@@ -190,4 +191,28 @@ test("corner preservation keeps a deliberate right-angle turn recognizable", () 
   const smooth = smoothPoints(points, 1);
   assert.ok(Math.abs(smooth[2].x - 0.7) < 0.1);
   assert.ok(Math.abs(smooth[2].y - 0.1) < 0.1);
+});
+
+
+test("cursive guide provides separate ordered strokes for all 52 Latin letters", () => {
+  assert.equal(Object.keys(CURSIVE_GUIDES).length, 52);
+  for (const letter of "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz") {
+    const strokes = getCursiveGuide(letter);
+    assert.ok(Array.isArray(strokes) && strokes.length > 0, `missing cursive guide for ${letter}`);
+    for (const path of strokes) {
+      assert.match(path, /^M\s*-?\d/);
+      assert.match(path, /[A-Z]/);
+    }
+  }
+});
+
+test("cursive lowercase a and o have distinct stroke constructions", () => {
+  assert.notDeepEqual(getCursiveGuide("a"), getCursiveGuide("o"));
+  assert.ok(getCursiveGuide("a").length > 0);
+  assert.ok(getCursiveGuide("o").length > 0);
+});
+
+test("cursive guide lookup rejects unsupported glyphs", () => {
+  assert.equal(getCursiveGuide("@"), null);
+  assert.equal(getCursiveGuide("𝒶"), null);
 });
