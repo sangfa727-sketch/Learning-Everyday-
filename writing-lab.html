@@ -78,8 +78,9 @@ function drawTarget(context, width, height, letter, style) {
 }
 function drawStroke(context, stroke, width, height, smooth = false, progress = 1) {
   const mode = penModeSelect.value;
-  const useSmooth = smooth || mode === "stabilized" || mode === "curve";
-  const points = useSmooth ? smoothPoints(stroke.points, mode === "curve" ? Math.max(strength(), 0.85) : strength()) : stroke.points;
+  const useSmooth = strength() > 0 && (smooth || mode === "stabilized" || mode === "curve");
+  const useCurve = mode === "curve" && strength() > 0;
+  const points = useSmooth ? smoothPoints(stroke.points, strength()) : stroke.points;
   if (!points.length) return;
   const segmentCount = Math.max(1, Math.min(points.length - 1, Math.floor((points.length - 1) * progress)));
   context.save(); context.strokeStyle = stroke.style === "calligraphy" ? "#24554a" : stroke.style === "cursive" ? "#476f9b" : "#315f9b";
@@ -90,7 +91,7 @@ function drawStroke(context, stroke, width, height, smooth = false, progress = 1
     context.beginPath(); context.arc(points[0].x * width, points[0].y * height, context.lineWidth / 2, 0, Math.PI * 2); context.fill();
   } else {
     context.beginPath(); context.moveTo(points[0].x * width, points[0].y * height);
-    if (useSmooth && points.length > 2) {
+    if (useCurve && points.length > 2) {
       for (let i = 1; i < segmentCount; i++) {
         const current = points[i], next = points[Math.min(i + 1, points.length - 1)];
         context.quadraticCurveTo(current.x * width, current.y * height, (current.x + next.x) * width / 2, (current.y + next.y) * height / 2);

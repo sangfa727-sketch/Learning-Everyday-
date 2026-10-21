@@ -31,3 +31,13 @@ test("Smart Writing Lab exposes pen assistance modes and an adjustable stabilize
   assert.match(html, /point\.pressure = Number/);
   assert.match(html, /context\.lineWidth = Math\.max\(1\.2, baseWidth \* pressureFactor \* speedFactor\)/);
 });
+
+
+test("stabilizer zero disables curve rendering and Curve Pen follows the selected strength", async () => {
+  const html = await readFile(new URL("./writing-lab.html", import.meta.url), "utf8");
+  assert.match(html, /const useSmooth = strength\(\) > 0 && \(smooth \|\| mode === "stabilized" \|\| mode === "curve"\)/);
+  assert.match(html, /const useCurve = mode === "curve" && strength\(\) > 0/);
+  assert.match(html, /if \(useCurve && points\.length > 2\)/);
+  assert.match(html, /const points = useSmooth \? smoothPoints\(stroke\.points, strength\(\)\) : stroke\.points/);
+  assert.doesNotMatch(html, /Math\.max\(strength\(\), 0\.85\)/);
+});
