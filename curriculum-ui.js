@@ -279,7 +279,11 @@ function renderLetterGuide() {
     : selectedStyle === "calligraphy"
       ? (language === "my" ? "Calligraphy: ဝင်မျဉ်းကို ဖိအားပေါ့ပေါ့ဖြင့်စပါ။ အောက်ဆင်းမျဉ်းတွင် ဖိအားတိုးပြီး အပေါ်တက်မျဉ်းတွင် လျှော့ပါ။ " : "Calligraphy: start the entry stroke lightly, add pressure on downstrokes, and release pressure on upstrokes. ")
       : "";
-  $("#letter-start-instruction").textContent = (language === "my" ? guide.my : guide.start) + (selectedStyle === "print" ? "" : " " + styleStart);
+  $("#letter-start-instruction").textContent = selectedStyle === "cursive"
+    ? (language === "my"
+      ? "သင်ပေးထားသော Script glyph ကို outline အတိုင်း လိုက်ကြည့်ပါ။ ဤ animation သည် အက္ခရာပုံစံကို တူညီစွာပြသသော်လည်း ဘောပင်စတင်ရာ၊ pen-lift နှင့် လက်ရေး stroke အစီအစဉ်ကို မပြသသေးပါ။"
+      : "Trace the supplied Script glyph outline. This matches the displayed letter shape, but does not yet teach pen start points, pen lifts, or authentic handwriting stroke order.")
+    : (language === "my" ? guide.my : guide.start) + (selectedStyle === "print" ? "" : " " + styleStart);
   $("#letter-guide-title").textContent = selectedStyle === "print"
     ? `${language === "my" ? "ပုံနှိပ်စာလုံး" : "Print stroke guide"} · ${selectedLetter}`
     : `${selectedStyle === "cursive" ? "Cursive" : "Calligraphy"} · ${selectedLetter}`;
