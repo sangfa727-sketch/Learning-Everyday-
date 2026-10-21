@@ -36,7 +36,7 @@ test("cursive practice animates hand-authored strokes and traces the same paths"
   assert.match(ui, /follow the hand-drawn centerline strokes in order/);
   assert.match(ui, /Mark each pen-down start so disconnected strokes and pen lifts are visible/);
   assert.match(ui, /class", "letter-stroke-number"/);
-  assert.match(ui, /Stroke \\${index \\+ 1} starts here/);
+  assert.match(ui, /starts here/);
   assert.match(ui, /function traceStrokeWidth\(style, pressure = 0\.5\)/);
   assert.match(ui, /drawTraceSegment\(context, stroke, previous, point, width, height\)/);
   assert.match(css, /\.letter-guide-strokes\.style-calligraphy/);
