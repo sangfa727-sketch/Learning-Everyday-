@@ -21,6 +21,6 @@ test("service worker app shell caches every local JavaScript module imported by 
 
 test("service worker cache version changes when the shell is revised", async () => {
   const worker = await readFile(new URL("./sw.js", import.meta.url), "utf8");
-  assert.match(worker, /const CACHE_NAME = "learning-everyday-shell-v17";/);
+  assert.match(worker, /const CACHE_NAME = "learning-everyday-shell-v19";/);
   assert.match(worker, /"\.\/progress-state\.js"/);
 });
