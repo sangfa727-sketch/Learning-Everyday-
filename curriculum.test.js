@@ -67,3 +67,15 @@ test("script cursive sample glyphs cover all 52 letters and match the supplied s
   assert.equal(CURSIVE_GLYPHS.g, "ℊ");
   assert.equal(CURSIVE_GLYPHS.o, "ℴ");
 });
+
+
+test("cursive alphabet mapping covers uppercase and lowercase without collisions", () => {
+  const uppercase = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"];
+  const lowercase = [..."abcdefghijklmnopqrstuvwxyz"];
+  assert.deepEqual(Object.keys(CURSIVE_GLYPHS).filter((letter) => letter === letter.toUpperCase()), uppercase);
+  assert.deepEqual(Object.keys(CURSIVE_GLYPHS).filter((letter) => letter !== letter.toUpperCase()), lowercase);
+  assert.equal(CURSIVE_GLYPHS.a, "𝒶");
+  assert.equal(CURSIVE_GLYPHS.o, "ℴ");
+  assert.notEqual(CURSIVE_GLYPHS.a, CURSIVE_GLYPHS.o);
+  for (const letter of ALPHABET) assert.ok(CURSIVE_GLYPHS[letter], `Missing script glyph for ${letter}`);
+});
