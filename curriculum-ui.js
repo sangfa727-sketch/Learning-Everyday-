@@ -275,21 +275,25 @@ function renderLetterGuide() {
   renderAlphabetGrid();
   $("#letter-style-note").textContent = styleInfo[selectedStyle][language];
   const styleStart = selectedStyle === "cursive"
-    ? (language === "my" ? "Cursive: အပေါ်က Animation သည် သင်ပေးထားသော Script စာလုံးပုံစံကို outline အတိုင်းပြသသည်။ ဘောပင်စတင်ရာနှင့် stroke အစီအစဉ်ကို သီးခြားပြင်ဆင်နေဆဲဖြစ်သည်။ " : "Cursive: the animation traces the exact supplied Script glyph outline; authentic pen-stroke order is still being refined. ")
+    ? (language === "my"
+      ? "Cursive — လက်ရေးပုံစံအတိုင်း ဆွဲထားသောမျဉ်းများကို အစဉ်လိုက်ကြည့်ပြီး ဝင်မျဉ်း၊ အဝိုင်းနှင့် ထွက်မျဉ်းကို လေ့ကျင့်ပါ။"
+      : "Cursive — follow the hand-drawn centerline strokes in order, practising the entry, letter form, and exit stroke.")
     : selectedStyle === "calligraphy"
       ? (language === "my" ? "Calligraphy: ဝင်မျဉ်းကို ဖိအားပေါ့ပေါ့ဖြင့်စပါ။ အောက်ဆင်းမျဉ်းတွင် ဖိအားတိုးပြီး အပေါ်တက်မျဉ်းတွင် လျှော့ပါ။ " : "Calligraphy: start the entry stroke lightly, add pressure on downstrokes, and release pressure on upstrokes. ")
       : "";
   $("#letter-start-instruction").textContent = selectedStyle === "cursive"
-    ? (language === "my"
-      ? "သင်ပေးထားသော Script glyph ကို outline အတိုင်း လိုက်ကြည့်ပါ။ ဤ animation သည် အက္ခရာပုံစံကို တူညီစွာပြသသော်လည်း ဘောပင်စတင်ရာ၊ pen-lift နှင့် လက်ရေး stroke အစီအစဉ်ကို မပြသသေးပါ။"
-      : "Trace the supplied Script glyph outline. This matches the displayed letter shape, but does not yet teach pen start points, pen lifts, or authentic handwriting stroke order.")
+    ? styleStart
     : (language === "my" ? guide.my : guide.start) + (selectedStyle === "print" ? "" : " " + styleStart);
   $("#letter-guide-title").textContent = selectedStyle === "print"
     ? `${language === "my" ? "ပုံနှိပ်စာလုံး" : "Print stroke guide"} · ${selectedLetter}`
     : `${selectedStyle === "cursive" ? "Cursive" : "Calligraphy"} · ${selectedLetter}`;
 
-  // Cursive preview and animation use the exact same supplied Script glyph. Do not animate unrelated hand-drawn paths that produce a different letter shape.
-  const stylePaths = selectedStyle === "print" ? guide.paths : selectedStyle === "calligraphy" ? (calligraphyPathsFor(selectedLetter) ?? guide.paths) : [];
+  // Cursive and calligraphy animate hand-authored centerline paths; keep tracing on the same path source.
+  const stylePaths = selectedStyle === "print"
+    ? guide.paths
+    : selectedStyle === "cursive"
+      ? (cursivePathsFor(selectedLetter) ?? [])
+      : (calligraphyPathsFor(selectedLetter) ?? guide.paths);
   const svg = $("#letter-animation");
   svg.replaceChildren();
   const baseline = document.createElementNS(ns, "line");
@@ -337,15 +341,13 @@ function renderLetterGuide() {
     glyph.textContent = selectedStyle === "cursive" ? (CURSIVE_GLYPHS[selectedLetter] ?? selectedLetter) : selectedLetter;
     svg.append(glyph);
   }
-  const visibleStrokeCount = stylePaths.reduce((count, d) => count + d.trim().split(/(?=M\s*[-\d.])/).filter(Boolean).length, 0);
-  $("#letter-stroke-count").textContent = selectedStyle === "cursive"
-    ? (language === "my" ? "ပေးထားသော Script စာလုံးပုံစံအတိုင်း outline animation · ဘောပင်ရေးစဉ်အစီအစဉ်ကို မဖော်ပြသေးပါ" : "Exact Script glyph outline animation · does not yet represent pen-stroke order")
-    : visibleStrokeCount
+  const visibleStrokeCount = stylePaths.reduce((count, d) => count + d.trim().split(/(?=M\\s*[-\\d.])/).filter(Boolean).length, 0);
+  $("#letter-stroke-count").textContent = visibleStrokeCount
     ? selectedStyle === "print"
-      ? (language === "my" ? `မျဉ်း ${visibleStrokeCount} ကြောင်း · အစဉ်လိုက် မျဉ်းဆွဲလှုပ်ရှားမှု` : `${visibleStrokeCount} strokes · Animated in writing order`)
+      ? (language === "my" ? `မျဉ်း ${visibleStrokeCount} ကြောင်း · အစဉ်လိုက် မျဉ်းဆွဲလှုပ်ရှားမှု` : `${visibleStrokeCount} strokes · animated in order`)
       : selectedStyle === "cursive"
-        ? (language === "my" ? `Cursive မျဉ်း ${visibleStrokeCount} ကြောင်း · စောင်းရေးဟန်နှင့် ဆက်ရေးဝင်/ထွက်မျဉ်း` : `Cursive guide · ${visibleStrokeCount} animated strokes with a slanted entry/exit style`)
-        : (language === "my" ? `Calligraphy မျဉ်း ${visibleStrokeCount} ကြောင်း · အထူမျဉ်းနှင့် အလင်းအတွင်းမျဉ်း` : `Calligraphy guide · ${visibleStrokeCount} animated strokes with a thick-and-thin overlay`)
+        ? (language === "my" ? `Cursive မျဉ်း ${visibleStrokeCount} ကြောင်း · ဝင်မျဉ်း၊ ဆက်ရေးပုံနှင့် ထွက်မျဉ်း` : `Cursive · ${visibleStrokeCount} hand-drawn strokes animated in sequence`)
+        : (language === "my" ? `Calligraphy မျဉ်း ${visibleStrokeCount} ကြောင်း · အထူမျဉ်းနှင့် အလင်းအတွင်းမျဉ်း` : `Calligraphy · ${visibleStrokeCount} animated strokes with thick/thin overlay`)
     : (language === "my" ? "လမ်းညွှန်ပုံစံကို ပြထားသည်။ အောက်ရှိ tracing board တွင် လိုက်ရေးပါ။" : "Template preview only; trace the letter on the practice board below.");
   renderTraceTemplate();
 }
@@ -371,7 +373,9 @@ function renderTraceTemplate() {
   context.lineTo(rect.width - 12, rect.height * 0.78);
   context.stroke();
   context.setLineDash([]);
-  const handPaths = selectedStyle === "calligraphy" ? calligraphyPathsFor(selectedLetter) : null;
+  const handPaths = selectedStyle === "cursive"
+    ? cursivePathsFor(selectedLetter)
+    : selectedStyle === "calligraphy" ? calligraphyPathsFor(selectedLetter) : null;
   if (handPaths && typeof Path2D === "function") {
     const size = Math.min(rect.width * 0.78, rect.height * 0.78);
     context.save();
