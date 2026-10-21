@@ -251,7 +251,7 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
 // Hide the Smart Writing Lab entry after the learner explicitly exports a sample.
 // The flag stays on this device only; the lab remains directly accessible by URL.
 try {
-  if (window.localStorage.getItem("le.writingLab.sampleExported") === "1") {
+  if (window.localStorage.getItem("le.writingLab.sampleExported.v2") === "1") {
     document.querySelector('a[href="./writing-lab.html"]')?.setAttribute("hidden", "");
   }
 } catch {
