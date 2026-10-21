@@ -283,7 +283,8 @@ function renderLetterGuide() {
     ? `${language === "my" ? "ပုံနှိပ်စာလုံး" : "Print stroke guide"} · ${selectedLetter}`
     : `${selectedStyle === "cursive" ? "Cursive" : "Calligraphy"} · ${selectedLetter}`;
 
-  const stylePaths = selectedStyle === "print" ? guide.paths : selectedStyle === "calligraphy" ? (calligraphyPathsFor(selectedLetter) ?? guide.paths) : (cursivePathsFor(selectedLetter) ?? guide.paths);
+  // Cursive preview and animation use the exact same supplied Script glyph. Do not animate unrelated hand-drawn paths that produce a different letter shape.
+  const stylePaths = selectedStyle === "print" ? guide.paths : selectedStyle === "calligraphy" ? (calligraphyPathsFor(selectedLetter) ?? guide.paths) : [];
   const svg = $("#letter-animation");
   svg.replaceChildren();
   const baseline = document.createElementNS(ns, "line");
@@ -328,7 +329,7 @@ function renderLetterGuide() {
     glyph.setAttribute("x", "50"); glyph.setAttribute("y", "76");
     glyph.setAttribute("text-anchor", "middle");
     glyph.setAttribute("class", `letter-template-glyph style-${selectedStyle}`);
-    glyph.textContent = selectedLetter;
+    glyph.textContent = selectedStyle === "cursive" ? (CURSIVE_GLYPHS[selectedLetter] ?? selectedLetter) : selectedLetter;
     svg.append(glyph);
   }
   const visibleStrokeCount = stylePaths.reduce((count, d) => count + d.trim().split(/(?=M\s*[-\d.])/).filter(Boolean).length, 0);
@@ -363,7 +364,7 @@ function renderTraceTemplate() {
   context.lineTo(rect.width - 12, rect.height * 0.78);
   context.stroke();
   context.setLineDash([]);
-  const handPaths = selectedStyle === "print" ? null : selectedStyle === "calligraphy" ? calligraphyPathsFor(selectedLetter) : cursivePathsFor(selectedLetter);
+  const handPaths = selectedStyle === "calligraphy" ? calligraphyPathsFor(selectedLetter) : null;
   if (handPaths && typeof Path2D === "function") {
     const size = Math.min(rect.width * 0.78, rect.height * 0.78);
     context.save();
@@ -379,13 +380,14 @@ function renderTraceTemplate() {
     context.textAlign = "center";
     context.textBaseline = "alphabetic";
     const fontSize = Math.max(72, Math.min(180, rect.height * 0.68, rect.width * 0.55));
-    const font = selectedStyle === "cursive" ? `italic ${fontSize}px "Segoe Print", "Comic Sans MS", cursive`
+    const font = selectedStyle === "cursive" ? `${fontSize}px "Cambria Math", "STIX Two Math", "Noto Sans Math", "Segoe UI Symbol", serif`
       : selectedStyle === "calligraphy" ? `italic bold ${fontSize}px "URW Chancery L", "Brush Script MT", "Apple Chancery", cursive`
       : `${fontSize}px Arial, sans-serif`;
     context.font = font;
     context.lineWidth = selectedStyle === "calligraphy" ? 2.8 : selectedStyle === "cursive" ? 1.1 : 1.5;
     context.strokeStyle = "rgba(90, 124, 91, 0.32)";
-    context.strokeText(selectedLetter, rect.width / 2, rect.height * 0.76);
+    const traceGlyph = selectedStyle === "cursive" ? (CURSIVE_GLYPHS[selectedLetter] ?? selectedLetter) : selectedLetter;
+    context.strokeText(traceGlyph, rect.width / 2, rect.height * 0.76);
     if (selectedStyle === "calligraphy") {
       context.fillStyle = "rgba(90, 124, 91, 0.08)";
       context.fillText(selectedLetter, rect.width / 2, rect.height * 0.76);
@@ -439,6 +441,45 @@ function renderLetterOptions() {
     letterSelect.append(option);
   }
   letterSelect.value = selectedLetter;
+  renderAlphabetGrid();
+}
+
+function renderAlphabetGrid() {
+  const grid = $("#letter-alphabet-grid");
+  if (!grid) return;
+  grid.replaceChildren();
+  for (const [label, letters] of [
+    [language === "my" ? "စာလုံးအကြီး A–Z" : "Uppercase A–Z", [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"]],
+    [language === "my" ? "စာလုံးအသေး a–z" : "Lowercase a–z", [..."abcdefghijklmnopqrstuvwxyz"]]
+  ]) {
+    const group = document.createElement("section");
+    group.className = "letter-alphabet-group";
+    const heading = document.createElement("h4");
+    heading.textContent = label;
+    const row = document.createElement("div");
+    row.className = "letter-alphabet-row";
+    for (const letter of letters) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "letter-alphabet-choice";
+      button.dataset.letter = letter;
+      button.setAttribute("aria-pressed", String(letter === selectedLetter));
+      button.setAttribute("aria-label", (letter === letter.toUpperCase()
+        ? (language === "my" ? "စာလုံးအကြီး " : "Uppercase ")
+        : (language === "my" ? "စာလုံးအသေး " : "Lowercase ")) + letter);
+      button.textContent = selectedStyle === "cursive" ? (CURSIVE_GLYPHS[letter] ?? letter) : letter;
+      button.addEventListener("click", () => {
+        selectedLetter = letter;
+        const select = $("#letter-select");
+        if (select) select.value = letter;
+        traceStrokes = [];
+        renderLetterGuide();
+      });
+      row.append(button);
+    }
+    group.append(heading, row);
+    grid.append(group);
+  }
 }
 
 function setLanguage(next) {
