@@ -40,6 +40,8 @@ test("Smart Writing Lab visibly exposes all 52 letters and the selected Script g
   assert.match(lab, /id="letter-picker-grid"/);
   assert.match(lab, /for \(const letter of LETTERS\)/);
   assert.match(lab, /CURSIVE_GLYPHS\[letter\] \?\? letter/);
+  assert.match(lab, /const targetGlyph = style === "cursive" \? \(CURSIVE_GLYPHS\[letter\] \?\? letter\) : letter/);
+  assert.match(lab, /referenceGlyph\.setAttribute\("font-style", style === "calligraphy" \? "italic" : "normal"\)/);
   assert.match(lab, /id="replay-reference"/);
   assert.match(lab, /script-reference-trace/);
   assert.match(lab, /renderSavedList\(\); renderModeLabel\(\); resizeAll\(\); renderReference\(\)/);
