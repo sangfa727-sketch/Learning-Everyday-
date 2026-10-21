@@ -15,6 +15,8 @@ test("Writing Practice exposes exactly Print and Handwriting mode controls", () 
   }
   assert.equal((html.match(/id="writing-mode-(?:print|handwriting)"/g) ?? []).length, 2);
   assert.match(html, /id="handwriting-reference" class="script-reference"/);
+  assert.doesNotMatch(html, /Choose a letter|id="letter-select"/);
+  assert.match(ui, /function renderLetterOptions\(\) \{\s*renderAlphabetGrid\(\);/);
   assert.match(html, /id="smart-writing-lab" class="curriculum-card letter-practice"/);
   assert.match(html, /Choose Print for step-by-step letter strokes, or Handwriting for cursive letter forms\./);
 });
@@ -34,7 +36,11 @@ test("Print mode preserves the stroke-by-stroke guide", () => {
 test("Handwriting mode retains both ruled-paper script alphabets", () => {
   assert.match(html, /Uppercase A–Z/);
   assert.match(html, /Lowercase a–z/);
-  assert.equal((html.match(/class="script-letter" role="listitem"/g) ?? []).length, 52);
+  assert.equal((html.match(/class="script-letter" type="button"/g) ?? []).length, 52);
+  assert.match(html, /id="script-letter-card" class="script-letter-card" hidden/);
+  assert.match(ui, /function renderScriptLetterPicker\(\)/);
+  assert.match(ui, /largeGlyph\.textContent = glyph/);
+  assert.match(css, /\.script-letter-card\s*\{[\s\S]*?aspect-ratio:\s*1\s*\/\s*1/);
   assert.match(ui, /writing-mode-print.*setWritingMode\("print"\)/);
   assert.match(ui, /writing-mode-handwriting.*setWritingMode\("handwriting"\)/);
 });
