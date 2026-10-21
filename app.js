@@ -248,12 +248,21 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
 }
 
 
-// Hide the Smart Writing Lab entry after the learner explicitly exports a sample.
-// The flag stays on this device only; the lab remains directly accessible by URL.
-try {
-  if (window.localStorage.getItem("le.writingLab.sampleExported.v2") === "1") {
-    document.querySelector('a[href="./writing-lab.html"]')?.setAttribute("hidden", "");
+// Keep the Smart Writing Lab highly visible until a sample has been exported.
+const writingLabExportKey = "le.writingLab.sampleExported.v3";
+function syncWritingLabEntryVisibility() {
+  try {
+    const exported = window.localStorage.getItem(writingLabExportKey) === "1";
+    document.querySelectorAll("[data-writing-lab-entry]").forEach((entry) => {
+      if (exported) entry.setAttribute("hidden", "");
+      else entry.removeAttribute("hidden");
+    });
+  } catch {
+    // Storage may be unavailable in private browsing; keep the entry visible.
   }
-} catch {
-  // Storage may be unavailable in private browsing; keep the link visible.
 }
+syncWritingLabEntryVisibility();
+window.addEventListener("pageshow", syncWritingLabEntryVisibility);
+window.addEventListener("storage", (event) => {
+  if (event.key === writingLabExportKey || event.key === null) syncWritingLabEntryVisibility();
+});
