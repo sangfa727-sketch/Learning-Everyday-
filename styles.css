@@ -116,3 +116,10 @@
 @media(max-width:420px){.vocabulary-list{grid-template-columns:1fr}.letter-guide-layout{grid-template-columns:90px minmax(0,1fr);gap:10px}.letter-preview{min-height:115px}.letter-sample{font-size:64px}.letter-practice-controls{grid-template-columns:1fr}.curriculum-card h3{font-size:16px}}
 
 .sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+
+/* Full alphabet tracing board */
+.letter-template-glyph{font-family:Arial,sans-serif;font-size:76px;fill:none;stroke:#7c9a7a;stroke-width:1.2;stroke-dasharray:2 2}
+.tracing-board-wrap{margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
+.tracing-board-wrap h4{margin:0;color:var(--forest);font:750 15px/1.4 Manrope,ui-sans-serif,sans-serif}
+.letter-tracing{display:block;width:100%;height:230px;margin:10px 0 12px;border:1px solid #dfe7da;border-radius:14px;background:repeating-linear-gradient(0deg,#fff 0,#fff 31px,#f4f7f1 32px,#fff 33px);touch-action:none;cursor:crosshair}
+@media(max-width:600px){.letter-tracing{height:190px}.letter-guide-layout{grid-template-columns:1fr}}
