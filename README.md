@@ -16,6 +16,14 @@ A mobile-first, offline-first English-learning Progressive Web App (PWA) for Mya
 - PWA manifest, app icon, service worker, and app-shell caching.
 - Zero-dependency Node.js unit tests and GitHub Actions test workflow.
 
+## UI/UX design direction
+
+- Calm premium visual language: deep forest green, warm off-white, muted botanical accents, generous whitespace, and restrained card elevation.
+- Mobile-first skill cards with clear labels, consistent touch targets, selected states, and visible keyboard focus.
+- Reading-first lesson panel with readable line-height, tap-to-define word controls, distinct audio controls, and a responsive speed selector.
+- English/Myanmar labels for the new dashboard copy; existing controls remain connected to the same JavaScript IDs.
+- Reduced-motion preference is respected. Typography uses system font fallbacks and does not require a remote font request, helping privacy and offline reliability.
+
 ## Architecture decisions
 
 - **Vanilla JavaScript modules:** no build step or framework runtime is needed for the first milestone.
@@ -37,14 +45,15 @@ Serve the repository over localhost or HTTPS to test service-worker registration
 ## Planned milestones
 
 1. [x] Establish mobile-first shell, bilingual toggle, sample reading, local dictionary lookup, device TTS, writing and optional speaking practice.
-2. [x] Add app-shell caching, manifest, and baseline unit tests.
-3. [ ] Verify CI and perform browser/device accessibility and offline smoke tests.
-4. [ ] Add local PDF text extraction; explicitly detect and explain scanned/image-only PDFs.
-5. [ ] Expand offline dictionary and structured beginner-to-advanced vocabulary, grammar, reading, and sentence lessons.
-6. [ ] Add letter tracing, uppercase/lowercase writing, cursive and calligraphy practice.
-7. [ ] Improve speaking practice with a clear capability boundary for browser speech recognition versus offline pronunciation support.
-8. [ ] Add progress persistence and export/clear controls with privacy-conscious local storage.
-9. [ ] Evaluate Capacitor packaging for Android APK after core PWA behavior is stable.
+2. [x] Refine dashboard hierarchy, responsive skill cards, lesson controls, accessibility focus states, and offline-safe typography.
+3. [x] Add app-shell caching, manifest, and baseline unit tests.
+4. [ ] Verify CI and perform browser/device accessibility and offline smoke tests.
+5. [ ] Add local PDF text extraction; explicitly detect and explain scanned/image-only PDFs.
+6. [ ] Expand offline dictionary and structured beginner-to-advanced vocabulary, grammar, reading, and sentence lessons.
+7. [ ] Add letter tracing, uppercase/lowercase writing, cursive and calligraphy practice.
+8. [ ] Improve speaking practice with a clear capability boundary for browser speech recognition versus offline pronunciation support.
+9. [ ] Add progress persistence and export/clear controls with privacy-conscious local storage.
+10. [ ] Evaluate Capacitor packaging for Android APK after core PWA behavior is stable.
 
 ## Known limitations
 
