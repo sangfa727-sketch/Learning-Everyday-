@@ -66,7 +66,6 @@ function renderProgress() {
 const styleInfo = {
   print: { en: "Print: use separate, clear strokes. Follow the numbered movement guide.", my: "ပုံနှိပ်စာလုံးပုံစံ — မျဉ်းတစ်ကြောင်းစီ ရှင်းရှင်းဆွဲပြီး လမ်းညွှန်အတိုင်း လိုက်ပါ။" },
   cursive: { en: "Cursive: keep letters connected where appropriate, use a relaxed wrist, and maintain a consistent slant.", my: "Cursive — သင့်တော်သည့်နေရာတွင် စာလုံးများကို ဆက်ရေးပါ။ လက်ကောက်ဝတ်ကို ဖြေလျှော့ပြီး စောင်းနှုန်းညီအောင်ထားပါ။" },
-  calligraphy: { en: "Calligraphy: begin with light guide strokes, vary pressure for thick and thin lines, and move slowly.", my: "Calligraphy — လမ်းညွှန်မျဉ်းကို ပေါ့ပေါ့စဆွဲပါ။ ဖိအားကိုပြောင်း၍ မျဉ်းအထူအပါးဖန်တီးပြီး ဖြည်းဖြည်းရေးပါ။" }
 };
 
 function labelForLevel(level) {
@@ -184,21 +183,6 @@ function makeSvgPath(d, index) {
   return path;
 }
 
-// Calligraphy has its own capital/lowercase forms where the pen movement changes,
-// not just a thicker rendering of the cursive centerline. These hand-authored
-// exemplars prioritize a legible entry, main form, and exit stroke.
-const CALLIGRAPHY_PATH_OVERRIDES = Object.freeze({
-  a: ["M14 68 C22 54 39 50 49 59 C59 68 53 80 41 81 C28 82 21 72 28 61 C35 51 48 54 53 64", "M53 64 C58 73 56 82 64 82 C72 82 79 74 86 66"],
-  o: ["M18 68 C26 55 39 51 49 58 C59 65 57 77 46 81 C34 85 23 77 25 66 C27 56 37 52 46 56", "M46 56 C55 61 60 72 66 78 C72 82 79 74 86 66"],
-  f: ["M17 82 C28 66 39 45 42 27 C44 14 56 10 64 20 C71 29 64 39 56 46 C48 53 40 57 32 61", "M12 58 C29 51 48 50 68 53", "M38 49 C34 64 29 80 22 92 C18 99 11 97 9 91"],
-  A: ["M10 79 C24 57 37 29 49 13 C61 34 67 59 77 78 C80 84 85 80 90 72", "M29 55 C42 48 57 47 68 51", "M48 14 C43 8 39 10 38 16"],
-  F: ["M24 82 C28 59 31 37 34 18 C47 11 61 16 64 27 C67 38 54 46 36 48", "M22 51 C39 45 57 45 73 49", "M39 49 C34 65 29 81 23 92 C18 100 11 98 9 91", "M34 18 C40 10 47 8 53 12"]
-});
-
-function calligraphyPathsFor(letter) {
-  return CALLIGRAPHY_PATH_OVERRIDES[letter] ?? cursivePathsFor(letter);
-}
-
 function renderLetterGuide() {
   const guide = LETTER_GUIDES[selectedLetter] ?? {
     start: `Trace the ${selectedLetter === selectedLetter.toUpperCase() ? "uppercase" : "lowercase"} letter slowly, following the faint template.`,
@@ -207,7 +191,7 @@ function renderLetterGuide() {
   };
   const sample = $("#letter-sample");
   sample.replaceChildren();
-  sample.classList.remove("style-print", "style-cursive", "style-calligraphy");
+  sample.classList.remove("style-print", "style-cursive");
   sample.classList.add(`style-${selectedStyle}`);
   if (selectedStyle === "cursive") {
     // Render the same hand-drawn paths used by the animation, not a Unicode math font.
@@ -239,22 +223,18 @@ function renderLetterGuide() {
     ? (language === "my"
       ? "Cursive — လက်ရေးပုံစံအတိုင်း ဆွဲထားသောမျဉ်းများကို အစဉ်လိုက်ကြည့်ပြီး ဝင်မျဉ်း၊ အဝိုင်းနှင့် ထွက်မျဉ်းကို လေ့ကျင့်ပါ။"
       : "Cursive — follow the hand-drawn centerline strokes in order, practising the entry, letter form, and exit stroke.")
-    : selectedStyle === "calligraphy"
-      ? (language === "my" ? "Calligraphy: ဝင်မျဉ်းကို ဖိအားပေါ့ပေါ့ဖြင့်စပါ။ အောက်ဆင်းမျဉ်းတွင် ဖိအားတိုးပြီး အပေါ်တက်မျဉ်းတွင် လျှော့ပါ။ " : "Calligraphy: start the entry stroke lightly, add pressure on downstrokes, and release pressure on upstrokes. ")
-      : "";
+    : "";
   $("#letter-start-instruction").textContent = selectedStyle === "cursive"
     ? styleStart
     : (language === "my" ? guide.my : guide.start) + (selectedStyle === "print" ? "" : " " + styleStart);
   $("#letter-guide-title").textContent = selectedStyle === "print"
     ? `${language === "my" ? "ပုံနှိပ်စာလုံး" : "Print stroke guide"} · ${selectedLetter}`
-    : `${selectedStyle === "cursive" ? "Cursive" : "Calligraphy"} · ${selectedLetter}`;
+    : `Cursive · ${selectedLetter}`;
 
-  // Cursive and calligraphy animate hand-authored centerline paths; keep tracing on the same path source.
-  const stylePaths = selectedStyle === "print"
-    ? guide.paths
-    : selectedStyle === "cursive"
-      ? (cursivePathsFor(selectedLetter) ?? [])
-      : (calligraphyPathsFor(selectedLetter) ?? guide.paths);
+  // Cursive uses the shared hand-drawn centerline source; Print uses its own stroke guide.
+  const stylePaths = selectedStyle === "cursive"
+    ? (cursivePathsFor(selectedLetter) ?? [])
+    : guide.paths;
   const svg = $("#letter-animation");
   svg.replaceChildren();
   const baseline = document.createElementNS(ns, "line");
@@ -275,13 +255,6 @@ function renderLetterGuide() {
       path.style.animationDuration = "620ms";
       path.style.animationDelay = `${index * 650}ms`;
       strokeGroup.append(path);
-      if (selectedStyle === "calligraphy") {
-        const highlight = makeSvgPath(d, index);
-        highlight.classList.add("calligraphy-highlight");
-        highlight.style.animationDuration = "620ms";
-        highlight.style.animationDelay = `${index * 650}ms`;
-        strokeGroup.append(highlight);
-      }
     });
     svg.append(strokeGroup);
     // Mark each pen-down start so disconnected strokes and pen lifts are visible.
@@ -346,9 +319,7 @@ function renderTraceTemplate() {
   context.lineTo(rect.width - 12, rect.height * 0.78);
   context.stroke();
   context.setLineDash([]);
-  const handPaths = selectedStyle === "cursive"
-    ? cursivePathsFor(selectedLetter)
-    : selectedStyle === "calligraphy" ? calligraphyPathsFor(selectedLetter) : null;
+  const handPaths = selectedStyle === "cursive" ? cursivePathsFor(selectedLetter) : null;
   if (handPaths && typeof Path2D === "function") {
     const size = Math.min(rect.width * 0.78, rect.height * 0.78);
     context.save();
@@ -357,7 +328,7 @@ function renderTraceTemplate() {
     context.strokeStyle = "rgba(65, 105, 79, 0.34)";
     context.lineCap = "round";
     context.lineJoin = "round";
-    context.lineWidth = selectedStyle === "calligraphy" ? 5.2 : 2.4;
+    context.lineWidth = 2.4;
     for (const d of handPaths) context.stroke(new Path2D(d));
     context.restore();
   } else {
@@ -365,12 +336,8 @@ function renderTraceTemplate() {
     context.textAlign = "center";
     context.textBaseline = "alphabetic";
     const fontSize = Math.max(72, Math.min(180, rect.height * 0.68, rect.width * 0.55));
-    context.font = `${selectedStyle === "cursive" ? "italic " : ""}${fontSize}px Georgia, serif`;
+    context.font = `${fontSize}px Georgia, serif`;
     context.strokeText(selectedLetter, rect.width / 2, rect.height * 0.76);
-    if (selectedStyle === "calligraphy") {
-      context.fillStyle = "rgba(90, 124, 91, 0.08)";
-      context.fillText(selectedLetter, rect.width / 2, rect.height * 0.76);
-    }
   }
 
   // Repaint learner strokes after the canvas backing store is resized.
