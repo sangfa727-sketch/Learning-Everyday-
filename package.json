@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Offline-first English learning PWA for English/Myanmar learners",
   "scripts": {
-    "test": "node --check app.js && node --check learning-core.js && node --check local-state.js && node --check pdf-import.js && node --check curriculum.js && node --check curriculum-ui.js && node --check writing-lab-core.js && node --test"
+    "test": "node --check app.js && node --check learning-core.js && node --check local-state.js && node --check pdf-import.js && node --check curriculum.js && node --check curriculum-ui.js && node --check cursive-paths.js && node --check writing-lab-core.js && node --test"
   },
   "engines": {
     "node": ">=20"
