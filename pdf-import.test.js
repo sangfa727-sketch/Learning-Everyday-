@@ -44,3 +44,15 @@ test("rejects oversized documents before invoking the PDF engine", async () => {
   await assert.rejects(extractPdfText({ name: "large.pdf", type: "application/pdf", size: MAX_PDF_BYTES + 1 }, pdfjs), /15 MB/);
   assert.equal(called, false);
 });
+
+test("rejects PDFs over the page limit and missing parser", async () => {
+  const oversized = { getDocument: () => ({ promise: Promise.resolve({ numPages: 51, destroy: async () => {} }) }) };
+  await assert.rejects(
+    extractPdfText({ name: "long.pdf", size: 1, arrayBuffer: async () => new ArrayBuffer(1) }, oversized),
+    /more than 50 pages/
+  );
+  await assert.rejects(
+    extractPdfText({ name: "story.pdf", size: 1, arrayBuffer: async () => new ArrayBuffer(1) }, null),
+    /PDF reader could not be loaded/
+  );
+});
