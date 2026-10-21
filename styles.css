@@ -396,7 +396,7 @@ body[data-page="reading"] #curriculum-workbench > #curriculum-status {
 /* Writing Practice: switch between animated Print strokes and ruled-paper Handwriting samples. */
 .writing-mode-controls{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 8px}
 .writing-mode-controls button[aria-pressed="true"]{background:#173c35;color:#fff;border-color:#173c35}
-#smart-writing-lab[hidden],#show-writing-card[hidden]{display:none!important}
+#smart-writing-lab[hidden]{display:none!important}
 #legacy-letter-tools[hidden]{display:none!important}
 #legacy-letter-tools .letter-practice-controls label:nth-child(2),
 #legacy-letter-tools .letter-preview,
