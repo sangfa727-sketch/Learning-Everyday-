@@ -147,3 +147,5 @@ body[data-page="home"] .page-navigation{display:none}
 .skill-card:focus-visible{outline:3px solid #789a62;outline-offset:3px}
 @media(max-width:600px){.page-navigation{width:calc(100% - 28px);margin-top:14px;padding:16px;gap:12px;flex-direction:column;border-radius:16px}.page-home-link{min-height:40px}.page-heading-copy h1{font-size:27px}.page-heading-copy>p:last-child{font-size:13px}body:not([data-page="home"]) #main-content{padding-top:14px}}
 @media(prefers-reduced-motion:reduce){.skill-card{transition:none}.skill-card:hover{transform:none}}
+
+body[data-page="writing"] #practice-panel #lesson-text,body[data-page="writing"] #practice-panel .reading-tip,body[data-page="writing"] #practice-panel #word-card,body[data-page="writing"] #practice-panel #pdf-note,body[data-page="speaking"] #practice-panel #lesson-text,body[data-page="speaking"] #practice-panel .reading-tip,body[data-page="speaking"] #practice-panel #word-card,body[data-page="speaking"] #practice-panel #pdf-note{display:none}
