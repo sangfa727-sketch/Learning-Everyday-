@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { cursivePathsFor, splitCursiveStrokes } from "./cursive-paths.js";
 
 test("cursive practice animates hand-authored strokes and traces the same paths", async () => {
   const [ui, css, html] = await Promise.all([
@@ -53,8 +54,23 @@ test("Smart Writing Lab visibly exposes all 52 letters and the selected Script g
   assert.match(lab, /for \(const letter of LETTERS\)/);
   assert.match(lab, /CURSIVE_GLYPHS\[letter\] \?\? letter/);
   assert.match(lab, /const targetGlyph = style === "cursive" \? \(CURSIVE_GLYPHS\[letter\] \?\? letter\) : letter/);
-  assert.match(lab, /referenceGlyph\.setAttribute\("font-style", style === "calligraphy" \? "italic" : "normal"\)/);
+  assert.match(lab, /const paths = style === "cursive" \? splitCursiveStrokes\(cursivePathsFor\(letter\)\) : \[\]/);
   assert.match(lab, /id="replay-reference"/);
   assert.match(lab, /script-reference-trace/);
+  assert.match(lab, /class", "script-reference-glyph"/);
+  assert.match(lab, /context\.stroke\(new Path2D\(d\)\)/);
+  assert.match(lab, /import \{ cursivePathsFor, splitCursiveStrokes \} from "\.\/cursive-paths\.js"/);
   assert.match(lab, /renderSavedList\(\); renderModeLabel\(\); resizeAll\(\); renderReference\(\)/);
+});
+
+
+test("shared cursive stroke data covers all 52 letters and keeps lowercase a and o distinct", () => {
+  const letters = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"];
+  for (const letter of letters) {
+    const paths = cursivePathsFor(letter);
+    assert.ok(Array.isArray(paths) && paths.length > 0, `missing cursive path for ${letter}`);
+    assert.ok(splitCursiveStrokes(paths).length > 0, `missing ordered strokes for ${letter}`);
+  }
+  assert.notDeepEqual(cursivePathsFor("a"), cursivePathsFor("o"));
+  assert.notEqual(splitCursiveStrokes(cursivePathsFor("a")).join("|"), splitCursiveStrokes(cursivePathsFor("o")).join("|"));
 });
