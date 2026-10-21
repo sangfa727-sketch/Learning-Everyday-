@@ -19,8 +19,10 @@ export function normalizePoint(clientX, clientY, rect, timestamp, pressure = 0.5
   };
 }
 
-export function smoothPoints(points) {
+export function smoothPoints(points, strength = 1) {
   if (!Array.isArray(points) || points.length < 3) return (points ?? []).map((point) => ({ ...point }));
+  const level = Number.isFinite(strength) ? Math.max(0, Math.min(1, strength)) : 1;
+  if (level === 0) return points.map((point) => ({ ...point }));
 
   // Replace only clear, isolated spikes. Small deviations may be intentional
   // handwriting detail, so they remain untouched by the outlier-rejection pass.
@@ -28,7 +30,7 @@ export function smoothPoints(points) {
     const sorted = [...values].sort((a, b) => a - b);
     return sorted[Math.floor(sorted.length / 2)];
   };
-  const outlierThreshold = 0.08; // normalized canvas units
+  const outlierThreshold = 0.08 + (1 - level) * 0.12; // normalized canvas units
   const filtered = points.map((point, index) => {
     if (index === 0 || index === points.length - 1) return { ...point };
     const from = Math.max(0, index - 2);
@@ -51,10 +53,11 @@ export function smoothPoints(points) {
     if (index === 0 || index === filtered.length - 1) return { ...point };
     const previous = filtered[index - 1];
     const next = filtered[index + 1];
+    const neighborWeight = 0.2 * level;
     return {
       ...point,
-      x: previous.x * 0.2 + point.x * 0.6 + next.x * 0.2,
-      y: previous.y * 0.2 + point.y * 0.6 + next.y * 0.2
+      x: previous.x * neighborWeight + point.x * (1 - 2 * neighborWeight) + next.x * neighborWeight,
+      y: previous.y * neighborWeight + point.y * (1 - 2 * neighborWeight) + next.y * neighborWeight
     };
   });
 }
