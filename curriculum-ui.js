@@ -181,6 +181,36 @@ function makeSvgPath(d, index) {
   return path;
 }
 
+// Hand-authored cursive lowercase centerlines. These are not transformed print glyphs.
+const CURSIVE_LOWERCASE_PATHS = Object.freeze({
+  a: ["M12 72 C18 61 26 55 35 56 C48 57 49 76 37 80 C24 84 19 68 27 59 C36 49 50 54 54 65 C57 74 53 83 62 82 C69 81 75 75 82 68"],
+  b: ["M12 72 C20 62 28 56 36 57 C49 58 49 77 37 80 C24 83 19 68 28 59 C38 48 53 54 55 66 L55 27 C55 18 62 15 69 22 L82 34"],
+  c: ["M80 61 C71 51 60 51 49 57 C36 64 38 80 52 81 C63 82 73 76 82 69"],
+  d: ["M12 72 C20 62 28 56 36 57 C49 58 49 77 37 80 C24 83 19 68 28 59 C38 48 53 54 55 66 L55 28 C55 18 62 16 69 22 L82 34"],
+  e: ["M14 69 C27 67 42 65 54 64 C58 54 49 49 39 54 C26 59 27 77 41 81 C56 85 70 77 82 68"],
+  f: ["M23 82 C31 66 40 46 43 29 C45 18 55 15 62 24 C66 30 63 38 59 43 M11 57 C27 52 45 51 61 54 M39 49 C34 65 29 79 23 91 C18 101 10 99 9 91"],
+  g: ["M12 71 C20 61 28 55 36 56 C49 57 49 76 37 80 C24 83 19 67 28 58 C38 48 52 54 55 65 C59 78 55 91 47 95 C38 100 28 95 24 90"],
+  h: ["M12 72 C20 60 27 49 31 36 C34 25 39 20 45 24 C50 28 46 41 42 51 L31 80 C41 65 51 55 61 57 C73 59 67 74 63 82 C72 79 78 73 85 67"],
+  i: ["M14 72 C23 62 31 56 39 57 C49 58 45 70 40 80 C49 77 57 72 64 66", "M46 39 C49 35 52 34 55 35"],
+  j: ["M14 72 C23 62 31 56 39 57 C49 58 45 70 40 80 C47 78 53 74 60 68 C57 82 52 93 45 98 C39 102 33 99 34 93", "M48 38 C51 34 54 34 57 35"],
+  k: ["M12 72 C20 60 27 49 31 36 C34 25 39 20 45 24 C50 28 46 41 42 51 L31 80 C42 68 53 58 65 55 M48 66 C58 72 68 78 82 80"],
+  l: ["M12 72 C23 56 32 39 38 26 C42 17 49 18 52 25 C56 33 46 52 40 65 C35 76 35 83 43 82 C55 81 70 73 83 66"],
+  m: ["M10 72 C20 61 27 56 35 57 C45 58 39 71 35 80 C46 66 53 56 62 58 C72 60 65 73 61 81 C72 72 78 68 87 66"],
+  n: ["M11 72 C21 61 29 56 37 57 C47 58 41 71 37 80 C48 66 57 56 66 58 C77 60 70 74 66 81 C74 77 80 71 87 66"],
+  o: ["M15 68 C25 54 41 50 51 59 C62 69 53 81 41 82 C27 84 20 72 28 61 C38 48 53 54 59 65 C63 74 67 79 74 76 C78 74 82 70 87 66"],
+  p: ["M12 72 C22 61 30 56 38 57 C49 58 43 73 38 83 L26 99 C34 82 45 66 56 59 C67 52 77 57 74 68 C71 79 58 84 45 80"],
+  q: ["M14 68 C24 54 40 50 50 59 C61 69 52 81 40 82 C26 84 19 72 27 61 C37 48 52 54 58 65 C64 79 60 91 53 96 C47 101 39 97 40 91"],
+  r: ["M12 72 C22 61 30 56 38 57 C49 58 42 72 38 80 C48 67 58 57 69 59 C75 60 78 64 82 67"],
+  s: ["M79 57 C67 49 55 51 48 58 C41 66 57 69 62 73 C70 80 58 85 47 82 C37 80 29 75 21 73"],
+  t: ["M12 72 C22 61 30 56 38 57 C49 58 43 71 38 80 C47 78 56 73 63 66 M26 51 C38 48 51 47 65 49"],
+  u: ["M12 62 C9 74 13 82 23 81 C33 80 41 67 47 58 C41 69 38 82 48 82 C59 82 70 73 83 66"],
+  v: ["M12 61 C17 69 23 79 29 81 C37 83 44 66 51 57 C49 70 49 81 59 81 C68 81 77 73 86 66"],
+  w: ["M10 61 C16 70 21 79 27 81 C35 83 40 68 46 58 C44 71 45 81 53 81 C61 81 68 67 75 58 C72 70 74 81 82 79 C87 78 90 73 93 68"],
+  x: ["M13 62 C25 69 37 77 50 81 C59 83 67 73 83 59 M19 81 C36 72 48 64 60 58"],
+  y: ["M12 61 C17 70 24 80 31 81 C39 82 46 66 52 58 C49 73 44 87 38 96 C32 104 23 100 24 93 C25 88 33 87 43 87 C57 87 72 77 86 66"],
+  z: ["M17 58 C34 55 52 55 69 58 C57 67 43 76 28 81 C45 82 63 80 82 73"]
+});
+
 function renderLetterGuide() {
   const guide = LETTER_GUIDES[selectedLetter] ?? {
     start: `Trace the ${selectedLetter === selectedLetter.toUpperCase() ? "uppercase" : "lowercase"} letter slowly, following the faint template.`,
@@ -213,7 +243,7 @@ function renderLetterGuide() {
     const strokeGroup = document.createElementNS(ns, "g");
     strokeGroup.setAttribute("class", `letter-guide-strokes style-${selectedStyle}`);
     if (selectedStyle === "cursive") strokeGroup.setAttribute("transform", "skewX(-7) translate(5 0)");
-    guide.paths.forEach((d, index) => {
+    stylePaths.forEach((d, index) => {
       const path = makeSvgPath(d, index);
       path.classList.add(`style-${selectedStyle}`);
       path.style.animationDelay = `${index * 650}ms`;
@@ -282,19 +312,33 @@ function renderTraceTemplate() {
   context.lineTo(rect.width - 12, rect.height * 0.78);
   context.stroke();
   context.setLineDash([]);
-  context.textAlign = "center";
-  context.textBaseline = "alphabetic";
-  const fontSize = Math.max(72, Math.min(180, rect.height * 0.68, rect.width * 0.55));
-  const font = selectedStyle === "cursive" ? `italic ${fontSize}px "Segoe Print", "Comic Sans MS", cursive`
-    : selectedStyle === "calligraphy" ? `italic bold ${fontSize}px "URW Chancery L", "Brush Script MT", "Apple Chancery", cursive`
-    : `${fontSize}px Arial, sans-serif`;
-  context.font = font;
-  context.lineWidth = selectedStyle === "calligraphy" ? 2.8 : selectedStyle === "cursive" ? 1.1 : 1.5;
-  context.strokeStyle = "rgba(90, 124, 91, 0.32)";
-  context.strokeText(selectedLetter, rect.width / 2, rect.height * 0.76);
-  if (selectedStyle === "calligraphy") {
-    context.fillStyle = "rgba(90, 124, 91, 0.08)";
-    context.fillText(selectedLetter, rect.width / 2, rect.height * 0.76);
+  const handPaths = selectedStyle === "print" ? null : CURSIVE_LOWERCASE_PATHS[selectedLetter];
+  if (handPaths && typeof Path2D === "function") {
+    const size = Math.min(rect.width * 0.78, rect.height * 0.78);
+    context.save();
+    context.translate((rect.width - size) / 2, (rect.height - size) / 2);
+    context.scale(size / 100, size / 100);
+    context.strokeStyle = "rgba(65, 105, 79, 0.34)";
+    context.lineCap = "round";
+    context.lineJoin = "round";
+    context.lineWidth = selectedStyle === "calligraphy" ? 5.2 : 2.4;
+    for (const d of handPaths) context.stroke(new Path2D(d));
+    context.restore();
+  } else {
+    context.textAlign = "center";
+    context.textBaseline = "alphabetic";
+    const fontSize = Math.max(72, Math.min(180, rect.height * 0.68, rect.width * 0.55));
+    const font = selectedStyle === "cursive" ? `italic ${fontSize}px "Segoe Print", "Comic Sans MS", cursive`
+      : selectedStyle === "calligraphy" ? `italic bold ${fontSize}px "URW Chancery L", "Brush Script MT", "Apple Chancery", cursive`
+      : `${fontSize}px Arial, sans-serif`;
+    context.font = font;
+    context.lineWidth = selectedStyle === "calligraphy" ? 2.8 : selectedStyle === "cursive" ? 1.1 : 1.5;
+    context.strokeStyle = "rgba(90, 124, 91, 0.32)";
+    context.strokeText(selectedLetter, rect.width / 2, rect.height * 0.76);
+    if (selectedStyle === "calligraphy") {
+      context.fillStyle = "rgba(90, 124, 91, 0.08)";
+      context.fillText(selectedLetter, rect.width / 2, rect.height * 0.76);
+    }
   }
 
   // Repaint learner strokes after the canvas backing store is resized.
@@ -423,6 +467,10 @@ function setLanguage(next) {
 document.querySelectorAll("[data-skill]").forEach((button) => button.addEventListener("click", () => {
   activeSkill = button.dataset.skill;
   selectedExerciseIndex = 0;
+  if (location.hash.slice(1).split("/").filter(Boolean)[0] === "home" || !location.hash || location.hash === "#") {
+    location.hash = `#/${activeSkill}`;
+    return;
+  }
   renderPractice();
 }));
 $("#start-selected-practice").addEventListener("click", () => {
