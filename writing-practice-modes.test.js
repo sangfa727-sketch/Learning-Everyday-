@@ -23,8 +23,8 @@ test("Print mode restores the stroke-by-stroke guide without exposing tracing or
   assert.match(ui, /const stylePaths = selectedStyle === "cursive"/);
   assert.match(html, /id="letter-animation" class="letter-animation"/);
   assert.match(html, /id="letter-alphabet-grid" class="letter-alphabet-grid"/);
-  assert.match(css, /#legacy-letter-tools \.tracing-board-wrap\{display:none!important\}/);
-  assert.match(css, /#legacy-letter-tools \.letter-preview\{display:none!important\}/);
+  assert.ok(css.includes("#legacy-letter-tools .tracing-board-wrap{display:none!important}"));
+  assert.ok(css.includes("#legacy-letter-tools .letter-preview{display:none!important}"));
 });
 
 test("Handwriting mode retains both ruled-paper script alphabets and Alphabet/Hide can hide the card", () => {
