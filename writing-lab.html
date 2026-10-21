@@ -77,17 +77,20 @@ function drawTarget(context, width, height, letter, style) {
   context.fillText(letter, width / 2, height / 2); context.restore();
 }
 function drawStroke(context, stroke, width, height, smooth = false, progress = 1) {
-  const points = smooth ? smoothPoints(stroke.points) : stroke.points;
+  const mode = penModeSelect.value;
+  const useSmooth = smooth || mode === "stabilized" || mode === "curve";
+  const points = useSmooth ? smoothPoints(stroke.points, mode === "curve" ? Math.max(strength(), 0.85) : strength()) : stroke.points;
   if (!points.length) return;
   const segmentCount = Math.max(1, Math.min(points.length - 1, Math.floor((points.length - 1) * progress)));
   context.save(); context.strokeStyle = stroke.style === "calligraphy" ? "#24554a" : stroke.style === "cursive" ? "#476f9b" : "#315f9b";
   context.fillStyle = context.strokeStyle; context.lineCap = "round"; context.lineJoin = "round";
-  context.lineWidth = stroke.style === "calligraphy" ? 4.1 : 3.0;
+  const baseWidth = stroke.style === "calligraphy" ? 4.1 : 3.0;
+  context.lineWidth = baseWidth;
   if (points.length === 1) {
     context.beginPath(); context.arc(points[0].x * width, points[0].y * height, context.lineWidth / 2, 0, Math.PI * 2); context.fill();
   } else {
     context.beginPath(); context.moveTo(points[0].x * width, points[0].y * height);
-    if (smooth && points.length > 2) {
+    if (useSmooth && points.length > 2) {
       for (let i = 1; i < segmentCount; i++) {
         const current = points[i], next = points[Math.min(i + 1, points.length - 1)];
         context.quadraticCurveTo(current.x * width, current.y * height, (current.x + next.x) * width / 2, (current.y + next.y) * height / 2);
@@ -96,7 +99,20 @@ function drawStroke(context, stroke, width, height, smooth = false, progress = 1
     } else {
       for (let i = 1; i <= segmentCount; i++) context.lineTo(points[i].x * width, points[i].y * height);
     }
-    context.stroke();
+    if (mode === "natural") {
+      // Vary each segment width to simulate pen pressure on mouse input as well as stylus.
+      for (let i = 1; i <= segmentCount; i++) {
+        const a = points[i - 1], b = points[i];
+        const distance = Math.hypot((b.x - a.x) * width, (b.y - a.y) * height);
+        const elapsed = Math.max(1, Math.abs((b.t ?? 0) - (a.t ?? 0)));
+        const speed = distance / elapsed;
+        const pressure = Number.isFinite(b.pressure) && b.pressure > 0 ? b.pressure : 0.5;
+        const pressureFactor = 0.65 + pressure * 0.7;
+        const speedFactor = Math.max(0.62, Math.min(1.25, 1.1 - speed * 0.12));
+        context.lineWidth = Math.max(1.2, baseWidth * pressureFactor * speedFactor);
+        context.beginPath(); context.moveTo(a.x * width, a.y * height); context.lineTo(b.x * width, b.y * height); context.stroke();
+      }
+    } else context.stroke();
   }
   context.restore();
 }
@@ -133,7 +149,14 @@ canvas.addEventListener("pointerdown", (event) => {
 canvas.addEventListener("pointermove", (event) => {
   if (!drawing || !activeStroke) return;
   const point = pointFromEvent(event), last = activeStroke.points.at(-1);
-  if (Math.hypot(point.x - last.x, point.y - last.y) > 0.0007) activeStroke.points.push(point);
+  if (Math.hypot(point.x - last.x, point.y - last.y) > 0.0007) {
+    if (event.pointerType === "mouse" && (!Number.isFinite(event.pressure) || event.pressure === 0.5)) {
+      const rect = canvas.getBoundingClientRect();
+      const speed = Math.hypot((point.x-last.x)*rect.width,(point.y-last.y)*rect.height) / Math.max(1,point.t-last.t);
+      point.pressure = Number(Math.max(0.18,Math.min(0.92,0.78-speed*0.22)).toFixed(3));
+    }
+    activeStroke.points.push(point);
+  }
   render();
 });
 function endStroke() { if (!drawing) return; drawing = false; if (activeStroke?.points.length) strokes.push(activeStroke); activeStroke = null; render(); }
@@ -148,6 +171,8 @@ function guardSelectionChange(select, previous) {
 }
 letterSelect.addEventListener("change", () => guardSelectionChange(letterSelect, captureLetter));
 styleSelect.addEventListener("change", () => guardSelectionChange(styleSelect, captureStyle));
+penModeSelect.addEventListener("change", () => { render(); });
+stabilizerInput.addEventListener("input", () => { renderModeLabel(); render(); });
 $("undo").addEventListener("click", () => { strokes.pop(); if (!strokes.length) sampleStartedAt = 0; render(); });
 $("clear").addEventListener("click", () => { resetSample(); $("status").textContent = "အသစ်သော အက္ခရာမှတ်တမ်းအတွက် အဆင်သင့်ဖြစ်ပါပြီ။"; });
 $("save").addEventListener("click", () => {
