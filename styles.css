@@ -114,3 +114,5 @@
 @media(prefers-reduced-motion:reduce){.letter-stroke{animation:none;stroke-dashoffset:0;transition:none}}
 @media(max-width:760px){.curriculum-grid{grid-template-columns:1fr}.curriculum-header{align-items:flex-start;flex-direction:column}.letter-guide-layout{grid-template-columns:110px minmax(0,1fr)}.letter-sample{font-size:76px}.curriculum-workbench{padding:16px;border-radius:20px}.curriculum-card{padding:14px}}
 @media(max-width:420px){.vocabulary-list{grid-template-columns:1fr}.letter-guide-layout{grid-template-columns:90px minmax(0,1fr);gap:10px}.letter-preview{min-height:115px}.letter-sample{font-size:64px}.letter-practice-controls{grid-template-columns:1fr}.curriculum-card h3{font-size:16px}}
+
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
