@@ -66,6 +66,6 @@ export function cursivePathsFor(letter) {
 
 export function splitCursiveStrokes(paths) {
   return (paths ?? []).flatMap((path) =>
-    path.trim().split(/(?=M\\s*[-\\d.])/).map((part) => part.trim()).filter(Boolean)
+    path.trim().split(/(?=M\s*[-\d.])/).map((part) => part.trim()).filter(Boolean)
   );
 }
