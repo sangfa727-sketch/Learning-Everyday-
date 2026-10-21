@@ -7,7 +7,12 @@ test("print, cursive, and calligraphy animate letter stroke paths distinctly", a
     readFile(new URL("./curriculum-ui.js", import.meta.url), "utf8"),
     readFile(new URL("./styles.css", import.meta.url), "utf8")
   ]);
-  assert.match(ui, /if \(guide\.paths\.length\)/);
+  assert.match(ui, /if \(stylePaths\.length\)/);
+  assert.match(ui, /const CURSIVE_LOWERCASE_PATHS = Object\.freeze\(\{/);
+  for (const letter of "abcdefghijklmnopqrstuvwxyz") {
+    assert.match(ui, new RegExp("^  " + letter + ": \\[", "m"), `missing hand-authored cursive form for ${letter}`);
+  }
+  assert.match(ui, /const handPaths = selectedStyle === "print" \? null : CURSIVE_LOWERCASE_PATHS\[selectedLetter\]/);
   assert.match(ui, /letter-guide-strokes style-/);
   assert.match(ui, /path\.classList\.add/);
   assert.match(ui, /calligraphy-highlight/);
