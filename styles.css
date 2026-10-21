@@ -251,3 +251,42 @@ body[data-page="home"] #skills-level-page{display:block!important}
   .header-actions{flex-wrap:wrap;justify-content:flex-end;gap:7px}
   .skills-nav-link{font-size:11px;white-space:nowrap}
 }
+
+
+/* Route visibility fix: show one focused learning experience per page. */
+body[data-page="writing"] #curriculum-workbench {
+  display: block !important;
+  margin-top: 0;
+}
+body[data-page="writing"] #curriculum-workbench > .curriculum-header,
+body[data-page="writing"] #curriculum-workbench > .curriculum-grid,
+body[data-page="writing"] #curriculum-workbench > .progress-tools,
+body[data-page="writing"] #curriculum-workbench > #curriculum-status,
+body[data-page="writing"] #practice-panel {
+  display: none !important;
+}
+body[data-page="writing"] #curriculum-workbench #smart-writing-lab {
+  display: block !important;
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+body[data-page="listening"] #curriculum-workbench,
+body[data-page="speaking"] #curriculum-workbench {
+  display: none !important;
+}
+body[data-page="skills"] #curriculum-workbench,
+body[data-page="skills"] #practice-panel,
+body[data-page="home"] #curriculum-workbench,
+body[data-page="home"] #practice-panel {
+  display: none !important;
+}
+/* Hidden controls must remain hidden even if component styles change later. */
+#writing-exercise[hidden],
+#speaking-exercise[hidden],
+#pdf-note[hidden],
+#player-controls[hidden],
+#practice-answer-wrap[hidden],
+#practice-speaking-note[hidden] {
+  display: none !important;
+}
