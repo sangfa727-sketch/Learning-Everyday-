@@ -6,103 +6,197 @@
 <meta name="theme-color" content="#173c35">
 <title>Learning Everyday — Smart Writing Lab</title>
 <style>
-:root{color-scheme:light;--ink:#20352f;--green:#24554a;--muted:#687970;--line:#dce5db;--paper:#fff;--soft:#f1f5ee}
+:root{color-scheme:light;--ink:#20352f;--green:#24554a;--muted:#687970;--line:#dce5db;--paper:#fff;--soft:#f1f5ee;--gold:#9c7429}
 *{box-sizing:border-box}body{margin:0;background:#f5f7f1;color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
-main{width:min(100% - 24px,980px);margin:0 auto;padding:24px 0 48px}.top{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}.brand{font-weight:800;color:var(--green);text-decoration:none}.tag{font-size:.8rem;background:#e3eee3;padding:5px 10px;border-radius:99px}
-h1{font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.15;margin:22px 0 8px}p{margin:8px 0;color:var(--muted)}.panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:clamp(14px,3vw,24px);margin-top:16px;box-shadow:0 10px 30px #20352f0a}
-.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:end}.field{display:grid;gap:5px;flex:1;min-width:135px}label{font-size:.9rem;font-weight:650}select,button{font:inherit;border-radius:11px;min-height:44px}select{border:1px solid #cbd8cc;background:white;padding:8px;color:var(--ink)}button{border:1px solid var(--green);background:var(--green);color:white;padding:9px 14px;font-weight:650;cursor:pointer}button.secondary{background:white;color:var(--green)}button:disabled{opacity:.45;cursor:not-allowed}
-.canvas-wrap{margin-top:14px;position:relative;border:1px solid #dce5db;border-radius:14px;overflow:hidden;background:repeating-linear-gradient(to bottom,#fff 0,#fff 47px,#dfe8e3 48px,#fff 49px)}canvas{display:block;width:100%;height:260px;touch-action:none;cursor:crosshair}.canvas-label{font-size:.8rem;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:7px;color:var(--muted)}
-.preview{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.preview-box{border:1px solid var(--line);border-radius:13px;padding:12px}.preview-box h3{font-size:1rem;margin:0}.preview-canvas{height:180px;background:repeating-linear-gradient(to bottom,#fff 0,#fff 43px,#e4ebe5 44px,#fff 45px);border-radius:8px;margin-top:8px}.notice{background:#f7f5e9;border:1px solid #e8e0bd;border-radius:12px;padding:12px;color:#645a31;font-size:.92rem}.status{min-height:1.5em;font-size:.92rem;color:var(--green)}.small{font-size:.85rem}.footer{margin-top:18px;font-size:.85rem;color:var(--muted)}
-@media(max-width:520px){main{width:min(100% - 16px,980px);padding-top:16px}.canvas-wrap canvas{height:230px}.controls button{flex:1}}
+main{width:min(100% - 24px,980px);margin:0 auto;padding:20px 0 48px}.top{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}.brand{font-weight:800;color:var(--green);text-decoration:none}.tag{font-size:.8rem;background:#e3eee3;padding:5px 10px;border-radius:99px}
+h1{font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.15;margin:22px 0 8px}h2{font-size:1.15rem;margin:0 0 8px}p{margin:8px 0;color:var(--muted)}.panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:clamp(14px,3vw,24px);margin-top:16px;box-shadow:0 10px 30px #20352f0a}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:end}.field{display:grid;gap:5px;flex:1;min-width:135px}label{font-size:.9rem;font-weight:650}select,button{font:inherit;border-radius:11px;min-height:44px}select{border:1px solid #cbd8cc;background:white;padding:8px;color:var(--ink);width:100%}button{border:1px solid var(--green);background:var(--green);color:white;padding:9px 14px;font-weight:650;cursor:pointer}button.secondary{background:white;color:var(--green)}button:disabled{opacity:.45;cursor:not-allowed}
+.canvas-wrap{margin-top:14px;position:relative;border:1px solid #dce5db;border-radius:14px;overflow:hidden;background:repeating-linear-gradient(to bottom,#fff 0,#fff 47px,#dfe8e3 48px,#fff 49px)}canvas{display:block;width:100%;height:270px;touch-action:none;cursor:crosshair}.canvas-label{font-size:.8rem;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:7px;color:var(--muted)}
+.preview{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.preview-box{border:1px solid var(--line);border-radius:13px;padding:12px}.preview-box h3{font-size:1rem;margin:0}.preview-canvas{height:180px;background:repeating-linear-gradient(to bottom,#fff 0,#fff 43px,#e4ebe5 44px,#fff 45px);border-radius:8px;margin-top:8px}
+.notice{background:#f7f5e9;border:1px solid #e8e0bd;border-radius:12px;padding:12px;color:#645a31;font-size:.92rem}.status{min-height:1.5em;font-size:.92rem;color:var(--green)}.small{font-size:.85rem}.footer{margin-top:18px;font-size:.85rem;color:var(--muted)}.sample-list{display:grid;gap:8px;margin-top:12px}.sample-row{display:flex;gap:10px;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:10px;padding:10px}.sample-letter{font-size:1.5rem;font-weight:750;min-width:38px;color:var(--green)}.sample-meta{flex:1;min-width:0}.sample-meta strong{display:block}.sample-meta span{font-size:.82rem;color:var(--muted)}.empty{padding:12px;border:1px dashed var(--line);border-radius:10px;color:var(--muted);font-size:.9rem}
+@media(max-width:520px){main{width:min(100% - 16px,980px);padding-top:16px}.canvas-wrap canvas{height:230px}.controls button{flex:1}.sample-row{align-items:flex-start}}
 </style>
 </head>
 <body><main>
-<div class="top"><a class="brand" href="./">← Learning Everyday</a><span class="tag">Internal prototype · local-only</span></div>
+<div class="top"><a class="brand" href="./">← Learning Everyday</a><span class="tag">Local-first handwriting records</span></div>
 <h1>Smart Writing Lab</h1>
-<p>လက်ရေးစမ်းသပ်ရန် သီးသန့်စာမျက်နှာ။ သင်ရေးသော လမ်းကြောင်းကို မှတ်တမ်းယူပြီး ချောမွေ့အောင် ပြန်ဖော်ပြခြင်းနှင့် stroke အစဉ်အတိုင်း animation ပြန်ကြည့်ခြင်းကို စမ်းသပ်ပါ။</p>
+<p>အက္ခရာတစ်လုံးကို ရွေးပြီး လက်ချောင်း သို့မဟုတ် Stylus ဖြင့် ရေးပါ။ Stroke တစ်ကြောင်းချင်းစီ၏ စတင်/ဆုံးမှတ်၊ အစဉ်၊ အချိန်နှင့် လမ်းကြောင်းကို သိမ်းပြီး Animation ပြန်ကြည့်နိုင်သည်။</p>
 <div class="panel">
 <div class="controls">
-<div class="field"><label for="letter">စမ်းသပ်မည့် အက္ခရာ</label><select id="letter"><option>a</option><option>o</option><option>f</option><option>A</option><option>F</option></select></div>
-<div class="field"><label for="style">ရေးဟန်</label><select id="style"><option value="cursive">Cursive</option><option value="calligraphy">Calligraphy</option><option value="print">Print</option></select></div>
-<div class="field"><label for="mode">ပြသပုံ</label><select id="mode"><option value="both">မူရင်း + ချောမွေ့ပုံ</option><option value="original">မူရင်းလက်ရေး</option><option value="smooth">ချောမွေ့ပြန်ဖော်ထားသောပုံ</option></select></div>
+<div class="field"><label for="letter">ရည်ရွယ်ထားသော English အက္ခရာ</label><select id="letter" aria-label="Choose target English letter"></select></div>
+<div class="field"><label for="style">ရေးဟန်</label><select id="style"><option value="print">Print</option><option value="cursive">Cursive</option><option value="calligraphy">Calligraphy</option></select></div>
 </div>
-<div class="canvas-wrap"><canvas id="draw" aria-label="လက်ရေးရေးဆွဲရန် နေရာ"></canvas></div>
-<div class="canvas-label"><span>လက်ချောင်း သို့မဟုတ် Stylus ဖြင့် ရေးပါ။ မျဉ်းတစ်ကြောင်းပြီးမှ လက်လွှတ်ပြီး နောက်မျဉ်းဆက်ရေးပါ။</span><span id="counts">Stroke 0 · Point 0</span></div>
-<div class="controls" style="margin-top:12px"><button id="undo" class="secondary" disabled>နောက်ဆုံးမျဉ်း ပြန်ဖျက်</button><button id="clear" class="secondary">အားလုံးရှင်း</button><button id="replay">Animation ပြန်ကြည့်</button><button id="export">JSON မှတ်တမ်းထုတ်</button></div>
+<div class="notice" style="margin-top:12px">ရွေးထားသောအက္ခရာကို မှတ်တမ်းတွင် ချိတ်ဆက်သိမ်းမည်။ လက်ရှိဗားရှင်းသည် သင်ရေးသောပုံကို ရွေးထားသည့်အက္ခရာနှင့် အလိုအလျောက်တိုက်စစ်ပြီး မှန်/မမှန် အတည်ပြုနိုင်သေးခြင်း မရှိပါ။</div>
+<div class="canvas-wrap"><canvas id="draw" aria-label="Draw the selected English letter here"></canvas></div>
+<div class="canvas-label"><span id="target-note">Target letter: a · Print</span><span id="counts">Stroke 0 · Point 0</span></div>
+<div class="controls" style="margin-top:12px">
+<button id="undo" class="secondary" disabled>နောက်ဆုံးမျဉ်း ပြန်ဖျက်</button><button id="clear" class="secondary">အသစ်စရေး / ရှင်း</button><button id="replay">Animation ပြန်ကြည့်</button><button id="save">ဒီအက္ခရာကို Save</button>
+</div>
 <p id="status" class="status" role="status" aria-live="polite"></p>
 </div>
-<div class="panel"><h2 style="margin:0 0 8px;font-size:1.2rem">မူရင်းနှင့် ပြန်ဖော်ထားသောပုံ</h2><div class="preview">
-<div class="preview-box"><h3>မူရင်းလက်ရေး</h3><canvas id="original" class="preview-canvas" aria-label="မူရင်းရေးဆွဲမှု"></canvas></div>
-<div class="preview-box"><h3>ချောမွေ့ပြန်ဖော်ထားသော လမ်းကြောင်း</h3><canvas id="smoothed" class="preview-canvas" aria-label="ချောမွေ့ပြန်ဖော်ထားသောရေးဆွဲမှု"></canvas></div>
-</div><p class="small">မှတ်ချက် — ချောမွေ့ပုံသည် မျဉ်းလမ်းကြောင်းကို အမြင်ပိုင်းအရသာ ပြုပြင်ထားခြင်းဖြစ်သည်။ အက္ခရာမှန်ကန်မှုကို အလိုအလျောက် အတည်ပြုခြင်း မဟုတ်ပါ။ စံ Cursive/Calligraphy ပုံစံနှင့် နှိုင်းယှဉ်သည့်အဆင့်ကို သီးခြားထည့်သွင်းရမည်။</p></div>
-<div class="panel"><h2 style="margin:0 0 8px;font-size:1.2rem">မှတ်တမ်းနှင့် လုံခြုံရေး</h2><div class="notice">ဒီ prototype မှာ လက်ရေးဒေတာကို server သို့ မပို့ပါ။ Export ခလုတ်ကို သင်နှိပ်မှသာ JSON ဖိုင်ကို သင့်စက်ထဲသို့ ထုတ်ပေးပါမည်။ Export လုပ်ထားသောမှတ်တမ်းကို စစ်ဆေးပြီးမှ user-facing Writing စာမျက်နှာသို့ ပေါင်းစည်းရမည်။</div></div>
-<p class="footer">Prototype only · not yet connected to the public Writing page.</p>
+<div class="panel"><h2>မူရင်းလက်ရေးနှင့် ချောမွေ့ပြန်ဖော်မှု</h2><div class="preview">
+<div class="preview-box"><h3>မူရင်းလမ်းကြောင်း</h3><canvas id="original" class="preview-canvas" aria-label="Original captured strokes"></canvas></div>
+<div class="preview-box"><h3>ချောမွေ့ပြန်ဖော်ထားသောလမ်းကြောင်း</h3><canvas id="smoothed" class="preview-canvas" aria-label="Smoothed captured strokes"></canvas></div>
+</div><p class="small">မူရင်းမှတ်တမ်းကို မပြောင်းလဲဘဲ သိမ်းထားပြီး ပြသချိန်တွင်သာ curve smoothing ပြုလုပ်သည်။ ရွေးထားသောရေးဟန်ကို metadata အဖြစ် သိမ်းသည်။ ပုံစံတိကျမှုအတွက် အလိုအလျောက် handwriting recognition/template matching ကို နောက်ထပ်တည်ဆောက်ရန် လိုအပ်သည်။</p></div>
+<div class="panel"><div class="controls" style="justify-content:space-between;align-items:center"><h2 style="margin:0">သိမ်းထားသော အက္ခရာမှတ်တမ်းများ</h2><button id="export" class="secondary">မှတ်တမ်းများ JSON ထုတ်</button></div><div id="saved-list" class="sample-list"></div><p class="small">မှတ်တမ်းများကို ဤစက်၏ browser local storage ထဲတွင်သာ သိမ်းသည်။ Server သို့ အလိုအလျောက် မပို့ပါ။ Browser data ကို ရှင်းလင်းလျှင် local မှတ်တမ်းများ ပျောက်နိုင်သောကြောင့် JSON export ကို backup အဖြစ် သိမ်းနိုင်သည်။</p></div>
+<p class="footer">Smart Writing Lab · Local prototype · not yet an automatic handwriting-recognition system.</p>
 </main>
-<script>
+<script type="module">
+import { LETTERS, normalizePoint, smoothPoints, buildSample, parseSavedSamples, serializeSavedSamples, SAVED_SAMPLES_KEY } from "./writing-lab-core.js";
 (() => {
-const $ = id => document.getElementById(id);
-const canvas = $('draw'), ctx = canvas.getContext('2d');
-const originalCanvas = $('original'), originalCtx = originalCanvas.getContext('2d');
-const smoothCanvas = $('smoothed'), smoothCtx = smoothCanvas.getContext('2d');
-let strokes = [], active = null, drawing = false, replayToken = 0;
-const now = () => (typeof performance !== 'undefined' ? performance.now() : Date.now());
+const $ = (id) => document.getElementById(id);
+const canvas = $("draw"), ctx = canvas.getContext("2d");
+const originalCanvas = $("original"), originalCtx = originalCanvas.getContext("2d");
+const smoothCanvas = $("smoothed"), smoothCtx = smoothCanvas.getContext("2d");
+const letterSelect = $("letter"), styleSelect = $("style");
+for (const group of [{label:"Uppercase",letters:LETTERS.slice(0,26)},{label:"Lowercase",letters:LETTERS.slice(26)}]) {
+  const optgroup = document.createElement("optgroup"); optgroup.label = group.label;
+  for (const letter of group.letters) { const option = document.createElement("option"); option.value = letter; option.textContent = letter; optgroup.append(option); }
+  letterSelect.append(optgroup);
+}
+letterSelect.value = "a";
+let strokes = [], activeStroke = null, drawing = false, replayToken = 0, sampleStartedAt = 0;
+let captureLetter = letterSelect.value, captureStyle = styleSelect.value;
+const savedSamples = parseSavedSamples(localStorage.getItem(SAVED_SAMPLES_KEY));
+const clock = () => (typeof performance !== "undefined" ? performance.now() : Date.now());
 function setupCanvas(el, context) {
- const rect = el.getBoundingClientRect(), dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
- el.width = Math.round(rect.width*dpr); el.height = Math.round(rect.height*dpr);
- context.setTransform(dpr,0,0,dpr,0,0);
+  const rect = el.getBoundingClientRect(), dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
+  el.width = Math.round(rect.width * dpr); el.height = Math.round(rect.height * dpr);
+  context.setTransform(dpr, 0, 0, dpr, 0, 0);
 }
-function pointFromEvent(e) { const r=canvas.getBoundingClientRect(); return {x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height,t:now(),p:Number.isFinite(e.pressure)&&e.pressure>0?e.pressure:.5}; }
-function smoothPoints(points) {
- if(points.length<3) return points.map(p=>({...p}));
- const out=[{...points[0]}];
- for(let i=1;i<points.length-1;i++) {
-  const a=points[i-1],b=points[i],c=points[i+1];
-  out.push({x:(a.x+2*b.x+c.x)/4,y:(a.y+2*b.y+c.y)/4,t:b.t,p:b.p});
- }
- out.push({...points[points.length-1]}); return out;
+function drawTarget(context, width, height, letter, style) {
+  context.save(); context.globalAlpha = 0.13; context.fillStyle = "#547568";
+  context.textAlign = "center"; context.textBaseline = "middle";
+  context.font = style === "print" ? "700 " + Math.min(height * 0.78, width * 0.42) + "px system-ui, sans-serif" : "italic 700 " + Math.min(height * 0.78, width * 0.42) + "px cursive";
+  context.fillText(letter, width / 2, height / 2); context.restore();
 }
-function drawOne(context, stroke, width, height, smooth=false, progress=1) {
- const raw=stroke.points, pts=smooth?smoothPoints(raw):raw;
- if(!pts.length) return;
- const maxSeg=Math.max(1,Math.floor((pts.length-1)*progress));
- context.save(); context.strokeStyle=stroke.style==='calligraphy'?'#24554a':'#315f9b';
- context.fillStyle=context.strokeStyle; context.lineCap='round';context.lineJoin='round';
- context.lineWidth=stroke.style==='calligraphy'?3.6:2.8;
- if(pts.length===1){context.beginPath();context.arc(pts[0].x*width,pts[0].y*height,context.lineWidth/2,0,Math.PI*2);context.fill();}
- else {
-  context.beginPath();context.moveTo(pts[0].x*width,pts[0].y*height);
-  for(let i=1;i<=maxSeg;i++){const p=pts[i]; if(smooth&&i<maxSeg){const n=pts[i+1];context.quadraticCurveTo(p.x*width,p.y*height,((p.x+n.x)/2)*width,((p.y+n.y)/2)*height);}else context.lineTo(p.x*width,p.y*height);}
-  context.stroke();
- }
- context.restore();
+function drawStroke(context, stroke, width, height, smooth = false, progress = 1) {
+  const points = smooth ? smoothPoints(stroke.points) : stroke.points;
+  if (!points.length) return;
+  const segmentCount = Math.max(1, Math.min(points.length - 1, Math.floor((points.length - 1) * progress)));
+  context.save(); context.strokeStyle = stroke.style === "calligraphy" ? "#24554a" : stroke.style === "cursive" ? "#476f9b" : "#315f9b";
+  context.fillStyle = context.strokeStyle; context.lineCap = "round"; context.lineJoin = "round";
+  context.lineWidth = stroke.style === "calligraphy" ? 4.1 : 3.0;
+  if (points.length === 1) {
+    context.beginPath(); context.arc(points[0].x * width, points[0].y * height, context.lineWidth / 2, 0, Math.PI * 2); context.fill();
+  } else {
+    context.beginPath(); context.moveTo(points[0].x * width, points[0].y * height);
+    if (smooth && points.length > 2) {
+      for (let i = 1; i < segmentCount; i++) {
+        const current = points[i], next = points[Math.min(i + 1, points.length - 1)];
+        context.quadraticCurveTo(current.x * width, current.y * height, (current.x + next.x) * width / 2, (current.y + next.y) * height / 2);
+      }
+      const end = points[segmentCount]; context.lineTo(end.x * width, end.y * height);
+    } else {
+      for (let i = 1; i <= segmentCount; i++) context.lineTo(points[i].x * width, points[i].y * height);
+    }
+    context.stroke();
+  }
+  context.restore();
 }
-function paint(el,context,source,smooth=false) {
- const r=el.getBoundingClientRect(); context.clearRect(0,0,r.width,r.height);
- source.forEach(s=>drawOne(context,s,r.width,r.height,smooth));
+function paintCanvas(el, context, source, smooth) {
+  const rect = el.getBoundingClientRect(); context.clearRect(0, 0, rect.width, rect.height);
+  if (el === canvas) drawTarget(context, rect.width, rect.height, captureLetter, captureStyle);
+  source.forEach((stroke) => drawStroke(context, stroke, rect.width, rect.height, smooth));
 }
 function render() {
- const r=canvas.getBoundingClientRect();ctx.clearRect(0,0,r.width,r.height);
- strokes.forEach(s=>drawOne(ctx,s,r.width,r.height,false));
- if(active) drawOne(ctx,active,r.width,r.height,false);
- paint(originalCanvas,originalCtx,strokes,false);paint(smoothCanvas,smoothCtx,strokes,true);
- const points=strokes.reduce((n,s)=>n+s.points.length,0)+(active?active.points.length:0);
- $('counts').textContent='Stroke '+(strokes.length+(active?1:0))+' · Point '+points;
- $('undo').disabled=strokes.length===0;
+  paintCanvas(canvas, ctx, strokes, false);
+  if (activeStroke) { const rect = canvas.getBoundingClientRect(); drawStroke(ctx, activeStroke, rect.width, rect.height, false); }
+  paintCanvas(originalCanvas, originalCtx, strokes, false);
+  paintCanvas(smoothCanvas, smoothCtx, strokes, true);
+  const pointCount = strokes.reduce((total, stroke) => total + stroke.points.length, 0) + (activeStroke?.points.length ?? 0);
+  $("counts").textContent = "Stroke " + (strokes.length + (activeStroke ? 1 : 0)) + " · Point " + pointCount;
+  $("undo").disabled = strokes.length === 0;
+  $("target-note").textContent = "Target letter: " + captureLetter + " · " + captureStyle[0].toUpperCase() + captureStyle.slice(1);
 }
-function resizeAll(){[canvas,originalCanvas,smoothCanvas].forEach(el=>setupCanvas(el,el.getContext('2d')));render();}
-canvas.addEventListener('pointerdown',e=>{if(e.button!==undefined&&e.button!==0&&e.pointerType==='mouse')return; replayToken++;drawing=true;active={letter:$('letter').value,style:$('style').value,points:[pointFromEvent(e)]};canvas.setPointerCapture?.(e.pointerId);render();});
-canvas.addEventListener('pointermove',e=>{if(!drawing||!active)return;const p=pointFromEvent(e),last=active.points[active.points.length-1];if(Math.hypot(p.x-last.x,p.y-last.y)>.001)active.points.push(p);render();});
-function endStroke(){if(!drawing)return;drawing=false;if(active?.points.length)strokes.push(active);active=null;render();}
-canvas.addEventListener('pointerup',endStroke);canvas.addEventListener('pointercancel',endStroke);canvas.addEventListener('lostpointercapture',endStroke);
-$('undo').addEventListener('click',()=>{strokes.pop();render();});
-$('clear').addEventListener('click',()=>{replayToken++;strokes=[];active=null;drawing=false;render();$('status').textContent='ရေးဆွဲမှုကို ရှင်းပြီးပါပြီ။';});
-$('letter').addEventListener('change',()=>{strokes=[];active=null;render();$('status').textContent='အက္ခရာပြောင်းထားသည်။ စမ်းသပ်ရေးဆွဲမှုအသစ် စတင်ပါ။';});
-$('style').addEventListener('change',()=>{strokes.forEach(s=>s.style=$('style').value);render();});
-$('mode').addEventListener('change',()=>{const mode=$('mode').value;$('original').parentElement.style.display=mode==='smooth'?'none':'';$('smoothed').parentElement.style.display=mode==='original'?'none':'';});
-$('replay').addEventListener('click',async()=>{if(!strokes.length){$('status').textContent='Animation ပြန်ကြည့်ရန် အရင်ရေးပါ။';return;}const token=++replayToken;const r=canvas.getBoundingClientRect();const frame=()=>ctx.clearRect(0,0,r.width,r.height);frame();for(const s of strokes){if(token!==replayToken)return;for(let i=1;i<=Math.max(1,s.points.length-1);i++){if(token!==replayToken)return;ctx.clearRect(0,0,r.width,r.height);for(const done of strokes.slice(0,strokes.indexOf(s)))drawOne(ctx,done,r.width,r.height,false);drawOne(ctx,s,r.width,r.height,false,i/Math.max(1,s.points.length-1));await new Promise(resolve=>requestAnimationFrame(resolve));}}$('status').textContent='Animation ပြီးပါပြီ။';});
-$('export').addEventListener('click',()=>{if(!strokes.length){$('status').textContent='Export လုပ်ရန် လက်ရေးမှတ်တမ်း မရှိသေးပါ။';return;}const payload={schemaVersion:1,kind:'learning-everyday-handwriting-lab',createdAt:new Date().toISOString(),letter:$('letter').value,style:$('style').value,privacy:'local-user-initiated-export',strokes:strokes.map((s,index)=>({index,letter:s.letter,style:s.style,points:s.points.map(p=>({x:+p.x.toFixed(5),y:+p.y.toFixed(5),t:Math.round(p.t),pressure:+p.p.toFixed(3)}))}))};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='learning-everyday-writing-'+payload.letter+'-'+payload.style+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);$('status').textContent='JSON မှတ်တမ်းကို သင့်စက်ထဲသို့ ထုတ်ပေးလိုက်ပါပြီ။';try{window.localStorage.setItem('le.writingLab.sampleExported.v3','1');}catch{}});
-window.addEventListener('resize',resizeAll);
-resizeAll();
+function resetSample() {
+  replayToken++; strokes = []; activeStroke = null; drawing = false; sampleStartedAt = 0;
+  captureLetter = letterSelect.value; captureStyle = styleSelect.value; render();
+}
+function pointFromEvent(event) {
+  const rect = canvas.getBoundingClientRect();
+  return normalizePoint(event.clientX, event.clientY, rect, clock(), event.pressure, sampleStartedAt);
+}
+canvas.addEventListener("pointerdown", (event) => {
+  if (event.button !== undefined && event.button !== 0 && event.pointerType === "mouse") return;
+  if (!sampleStartedAt) { sampleStartedAt = clock(); captureLetter = letterSelect.value; captureStyle = styleSelect.value; }
+  replayToken++; drawing = true;
+  activeStroke = { style: captureStyle, points: [pointFromEvent(event)] };
+  canvas.setPointerCapture?.(event.pointerId); render();
+});
+canvas.addEventListener("pointermove", (event) => {
+  if (!drawing || !activeStroke) return;
+  const point = pointFromEvent(event), last = activeStroke.points.at(-1);
+  if (Math.hypot(point.x - last.x, point.y - last.y) > 0.0007) activeStroke.points.push(point);
+  render();
+});
+function endStroke() { if (!drawing) return; drawing = false; if (activeStroke?.points.length) strokes.push(activeStroke); activeStroke = null; render(); }
+canvas.addEventListener("pointerup", endStroke); canvas.addEventListener("pointercancel", endStroke); canvas.addEventListener("lostpointercapture", endStroke);
+function guardSelectionChange(select, previous) {
+  if (strokes.length || activeStroke) {
+    select.value = previous;
+    $("status").textContent = "လက်ရှိမှတ်တမ်းကို Save လုပ်ပါ သို့မဟုတ် ရှင်းပြီးမှ အက္ခရာ/ရေးဟန် ပြောင်းပါ။";
+    return false;
+  }
+  resetSample(); return true;
+}
+letterSelect.addEventListener("change", () => guardSelectionChange(letterSelect, captureLetter));
+styleSelect.addEventListener("change", () => guardSelectionChange(styleSelect, captureStyle));
+$("undo").addEventListener("click", () => { strokes.pop(); if (!strokes.length) sampleStartedAt = 0; render(); });
+$("clear").addEventListener("click", () => { resetSample(); $("status").textContent = "အသစ်သော အက္ခရာမှတ်တမ်းအတွက် အဆင်သင့်ဖြစ်ပါပြီ။"; });
+$("save").addEventListener("click", () => {
+  if (activeStroke) endStroke();
+  if (!strokes.length) { $("status").textContent = "Save မလုပ်မီ အက္ခရာတစ်လုံးကို အရင်ရေးပါ။"; return; }
+  try {
+    const sample = buildSample({letter:captureLetter, style:captureStyle, strokes, startedAt:sampleStartedAt, finishedAt:clock()});
+    const existing = parseSavedSamples(localStorage.getItem(SAVED_SAMPLES_KEY));
+    existing.unshift(sample);
+    localStorage.setItem(SAVED_SAMPLES_KEY, serializeSavedSamples(existing));
+    try { localStorage.setItem("le.writingLab.sampleExported.v3", "1"); } catch {}
+    renderSavedList(); resetSample();
+    $("status").textContent = "အက္ခရာ " + sample.targetLetter + " (" + sample.style + ") ကို local မှတ်တမ်းထဲ သိမ်းပြီးပါပြီ။ အလိုအလျောက် အက္ခရာမှန်/မမှန် အတည်ပြုထားခြင်း မဟုတ်ပါ။";
+  } catch (error) { $("status").textContent = "မှတ်တမ်းသိမ်းမရပါ။ Browser storage နေရာ/ခွင့်ပြုချက်ကို စစ်ပါ။"; }
+});
+$("replay").addEventListener("click", async () => {
+  if (!strokes.length) { $("status").textContent = "Animation ပြန်ကြည့်ရန် အရင်ရေးပါ။"; return; }
+  const token = ++replayToken, rect = canvas.getBoundingClientRect();
+  const frame = () => { ctx.clearRect(0,0,rect.width,rect.height); drawTarget(ctx,rect.width,rect.height,captureLetter,captureStyle); };
+  frame();
+  for (let index = 0; index < strokes.length; index++) {
+    const stroke = strokes[index], count = Math.max(1, stroke.points.length - 1);
+    for (let step = 1; step <= count; step++) {
+      if (token !== replayToken) return;
+      frame();
+      for (let done = 0; done < index; done++) drawStroke(ctx,strokes[done],rect.width,rect.height,false);
+      drawStroke(ctx,stroke,rect.width,rect.height,true,step/count);
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+    }
+  }
+  $("status").textContent = "Stroke အစဉ်လိုက် Animation ပြီးပါပြီ။";
+});
+function renderSavedList() {
+  const list = $("saved-list"); list.replaceChildren();
+  const samples = parseSavedSamples(localStorage.getItem(SAVED_SAMPLES_KEY));
+  if (!samples.length) { const empty = document.createElement("div"); empty.className = "empty"; empty.textContent = "မှတ်တမ်းမရှိသေးပါ။ အက္ခရာရေးပြီး Save လုပ်ပါ။"; list.append(empty); return; }
+  samples.slice(0,30).forEach((sample) => {
+    const row = document.createElement("div"); row.className = "sample-row";
+    const glyph = document.createElement("div"); glyph.className = "sample-letter"; glyph.textContent = sample.targetLetter;
+    const meta = document.createElement("div"); meta.className = "sample-meta";
+    const title = document.createElement("strong"); title.textContent = sample.targetLetter + " · " + sample.style;
+    const detail = document.createElement("span"); detail.textContent = sample.strokeCount + " strokes · " + sample.pointCount + " points · " + sample.durationMs + " ms";
+    meta.append(title,detail); row.append(glyph,meta); list.append(row);
+  });
+}
+$("export").addEventListener("click", () => {
+  const samples = parseSavedSamples(localStorage.getItem(SAVED_SAMPLES_KEY));
+  if (!samples.length) { $("status").textContent = "JSON ထုတ်ရန် အရင်ဆုံး အက္ခရာမှတ်တမ်း Save လုပ်ပါ။"; return; }
+  const blob = new Blob([JSON.stringify({schemaVersion:1,exportedAt:new Date().toISOString(),samples},null,2)],{type:"application/json"});
+  const url = URL.createObjectURL(blob), anchor = document.createElement("a"); anchor.href=url; anchor.download="learning-everyday-handwriting-samples.json"; anchor.click(); setTimeout(()=>URL.revokeObjectURL(url),1000);
+  $("status").textContent = samples.length + " ခုသော မှတ်တမ်းကို JSON အဖြစ် ထုတ်ပေးလိုက်ပါပြီ။";
+});
+function resizeAll() { [canvas,originalCanvas,smoothCanvas].forEach((el)=>setupCanvas(el,el.getContext("2d"))); render(); }
+window.addEventListener("resize",resizeAll);
+renderSavedList(); resizeAll();
 })();
 </script>
 </body></html>
