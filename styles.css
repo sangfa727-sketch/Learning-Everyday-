@@ -66,3 +66,51 @@
   outline: 3px solid #c39b58;
   outline-offset: 3px;
 }
+
+/* Structured curriculum workbench */
+.curriculum-workbench{margin:0 0 34px;padding:clamp(18px,3vw,28px);border:1px solid #e1e8de;border-radius:24px;background:linear-gradient(145deg,#fff,#f8faf5);box-shadow:var(--shadow)}
+.curriculum-header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:20px}
+.curriculum-header h2{margin:0;color:var(--forest);font:750 clamp(23px,3vw,30px)/1.2 Manrope,ui-sans-serif,sans-serif;letter-spacing:-.9px}
+.curriculum-header p{max-width:570px;margin:8px 0 0;color:#738078;font-size:13px;line-height:1.65}
+.curriculum-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
+.curriculum-card{min-width:0;padding:18px;border:1px solid #e4e9e1;border-radius:18px;background:#fff}
+.curriculum-card h3{margin:0;color:var(--forest);font:750 18px/1.3 Manrope,ui-sans-serif,sans-serif;letter-spacing:-.35px}
+.curriculum-card .curriculum-muted{margin:6px 0 14px;color:#7a867d;font-size:12px;line-height:1.6}
+.curriculum-select{display:block;width:100%;min-height:44px;margin:10px 0 14px;padding:0 12px;border:1px solid #dce5da;border-radius:11px;background:#fbfcf9;color:#28483d;font:600 13px inherit}
+.vocabulary-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.vocabulary-word{display:flex;flex-direction:column;align-items:flex-start;gap:5px;min-height:66px;padding:11px 12px;text-align:left;border:1px solid #e5ebe2;border-radius:12px;background:#fbfcf9;color:#34473c;cursor:pointer;transition:border-color .15s,background .15s}
+.vocabulary-word strong{font-size:13px;line-height:1.3}
+.vocabulary-word span{font-size:12px;color:#778278;line-height:1.45}
+.vocabulary-word[aria-pressed=true]{border-color:#6f967a;background:#eef5e9;box-shadow:inset 0 0 0 1px #6f967a}
+.vocabulary-word:focus-visible,.curriculum-workbench button:focus-visible,.curriculum-select:focus-visible{outline:3px solid #9bbd69;outline-offset:2px}
+.vocabulary-detail{margin-top:12px;padding:13px;border-radius:12px;background:#f1f6ec;border:1px solid #dfe9d8}
+.vocabulary-detail strong{display:block;color:#24483b;font-size:16px}
+.vocabulary-detail p{margin:6px 0 0;color:#657368;font-size:12px;line-height:1.6}
+.level-practice-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:13px 0 12px}
+.level-tag{white-space:nowrap}
+.level-practice-prompt{padding:16px;border-left:3px solid #9bb67a;border-radius:0 12px 12px 0;background:#f6f8f1;color:#29473b;font:600 15px/1.8 Georgia,serif}
+.level-practice-task{margin:12px 0 14px;color:#647267;font-size:13px;line-height:1.7}
+.practice-answer{display:block;width:100%;min-height:90px;padding:12px;border:1px solid #dfe6dc;border-radius:12px;resize:vertical;font:14px/1.6 inherit;color:#263f34;background:#fff}
+.practice-action{min-height:42px;margin-top:10px;padding:0 15px;border:0;border-radius:11px;background:var(--forest);color:#fff;font-weight:700;cursor:pointer}
+.practice-action:hover{background:var(--forest-2)}
+.practice-speaking-note{font-size:11px;line-height:1.6;color:#7c887f}
+.letter-practice{margin-top:18px;padding-top:18px;border-top:1px solid #e5eae2}
+.letter-practice-controls{display:grid;grid-template-columns:1fr 1.4fr;gap:9px}
+.letter-guide-layout{display:grid;grid-template-columns:135px minmax(0,1fr);align-items:center;gap:16px;margin-top:12px}
+.letter-preview{display:grid;place-items:center;min-height:145px;border-radius:16px;background:#f5f7ef;border:1px solid #e5eadd}
+.letter-sample{color:#254b3e;font:700 92px/1 Georgia,serif}
+.letter-animation{width:100%;max-height:160px;overflow:visible}
+.letter-baseline{stroke:#d8e2d2;stroke-width:1;stroke-dasharray:3 3}
+.letter-stroke{fill:none;stroke:#6c9576;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;animation:trace-letter 1.15s ease-out forwards}
+.letter-stroke:nth-of-type(3){animation-delay:.65s}
+.letter-stroke:nth-of-type(4){animation-delay:1.3s}
+.letter-start-dot{fill:#e6a65a;stroke:#fff;stroke-width:1.5}
+.letter-guide-title{margin:0 0 5px;color:#24483b;font-size:14px;font-weight:800}
+.letter-start-instruction{margin:0;color:#5f6f63;font-size:12px;line-height:1.7}
+.letter-stroke-count{margin:8px 0 0;color:#859084;font-size:10px;line-height:1.5}
+.letter-style-note{margin:12px 0 0;padding:11px 12px;border-radius:11px;background:#f8f8f2;color:#788276;font-size:11px;line-height:1.7}
+.letter-replay{min-height:36px;margin-top:10px;padding:0 12px;border:1px solid #dfe6dc;border-radius:10px;background:white;color:#385847;font-size:12px;font-weight:700;cursor:pointer}
+@keyframes trace-letter{to{stroke-dashoffset:0}}
+@media(prefers-reduced-motion:reduce){.letter-stroke{animation:none;stroke-dashoffset:0;transition:none}}
+@media(max-width:760px){.curriculum-grid{grid-template-columns:1fr}.curriculum-header{align-items:flex-start;flex-direction:column}.letter-guide-layout{grid-template-columns:110px minmax(0,1fr)}.letter-sample{font-size:76px}.curriculum-workbench{padding:16px;border-radius:20px}.curriculum-card{padding:14px}}
+@media(max-width:420px){.vocabulary-list{grid-template-columns:1fr}.letter-guide-layout{grid-template-columns:90px minmax(0,1fr);gap:10px}.letter-preview{min-height:115px}.letter-sample{font-size:64px}.letter-practice-controls{grid-template-columns:1fr}.curriculum-card h3{font-size:16px}}
