@@ -24,40 +24,56 @@ export function smoothPoints(points, strength = 1) {
   const level = Number.isFinite(strength) ? Math.max(0, Math.min(1, strength)) : 1;
   if (level === 0) return points.map((point) => ({ ...point }));
 
-  // Replace only clear, isolated spikes. Small deviations may be intentional
-  // handwriting detail, so they remain untouched by the outlier-rejection pass.
-  const median = (values) => {
-    const sorted = [...values].sort((a, b) => a - b);
-    return sorted[Math.floor(sorted.length / 2)];
-  };
-  const outlierThreshold = 0.08 + (1 - level) * 0.12; // normalized canvas units
-  const filtered = points.map((point, index) => {
-    if (index === 0 || index === points.length - 1) return { ...point };
-    const from = Math.max(0, index - 2);
-    const to = Math.min(points.length - 1, index + 2);
-    const window = points.slice(from, to + 1);
-    const medianX = median(window.map((item) => item.x));
-    const medianY = median(window.map((item) => item.y));
-    const isIsolatedSpike =
-      Math.hypot(point.x - medianX, point.y - medianY) > outlierThreshold;
-    return {
-      ...point,
-      x: isIsolatedSpike ? medianX : point.x,
-      y: isIsolatedSpike ? medianY : point.y
-    };
-  });
+  // Stabilization uses two complementary passes:
+  // 1) remove isolated reversals (large pointer spikes) without flattening real turns;
+  // 2) apply a strength-controlled low-pass filter for smaller hand/mouse jitter.
+  const filtered = points.map((point) => ({ ...point }));
+  const spikeTolerance = 0.004 + (1 - level) * 0.018;
+  for (let i = 1; i < points.length - 1; i++) {
+    const previous = points[i - 1];
+    const current = points[i];
+    const next = points[i + 1];
+    const ax = current.x - previous.x;
+    const ay = current.y - previous.y;
+    const bx = next.x - current.x;
+    const by = next.y - current.y;
+    const aLength = Math.hypot(ax, ay);
+    const bLength = Math.hypot(bx, by);
+    if (aLength < 1e-7 || bLength < 1e-7) continue;
+    const directionCosine = (ax * bx + ay * by) / (aLength * bLength);
+    const midpointX = (previous.x + next.x) / 2;
+    const midpointY = (previous.y + next.y) / 2;
+    const deviation = Math.hypot(current.x - midpointX, current.y - midpointY);
+    // A sharp reversal plus a large offset is characteristic of an isolated
+    // pointer jump. A genuine corner normally continues forward, so it survives.
+    if (directionCosine < -0.45 && deviation > spikeTolerance) {
+      filtered[i].x = midpointX;
+      filtered[i].y = midpointY;
+    }
+  }
 
-  // Light smoothing limits fine jitter while retaining local letter shape.
-  // Raw captured strokes are never mutated; timing and pressure stay unchanged.
+  // Blend neighbors more strongly at higher settings. Preserve corners by
+  // reducing the blend where the path changes direction sharply.
+  const neighborWeight = 0.08 + 0.38 * level;
   return filtered.map((point, index) => {
     if (index === 0 || index === filtered.length - 1) return { ...point };
     const previous = filtered[index - 1];
     const next = filtered[index + 1];
-    const neighborWeight = 0.2 * level;
+    const incomingX = point.x - previous.x;
+    const incomingY = point.y - previous.y;
+    const outgoingX = next.x - point.x;
+    const outgoingY = next.y - point.y;
+    const incomingLength = Math.hypot(incomingX, incomingY);
+    const outgoingLength = Math.hypot(outgoingX, outgoingY);
+    const cosine = incomingLength && outgoingLength
+      ? (incomingX * outgoingX + incomingY * outgoingY) / (incomingLength * outgoingLength)
+      : 1;
+    const cornerPreservation = cosine < 0.35 ? 0.2 : cosine < 0.7 ? 0.55 : 1;
+    const weight = neighborWeight * cornerPreservation;
     return {
       ...point,
-      x: previous.x * neighborWeight + point.x * (1 - 2 * neighborWeight) + next.x * neighborWeight,
-      y: previous.y * neighborWeight + point.y * (1 - 2 * neighborWeight) + next.y * neighborWeight
+      x: previous.x * weight + point.x * (1 - 2 * weight) + next.x * weight,
+      y: previous.y * weight + point.y * (1 - 2 * weight) + next.y * weight
     };
   });
 }
