@@ -101,7 +101,7 @@ function renderReference() {
   referenceGlyph.setAttribute("font-family", style === "cursive"
     ? '"Cambria Math","STIX Two Math","Noto Sans Math","Segoe UI Symbol",serif'
     : style === "calligraphy" ? '"URW Chancery L","Brush Script MT","Apple Chancery",cursive' : 'Arial,sans-serif');
-  referenceGlyph.setAttribute("font-style", style === "print" ? "normal" : "italic");
+  referenceGlyph.setAttribute("font-style", style === "calligraphy" ? "italic" : "normal");
   referenceGlyph.setAttribute("font-weight", style === "print" ? "700" : "400");
   referenceGlyph.setAttribute("font-size", glyph.length > 1 ? "72" : "88");
   void referenceGlyph.getBoundingClientRect().width;
@@ -130,8 +130,12 @@ function setupCanvas(el, context) {
 function drawTarget(context, width, height, letter, style) {
   context.save(); context.globalAlpha = 0.13; context.fillStyle = "#547568";
   context.textAlign = "center"; context.textBaseline = "middle";
-  context.font = style === "print" ? "700 " + Math.min(height * 0.78, width * 0.42) + "px system-ui, sans-serif" : "italic 700 " + Math.min(height * 0.78, width * 0.42) + "px cursive";
-  context.fillText(letter, width / 2, height / 2); context.restore();
+  const fontSize = Math.min(height * 0.78, width * 0.42);
+  context.font = style === "print" ? "700 " + fontSize + "px system-ui, sans-serif"
+    : style === "cursive" ? fontSize + 'px "Cambria Math", "STIX Two Math", "Noto Sans Math", "Segoe UI Symbol", serif'
+    : "italic 700 " + fontSize + 'px "URW Chancery L", "Brush Script MT", "Apple Chancery", cursive';
+  const targetGlyph = style === "cursive" ? (CURSIVE_GLYPHS[letter] ?? letter) : letter;
+  context.fillText(targetGlyph, width / 2, height / 2); context.restore();
 }
 function drawStroke(context, stroke, width, height, smooth = false, progress = 1, raw = false) {
   const mode = raw ? "freehand" : penModeSelect.value;
