@@ -22,25 +22,31 @@ export function normalizePoint(clientX, clientY, rect, timestamp, pressure = 0.5
 export function smoothPoints(points) {
   if (!Array.isArray(points) || points.length < 3) return (points ?? []).map((point) => ({ ...point }));
 
-  // Robust two-stage filtering:
-  // 1) a local median rejects isolated large mouse jumps/spikes;
-  // 2) a light weighted pass softens remaining jitter.
-  // Exact first/last points, timing, pressure, and point order are preserved.
+  // Replace only clear, isolated spikes. Small deviations may be intentional
+  // handwriting detail, so they remain untouched by the outlier-rejection pass.
   const median = (values) => {
     const sorted = [...values].sort((a, b) => a - b);
     return sorted[Math.floor(sorted.length / 2)];
   };
+  const outlierThreshold = 0.08; // normalized canvas units
   const filtered = points.map((point, index) => {
     if (index === 0 || index === points.length - 1) return { ...point };
     const from = Math.max(0, index - 2);
     const to = Math.min(points.length - 1, index + 2);
     const window = points.slice(from, to + 1);
+    const medianX = median(window.map((item) => item.x));
+    const medianY = median(window.map((item) => item.y));
+    const isIsolatedSpike =
+      Math.hypot(point.x - medianX, point.y - medianY) > outlierThreshold;
     return {
       ...point,
-      x: median(window.map((item) => item.x)),
-      y: median(window.map((item) => item.y))
+      x: isIsolatedSpike ? medianX : point.x,
+      y: isIsolatedSpike ? medianY : point.y
     };
   });
+
+  // Light smoothing limits fine jitter while retaining local letter shape.
+  // Raw captured strokes are never mutated; timing and pressure stay unchanged.
   return filtered.map((point, index) => {
     if (index === 0 || index === filtered.length - 1) return { ...point };
     const previous = filtered[index - 1];
