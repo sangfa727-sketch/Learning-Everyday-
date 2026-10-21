@@ -35,6 +35,6 @@ test("Smart Writing Lab is reachable, route-focused, and refreshed from cache", 
   // Use a versioned completion key so an older test export cannot permanently hide the new entry.
   assert.match(app, /le\.writingLab\.sampleExported\.v3/);
   assert.match(lab, /le\.writingLab\.sampleExported\.v3/);
-  assert.match(sw, /learning-everyday-shell-v11/);
+  assert.match(sw, /learning-everyday-shell-v12/);
   assert.match(sw, /"\.\/writing-lab\.html"/);
 });
