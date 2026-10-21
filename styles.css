@@ -134,7 +134,7 @@
 .page-heading-copy .eyebrow{margin:0 0 7px}
 .page-heading-copy h1{margin:0;color:var(--forest);font:800 clamp(25px,4vw,38px)/1.15 Manrope,ui-sans-serif,sans-serif;letter-spacing:-1.1px}
 .page-heading-copy>p:last-child{margin:8px 0 0;color:var(--muted);font-size:14px;line-height:1.7}
-body[data-page="home"] #practice-panel{display:none}
+body[data-page="home"] #practice-panel,body[data-page="home"] #curriculum-workbench{display:none}
 body:not([data-page="home"]) .hero,body:not([data-page="home"]) .section-block{display:none}
 body[data-page="reading"] #curriculum-workbench .letter-practice,body[data-page="reading"] #curriculum-workbench .progress-tools{display:none}
 body[data-page="listening"] #curriculum-workbench{display:none}
