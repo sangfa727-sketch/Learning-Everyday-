@@ -57,7 +57,10 @@ for (const group of [{label:"Uppercase",letters:LETTERS.slice(0,26)},{label:"Low
   letterSelect.append(optgroup);
 }
 letterSelect.value = "a";
-let strokes = [], activeStroke = null, drawing = false, replayToken = 0, sampleStartedAt = 0;\nconst penModeSelect = $("pen-mode"), stabilizerInput = $("stabilizer");\nconst strength = () => Number(stabilizerInput.value) / 100;\nfunction renderModeLabel() { $("stabilizer-value").textContent = stabilizerInput.value + "%"; }
+let strokes = [], activeStroke = null, drawing = false, replayToken = 0, sampleStartedAt = 0;
+const penModeSelect = $("pen-mode"), stabilizerInput = $("stabilizer");
+const strength = () => Number(stabilizerInput.value) / 100;
+function renderModeLabel() { $("stabilizer-value").textContent = stabilizerInput.value + "%"; }
 let captureLetter = letterSelect.value, captureStyle = styleSelect.value;
 function readSavedSamples() { try { return parseSavedSamples(localStorage.getItem(SAVED_SAMPLES_KEY)); } catch { return []; } }
 const savedSamples = readSavedSamples();
