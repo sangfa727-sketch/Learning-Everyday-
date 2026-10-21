@@ -3,6 +3,15 @@ import { loadProgress, saveProgress, markPracticeComplete, clearProgress, export
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const ns = "http://www.w3.org/2000/svg";
+
+const SCRIPT_CURSIVE_GLYPHS = Object.freeze({
+  A: "𝒜", B: "ℬ", C: "𝒞", D: "𝒟", E: "ℰ", F: "ℱ", G: "𝒢", H: "ℋ", I: "ℐ",
+  J: "𝒥", K: "𝒦", L: "ℒ", M: "ℳ", N: "𝒩", O: "𝒪", P: "𝒫", Q: "𝒬", R: "ℛ",
+  S: "𝒮", T: "𝒯", U: "𝒰", V: "𝒱", W: "𝒲", X: "𝒳", Y: "𝒴", Z: "𝒵",
+  a: "𝒶", b: "𝒷", c: "𝒸", d: "𝒹", e: "ℯ", f: "𝒻", g: "ℊ", h: "𝒽", i: "𝒾",
+  j: "𝒿", k: "𝓀", l: "𝓁", m: "𝓂", n: "𝓃", o: "ℴ", p: "𝓅", q: "𝓆", r: "𝓇",
+  s: "𝓈", t: "𝓉", u: "𝓊", v: "𝓋", w: "𝓌", x: "𝓍", y: "𝓎", z: "𝓏"
+});
 let selectedCategory = VOCABULARY_CATEGORIES[0].id;
 let selectedLevel = "A1";
 let selectedExerciseIndex = 0;
@@ -267,7 +276,7 @@ function renderLetterGuide() {
     paths: []
   };
   const sample = $("#letter-sample");
-  sample.textContent = selectedLetter;
+  sample.textContent = selectedStyle === "cursive" ? (SCRIPT_CURSIVE_GLYPHS[selectedLetter] ?? selectedLetter) : selectedLetter;
   sample.classList.remove("style-print", "style-cursive", "style-calligraphy");
   sample.classList.add(`style-${selectedStyle}`);
   $("#letter-style-note").textContent = styleInfo[selectedStyle][language];
@@ -293,7 +302,12 @@ function renderLetterGuide() {
     const strokeGroup = document.createElementNS(ns, "g");
     strokeGroup.setAttribute("class", `letter-guide-strokes style-${selectedStyle}`);
     if (selectedStyle === "cursive") strokeGroup.setAttribute("transform", "skewX(-7) translate(5 0)");
-    stylePaths.forEach((d, index) => {
+    // An SVG path can contain multiple "M" commands, which represent pen lifts.
+    // Split them so disconnected sub-strokes animate in actual writing order.
+    const orderedStrokePaths = stylePaths.flatMap((d) =>
+      d.trim().split(/(?=M\s*[-\d.])/).map((part) => part.trim()).filter(Boolean)
+    );
+    orderedStrokePaths.forEach((d, index) => {
       const path = makeSvgPath(d, index);
       path.classList.add(`style-${selectedStyle}`);
       path.style.animationDelay = `${index * 650}ms`;
@@ -331,7 +345,7 @@ function renderLetterGuide() {
     glyph.textContent = selectedLetter;
     svg.append(glyph);
   }
-  const visibleStrokeCount = stylePaths.length;
+  const visibleStrokeCount = stylePaths.reduce((count, d) => count + d.trim().split(/(?=M\s*[-\d.])/).filter(Boolean).length, 0);
   $("#letter-stroke-count").textContent = visibleStrokeCount
     ? selectedStyle === "print"
       ? (language === "my" ? `မျဉ်း ${visibleStrokeCount} ကြောင်း · အစဉ်လိုက် မျဉ်းဆွဲလှုပ်ရှားမှု` : `${visibleStrokeCount} strokes · Animated in writing order`)
