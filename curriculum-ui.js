@@ -93,7 +93,7 @@ function renderPractice() {
   $("#level-practice-task").textContent = language === "my" ? practice.myTask : practice.task;
   $("#level-practice-answer").value = "";
   $("#level-practice-answer").placeholder = language === "my" ? "ဤနေရာတွင် လေ့ကျင့်ပါ…" : "Write your answer or notes here…";
-  $("#practice-answer-wrap").hidden = activeSkill !== "writing";
+  $("#practice-answer-wrap").hidden = activeSkill !== "writing" && activeSkill !== "reading";
   $("#practice-speaking-note").hidden = activeSkill !== "speaking";
   $("#practice-action").textContent = activeSkill === "speaking"
     ? (language === "my" ? "ဝါကျကို နားထောင်ရန်" : "Listen to model")
@@ -170,7 +170,8 @@ function setLanguage(next) {
       chooseStyle: "Writing style",
       replay: "Replay stroke animation",
       listen: "Listen to model",
-      answerPlaceholder: "Write your answer or notes here…"
+      answerPlaceholder: "Write your answer or notes here…",
+      speakingNote: "Say your response aloud. The speaking practice controls in the lesson panel below offer optional browser microphone recognition where supported."
     },
     my: {
       curriculumTitle: "အဆင့်လိုက် ကျွမ်းကျင်မှုများ တည်ဆောက်ပါ",
@@ -185,7 +186,8 @@ function setLanguage(next) {
       chooseStyle: "ရေးသားမှုပုံစံ",
       replay: "မျဉ်းဆွဲလှုပ်ရှားမှု ပြန်ကြည့်ရန်",
       listen: "နမူနာအသံ နားထောင်ရန်",
-      answerPlaceholder: "ဤနေရာတွင် အဖြေ သို့မဟုတ် မှတ်စုရေးပါ…"
+      answerPlaceholder: "ဤနေရာတွင် အဖြေ သို့မဟုတ် မှတ်စုရေးပါ…",
+      speakingNote: "အဖြေကို အသံထွက်ပြောပါ။ အောက်ရှိ Speaking လေ့ကျင့်ခန်းတွင် browser က ပံ့ပိုးပါက မိုက်ခရိုဖုန်းဖြင့် စမ်းသပ်နိုင်သည်။"
     }
   }[next];
   $("#curriculum-title").textContent = copy.curriculumTitle;
@@ -201,6 +203,7 @@ function setLanguage(next) {
   $("#replay-letter").textContent = copy.replay;
   $("#practice-action").textContent = copy.listen;
   $("#level-practice-answer").placeholder = copy.answerPlaceholder;
+  $("#practice-speaking-note").textContent = copy.speakingNote;
   const styleOptions = $("#letter-style").options;
   styleOptions[0].textContent = next === "my" ? "ပုံနှိပ်စာလုံး · အကြီး / အသေး" : "Print · Uppercase / lowercase";
   styleOptions[1].textContent = next === "my" ? "Cursive · ဆက်ရေးဟန်" : "Cursive";
