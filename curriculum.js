@@ -53,6 +53,36 @@ export const VOCABULARY_CATEGORIES = [
   ]},
   { id: "health", en: "Health and feelings", my: "ကျန်းမာရေးနှင့် ခံစားချက်", words: [
     ["headache", "ခေါင်းကိုက်ခြင်း", "I have a mild headache."], ["fever", "ဖျားနာခြင်း", "He stayed home because of a fever."], ["tired", "ပင်ပန်းသော", "I feel tired after work."], ["thirsty", "ရေဆာသော", "I am thirsty after the walk."], ["worried", "စိုးရိမ်သော", "She is worried about the exam."], ["excited", "စိတ်လှုပ်ရှားပျော်ရွှင်သော", "We are excited about the trip."], ["appointment", "ချိန်းဆိုမှု", "I have a doctor's appointment tomorrow."], ["medicine", "ဆေးဝါး", "Take medicine only as directed."]
+  ]},
+  { id: "family", en: "Family and relationships", my: "မိသားစုနှင့် ဆက်ဆံရေး", words: [
+    ["mother", "မိခင်", "My mother makes tea every morning."], ["father", "ဖခင်", "My father walks to work."],
+    ["sister", "အစ်မ၊ ညီမ", "My sister is learning English."], ["brother", "အစ်ကို၊ ညီ", "My brother plays football after school."],
+    ["grandmother", "အဘွား", "My grandmother tells wonderful stories."], ["grandfather", "အဘိုး", "My grandfather grows vegetables."],
+    ["cousin", "ဝမ်းကွဲမောင်နှမ", "My cousin lives in another town."], ["relative", "ဆွေမျိုး", "We visit our relatives during the holiday."]
+  ]},
+  { id: "shopping", en: "Shopping and money", my: "ဈေးဝယ်ခြင်းနှင့် ငွေကြေး", words: [
+    ["price", "ဈေးနှုန်း", "What is the price of this bag?"], ["cashier", "ငွေရှင်းကောင်တာဝန်ထမ်း", "The cashier gave me a receipt."],
+    ["receipt", "ပြေစာ", "Please keep your receipt."], ["discount", "လျှော့ဈေး", "This shop offers a ten percent discount."],
+    ["change", "အမ်းငွေ", "Here is your change."], ["basket", "ဈေးဝယ်ခြင်းတောင်း", "Put the fruit in the basket."],
+    ["size", "အရွယ်အစား", "Do you have this shirt in a larger size?"], ["wallet", "ပိုက်ဆံအိတ်", "I keep my cards in my wallet."]
+  ]},
+  { id: "technology", en: "Technology and communication", my: "နည်းပညာနှင့် ဆက်သွယ်ရေး", words: [
+    ["keyboard", "ကီးဘုတ်", "Use the keyboard to type your name."], ["screen", "မျက်နှာပြင်", "The screen is too bright."],
+    ["password", "စကားဝှက်", "Never share your password."], ["email", "အီးမေးလ်", "I sent the document by email."],
+    ["website", "ဝက်ဘ်ဆိုက်", "The school website has the timetable."], ["message", "စာတို", "I received your message this morning."],
+    ["headphones", "နားကြပ်", "Use headphones to listen quietly."], ["battery", "ဘက်ထရီ", "My phone battery is almost empty."]
+  ]},
+  { id: "town", en: "Places in town", my: "မြို့တွင်းရှိ နေရာများ", words: [
+    ["hospital", "ဆေးရုံ", "The hospital is near the main road."], ["market", "ဈေး", "We buy fresh vegetables at the market."],
+    ["library", "စာကြည့်တိုက်", "I borrow books from the library."], ["bank", "ဘဏ်", "The bank opens at nine o'clock."],
+    ["pharmacy", "ဆေးဆိုင်", "You can buy medicine at the pharmacy."], ["station", "ဘူတာရုံ", "We met at the bus station."],
+    ["post office", "စာတိုက်", "I sent a parcel from the post office."], ["restaurant", "စားသောက်ဆိုင်", "They had lunch at a small restaurant."]
+  ]},
+  { id: "time", en: "Time and calendar", my: "အချိန်နှင့် ပြက္ခဒိန်", words: [
+    ["morning", "နံနက်", "I study English in the morning."], ["afternoon", "နေ့လယ်ပိုင်း", "The meeting is in the afternoon."],
+    ["evening", "ညနေပိုင်း", "We walk in the evening."], ["midnight", "သန်းခေါင်ယံ", "The train arrives just after midnight."],
+    ["yesterday", "မနေ့က", "I finished the lesson yesterday."], ["tomorrow", "မနက်ဖြန်", "We will practise again tomorrow."],
+    ["weekday", "ရုံးဖွင့်ရက်", "I usually work on weekdays."], ["weekend", "စနေ၊ တနင်္ဂနွေ", "We visit our grandparents at the weekend."]
   ]}
 ];
 
