@@ -428,6 +428,41 @@ function renderAlphabetGrid() {
   }
 }
 
+
+function setWritingMode(mode) {
+  const card = $("#smart-writing-lab");
+  const showButton = $("#show-writing-card");
+  const reference = $("#handwriting-reference");
+  const tools = $("#legacy-letter-tools");
+  const alphabetButton = $("#writing-mode-alphabet");
+  const printButton = $("#writing-mode-print");
+  const handwritingButton = $("#writing-mode-handwriting");
+  if (!card || !showButton || !reference || !tools) return;
+
+  if (mode === "alphabet") {
+    card.hidden = true;
+    showButton.hidden = false;
+    return;
+  }
+
+  card.hidden = false;
+  showButton.hidden = true;
+  const printMode = mode === "print";
+  reference.hidden = printMode;
+  tools.hidden = !printMode;
+  tools.setAttribute("aria-hidden", String(!printMode));
+  selectedStyle = printMode ? "print" : "cursive";
+  const styleSelect = $("#letter-style");
+  if (styleSelect) styleSelect.value = selectedStyle;
+  [alphabetButton, printButton, handwritingButton].forEach((button) => {
+    if (button) button.setAttribute("aria-pressed", String(
+      (button === printButton && printMode) ||
+      (button === handwritingButton && !printMode)
+    ));
+  });
+  renderLetterGuide();
+}
+
 function setLanguage(next) {
   language = next;
   const copy = {
@@ -491,6 +526,14 @@ function setLanguage(next) {
   $("#export-progress").textContent = next === "my" ? "မှတ်တမ်း Export ထုတ်ရန်" : "Export progress";
   $("#clear-progress").textContent = next === "my" ? "မှတ်တမ်းရှင်းရန်" : "Clear progress";
   renderProgress();
+  const modeLabels = next === "my"
+    ? { alphabet: "အက္ခရာ", print: "Print", handwriting: "Handwriting", hide: "ကတ်ဖျောက်ရန်", show: "Writing Practice ပြရန်" }
+    : { alphabet: "Alphabet", print: "Print", handwriting: "Handwriting", hide: "Hide card", show: "Show Writing Practice" };
+  $("#writing-mode-alphabet").textContent = modeLabels.alphabet;
+  $("#writing-mode-print").textContent = modeLabels.print;
+  $("#writing-mode-handwriting").textContent = modeLabels.handwriting;
+  $("#hide-writing-card").textContent = modeLabels.hide;
+  $("#show-writing-card").textContent = modeLabels.show;
   const styleOptions = $("#letter-style").options;
   styleOptions[0].textContent = next === "my" ? "ပုံနှိပ်စာလုံး · အကြီး / အသေး" : "Print · Uppercase / lowercase";
   styleOptions[1].textContent = next === "my" ? "Cursive · ဆက်ရေးဟန်" : "Cursive";
@@ -580,6 +623,11 @@ $("#letter-style").addEventListener("change", (event) => {
   renderLetterGuide();
 });
 $("#replay-letter").addEventListener("click", () => { renderLetterGuide(); setStatus(language === "my" ? "လမ်းညွှန်ကို ပြန်ဖော်ပြပြီးပါပြီ။ အောက်တွင် လက်ဖြင့်လိုက်ရေးပါ။" : "Guide refreshed. Trace the faint letter on the board below."); });
+$("#writing-mode-alphabet").addEventListener("click", () => setWritingMode("alphabet"));
+$("#writing-mode-print").addEventListener("click", () => setWritingMode("print"));
+$("#writing-mode-handwriting").addEventListener("click", () => setWritingMode("handwriting"));
+$("#hide-writing-card").addEventListener("click", () => setWritingMode("alphabet"));
+$("#show-writing-card").addEventListener("click", () => setWritingMode("handwriting"));
 
 const tracingCanvas = $("#letter-tracing");
 let traceDrawing = false;
