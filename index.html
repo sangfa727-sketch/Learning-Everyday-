@@ -110,7 +110,13 @@
       <section id="smart-writing-lab" class="curriculum-card letter-practice" aria-labelledby="letter-practice-heading">
         <h3 id="letter-practice-heading">Script-style alphabet reference</h3>
         <p class="curriculum-muted">Uppercase and lowercase mathematical script letters are shown as visual references on ruled writing paper. These are display glyphs, not stroke-by-stroke cursive instructions.</p>
-        <div class="script-reference" aria-label="Script-style alphabet reference">
+        <div class="writing-mode-controls" role="group" aria-label="Writing display mode">
+          <button id="writing-mode-alphabet" class="secondary-button" type="button">Alphabet</button>
+          <button id="writing-mode-print" class="secondary-button" type="button" aria-pressed="false">Print</button>
+          <button id="writing-mode-handwriting" class="secondary-button" type="button" aria-pressed="true">Handwriting</button>
+          <button id="hide-writing-card" class="text-button" type="button">Hide card</button>
+        </div>
+        <div id="handwriting-reference" class="script-reference" aria-label="Script-style alphabet reference">
           <section class="script-reference-group" aria-labelledby="script-uppercase-heading">
             <h4 id="script-uppercase-heading">Uppercase A–Z</h4>
             <div class="script-alphabet-paper" role="list" aria-label="Uppercase script letters A to Z">
@@ -138,6 +144,7 @@
           <div class="tracing-board-wrap"><h4 id="tracing-heading">Trace and practise</h4><p class="curriculum-muted">Follow the faint letter with your finger or mouse. This drawing stays in the current page and is not uploaded.</p><canvas id="letter-tracing" class="letter-tracing" aria-label="Letter tracing practice board"></canvas><button id="clear-tracing" class="letter-replay" type="button">Clear tracing</button></div>
         </div>
       </section>
+      <button id="show-writing-card" class="secondary-button show-writing-card" type="button" hidden>Show Writing Practice</button>
       <section class="curriculum-card progress-tools" aria-labelledby="progress-heading">
         <h3 id="progress-heading">Your learning progress</h3>
         <p id="progress-summary" class="curriculum-muted" aria-live="polite">0 completed exercises · saved on this device only</p>
