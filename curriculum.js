@@ -158,6 +158,15 @@ C2:{title:"Defend a nuanced position",my:"အမြင်တစ်ခုကိ�
 
 export const ALPHABET = Object.freeze([..."ABCDEFGHIJKLMNOPQRSTUVWXYZ", ..."abcdefghijklmnopqrstuvwxyz"]);
 
+export const CURSIVE_GLYPHS = Object.freeze({
+  A: "𝒜", B: "ℬ", C: "𝒞", D: "𝒟", E: "ℰ", F: "ℱ", G: "𝒢", H: "ℋ", I: "ℐ",
+  J: "𝒥", K: "𝒦", L: "ℒ", M: "ℳ", N: "𝒩", O: "𝒪", P: "𝒫", Q: "𝒬", R: "ℛ",
+  S: "𝒮", T: "𝒯", U: "𝒰", V: "𝒱", W: "𝒲", X: "𝒳", Y: "𝒴", Z: "𝒵",
+  a: "𝒶", b: "𝒷", c: "𝒸", d: "𝒹", e: "ℯ", f: "𝒻", g: "ℊ", h: "𝒽", i: "𝒾",
+  j: "𝒿", k: "𝓀", l: "𝓁", m: "𝓂", n: "𝓃", o: "ℴ", p: "𝓅", q: "𝓆", r: "𝓇",
+  s: "𝓈", t: "𝓉", u: "𝓊", v: "𝓋", w: "𝓌", x: "𝓍", y: "𝓎", z: "𝓏"
+});
+
 const BASE_LETTER_GUIDES = {
   A: { style: "Print uppercase", start: "Start at the top, move down-left, lift, then down-right; add the middle bar.", my: "အပေါ်ဆုံးမှစ၍ ဘယ်အောက်သို့ ဆင်းပါ။ လက်မြှောက်ပြီး ညာအောက်သို့ ဆင်းကာ အလယ်မျဉ်းဆွဲပါ။", paths: ["M50 12 L20 88", "M50 12 L80 88", "M32 61 L68 61"] },
   a: { style: "Print lowercase", start: "Begin with the round bowl, move counter-clockwise, close the shape, then draw the right stem.", my: "ဝိုင်းပုံကို ဘယ်ဘက်မှစ၍ လှည့်ဆွဲပြီး ပိတ်ပါ။ ထို့နောက် ညာဘက်တိုင်ကို ဆွဲပါ။", paths: ["M68 48 C68 26 30 26 30 51 C30 76 68 76 68 51 L68 27 L68 78"] },
