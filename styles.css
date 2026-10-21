@@ -230,7 +230,7 @@ body[data-page="home"] #skills-level-page{display:block}body[data-page="home"] .
 .letter-guide-strokes.style-calligraphy .letter-stroke.style-calligraphy{stroke:#24554a;stroke-width:4.6;stroke-linecap:round;stroke-linejoin:round}
 .letter-guide-strokes .letter-stroke.calligraphy-highlight{stroke:#dce8d1;stroke-width:1.15;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;animation:trace-letter 1.15s ease-out forwards}
 .letter-style-flourish{stroke-dasharray:1;stroke-dashoffset:1;animation:trace-letter .8s ease-out forwards;animation-delay:2s}
-.letter-template-glyph.style-cursive{font-family:"Comic Sans MS","Segoe Print",cursive;font-style:italic;font-weight:500;stroke-width:1.5;stroke-dasharray:1;stroke-dashoffset:1;animation:trace-letter 1.8s ease-out forwards}
+.letter-template-glyph.style-cursive{font-family:"Comic Sans MS","Segoe Print",cursive;font-style:italic;font-weight:500;stroke-width:1.5;stroke-dasharray:300;stroke-dashoffset:300;animation:trace-letter 1.8s ease-out forwards}
 .letter-template-glyph.style-calligraphy{font-family:"Brush Script MT","URW Chancery L","Apple Chancery",cursive;font-style:italic;font-weight:800;stroke-width:3.2;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:trace-letter 1.8s ease-out forwards}
 .letter-tracing{touch-action:none}
 @media(prefers-reduced-motion:reduce){.letter-guide-strokes .letter-stroke,.letter-style-flourish,.letter-template-glyph{animation:none!important;stroke-dashoffset:0!important}}
