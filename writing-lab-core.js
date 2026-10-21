@@ -21,21 +21,36 @@ export function normalizePoint(clientX, clientY, rect, timestamp, pressure = 0.5
 
 export function smoothPoints(points) {
   if (!Array.isArray(points) || points.length < 3) return (points ?? []).map((point) => ({ ...point }));
-  const output = [{ ...points[0] }];
-  for (let index = 1; index < points.length - 1; index += 1) {
-    const previous = points[index - 1];
-    const current = points[index];
-    const next = points[index + 1];
-    // Conservative one-pass smoothing: 15% neighbour influence on each side.
-    // This removes small mouse jitter while keeping the writer's shape and corners.
-    output.push({
-      ...current,
-      x: previous.x * 0.15 + current.x * 0.7 + next.x * 0.15,
-      y: previous.y * 0.15 + current.y * 0.7 + next.y * 0.15
-    });
-  }
-  output.push({ ...points[points.length - 1] });
-  return output;
+
+  // Robust two-stage filtering:
+  // 1) a local median rejects isolated large mouse jumps/spikes;
+  // 2) a light weighted pass softens remaining jitter.
+  // Exact first/last points, timing, pressure, and point order are preserved.
+  const median = (values) => {
+    const sorted = [...values].sort((a, b) => a - b);
+    return sorted[Math.floor(sorted.length / 2)];
+  };
+  const filtered = points.map((point, index) => {
+    if (index === 0 || index === points.length - 1) return { ...point };
+    const from = Math.max(0, index - 2);
+    const to = Math.min(points.length - 1, index + 2);
+    const window = points.slice(from, to + 1);
+    return {
+      ...point,
+      x: median(window.map((item) => item.x)),
+      y: median(window.map((item) => item.y))
+    };
+  });
+  return filtered.map((point, index) => {
+    if (index === 0 || index === filtered.length - 1) return { ...point };
+    const previous = filtered[index - 1];
+    const next = filtered[index + 1];
+    return {
+      ...point,
+      x: previous.x * 0.2 + point.x * 0.6 + next.x * 0.2,
+      y: previous.y * 0.2 + point.y * 0.6 + next.y * 0.2
+    };
+  });
 }
 
 export function getStrokeEndpoints(points) {
