@@ -158,7 +158,7 @@ C2:{title:"Defend a nuanced position",my:"အမြင်တစ်ခုကိ�
 
 export const ALPHABET = Object.freeze([..."ABCDEFGHIJKLMNOPQRSTUVWXYZ", ..."abcdefghijklmnopqrstuvwxyz"]);
 
-export const LETTER_GUIDES = {
+const BASE_LETTER_GUIDES = {
   A: { style: "Print uppercase", start: "Start at the top, move down-left, lift, then down-right; add the middle bar.", my: "အပေါ်ဆုံးမှစ၍ ဘယ်အောက်သို့ ဆင်းပါ။ လက်မြှောက်ပြီး ညာအောက်သို့ ဆင်းကာ အလယ်မျဉ်းဆွဲပါ။", paths: ["M50 12 L20 88", "M50 12 L80 88", "M32 61 L68 61"] },
   a: { style: "Print lowercase", start: "Begin with the round bowl, move counter-clockwise, close the shape, then draw the right stem.", my: "ဝိုင်းပုံကို ဘယ်ဘက်မှစ၍ လှည့်ဆွဲပြီး ပိတ်ပါ။ ထို့နောက် ညာဘက်တိုင်ကို ဆွဲပါ။", paths: ["M68 48 C68 26 30 26 30 51 C30 76 68 76 68 51 L68 27 L68 78"] },
   B: { style: "Print uppercase", start: "Draw the vertical stem from top to bottom, then make the upper and lower bowls.", my: "အပေါ်မှအောက်သို့ တိုင်ကို အရင်ဆွဲပြီး အပေါ်ဝိုင်းနှင့် အောက်ဝိုင်းကို ဆက်ဆွဲပါ။", paths: ["M28 12 L28 88", "M28 14 C78 8 78 47 29 48", "M29 48 C85 43 84 89 28 88"] },
@@ -166,6 +166,69 @@ export const LETTER_GUIDES = {
   C: { style: "Print uppercase", start: "Start near the top-right, curve left and down, then sweep back toward the right.", my: "အပေါ်ညာဘက်မှစ၍ ဘယ်ဘက်သို့ကွေးဆွဲ၊ အောက်သို့ဆင်းပြီး ညာဘက်သို့ ပြန်ကွေးပါ။", paths: ["M78 25 C45 0 19 24 20 50 C19 79 47 98 78 75"] },
   c: { style: "Print lowercase", start: "Start near the upper-right of the bowl, curve left and down, then return toward the opening.", my: "ဝိုင်းပုံ၏ အပေါ်ညာဘက်မှစ၍ ဘယ်ဘက်၊ အောက်ဘက်သို့ ကွေးဆွဲပြီး အဖွင့်နေရာသို့ ပြန်တက်ပါ။", paths: ["M72 35 C46 17 26 34 27 53 C27 76 49 83 72 68"] }
 };
+
+const ADDITIONAL_STROKE_PATHS = {
+  D: ["M24 12 L24 88", "M24 14 C79 8 82 88 24 88"],
+  d: ["M68 50 C68 26 30 26 30 51 C30 76 68 76 68 51", "M68 12 L68 88"],
+  E: ["M25 12 L25 88", "M25 14 L75 14", "M25 50 L65 50", "M25 88 L75 88"],
+  e: ["M28 52 L71 52 C70 28 31 26 28 52 C25 78 52 83 71 67"],
+  F: ["M25 88 L25 14 L75 14", "M25 48 L65 48"],
+  f: ["M31 88 L31 29 C31 7 61 6 66 27", "M15 48 L58 48"],
+  G: ["M78 24 C50 1 21 20 21 50 C21 80 51 97 78 75 L78 53 L54 53"],
+  g: ["M68 50 C68 26 30 26 30 51 C30 76 68 76 68 51", "M68 45 L68 78 C68 98 39 98 29 85"],
+  H: ["M22 12 L22 88", "M78 12 L78 88", "M22 50 L78 50"],
+  h: ["M30 12 L30 88", "M30 55 C30 28 70 30 70 55 L70 88"],
+  I: ["M25 14 L75 14", "M50 14 L50 88", "M25 88 L75 88"],
+  i: ["M45 45 L45 78", "M45 22 L45.1 22"],
+  J: ["M25 14 L78 14", "M63 14 L63 69 C63 98 26 96 22 72"],
+  j: ["M52 45 L52 80 C52 98 30 98 25 86", "M52 22 L52.1 22"],
+  K: ["M25 12 L25 88", "M75 14 L28 52", "M43 42 L78 88"],
+  k: ["M30 12 L30 88", "M68 45 L31 62", "M45 56 L72 80"],
+  L: ["M26 12 L26 88 L76 88"],
+  l: ["M45 12 L45 88"],
+  M: ["M18 88 L18 14 L50 58 L82 14 L82 88"],
+  m: ["M24 78 L24 45", "M24 55 C24 30 48 30 48 55 L48 78", "M48 55 C48 30 72 30 72 55 L72 78"],
+  N: ["M22 88 L22 14", "M22 14 L78 88", "M78 88 L78 14"],
+  n: ["M30 78 L30 45", "M30 55 C30 30 70 30 70 55 L70 78"],
+  O: ["M50 12 C12 12 12 88 50 88 C88 88 88 12 50 12 Z"],
+  o: ["M50 30 C20 30 20 78 50 78 C80 78 80 30 50 30 Z"],
+  P: ["M25 88 L25 14", "M25 14 C78 7 79 49 25 49"],
+  p: ["M30 42 L30 96", "M30 55 C30 30 70 30 70 55 C70 78 30 80 30 55"],
+  Q: ["M50 12 C12 12 12 88 50 88 C88 88 88 12 50 12 Z", "M58 65 L82 91"],
+  q: ["M68 50 C68 26 30 26 30 51 C30 76 68 76 68 51", "M68 45 L68 96"],
+  R: ["M25 88 L25 14", "M25 14 C78 7 79 49 25 49", "M43 49 L78 88"],
+  r: ["M30 78 L30 45", "M30 56 C31 35 49 36 59 43"],
+  S: ["M76 22 C51 2 22 15 25 34 C28 49 72 47 75 65 C79 89 44 98 22 76"],
+  s: ["M69 36 C51 22 29 31 30 45 C31 57 66 51 68 65 C71 83 45 85 28 72"],
+  T: ["M18 14 L82 14", "M50 14 L50 88"],
+  t: ["M44 18 L44 67 C44 82 58 83 66 74", "M24 43 L65 43"],
+  U: ["M22 14 L22 62 C22 98 78 98 78 62 L78 14"],
+  u: ["M30 45 L30 62 C30 86 68 86 68 62 L68 45", "M68 45 L68 78"],
+  V: ["M20 14 L50 88", "M50 88 L80 14"],
+  v: ["M25 45 L45 78", "M45 78 L70 45"],
+  W: ["M14 14 L30 88 L50 48 L70 88 L86 14"],
+  w: ["M20 45 L32 78 L48 52 L62 78 L78 45"],
+  X: ["M22 14 L78 88", "M78 14 L22 88"],
+  x: ["M28 45 L70 78", "M70 45 L28 78"],
+  Y: ["M20 14 L50 48", "M80 14 L50 48", "M50 48 L50 88"],
+  y: ["M27 45 L44 78", "M65 45 L44 78 L32 96"],
+  Z: ["M22 14 L78 14", "M78 14 L22 88", "M22 88 L78 88"],
+  z: ["M28 45 L70 45", "M70 45 L28 78", "M28 78 L70 78"]
+};
+
+const ADDITIONAL_LETTER_GUIDES = Object.fromEntries(
+  Object.entries(ADDITIONAL_STROKE_PATHS).map(([letter, paths]) => {
+    const uppercase = letter === letter.toUpperCase();
+    return [letter, {
+      style: uppercase ? "Print uppercase" : "Print lowercase",
+      start: "Follow the animated strokes in order, lifting your pen between separate strokes.",
+      my: "လှုပ်ရှားမှုလမ်းညွှန်ကို အစဉ်လိုက်လိုက်နာပြီး မျဉ်းတစ်ကြောင်းစီပြီးတိုင်း လိုအပ်သလို ဘောပင်ကို မြှောက်ပါ။",
+      paths
+    }];
+  })
+);
+
+export const LETTER_GUIDES = { ...BASE_LETTER_GUIDES, ...ADDITIONAL_LETTER_GUIDES };
 
 export function getPractice(skill, level, exerciseIndex = 0) {
   if (exerciseIndex === 0) return SKILL_PRACTICE[skill]?.[level] ?? null;

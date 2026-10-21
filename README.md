@@ -9,7 +9,7 @@ A mobile-first, offline-first English-learning Progressive Web App (PWA) for Mya
 - Sample A1 reading story with keyboard-accessible word buttons.
 - Topic-based vocabulary across 16 everyday categories (128 words), with Myanmar meanings and example sentences.
 - Two distinct reading, listening, writing, and speaking exercises for every CEFR level from A1 to C2 (48 skill-level exercises total).
-- Letter-writing studio with animated stroke guides for A/a, B/b, and C/c; template tracing for all 52 uppercase/lowercase letters; print, cursive, and calligraphy guidance. Full stroke-order animation for the remaining letters is still planned.
+- Letter-writing studio with animated stroke guides for all 52 uppercase/lowercase letters, plus template tracing and print, cursive, and calligraphy guidance. Stroke paths are visual learning aids; learners should follow their school's preferred handwriting convention where it differs.
 - Conservative offline lookup for common inflected words (for example, `flowers` → `flower`).
 - Device text-to-speech with speed controls and stop action; voice availability depends on the browser and installed voices.
 - Local PDF text extraction (up to 15 MB and 50 pages), page-by-page reading, selectable word lookup, and device TTS; PDF bytes and extracted text are processed in memory on the device and are not uploaded. Scanned/image-only PDFs are detected and reported because OCR is not included.

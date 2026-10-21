@@ -38,11 +38,12 @@ test("every skill and CEFR level has a second bilingual practice exercise", () =
   assert.equal(getPractice("reading", "A1", 2), null);
 });
 
-test("letter guides have animated stroke paths and bilingual start instructions", () => {
-  for (const letter of ["A", "a", "B", "b", "C", "c"]) {
+test("every uppercase and lowercase letter has an animated bilingual stroke guide", () => {
+  assert.deepEqual(Object.keys(LETTER_GUIDES).sort(), [...ALPHABET].sort());
+  for (const letter of ALPHABET) {
     const guide = LETTER_GUIDES[letter];
-    assert.ok(guide.start && guide.my && guide.paths.length > 0);
-    assert.ok(guide.paths.every((path) => path.startsWith("M")));
+    assert.ok(guide.start && guide.my && guide.paths.length > 0, `${letter} should have a guide`);
+    assert.ok(guide.paths.every((path) => path.startsWith("M")), `${letter} paths should be SVG paths`);
   }
 });
 
