@@ -261,10 +261,142 @@ pathSvg.addEventListener("pointerdown",event=>{const target=event.target;if(!tar
 pathSvg.addEventListener("pointermove",event=>{if(activePointDrag===null)return;const svgPoint=pathSvg.createSVGPoint();svgPoint.x=event.clientX;svgPoint.y=event.clientY;const local=svgPoint.matrixTransform(pathSvg.getScreenCTM().inverse());const x=Math.max(0,Math.min(100,local.x));const y=Math.max(0,Math.min(100,local.y));const contour=editableContours[activePointDrag];let best=0,dist=Infinity;contour.points.forEach((p,i)=>{const d=(p.x-x)**2+(p.y-y)**2;if(d<dist){dist=d;best=i;}});contour.start=best;renderEditablePaths();});
 pathSvg.addEventListener("pointerup",()=>{activePointDrag=null;});pathSvg.addEventListener("pointercancel",()=>{activePointDrag=null;});
 $("replay-pasted-path").addEventListener("click",()=>renderEditablePaths(true));
-const SAVED_PATHS_KEY="le.writingLab.savedLetterPaths.v1";
-function readSavedPaths(){try{const parsed=JSON.parse(localStorage.getItem(SAVED_PATHS_KEY)||"[]");return Array.isArray(parsed)?parsed.filter(item=>item&&typeof item.id==="string"&&typeof item.letter==="string"&&Array.isArray(item.contours)&&Array.isArray(item.order)):[];}catch{return [];}}
-function renderSavedPaths(){const list=$("saved-path-list");list.replaceChildren();const saved=readSavedPaths();if(!saved.length){const empty=document.createElement("div");empty.className="empty";empty.textContent="Path မသိမ်းရသေးပါ။ Path ဖန်တီးပြီး “ဒီစက်တွင် သိမ်း + JSON ထုတ်” ကိုနှိပ်ပါ။";list.append(empty);return;}saved.slice(0,30).forEach(item=>{const row=document.createElement("div");row.className="sample-row";const glyph=document.createElement("div");glyph.className="sample-letter";glyph.textContent=item.letter;const meta=document.createElement("div");meta.className="sample-meta";const title=document.createElement("strong");title.textContent=item.letter+" · "+item.contours.length+" paths";const detail=document.createElement("span");detail.textContent=new Date(item.savedAt).toLocaleString();meta.append(title,detail);const actions=document.createElement("div");actions.className="controls";const load=document.createElement("button");load.type="button";load.className="secondary";load.textContent="ပြန်ဖွင့်";load.addEventListener("click",()=>{editableContours=item.contours.map(c=>({start:Number(c.start)||0,points:c.points.map(p=>({x:Number(p.x),y:Number(p.y)}))}));editableOrder=item.order.slice();pasteInput.value=item.source||item.letter;letterSelect.value=/^[A-Za-z]$/.test(item.letter)?item.letter:letterSelect.value;captureLetter=letterSelect.value;renderEditablePaths();$("paste-path-status").textContent="သိမ်းထားသော path ကို ပြန်ဖွင့်ပြီးပါပြီ။ ပြင်ဆင်ပြီး ထပ်သိမ်းနိုင်သည်။";$("paste-path-editor").scrollIntoView({behavior:"smooth",block:"start"});});const remove=document.createElement("button");remove.type="button";remove.className="secondary";remove.textContent="ဖျက်";remove.addEventListener("click",()=>{localStorage.setItem(SAVED_PATHS_KEY,JSON.stringify(readSavedPaths().filter(x=>x.id!==item.id)));renderSavedPaths();});actions.append(load,remove);row.append(glyph,meta,actions);list.append(row);});}
-$("save-pasted-path").addEventListener("click",()=>{if(!editableContours.length){$("paste-path-status").textContent="Code ထုတ်ရန် path ကို အရင်ဖန်တီးပါ။";return;}const code=$("generated-path-code").value;const raw=pasteInput.value.trim();const letters=[...raw].filter(ch=>/[A-Za-z]/.test(ch));const record={id:Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,8),letter:letters.length===1?letters[0]:captureLetter,source:raw,savedAt:new Date().toISOString(),contours:editableContours.map(c=>({start:c.start||0,points:c.points.map(p=>({x:p.x,y:p.y}))})),order:editableOrder.slice(),code};try{const saved=readSavedPaths();saved.unshift(record);localStorage.setItem(SAVED_PATHS_KEY,JSON.stringify(saved.slice(0,30)));renderSavedPaths();const blob=new Blob([code],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="learning-everyday-letter-path.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);$("paste-path-status").textContent="ဒီစက်တွင် သိမ်းပြီး JSON code ကို ထုတ်ပေးလိုက်ပါပြီ။ “ပြန်ဖွင့်” မှ ပြန်လည်ပြင်ဆင်နိုင်သည်။";}catch(error){$("paste-path-status").textContent="Local storage ထဲ သိမ်းမရပါ။ Browser storage နေရာ/ခွင့်ပြုချက်ကို စစ်ပါ။";}});
+const SAVED_PATHS_KEY = "le.writingLab.savedLetterPaths.v1";
+function isValidSavedPath(item) {
+  if (!item || typeof item.id !== "string" || typeof item.letter !== "string" ||
+      typeof item.source !== "string" || typeof item.savedAt !== "string" ||
+      !Number.isFinite(Date.parse(item.savedAt)) || !Array.isArray(item.contours) ||
+      !Array.isArray(item.order) || item.contours.length < 1 || item.contours.length > 24 ||
+      item.order.length !== item.contours.length) return false;
+  const pointCountsValid = item.contours.every((contour) =>
+    contour && Array.isArray(contour.points) && contour.points.length >= 3 &&
+    Number.isInteger(contour.start) && contour.start >= 0 && contour.start < contour.points.length &&
+    contour.points.every((point) => point && Number.isFinite(point.x) && Number.isFinite(point.y) &&
+      point.x >= 0 && point.x <= 100 && point.y >= 0 && point.y <= 100)
+  );
+  return pointCountsValid &&
+    item.order.every((index) => Number.isInteger(index) && index >= 0 && index < item.contours.length) &&
+    new Set(item.order).size === item.contours.length;
+}
+function readSavedPaths() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(SAVED_PATHS_KEY) || "[]");
+    return Array.isArray(parsed) ? parsed.filter(isValidSavedPath).slice(0, 30) : [];
+  } catch {
+    return [];
+  }
+}
+function renderSavedPaths() {
+  const list = $("saved-path-list");
+  list.replaceChildren();
+  const saved = readSavedPaths();
+  if (!saved.length) {
+    const empty = document.createElement("div");
+    empty.className = "empty";
+    empty.textContent = "Path မသိမ်းရသေးပါ။ Path ဖန်တီးပြီး “ဒီစက်တွင် သိမ်း + JSON ထုတ်” ကိုနှိပ်ပါ။";
+    list.append(empty);
+    return;
+  }
+  saved.forEach((item) => {
+    const row = document.createElement("div");
+    row.className = "sample-row";
+    const glyph = document.createElement("div");
+    glyph.className = "sample-letter";
+    glyph.textContent = item.letter;
+    const meta = document.createElement("div");
+    meta.className = "sample-meta";
+    const title = document.createElement("strong");
+    title.textContent = item.letter + " · " + item.contours.length + " paths";
+    const detail = document.createElement("span");
+    detail.textContent = new Date(item.savedAt).toLocaleString();
+    meta.append(title, detail);
+    const actions = document.createElement("div");
+    actions.className = "controls";
+    const load = document.createElement("button");
+    load.type = "button";
+    load.className = "secondary";
+    load.textContent = "ပြန်ဖွင့်";
+    load.addEventListener("click", () => {
+      if (!isValidSavedPath(item)) {
+        $("paste-path-status").textContent = "သိမ်းထားသော Path မှတ်တမ်း မပြည့်စုံပါ။ ပြန်ဖွင့်၍မရပါ။";
+        return;
+      }
+      editableContours = item.contours.map((contour) => ({
+        start: contour.start,
+        points: contour.points.map((point) => ({ x: point.x, y: point.y }))
+      }));
+      editableOrder = item.order.slice();
+      pasteInput.value = item.source || item.letter;
+      if (/^[A-Za-z]$/.test(item.letter)) letterSelect.value = item.letter;
+      captureLetter = letterSelect.value;
+      renderEditablePaths();
+      $("paste-path-status").textContent = "သိမ်းထားသော path ကို ပြန်ဖွင့်ပြီးပါပြီ။ ပြင်ဆင်ပြီး ထပ်သိမ်းနိုင်သည်။";
+      $("paste-path-editor").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.className = "secondary";
+    remove.textContent = "ဖျက်";
+    remove.addEventListener("click", () => {
+      try {
+        localStorage.setItem(SAVED_PATHS_KEY, JSON.stringify(readSavedPaths().filter((savedItem) => savedItem.id !== item.id)));
+        renderSavedPaths();
+        $("paste-path-status").textContent = "ရွေးထားသော Path မှတ်တမ်းကို ဖျက်ပြီးပါပြီ။";
+      } catch {
+        $("paste-path-status").textContent = "ဖျက်သိမ်းမှုကို သိမ်းမထားနိုင်ပါ။ Browser storage ခွင့်ပြုချက်ကို စစ်ပါ။";
+      }
+    });
+    actions.append(load, remove);
+    row.append(glyph, meta, actions);
+    list.append(row);
+  });
+}
+$("save-pasted-path").addEventListener("click", () => {
+  if (!editableContours.length) {
+    $("paste-path-status").textContent = "Code ထုတ်ရန် path ကို အရင်ဖန်တီးပါ။";
+    return;
+  }
+  const code = $("generated-path-code").value;
+  const raw = pasteInput.value.trim();
+  const normalizedLetter = normalizePastedLetter(raw);
+  const record = {
+    id: Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8),
+    letter: normalizedLetter || captureLetter,
+    source: raw,
+    savedAt: new Date().toISOString(),
+    contours: editableContours.map((contour) => ({
+      start: Number.isInteger(contour.start) ? contour.start : 0,
+      points: contour.points.map((point) => ({ x: point.x, y: point.y }))
+    })),
+    order: editableOrder.slice(),
+    code
+  };
+  if (!isValidSavedPath(record)) {
+    $("paste-path-status").textContent = "Path မှတ်တမ်းတွင် အချက်အလက်မမှန်ပါ။ မသိမ်းမီ path ကို ပြန်ဖန်တီးပါ။";
+    return;
+  }
+  try {
+    const saved = readSavedPaths();
+    saved.unshift(record);
+    localStorage.setItem(SAVED_PATHS_KEY, JSON.stringify(saved.slice(0, 30)));
+  } catch {
+    $("paste-path-status").textContent = "ဒီစက်တွင် Path သိမ်းမရပါ။ Browser storage နေရာ/ခွင့်ပြုချက်ကို စစ်ပါ။ JSON ကို Copy သို့မဟုတ် export ပြုလုပ်နိုင်ပါသည်။";
+    return;
+  }
+  renderSavedPaths();
+  try {
+    const blob = new Blob([code], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = "learning-everyday-letter-path.json";
+    anchor.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    $("paste-path-status").textContent = "ဒီစက်တွင် Path သိမ်းပြီး JSON code ကို ထုတ်ပေးလိုက်ပါပြီ။ “ပြန်ဖွင့်” မှ ပြန်လည်ပြင်ဆင်နိုင်သည်။";
+  } catch {
+    $("paste-path-status").textContent = "ဒီစက်တွင် Path သိမ်းပြီးပါပြီ၊ သို့သော် JSON download မစတင်နိုင်ပါ။ Code ကို Copy လုပ်နိုင်ပါသည်။";
+  }
+});
 $("copy-path-code").addEventListener("click",async()=>{const code=$("generated-path-code").value;if(!code){$("paste-path-status").textContent="Copy လုပ်ရန် code မရှိသေးပါ။";return;}try{await navigator.clipboard.writeText(code);$("paste-path-status").textContent="Path code ကို Copy လုပ်ပြီးပါပြီ။";}catch{$("generated-path-code").focus();$("generated-path-code").select();$("paste-path-status").textContent="အလိုအလျောက် Copy မရပါ။ Code အကွက်ကို select လုပ်ထားပါတယ်။ Copy လုပ်ပါ။";}});
 
 let strokes = [], activeStroke = null, drawing = false, replayToken = 0, sampleStartedAt = 0;
