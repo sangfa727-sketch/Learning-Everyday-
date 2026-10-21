@@ -35,6 +35,11 @@ test("Smart Writing Lab is reachable, route-focused, and refreshed from cache", 
   // Use a versioned completion key so an older test export cannot permanently hide the new entry.
   assert.match(app, /le\.writingLab\.sampleExported\.v3/);
   assert.match(lab, /le\.writingLab\.sampleExported\.v3/);
+  assert.match(lab, /id="paste-path-editor"/);
+  assert.match(lab, /id="editable-path-svg"/);
+  assert.match(lab, /id="path-point-list"/);
+  assert.match(lab, /pasteInput.addEventListener\("input"/);
+  assert.match(lab, /pasteInput.addEventListener\("paste"/);
   assert.match(sw, /learning-everyday-shell-v18/);
   assert.ok(sw.includes('\"./writing-lab-core.js\"'), "offline app shell must cache the writing lab core module");
   assert.match(sw, /"\.\/writing-lab\.html"/);
