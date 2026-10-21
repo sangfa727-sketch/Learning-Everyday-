@@ -317,6 +317,8 @@ body[data-page="progress"] #curriculum-workbench > #curriculum-status {
 }
 
 
+body:not([data-page="home"]) .writing-lab-entry { display: none !important; }
+
 /* Make Smart Writing Lab unmistakable on Home until the first sample is exported. */
 .writing-lab-entry {
   display: flex;
