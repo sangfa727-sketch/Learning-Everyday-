@@ -7,7 +7,9 @@ A mobile-first, offline-first English-learning Progressive Web App (PWA) for Mya
 - Responsive app shell for phone and desktop screens.
 - English/Myanmar interface toggle.
 - Sample A1 reading story with keyboard-accessible word buttons.
-- Local English definitions, example usage, and Myanmar meanings for a small starter vocabulary set.
+- Topic-based vocabulary in household, electrical appliances, kitchen, food and drink, clothing, and school categories, with Myanmar meanings and example sentences.
+- Levelled reading, listening, writing, and speaking exercises across A1–C2 (Beginner to Proficient).
+- Letter-writing studio with animated sample stroke paths for A/a, B/b, and C/c; print, cursive, and calligraphy guidance.
 - Conservative offline lookup for common inflected words (for example, `flowers` → `flower`).
 - Device text-to-speech with speed controls and stop action; voice availability depends on the browser and installed voices.
 - Local PDF text extraction (up to 15 MB and 50 pages), page-by-page reading, selectable word lookup, and device TTS; PDF bytes and extracted text are processed in memory on the device and are not uploaded. Scanned/image-only PDFs are detected and reported because OCR is not included.
@@ -30,7 +32,7 @@ A mobile-first, offline-first English-learning Progressive Web App (PWA) for Mya
 - **Vanilla JavaScript modules:** no build step or framework runtime is needed for the first milestone.
 - **Local-first core:** lessons and the starter dictionary ship with the app. No paid AI API or server is required for reading, lookup, or writing practice.
 - **PWA first, Android wrapper later:** keep learning logic in reusable modules so Capacitor can wrap the web UI for an Android APK if native features are needed. This repository does not yet include an APK build.
-- **Privacy:** this version does not upload imported documents or learning data. Imported PDF support has not been implemented yet.
+- **Privacy:** imported documents and learning exercises are processed locally; the curriculum does not require a server or paid AI API.
 - **Offline boundary:** app-shell caching supports repeat visits after the first successful load over HTTPS or localhost. Device speech voices may still require OS-provided resources; do not promise that every voice works offline.
 
 ## Local development
@@ -50,15 +52,15 @@ Serve the repository over localhost or HTTPS to test service-worker registration
 3. [x] Add app-shell caching, manifest, and baseline unit tests.
 4. [ ] Verify CI and perform browser/device accessibility and offline smoke tests.
 5. [x] Add local PDF text extraction; explicitly detect and explain scanned/image-only PDFs.
-6. [ ] Expand offline dictionary and structured beginner-to-advanced vocabulary, grammar, reading, and sentence lessons.
-7. [ ] Add letter tracing, uppercase/lowercase writing, cursive and calligraphy practice.
+6. [x] Add categorized everyday vocabulary and an initial A1–C2 exercise for each of the four skills; continue expanding topic coverage and grammar.
+7. [ ] Expand animated stroke-order guides across the full alphabet and add interactive uppercase/lowercase, cursive, and calligraphy tracing.
 8. [ ] Improve speaking practice with a clear capability boundary for browser speech recognition versus offline pronunciation support.
 9. [ ] Add progress persistence and export/clear controls with privacy-conscious local storage.
 10. [ ] Evaluate Capacitor packaging for Android APK after core PWA behavior is stable.
 
 ## Known limitations
 
-- OCR, robust dictionary coverage, handwriting tracing, persistent progress, and APK packaging are not implemented yet. PDF parsing loads its library from a pinned CDN on first use; the service worker caches the two pinned parser assets for later offline use after a successful online load.
+- OCR, full-alphabet stroke-order animation, interactive handwriting tracing, persistent progress, and APK packaging are not implemented yet. Cursive and calligraphy currently provide style guidance and previews rather than a full pen-pressure simulator. PDF parsing loads its library from a pinned CDN on first use; the service worker caches the two pinned parser assets for later offline use after a successful online load.
 - Browser speech recognition may send audio to a browser/vendor service and may require internet; it is optional and is not advertised as an offline capability.
 - The starter dictionary is a learning prototype, not a comprehensive dictionary.
 - A PWA normally needs HTTPS for installation/service workers outside localhost. A separately packaged APK can be installed without a domain, but needs an Android build/signing and distribution workflow.
