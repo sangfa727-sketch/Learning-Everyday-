@@ -1,4 +1,4 @@
-import { LEVELS, VOCABULARY_CATEGORIES, SKILL_PRACTICE, LETTER_GUIDES, ALPHABET, CURSIVE_GLYPHS, getPractice, getPracticeCount } from "./curriculum.js";
+import { LEVELS, VOCABULARY_CATEGORIES, SKILL_PRACTICE, LETTER_GUIDES, CURSIVE_GLYPHS, getPractice, getPracticeCount } from "./curriculum.js";
 import { cursivePathsFor, splitCursiveStrokes } from "./cursive-paths.js";
 import { loadProgress, saveProgress, markPracticeComplete, clearProgress, exportProgress } from "./progress-state.js";
 
@@ -378,15 +378,6 @@ function drawTraceStroke(context, stroke, width, height) {
 }
 
 function renderLetterOptions() {
-  const letterSelect = $("#letter-select");
-  letterSelect.replaceChildren();
-  for (const letter of ALPHABET) {
-    const option = document.createElement("option");
-    option.value = letter;
-    option.textContent = letter;
-    letterSelect.append(option);
-  }
-  letterSelect.value = selectedLetter;
   renderAlphabetGrid();
 }
 
@@ -416,8 +407,6 @@ function renderAlphabetGrid() {
       button.textContent = selectedStyle === "cursive" ? (CURSIVE_GLYPHS[letter] ?? letter) : letter;
       button.addEventListener("click", () => {
         selectedLetter = letter;
-        const select = $("#letter-select");
-        if (select) select.value = letter;
         traceStrokes = [];
         renderLetterGuide();
       });
@@ -428,6 +417,23 @@ function renderAlphabetGrid() {
   }
 }
 
+
+function renderScriptLetterPicker() {
+  const card = $("#script-letter-card");
+  const largeGlyph = $("#script-letter-card-glyph");
+  const choices = document.querySelectorAll(".script-letter");
+  if (!card || !largeGlyph || !choices.length) return;
+  for (const choice of choices) {
+    const glyph = choice.textContent.trim();
+    choice.setAttribute("aria-label", `Show large script letter ${glyph}`);
+    choice.setAttribute("aria-pressed", "false");
+    choice.addEventListener("click", () => {
+      largeGlyph.textContent = glyph;
+      card.hidden = false;
+      for (const item of choices) item.setAttribute("aria-pressed", String(item === choice));
+    });
+  }
+}
 
 function setWritingMode(mode) {
   const reference = $("#handwriting-reference");
@@ -441,8 +447,6 @@ function setWritingMode(mode) {
   tools.hidden = !printMode;
   tools.setAttribute("aria-hidden", String(!printMode));
   selectedStyle = printMode ? "print" : "cursive";
-  const styleSelect = $("#letter-style");
-  if (styleSelect) styleSelect.value = selectedStyle;
   printButton.setAttribute("aria-pressed", String(printMode));
   handwritingButton.setAttribute("aria-pressed", String(!printMode));
   renderLetterGuide();
@@ -460,8 +464,6 @@ function setLanguage(next) {
       practiceIntro: "Practise at the selected level. Use Skills & Levels to change your skill or level.",
       letterTitle: "Script-style alphabet reference",
       letterIntro: "View uppercase and lowercase mathematical script letters on ruled writing paper. These are display forms, not stroke-by-stroke cursive instructions.",
-      chooseLetter: "Choose a letter",
-      chooseStyle: "Writing style",
       replay: "Replay stroke animation",
       listen: "Listen to model",
       answerPlaceholder: "Write your answer or notes here…",
@@ -479,8 +481,6 @@ function setLanguage(next) {
       practiceIntro: "ရွေးထားသောအဆင့်တွင် လေ့ကျင့်ပါ။ ကျွမ်းကျင်မှု သို့မဟုတ် အဆင့်ပြောင်းရန် သက်ဆိုင်ရာစာမျက်နှာသို့ သွားပါ။",
       letterTitle: "Script အက္ခရာ နမူနာ",
       letterIntro: "စာလုံးအကြီးနှင့် အသေး Script ပုံစံများကို စာရွက်မျဉ်းကြောင်းပေါ်တွင် နမူနာအဖြစ် ဖော်ပြထားသည်။ ဤအရာသည် stroke အစီအစဉ်ပြသသော cursive လမ်းညွှန်မဟုတ်ပါ။",
-      chooseLetter: "အက္ခရာရွေးပါ",
-      chooseStyle: "ရေးသားမှုပုံစံ",
       replay: "မျဉ်းဆွဲလှုပ်ရှားမှု ပြန်ကြည့်ရန်",
       listen: "နမူနာအသံ နားထောင်ရန်",
       answerPlaceholder: "ဤနေရာတွင် အဖြေ သို့မဟုတ် မှတ်စုရေးပါ…",
@@ -498,8 +498,6 @@ function setLanguage(next) {
   $("#practice-heading").nextElementSibling.textContent = copy.practiceIntro;
   $("#letter-practice-heading").textContent = copy.letterTitle;
   $("#letter-practice-heading").nextElementSibling.textContent = copy.letterIntro;
-  $("#letter-select").previousElementSibling.textContent = copy.chooseLetter;
-  $("#letter-style").previousElementSibling.textContent = copy.chooseStyle;
   $("#replay-letter").textContent = copy.replay;
   $("#practice-action").textContent = copy.listen;
   $("#level-practice-answer").placeholder = copy.answerPlaceholder;
@@ -513,10 +511,6 @@ function setLanguage(next) {
   renderProgress();
   $("#writing-mode-print").textContent = "Print";
   $("#writing-mode-handwriting").textContent = "Handwriting";
-  const styleOptions = $("#letter-style").options;
-  styleOptions[0].textContent = next === "my" ? "ပုံနှိပ်စာလုံး · အကြီး / အသေး" : "Print · Uppercase / lowercase";
-  styleOptions[1].textContent = next === "my" ? "Cursive · ဆက်ရေးဟန်" : "Cursive";
-  if (styleOptions[2]) styleOptions[2].textContent = next === "my" ? "Calligraphy · အလှရေးဟန်" : "Calligraphy";
   renderCategoryOptions();
   renderVocabulary();
   renderLevelOptions();
@@ -590,16 +584,6 @@ $("#practice-action").addEventListener("click", () => {
   utterance.onstart = () => setStatus(language === "my" ? "လေ့ကျင့်ခန်းကို နားထောင်နေသည်…" : "Playing the model sentence…");
   utterance.onend = () => setStatus(language === "my" ? "နားထောင်ပြီး လိုက်လေ့ကျင့်ပါ။" : "Now repeat or answer the exercise.");
   window.speechSynthesis.speak(utterance);
-});
-$("#letter-select").addEventListener("change", (event) => {
-  selectedLetter = event.target.value;
-  traceStrokes = [];
-  renderLetterGuide();
-});
-$("#letter-style").addEventListener("change", (event) => {
-  selectedStyle = event.target.value;
-  traceStrokes = [];
-  renderLetterGuide();
 });
 $("#replay-letter").addEventListener("click", () => { renderLetterGuide(); setStatus(language === "my" ? "လမ်းညွှန်ကို ပြန်ဖော်ပြပြီးပါပြီ။ အောက်တွင် လက်ဖြင့်လိုက်ရေးပါ။" : "Guide refreshed. Trace the faint letter on the board below."); });
 $("#writing-mode-print").addEventListener("click", () => setWritingMode("print"));
@@ -698,6 +682,7 @@ renderCategoryOptions();
 renderVocabulary();
 renderLevelOptions();
 renderLetterOptions();
+renderScriptLetterPicker();
 renderPractice();
 renderLetterGuide();
 renderProgress();
