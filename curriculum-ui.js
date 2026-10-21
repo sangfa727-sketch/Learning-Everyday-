@@ -1,4 +1,4 @@
-import { LEVELS, VOCABULARY_CATEGORIES, SKILL_PRACTICE, LETTER_GUIDES, getPractice } from "./curriculum.js";
+import { LEVELS, VOCABULARY_CATEGORIES, SKILL_PRACTICE, LETTER_GUIDES, ALPHABET, getPractice } from "./curriculum.js";
 import { loadProgress, saveProgress, markPracticeComplete, clearProgress, exportProgress } from "./progress-state.js";
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -120,7 +120,11 @@ function makeSvgPath(d, index) {
 }
 
 function renderLetterGuide() {
-  const guide = LETTER_GUIDES[selectedLetter];
+  const guide = LETTER_GUIDES[selectedLetter] ?? {
+    start: `Trace the ${selectedLetter === selectedLetter.toUpperCase() ? "uppercase" : "lowercase"} letter slowly, following the faint template.`,
+    my: `ဖျော့ဖျော့လမ်းညွှန်စာလုံးအတိုင်း ${selectedLetter === selectedLetter.toUpperCase() ? "စာလုံးအကြီး" : "စာလုံးအသေး"} ကို ဖြည်းဖြည်းလိုက်ရေးပါ။`,
+    paths: []
+  };
   $("#letter-sample").textContent = selectedLetter;
   $("#letter-style-note").textContent = styleInfo[selectedStyle][language];
   const styleStart = selectedStyle === "cursive"
@@ -140,22 +144,62 @@ function renderLetterGuide() {
   baseline.setAttribute("y1", "88"); baseline.setAttribute("y2", "88");
   baseline.setAttribute("class", "letter-baseline");
   svg.append(baseline);
-  guide.paths.forEach((d, index) => svg.append(makeSvgPath(d, index)));
+  if (guide.paths.length) {
+    guide.paths.forEach((d, index) => svg.append(makeSvgPath(d, index)));
+  } else {
+    const glyph = document.createElementNS(ns, "text");
+    glyph.setAttribute("x", "50"); glyph.setAttribute("y", "76");
+    glyph.setAttribute("text-anchor", "middle"); glyph.setAttribute("class", "letter-template-glyph");
+    glyph.textContent = selectedLetter;
+    svg.append(glyph);
+  }
   const start = document.createElementNS(ns, "circle");
   start.setAttribute("cx", selectedLetter.toLowerCase() === "a" || selectedLetter === "B" || selectedLetter === "b" ? "30" : selectedLetter === "C" || selectedLetter === "c" ? "78" : "50");
   start.setAttribute("cy", selectedLetter === "A" ? "12" : selectedLetter === "a" ? "48" : selectedLetter === "C" || selectedLetter === "c" ? "25" : "12");
   start.setAttribute("r", "3");
   start.setAttribute("class", "letter-start-dot");
-  svg.append(start);
+  if (guide.paths.length) svg.append(start);
   $("#letter-stroke-count").textContent = selectedStyle === "print"
     ? (language === "my" ? `မျဉ်း ${guide.paths.length} ကြောင်း · တစ်ကြောင်းချင်း လှုပ်ရှားမှုကို ကြည့်ပါ` : `${guide.paths.length} strokes · Watch each movement in order`)
-    : (language === "my" ? "လှုပ်ရှားမှုသည် ပုံနှိပ်စာလုံးအခြေခံလမ်းညွှန်ဖြစ်သည်။ စတိုင်အလိုက် အထက်ပါညွှန်ကြားချက်ကို လိုက်နာပါ။" : "Animation is the print reference; follow the style-specific directions above.");
+    : (language === "my" ? (guide.paths.length ? "လှုပ်ရှားမှုသည် ပုံနှိပ်စာလုံးအခြေခံလမ်းညွှန်ဖြစ်သည်။ စတိုင်အလိုက် အထက်ပါညွှန်ကြားချက်ကို လိုက်နာပါ။" : "ဤစာလုံးအတွက် လမ်းညွှန်ပုံစံကို ပြထားသည်။ အောက်ရှိ tracing board တွင် လိုက်ရေးပါ။") : (guide.paths.length ? "Animation is the print reference; follow the style-specific directions above." : "Template preview only; trace the letter on the practice board below."));
+  renderTraceTemplate();
 }
 
-function renderLetterOptions() {
+
+function renderTraceTemplate() {
+  const canvas = $("#letter-tracing");
+  if (!canvas) return;
+  const rect = canvas.getBoundingClientRect();
+  if (!rect.width || !rect.height) return;
+  const ratio = Math.max(1, window.devicePixelRatio || 1);
+  canvas.width = Math.round(rect.width * ratio);
+  canvas.height = Math.round(rect.height * ratio);
+  const context = canvas.getContext("2d");
+  if (!context) return;
+  context.setTransform(ratio, 0, 0, ratio, 0, 0);
+  context.clearRect(0, 0, rect.width, rect.height);
+  context.strokeStyle = "#dfe7d8";
+  context.lineWidth = 1;
+  context.setLineDash([4, 5]);
+  context.beginPath();
+  context.moveTo(12, rect.height * 0.78);
+  context.lineTo(rect.width - 12, rect.height * 0.78);
+  context.stroke();
+  context.setLineDash([]);
+  context.textAlign = "center";
+  context.textBaseline = "alphabetic";
+  const font = selectedStyle === "cursive" ? "italic 180px cursive"
+    : selectedStyle === "calligraphy" ? "bold 180px Georgia, serif"
+    : "180px Arial, sans-serif";
+  context.font = font;
+  context.lineWidth = 1.5;
+  context.strokeStyle = "rgba(90, 124, 91, 0.28)";
+  context.strokeText(selectedLetter, rect.width / 2, rect.height * 0.76);
+}
+\nfunction renderLetterOptions() {
   const letterSelect = $("#letter-select");
   letterSelect.replaceChildren();
-  for (const letter of "ABCabc") {
+  for (const letter of ALPHABET) {
     const option = document.createElement("option");
     option.value = letter;
     option.textContent = letter;
@@ -259,7 +303,37 @@ $("#practice-action").addEventListener("click", () => {
 });
 $("#letter-select").addEventListener("change", (event) => { selectedLetter = event.target.value; renderLetterGuide(); });
 $("#letter-style").addEventListener("change", (event) => { selectedStyle = event.target.value; renderLetterGuide(); });
-$("#replay-letter").addEventListener("click", () => renderLetterGuide());
+$("#replay-letter").addEventListener("click", () => { renderLetterGuide(); setStatus(language === "my" ? "လမ်းညွှန်ကို ပြန်ဖော်ပြပြီးပါပြီ။ အောက်တွင် လက်ဖြင့်လိုက်ရေးပါ။" : "Guide refreshed. Trace the faint letter on the board below."); });
+
+const tracingCanvas = $("#letter-tracing");
+let traceDrawing = false;
+let traceLastPoint = null;
+tracingCanvas.addEventListener("pointerdown", (event) => {
+  const rect = tracingCanvas.getBoundingClientRect();
+  const context = tracingCanvas.getContext("2d");
+  if (!context) return;
+  traceDrawing = true;
+  traceLastPoint = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+  tracingCanvas.setPointerCapture(event.pointerId);
+  context.beginPath(); context.moveTo(traceLastPoint.x, traceLastPoint.y);
+});
+tracingCanvas.addEventListener("pointermove", (event) => {
+  if (!traceDrawing || !traceLastPoint) return;
+  const rect = tracingCanvas.getBoundingClientRect();
+  const context = tracingCanvas.getContext("2d");
+  if (!context) return;
+  const point = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+  context.strokeStyle = selectedStyle === "calligraphy" ? "#24554a" : "#477b62";
+  context.lineWidth = selectedStyle === "calligraphy" ? 5 : selectedStyle === "cursive" ? 3.5 : 4;
+  context.lineCap = "round"; context.lineJoin = "round";
+  context.lineTo(point.x, point.y); context.stroke();
+  traceLastPoint = point;
+});
+const stopTrace = () => { traceDrawing = false; traceLastPoint = null; };
+tracingCanvas.addEventListener("pointerup", stopTrace);
+tracingCanvas.addEventListener("pointercancel", stopTrace);
+$("#clear-tracing").addEventListener("click", () => renderTraceTemplate());
+window.addEventListener("resize", () => renderTraceTemplate());
 
 $("#complete-practice").addEventListener("click", () => {
   try {
