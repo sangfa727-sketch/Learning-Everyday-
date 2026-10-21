@@ -16,6 +16,12 @@ test("Smart Writing Lab is reachable, route-focused, and refreshed from cache", 
   assert.match(html, /id="smart-writing-lab"/);
   assert.match(curriculum, /letterTitle: "Smart Writing Lab"/);
   assert.match(css, /body\[data-page="writing"\] #curriculum-workbench #smart-writing-lab/);
+  assert.match(css, /body:not\(\[data-page="home"\]\) \.hero/);
+  assert.match(css, /body\[data-page="reading"\] #skills-level-page/);
+  assert.match(css, /body\[data-page="listening"\] #skills-level-page/);
+  assert.match(css, /body\[data-page="speaking"\] #skills-level-page/);
+  assert.match(css, /body\[data-page="progress"\] #skills-level-page/);
+  assert.match(css, /body\[data-page="progress"\] #curriculum-workbench > #smart-writing-lab/);
   assert.match(css, /body\[data-page="writing"\] #practice-panel\s*\{\s*display: none !important;/);
   assert.match(css, /body\[data-page="listening"\] #curriculum-workbench/);
   assert.match(css, /body\[data-page="speaking"\] #curriculum-workbench/);
