@@ -1,0 +1,13 @@
+{
+  "name": "learning-everyday",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Offline-first English learning PWA for English/Myanmar learners",
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
