@@ -234,7 +234,18 @@ function createPastedPath(){const raw=pasteInput.value.trim();if(!raw){$("paste-
   editableContours=contours;editableOrder=contours.map((_,i)=>i);renderEditablePaths();$("paste-path-status").textContent=source+" မှ path "+contours.length+" ခု ဖန်တီးပြီးပါပြီ။ နံပါတ်အမှတ်ကို ဆွဲရွှေ့၍ start point ပြောင်းပါ။ Font outline သည် လက်ရေး centerline မဟုတ်ပါ။";
 }
 $("convert-pasted-path").addEventListener("click",createPastedPath);
-pasteInput.addEventListener("paste",()=>setTimeout(createPastedPath,0));
+let pastedLetterTimer;
+pasteInput.addEventListener("input",()=>{
+  clearTimeout(pastedLetterTimer);
+  const raw=pasteInput.value.trim();
+  if(/^[A-Za-z]$/.test(raw)) pastedLetterTimer=setTimeout(createPastedPath,120);
+});
+pasteInput.addEventListener("paste",()=>{
+  setTimeout(()=>{
+    const raw=pasteInput.value.trim();
+    if(/^[A-Za-z]$/.test(raw)) createPastedPath();
+  },0);
+});
 pathSvg.addEventListener("pointerdown",event=>{const target=event.target;if(!target.classList.contains("path-edit-point"))return;activePointDrag=Number(target.dataset.contour);pathSvg.setPointerCapture?.(event.pointerId);event.preventDefault();});
 pathSvg.addEventListener("pointermove",event=>{if(activePointDrag===null)return;const svgPoint=pathSvg.createSVGPoint();svgPoint.x=event.clientX;svgPoint.y=event.clientY;const local=svgPoint.matrixTransform(pathSvg.getScreenCTM().inverse());const x=Math.max(0,Math.min(100,local.x));const y=Math.max(0,Math.min(100,local.y));const contour=editableContours[activePointDrag];let best=0,dist=Infinity;contour.points.forEach((p,i)=>{const d=(p.x-x)**2+(p.y-y)**2;if(d<dist){dist=d;best=i;}});contour.start=best;renderEditablePaths();});
 pathSvg.addEventListener("pointerup",()=>{activePointDrag=null;});pathSvg.addEventListener("pointercancel",()=>{activePointDrag=null;});
