@@ -32,3 +32,15 @@ test("cursive sample, animation, and tracing use the same Script glyph", async (
   assert.match(css, /\.letter-stroke\.calligraphy-highlight/);
   assert.match(css, /prefers-reduced-motion:reduce/);
 });
+
+test("Smart Writing Lab visibly exposes all 52 letters and the selected Script glyph animation", async () => {
+  const lab = await readFile(new URL("./writing-lab.html", import.meta.url), "utf8");
+  assert.match(lab, /import \{ CURSIVE_GLYPHS \} from "\.\/curriculum\.js"/);
+  assert.match(lab, /id="script-reference-panel"/);
+  assert.match(lab, /id="letter-picker-grid"/);
+  assert.match(lab, /for \(const letter of LETTERS\)/);
+  assert.match(lab, /CURSIVE_GLYPHS\[letter\] \?\? letter/);
+  assert.match(lab, /id="replay-reference"/);
+  assert.match(lab, /script-reference-trace/);
+  assert.match(lab, /renderSavedList\(\); renderModeLabel\(\); resizeAll\(\); renderReference\(\)/);
+});
