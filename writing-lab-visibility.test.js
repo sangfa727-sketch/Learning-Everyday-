@@ -40,7 +40,7 @@ test("Smart Writing Lab is reachable, route-focused, and refreshed from cache", 
   assert.match(lab, /id="path-point-list"/);
   assert.match(lab, /pasteInput.addEventListener\("input"/);
   assert.match(lab, /pasteInput.addEventListener\("paste"/);
-  assert.match(sw, /learning-everyday-shell-v18/);
+  assert.match(sw, /learning-everyday-shell-v19/);
   assert.ok(sw.includes('\"./writing-lab-core.js\"'), "offline app shell must cache the writing lab core module");
   assert.match(sw, /"\.\/writing-lab\.html"/);
 });
