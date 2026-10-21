@@ -57,7 +57,8 @@ for (const group of [{label:"Uppercase",letters:LETTERS.slice(0,26)},{label:"Low
 letterSelect.value = "a";
 let strokes = [], activeStroke = null, drawing = false, replayToken = 0, sampleStartedAt = 0;
 let captureLetter = letterSelect.value, captureStyle = styleSelect.value;
-function readSavedSamples() { try { return parseSavedSamples(localStorage.getItem(SAVED_SAMPLES_KEY)); } catch { return []; } }\nconst savedSamples = readSavedSamples();
+function readSavedSamples() { try { return parseSavedSamples(localStorage.getItem(SAVED_SAMPLES_KEY)); } catch { return []; } }
+const savedSamples = readSavedSamples();
 const clock = () => (typeof performance !== "undefined" ? performance.now() : Date.now());
 function setupCanvas(el, context) {
   const rect = el.getBoundingClientRect(), dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
