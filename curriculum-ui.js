@@ -157,8 +157,9 @@ function renderLetterGuide() {
     svg.append(glyph);
   }
   const start = document.createElementNS(ns, "circle");
-  start.setAttribute("cx", selectedLetter.toLowerCase() === "a" || selectedLetter === "B" || selectedLetter === "b" ? "30" : selectedLetter === "C" || selectedLetter === "c" ? "78" : "50");
-  start.setAttribute("cy", selectedLetter === "A" ? "12" : selectedLetter === "a" ? "48" : selectedLetter === "C" || selectedLetter === "c" ? "25" : "12");
+  const firstMove = guide.paths[0]?.match(/^M\s*([\d.]+)[ ,]+([\d.]+)/);
+  start.setAttribute("cx", firstMove?.[1] ?? "50");
+  start.setAttribute("cy", firstMove?.[2] ?? "12");
   start.setAttribute("r", "3");
   start.setAttribute("class", "letter-start-dot");
   if (guide.paths.length) svg.append(start);
