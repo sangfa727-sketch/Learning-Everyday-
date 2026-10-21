@@ -172,12 +172,35 @@ function renderStory() {
   }
 }
 
+function pronounceWord(word) {
+  if (!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) {
+    $("#status-message").textContent = translations[language].noSpeech;
+    return;
+  }
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(word);
+  const voice = selectedEnglishVoice();
+  utterance.lang = voice?.lang || "en-US";
+  if (voice) utterance.voice = voice;
+  utterance.rate = clampSpeechRate($("#speech-speed")?.value ?? 0.85);
+  utterance.onerror = () => { $("#status-message").textContent = translations[language].noSpeech; };
+  window.speechSynthesis.speak(utterance);
+}
+
 function showWord(word) {
   const entry = lookupWord(word);
   $("#word-title").textContent = word;
-  const meaning = entry ? entry.meaning : translations[language].unknown;
-  $("#word-definition").textContent = entry ? `${meaning}. ${entry.usage}${language === "my" && entry.my ? ` — ${entry.my}` : ""}` : meaning;
+  $("#word-definition").textContent = entry ? entry.meaning + ". " + entry.usage : translations[language].unknown;
+  const myTranslation = $("#word-myanmar-translation");
+  if (myTranslation) {
+    myTranslation.textContent = entry?.my
+      ? "မြန်မာအဓိပ္ပာယ် — " + entry.my
+      : "မြန်မာအဓိပ္ပာယ် — ဤစကားလုံးအတွက် offline အဘိဓာန်အချက်အလက် မထည့်ရသေးပါ။";
+  }
+  $("#pronounce-word").textContent = language === "my" ? "🔊 အသံထွက် နားထောင်ရန်" : "🔊 Hear pronunciation";
+  $("#pronounce-word").setAttribute("aria-label", "Pronounce " + word);
   $("#word-card").hidden = false;
+  pronounceWord(word);
   $("#word-card").scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
@@ -314,6 +337,7 @@ $("#back-to-story-library").addEventListener("click", () => {
 });
 $("#stop-button").addEventListener("click", () => { if ("speechSynthesis" in window) window.speechSynthesis.cancel(); $("#play-button").disabled = false; $("#status-message").textContent = translations[language].voiceNote; });
 $("#close-word").addEventListener("click", () => { $("#word-card").hidden = true; });
+$("#pronounce-word").addEventListener("click", () => pronounceWord($("#word-title").textContent));
 $("#writing-input").value = readLocalValue("le.writingDraft", "");
 $("#writing-count").textContent = `${countCharacters($("#writing-input").value)} ${translations[language].characters}`;
 $("#writing-input").addEventListener("input", (event) => {
