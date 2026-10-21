@@ -16,5 +16,5 @@ test("home page keeps the original skill cards and learning workbench visible", 
   assert.match(html, /id="letter-practice-heading"/);
   assert.doesNotMatch(css, /body\[data-page="home"\] #curriculum-workbench,body\[data-page="home"\] #practice-panel\{display:none\}/);
   assert.match(css, /body\[data-page="home"\] #skills-level-page\{display:block\}/);
-  assert.match(css, /body\[data-page="home"\] \.skills-level-page \.skill-level-picker\{display:none\}/);
+  assert.match(css, /body\[data-page="home"\] \.skills-level-page \.skill-level-picker\{display:none\}/);\n  assert.match(css, /body\[data-page="home"\] #practice-panel,body\[data-page="home"\] #curriculum-workbench\{display:none\}/);
 });
