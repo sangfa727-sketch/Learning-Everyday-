@@ -25,6 +25,10 @@ test("cursive practice animates hand-authored strokes and traces the same paths"
   assert.match(ui, /Uppercase A–Z/);
   assert.match(ui, /Lowercase a–z/);
   assert.match(html, /id="letter-alphabet-grid"/);
+  assert.match(html, /class="script-alphabet-paper"/);
+  assert.match(html, /id="legacy-letter-tools" hidden aria-hidden="true"/);
+  assert.match(html, /Uppercase A–Z/);
+  assert.match(html, /Lowercase a–z/);
   assert.doesNotMatch(html, /<option value="calligraphy">Calligraphy<\/option>/);
   assert.doesNotMatch(ui, /CALLIGRAPHY_PATH_OVERRIDES|function calligraphyPathsFor/);
   assert.match(css, /\.letter-template-glyph\.style-cursive/);

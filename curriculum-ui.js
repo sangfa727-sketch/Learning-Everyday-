@@ -438,8 +438,8 @@ function setLanguage(next) {
       vocabularyIntro: "Choose a real-life topic. Tap a word to see its Myanmar meaning and an example sentence.",
       practiceTitle: "Practice by skill",
       practiceIntro: "Practise at the selected level. Use Skills & Levels to change your skill or level.",
-      letterTitle: "Smart Writing Lab",
-      letterIntro: "Practise uppercase and lowercase letters with guided stroke animation and finger tracing. Choose print, cursive, or calligraphy.",
+      letterTitle: "Script-style alphabet reference",
+      letterIntro: "View uppercase and lowercase mathematical script letters on ruled writing paper. These are display forms, not stroke-by-stroke cursive instructions.",
       chooseLetter: "Choose a letter",
       chooseStyle: "Writing style",
       replay: "Replay stroke animation",
@@ -457,8 +457,8 @@ function setLanguage(next) {
       vocabularyIntro: "နေ့စဉ်ဘဝအကြောင်းအရာကို ရွေးပါ။ စကားလုံးကိုနှိပ်၍ မြန်မာအဓိပ္ပာယ်နှင့် ဥပမာဝါကျကို ကြည့်ပါ။",
       practiceTitle: "ကျွမ်းကျင်မှုအလိုက် လေ့ကျင့်ခန်း",
       practiceIntro: "ရွေးထားသောအဆင့်တွင် လေ့ကျင့်ပါ။ ကျွမ်းကျင်မှု သို့မဟုတ် အဆင့်ပြောင်းရန် သက်ဆိုင်ရာစာမျက်နှာသို့ သွားပါ။",
-      letterTitle: "Smart Writing Lab · လက်ရေးလေ့ကျင့်ခန်း",
-      letterIntro: "စာလုံးအကြီး၊ အသေးများကို လမ်းညွှန် Animation နှင့် လက်ချောင်းဖြင့် လိုက်ရေးပါ။ Print၊ Cursive သို့မဟုတ် Calligraphy ကို ရွေးနိုင်သည်။",
+      letterTitle: "Script အက္ခရာ နမူနာ",
+      letterIntro: "စာလုံးအကြီးနှင့် အသေး Script ပုံစံများကို စာရွက်မျဉ်းကြောင်းပေါ်တွင် နမူနာအဖြစ် ဖော်ပြထားသည်။ ဤအရာသည် stroke အစီအစဉ်ပြသသော cursive လမ်းညွှန်မဟုတ်ပါ။",
       chooseLetter: "အက္ခရာရွေးပါ",
       chooseStyle: "ရေးသားမှုပုံစံ",
       replay: "မျဉ်းဆွဲလှုပ်ရှားမှု ပြန်ကြည့်ရန်",
@@ -494,7 +494,7 @@ function setLanguage(next) {
   const styleOptions = $("#letter-style").options;
   styleOptions[0].textContent = next === "my" ? "ပုံနှိပ်စာလုံး · အကြီး / အသေး" : "Print · Uppercase / lowercase";
   styleOptions[1].textContent = next === "my" ? "Cursive · ဆက်ရေးဟန်" : "Cursive";
-  styleOptions[2].textContent = next === "my" ? "Calligraphy · အလှရေးဟန်" : "Calligraphy";
+  if (styleOptions[2]) styleOptions[2].textContent = next === "my" ? "Calligraphy · အလှရေးဟန်" : "Calligraphy";
   renderCategoryOptions();
   renderVocabulary();
   renderLevelOptions();
