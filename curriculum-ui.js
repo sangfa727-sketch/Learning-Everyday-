@@ -272,6 +272,7 @@ function renderLetterGuide() {
   sample.textContent = selectedStyle === "cursive" ? (CURSIVE_GLYPHS[selectedLetter] ?? selectedLetter) : selectedLetter;
   sample.classList.remove("style-print", "style-cursive", "style-calligraphy");
   sample.classList.add(`style-${selectedStyle}`);
+  renderAlphabetGrid();
   $("#letter-style-note").textContent = styleInfo[selectedStyle][language];
   const styleStart = selectedStyle === "cursive"
     ? (language === "my" ? "Cursive: စာလုံး၏ ဝင်မျဉ်းမှစပြီး သင့်တော်သည့်နေရာတွင် ဘောပင်မမြှောက်ဘဲ နောက်စာလုံးသို့ ဆက်ပါ။ " : "Cursive: begin with an entry stroke and connect into the next letter where the form allows. ")
@@ -333,7 +334,9 @@ function renderLetterGuide() {
     svg.append(glyph);
   }
   const visibleStrokeCount = stylePaths.reduce((count, d) => count + d.trim().split(/(?=M\s*[-\d.])/).filter(Boolean).length, 0);
-  $("#letter-stroke-count").textContent = visibleStrokeCount
+  $("#letter-stroke-count").textContent = selectedStyle === "cursive"
+    ? (language === "my" ? "ပေးထားသော Script စာလုံးပုံစံအတိုင်း outline animation · ဘောပင်ရေးစဉ်အစီအစဉ်ကို မဖော်ပြသေးပါ" : "Exact Script glyph outline animation · does not yet represent pen-stroke order")
+    : visibleStrokeCount
     ? selectedStyle === "print"
       ? (language === "my" ? `မျဉ်း ${visibleStrokeCount} ကြောင်း · အစဉ်လိုက် မျဉ်းဆွဲလှုပ်ရှားမှု` : `${visibleStrokeCount} strokes · Animated in writing order`)
       : selectedStyle === "cursive"
