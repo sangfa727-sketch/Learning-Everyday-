@@ -209,8 +209,23 @@ function renderLetterGuide() {
   baseline.setAttribute("y1", "88"); baseline.setAttribute("y2", "88");
   baseline.setAttribute("class", "letter-baseline");
   svg.append(baseline);
-  if (selectedStyle === "print" && guide.paths.length) {
-    guide.paths.forEach((d, index) => svg.append(makeSvgPath(d, index)));
+  if (guide.paths.length) {
+    const strokeGroup = document.createElementNS(ns, "g");
+    strokeGroup.setAttribute("class", `letter-guide-strokes style-${selectedStyle}`);
+    if (selectedStyle === "cursive") strokeGroup.setAttribute("transform", "skewX(-7) translate(5 0)");
+    guide.paths.forEach((d, index) => {
+      const path = makeSvgPath(d, index);
+      path.classList.add(`style-${selectedStyle}`);
+      path.style.animationDelay = `${index * 650}ms`;
+      strokeGroup.append(path);
+      if (selectedStyle === "calligraphy") {
+        const highlight = makeSvgPath(d, index);
+        highlight.classList.add("calligraphy-highlight");
+        highlight.style.animationDelay = `${index * 650}ms`;
+        strokeGroup.append(highlight);
+      }
+    });
+    svg.append(strokeGroup);
     const start = document.createElementNS(ns, "circle");
     const firstMove = guide.paths[0]?.match(/^M\s*([\d.]+)[ ,]+([\d.]+)/);
     start.setAttribute("cx", firstMove?.[1] ?? "50");
@@ -218,13 +233,6 @@ function renderLetterGuide() {
     start.setAttribute("r", "3");
     start.setAttribute("class", "letter-start-dot");
     svg.append(start);
-  } else {
-    const glyph = document.createElementNS(ns, "text");
-    glyph.setAttribute("x", "50"); glyph.setAttribute("y", "76");
-    glyph.setAttribute("text-anchor", "middle");
-    glyph.setAttribute("class", `letter-template-glyph style-${selectedStyle}`);
-    glyph.textContent = selectedLetter;
-    svg.append(glyph);
     if (selectedStyle === "cursive") {
       const entry = document.createElementNS(ns, "path");
       entry.setAttribute("d", "M 12 79 C 19 69, 24 71, 30 78");
@@ -235,14 +243,21 @@ function renderLetterGuide() {
       exit.setAttribute("class", "letter-style-flourish");
       svg.append(exit);
     }
+  } else {
+    const glyph = document.createElementNS(ns, "text");
+    glyph.setAttribute("x", "50"); glyph.setAttribute("y", "76");
+    glyph.setAttribute("text-anchor", "middle");
+    glyph.setAttribute("class", `letter-template-glyph style-${selectedStyle}`);
+    glyph.textContent = selectedLetter;
+    svg.append(glyph);
   }
-  $("#letter-stroke-count").textContent = selectedStyle === "print" && guide.paths.length
-    ? (language === "my" ? `မျဉ်း ${guide.paths.length} ကြောင်း · တစ်ကြောင်းချင်း လှုပ်ရှားမှုကို ကြည့်ပါ` : `${guide.paths.length} strokes · Watch each movement in order`)
-    : selectedStyle === "cursive"
-      ? (language === "my" ? "Cursive နမူနာပုံစံ · စာလုံးကို စောင်းရေးပြီး သင့်တော်သည့်နေရာတွင် နောက်စာလုံးသို့ ဆက်ရေးပါ။" : "Cursive letterform preview · Use a slanted form and connect to the next letter where appropriate.")
-      : selectedStyle === "calligraphy"
-        ? (language === "my" ? "Calligraphy နမူနာပုံစံ · အပေါ်တက်မျဉ်းကို ပေါ့ပေါ့၊ အောက်ဆင်းမျဉ်းကို ဖိအားပို၍ ရေးပါ။" : "Calligraphy letterform preview · Keep upstrokes light and downstrokes heavier; pressure is not measured by the device.")
-        : (language === "my" ? "ဤစာလုံးအတွက် လမ်းညွှန်ပုံစံကို ပြထားသည်။ အောက်ရှိ tracing board တွင် လိုက်ရေးပါ။" : "Template preview only; trace the letter on the practice board below.");
+  $("#letter-stroke-count").textContent = guide.paths.length
+    ? selectedStyle === "print"
+      ? (language === "my" ? `မျဉ်း ${guide.paths.length} ကြောင်း · အစဉ်လိုက် မျဉ်းဆွဲလှုပ်ရှားမှု` : `${guide.paths.length} strokes · Animated in writing order`)
+      : selectedStyle === "cursive"
+        ? (language === "my" ? `Cursive မျဉ်း ${guide.paths.length} ကြောင်း · စောင်းရေးဟန်နှင့် ဆက်ရေးဝင်/ထွက်မျဉ်း` : `Cursive guide · ${guide.paths.length} animated strokes with a slanted entry/exit style`)
+        : (language === "my" ? `Calligraphy မျဉ်း ${guide.paths.length} ကြောင်း · အထူမျဉ်းနှင့် အလင်းအတွင်းမျဉ်း` : `Calligraphy guide · ${guide.paths.length} animated strokes with a thick-and-thin overlay`)
+    : (language === "my" ? "လမ်းညွှန်ပုံစံကို ပြထားသည်။ အောက်ရှိ tracing board တွင် လိုက်ရေးပါ။" : "Template preview only; trace the letter on the practice board below.");
   renderTraceTemplate();
 }
 
@@ -283,24 +298,39 @@ function renderTraceTemplate() {
   }
 
   // Repaint learner strokes after the canvas backing store is resized.
-  for (const stroke of traceStrokes) {
-    if (stroke.points.length < 1) continue;
+  for (const stroke of traceStrokes) drawTraceStroke(context, stroke, rect.width, rect.height);
+}
+
+function traceStrokeWidth(style, pressure = 0.5) {
+  const base = style === "cursive" ? 3.5 : style === "calligraphy" ? 5 : 4;
+  if (style !== "calligraphy") return base;
+  const normalized = Number.isFinite(pressure) && pressure > 0 ? pressure : 0.5;
+  return base * (0.45 + Math.min(1, normalized) * 1.1);
+}
+
+function drawTraceSegment(context, stroke, previous, point, width, height) {
+  context.beginPath();
+  context.strokeStyle = stroke.style === "calligraphy" ? "#24554a" : "#477b62";
+  context.lineWidth = (traceStrokeWidth(stroke.style, previous.pressure) + traceStrokeWidth(stroke.style, point.pressure)) / 2;
+  context.lineCap = "round";
+  context.lineJoin = "round";
+  context.moveTo(previous.x * width, previous.y * height);
+  context.lineTo(point.x * width, point.y * height);
+  context.stroke();
+}
+
+function drawTraceStroke(context, stroke, width, height) {
+  if (!stroke.points.length) return;
+  if (stroke.points.length === 1) {
+    const point = stroke.points[0];
     context.beginPath();
-    context.strokeStyle = stroke.style === "calligraphy" ? "#24554a" : "#477b62";
-    context.lineWidth = stroke.style === "calligraphy" ? 5 : stroke.style === "cursive" ? 3.5 : 4;
-    context.lineCap = "round";
-    context.lineJoin = "round";
-    stroke.points.forEach((point, index) => {
-      const x = point.x * rect.width;
-      const y = point.y * rect.height;
-      if (index === 0) context.moveTo(x, y);
-      else context.lineTo(x, y);
-    });
-    if (stroke.points.length === 1) {
-      const point = stroke.points[0];
-      context.lineTo(point.x * rect.width + 0.1, point.y * rect.height + 0.1);
-    }
-    context.stroke();
+    context.fillStyle = stroke.style === "calligraphy" ? "#24554a" : "#477b62";
+    context.arc(point.x * width, point.y * height, traceStrokeWidth(stroke.style, point.pressure) / 2, 0, Math.PI * 2);
+    context.fill();
+    return;
+  }
+  for (let index = 1; index < stroke.points.length; index += 1) {
+    drawTraceSegment(context, stroke, stroke.points[index - 1], stroke.points[index], width, height);
   }
 }
 
@@ -469,7 +499,7 @@ tracingCanvas.addEventListener("pointerdown", (event) => {
   traceLastPoint = { x: event.clientX - rect.left, y: event.clientY - rect.top };
   traceStrokes.push({
     style: selectedStyle,
-    points: [{ x: traceLastPoint.x / rect.width, y: traceLastPoint.y / rect.height }]
+    points: [{ x: traceLastPoint.x / rect.width, y: traceLastPoint.y / rect.height, pressure: event.pressure }]
   });
   tracingCanvas.setPointerCapture(event.pointerId);
   context.beginPath();
@@ -482,13 +512,10 @@ tracingCanvas.addEventListener("pointermove", (event) => {
   if (!context || !rect.width || !rect.height) return;
   const point = { x: event.clientX - rect.left, y: event.clientY - rect.top };
   const stroke = traceStrokes[traceStrokes.length - 1];
-  stroke.points.push({ x: point.x / rect.width, y: point.y / rect.height });
-  context.strokeStyle = selectedStyle === "calligraphy" ? "#24554a" : "#477b62";
-  context.lineWidth = selectedStyle === "calligraphy" ? 5 : selectedStyle === "cursive" ? 3.5 : 4;
-  context.lineCap = "round";
-  context.lineJoin = "round";
-  context.lineTo(point.x, point.y);
-  context.stroke();
+  const normalizedPoint = { x: point.x / rect.width, y: point.y / rect.height, pressure: event.pressure };
+  const previous = stroke.points[stroke.points.length - 1];
+  stroke.points.push(normalizedPoint);
+  drawTraceSegment(context, stroke, previous, normalizedPoint, rect.width, rect.height);
   traceLastPoint = point;
 });
 const stopTrace = () => { traceDrawing = false; traceLastPoint = null; };
