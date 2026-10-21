@@ -94,7 +94,6 @@ function renderPractice() {
   $("#level-practice-answer").value = "";
   $("#level-practice-answer").placeholder = language === "my" ? "ဤနေရာတွင် လေ့ကျင့်ပါ…" : "Write your answer or notes here…";
   $("#practice-answer-wrap").hidden = activeSkill !== "writing";
-  $("#practice-listen").hidden = activeSkill !== "listening";
   $("#practice-speaking-note").hidden = activeSkill !== "speaking";
   $("#practice-action").textContent = activeSkill === "speaking"
     ? (language === "my" ? "ဝါကျကို နားထောင်ရန်" : "Listen to model")
@@ -114,8 +113,16 @@ function renderLetterGuide() {
   const guide = LETTER_GUIDES[selectedLetter];
   $("#letter-sample").textContent = selectedLetter;
   $("#letter-style-note").textContent = styleInfo[selectedStyle][language];
-  $("#letter-start-instruction").textContent = language === "my" ? guide.my : guide.start;
-  $("#letter-guide-title").textContent = `${selectedStyle === "print" ? (language === "my" ? "ပုံနှိပ်စာလုံး" : "Print") : selectedStyle === "cursive" ? "Cursive" : "Calligraphy"} · ${selectedLetter}`;
+  const styleStart = selectedStyle === "cursive"
+    ? (language === "my" ? "Cursive: စာလုံး၏ ဝင်မျဉ်းမှစပြီး သင့်တော်သည့်နေရာတွင် ဘောပင်မမြှောက်ဘဲ နောက်စာလုံးသို့ ဆက်ပါ။ " : "Cursive: begin with an entry stroke and connect into the next letter where the form allows. ")
+    : selectedStyle === "calligraphy"
+      ? (language === "my" ? "Calligraphy: ဝင်မျဉ်းကို ဖိအားပေါ့ပေါ့ဖြင့်စပါ။ အောက်ဆင်းမျဉ်းတွင် ဖိအားတိုးပြီး အပေါ်တက်မျဉ်းတွင် လျှော့ပါ။ " : "Calligraphy: start the entry stroke lightly, add pressure on downstrokes, and release pressure on upstrokes. ")
+      : "";
+  $("#letter-start-instruction").textContent = (language === "my" ? guide.my : guide.start) + (selectedStyle === "print" ? "" : " " + styleStart);
+  $("#letter-guide-title").textContent = selectedStyle === "print"
+    ? `${language === "my" ? "ပုံနှိပ်စာလုံး" : "Print stroke guide"} · ${selectedLetter}`
+    : `${selectedStyle === "cursive" ? "Cursive" : "Calligraphy"} · ${selectedLetter}`;
+
   const svg = $("#letter-animation");
   svg.replaceChildren();
   const baseline = document.createElementNS(ns, "line");
@@ -130,9 +137,9 @@ function renderLetterGuide() {
   start.setAttribute("r", "3");
   start.setAttribute("class", "letter-start-dot");
   svg.append(start);
-  $("#letter-stroke-count").textContent = language === "my"
-    ? `မျဉ်း ${guide.paths.length} ကြောင်း · တစ်ကြောင်းချင်း လှုပ်ရှားမှုကို ကြည့်ပါ`
-    : `${guide.paths.length} strokes · Watch each movement in order`;
+  $("#letter-stroke-count").textContent = selectedStyle === "print"
+    ? (language === "my" ? `မျဉ်း ${guide.paths.length} ကြောင်း · တစ်ကြောင်းချင်း လှုပ်ရှားမှုကို ကြည့်ပါ` : `${guide.paths.length} strokes · Watch each movement in order`)
+    : (language === "my" ? "လှုပ်ရှားမှုသည် ပုံနှိပ်စာလုံးအခြေခံလမ်းညွှန်ဖြစ်သည်။ စတိုင်အလိုက် အထက်ပါညွှန်ကြားချက်ကို လိုက်နာပါ။" : "Animation is the print reference; follow the style-specific directions above.");
 }
 
 function renderLetterOptions() {
@@ -149,6 +156,55 @@ function renderLetterOptions() {
 
 function setLanguage(next) {
   language = next;
+  const copy = {
+    en: {
+      curriculumTitle: "Build skills step by step",
+      curriculumIntro: "Explore everyday vocabulary, then practise reading, listening, writing and speaking from Beginner to Proficient.",
+      vocabularyTitle: "Vocabulary by topic",
+      vocabularyIntro: "Choose a real-life topic. Tap a word to see its Myanmar meaning and an example sentence.",
+      practiceTitle: "Four skills · six levels",
+      practiceIntro: "Select a level, then use the skill cards above to change the exercise.",
+      letterTitle: "Letter writing studio",
+      letterIntro: "Practise uppercase and lowercase print, then explore cursive and calligraphy. The animated guide shows sample stroke sequences.",
+      chooseLetter: "Choose a letter",
+      chooseStyle: "Writing style",
+      replay: "Replay stroke animation",
+      listen: "Listen to model",
+      answerPlaceholder: "Write your answer or notes here…"
+    },
+    my: {
+      curriculumTitle: "အဆင့်လိုက် ကျွမ်းကျင်မှုများ တည်ဆောက်ပါ",
+      curriculumIntro: "နေ့စဉ်သုံး ဝေါဟာရများကို လေ့လာပြီး အစပြုသူမှ ကျွမ်းကျင်အဆင့်အထိ ဖတ်ခြင်း၊ နားထောင်ခြင်း၊ ရေးခြင်းနှင့် ပြောခြင်းကို လေ့ကျင့်ပါ။",
+      vocabularyTitle: "အမျိုးအစားအလိုက် ဝေါဟာရ",
+      vocabularyIntro: "နေ့စဉ်ဘဝအကြောင်းအရာကို ရွေးပါ။ စကားလုံးကိုနှိပ်၍ မြန်မာအဓိပ္ပာယ်နှင့် ဥပမာဝါကျကို ကြည့်ပါ။",
+      practiceTitle: "ကျွမ်းကျင်မှု ၄ မျိုး · အဆင့် ၆ ဆင့်",
+      practiceIntro: "အဆင့်တစ်ခုကိုရွေးပြီး အပေါ်ရှိ ကျွမ်းကျင်မှုကတ်များမှ လေ့ကျင့်ခန်းကို ပြောင်းလဲပါ။",
+      letterTitle: "အက္ခရာရေးသားမှု လေ့ကျင့်ခန်း",
+      letterIntro: "စာလုံးအကြီး၊ အသေးကို လေ့ကျင့်ပြီး Cursive နှင့် Calligraphy စတိုင်များကို လေ့လာပါ။ လှုပ်ရှားပုံတွင် အခြေခံမျဉ်းဆွဲအစီအစဉ်ကို ပြထားသည်။",
+      chooseLetter: "အက္ခရာရွေးပါ",
+      chooseStyle: "ရေးသားမှုပုံစံ",
+      replay: "မျဉ်းဆွဲလှုပ်ရှားမှု ပြန်ကြည့်ရန်",
+      listen: "နမူနာအသံ နားထောင်ရန်",
+      answerPlaceholder: "ဤနေရာတွင် အဖြေ သို့မဟုတ် မှတ်စုရေးပါ…"
+    }
+  }[next];
+  $("#curriculum-title").textContent = copy.curriculumTitle;
+  $(".curriculum-header > div > p:last-child").textContent = copy.curriculumIntro;
+  $("#vocabulary-heading").textContent = copy.vocabularyTitle;
+  $("#vocabulary-heading").nextElementSibling.textContent = copy.vocabularyIntro;
+  $("#practice-heading").textContent = copy.practiceTitle;
+  $("#practice-heading").nextElementSibling.textContent = copy.practiceIntro;
+  $("#letter-practice-heading").textContent = copy.letterTitle;
+  $("#letter-practice-heading").nextElementSibling.textContent = copy.letterIntro;
+  $("#letter-select").previousElementSibling.textContent = copy.chooseLetter;
+  $("#letter-style").previousElementSibling.textContent = copy.chooseStyle;
+  $("#replay-letter").textContent = copy.replay;
+  $("#practice-action").textContent = copy.listen;
+  $("#level-practice-answer").placeholder = copy.answerPlaceholder;
+  const styleOptions = $("#letter-style").options;
+  styleOptions[0].textContent = next === "my" ? "ပုံနှိပ်စာလုံး · အကြီး / အသေး" : "Print · Uppercase / lowercase";
+  styleOptions[1].textContent = next === "my" ? "Cursive · ဆက်ရေးဟန်" : "Cursive";
+  styleOptions[2].textContent = next === "my" ? "Calligraphy · အလှရေးဟန်" : "Calligraphy";
   renderCategoryOptions();
   renderVocabulary();
   renderLevelOptions();
@@ -186,12 +242,7 @@ $("#practice-action").addEventListener("click", () => {
 });
 $("#letter-select").addEventListener("change", (event) => { selectedLetter = event.target.value; renderLetterGuide(); });
 $("#letter-style").addEventListener("change", (event) => { selectedStyle = event.target.value; renderLetterGuide(); });
-$("#replay-letter").addEventListener("click", () => {
-  const svg = $("#letter-animation");
-  svg.classList.remove("replay");
-  void svg.getBoundingClientRect();
-  svg.classList.add("replay");
-});
+$("#replay-letter").addEventListener("click", () => renderLetterGuide());
 
 const languageButton = $("#language-toggle");
 languageButton.addEventListener("click", () => window.setTimeout(() => setLanguage(document.documentElement.lang === "my" ? "my" : "en"), 0));
