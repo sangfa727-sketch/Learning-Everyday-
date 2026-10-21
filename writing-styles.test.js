@@ -37,6 +37,7 @@ test("cursive practice animates hand-authored strokes and traces the same paths"
   assert.match(ui, /Mark each pen-down start so disconnected strokes and pen lifts are visible/);
   assert.match(ui, /class", "letter-stroke-number"/);
   assert.match(ui, /starts here/);
+  assert.ok(ui.includes(String.raw`const move = d.match(/^M\s*([-\d.]+)[ ,]+([-\d.]+)/);`), "stroke-start markers must parse SVG move coordinates");
   assert.match(ui, /function traceStrokeWidth\(style, pressure = 0\.5\)/);
   assert.match(ui, /drawTraceSegment\(context, stroke, previous, point, width, height\)/);
   assert.match(css, /\.letter-guide-strokes\.style-calligraphy/);
