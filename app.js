@@ -35,7 +35,14 @@ function renderPage() {
   $("#page-description").textContent = copy.description;
   navigation.querySelector(".eyebrow").textContent = copy.eyebrow;
   document.title = page === "home" ? "Learning Everyday — Your English practice space" : `${copy.title} — Learning Everyday`;
-  if (page !== "home") updateSkill(page);
+  if (page !== "home") {
+    updateSkill(page);
+  } else {
+    document.querySelectorAll("[data-skill]").forEach((button) => {
+      button.classList.remove("active");
+      button.setAttribute("aria-pressed", "false");
+    });
+  }
 }
 window.addEventListener("hashchange", () => {
   renderPage();
@@ -94,6 +101,13 @@ function updateSkill(skill) {
   $("#pdf-note").hidden = skill !== "reading" && skill !== "listening";
   const title = { reading:"readTitle", listening:"listeningTitle", writing:"writingTitle", speaking:"speakingTitle" }[skill];
   $("#panel-title").textContent = translations[language][title];
+  const lessonLabels = {
+    reading: language === "my" ? "စာဖတ်လေ့ကျင့်ခန်းတို" : "A SHORT READING",
+    listening: language === "my" ? "နားထောင်လေ့ကျင့်ခန်း" : "LISTENING PRACTICE",
+    writing: language === "my" ? "စာရေးလေ့ကျင့်ခန်း" : "WRITING PRACTICE",
+    speaking: language === "my" ? "စကားပြောလေ့ကျင့်ခန်း" : "SPEAKING PRACTICE"
+  };
+  document.querySelector("[data-i18n='lessonType']").textContent = lessonLabels[skill];
 }
 
 function speakStory() {
