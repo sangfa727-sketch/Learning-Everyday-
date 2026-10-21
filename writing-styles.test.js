@@ -25,6 +25,8 @@ test("cursive practice animates hand-authored strokes and traces the same paths"
   assert.match(ui, /Uppercase A–Z/);
   assert.match(ui, /Lowercase a–z/);
   assert.match(html, /id="letter-alphabet-grid"/);
+  assert.doesNotMatch(html, /<option value="calligraphy">Calligraphy<\/option>/);
+  assert.doesNotMatch(ui, /CALLIGRAPHY_PATH_OVERRIDES|function calligraphyPathsFor/);
   assert.match(css, /\.letter-template-glyph\.style-cursive/);
   assert.match(css, /\.letter-sample-svg/);
   assert.match(css, /\.letter-sample-stroke/);
@@ -33,8 +35,6 @@ test("cursive practice animates hand-authored strokes and traces the same paths"
   assert.match(css, /letter-alphabet-row/);
   assert.match(pathsModule, /export function cursivePathsFor\(letter\)/);
   assert.match(pathsModule, /export function splitCursiveStrokes\(paths\)/);
-  assert.match(ui, /const CALLIGRAPHY_PATH_OVERRIDES = Object\.freeze\(\{/);
-  assert.match(ui, /function calligraphyPathsFor\(letter\)/);
   assert.match(ui, /const handPaths = selectedStyle === "cursive"/);
   assert.match(ui, /follow the hand-drawn centerline strokes in order/);
   assert.match(ui, /Mark each pen-down start so disconnected strokes and pen lifts are visible/);
@@ -43,8 +43,6 @@ test("cursive practice animates hand-authored strokes and traces the same paths"
   assert.ok(ui.includes(String.raw`const move = d.match(/^M\s*([-\d.]+)[ ,]+([-\d.]+)/);`), "stroke-start markers must parse SVG move coordinates");
   assert.match(ui, /function traceStrokeWidth\(style, pressure = 0\.5\)/);
   assert.match(ui, /drawTraceSegment\(context, stroke, previous, point, width, height\)/);
-  assert.match(css, /\.letter-guide-strokes\.style-calligraphy/);
-  assert.match(css, /\.letter-stroke\.calligraphy-highlight/);
   assert.match(css, /prefers-reduced-motion:reduce/);
 });
 
