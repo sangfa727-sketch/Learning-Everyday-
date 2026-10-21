@@ -94,6 +94,7 @@ h1{font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.15;margin:22px 0 8px}h2{font
 import { LETTERS, normalizePoint, smoothPoints, buildSample, parseSavedSamples, serializeSavedSamples, SAVED_SAMPLES_KEY } from "./writing-lab-core.js";
 import { CURSIVE_GLYPHS } from "./curriculum.js";
 import { cursivePathsFor, splitCursiveStrokes } from "./cursive-paths.js";
+import { normalizePastedLetter } from "./writing-lab-unicode.js";
 (() => {
 const $ = (id) => document.getElementById(id);
 const canvas = $("draw"), ctx = canvas.getContext("2d");
@@ -235,7 +236,7 @@ function renderEditablePaths(animate=false){
 function renderPointList(){const list=$("path-point-list");list.replaceChildren();editableOrder.forEach((idx,order)=>{const row=document.createElement("div");row.className="path-point-row";const label=document.createElement("strong");label.textContent=(order+1)+". Animation point · path "+(idx+1);const up=document.createElement("button");up.type="button";up.className="secondary";up.textContent="↑";up.disabled=order===0;up.onclick=()=>{[editableOrder[order-1],editableOrder[order]]=[editableOrder[order],editableOrder[order-1]];renderEditablePaths();};const down=document.createElement("button");down.type="button";down.className="secondary";down.textContent="↓";down.disabled=order===editableOrder.length-1;down.onclick=()=>{[editableOrder[order+1],editableOrder[order]]=[editableOrder[order],editableOrder[order+1]];renderEditablePaths();};row.append(label,up,down);list.append(row);});}
 function updatePathCode(){const letter=pasteInput.value.trim();const code={schemaVersion:1,kind:"learning-everyday-editable-letter-path",source:letter,style:styleSelect.value,paths:editableOrder.map((idx,order)=>({order:order+1,d:pathData(editableContours[idx]),startPoint:rotateContour(editableContours[idx])[0]}))};$("generated-path-code").value=editableContours.length?JSON.stringify(code,null,2):"";}
 function createPastedPath(){const raw=pasteInput.value.trim();if(!raw){$("paste-path-status").textContent="စာလုံးတစ်လုံး သို့မဟုတ် SVG path ကို အရင် Paste လုပ်ပါ။";return;}
-  let contours=parseSvgPath(raw),source="SVG path";if(!contours){const letters=[...raw].filter(ch=>/[A-Za-z]/.test(ch));if(letters.length!==1||[...raw].some(ch=>!/[A-Za-z\\s]/.test(ch))){$("paste-path-status").textContent="A–Z / a–z စာလုံးတစ်လုံးတည်း သို့မဟုတ် SVG path data ကို ထည့်ပါ။";return;}const letter=letters[0];letterSelect.value=letter;captureLetter=letter;
+  let contours=parseSvgPath(raw),source="SVG path";if(!contours){const letter=normalizePastedLetter(raw);if(!letter){$("paste-path-status").textContent="A–Z / a–z သို့မဟုတ် 𝒜 / 𝒶 ကဲ့သို့ Script အက္ခရာ တစ်လုံးတည်းကို ထည့်ပါ။";return;}letterSelect.value=letter;captureLetter=letter;
     const authored=styleSelect.value==="cursive"?cursivePathsFor(letter):null;
     contours=authored?.length?parseSvgPath(authored.join(" ")):glyphContours(letter);
     source=authored?.length?"hand-authored cursive centerline":"pasted glyph outline";
@@ -248,12 +249,12 @@ let pastedLetterTimer;
 pasteInput.addEventListener("input",()=>{
   clearTimeout(pastedLetterTimer);
   const raw=pasteInput.value.trim();
-  if(/^[A-Za-z]$/.test(raw)) pastedLetterTimer=setTimeout(createPastedPath,120);
+  if(normalizePastedLetter(raw)) pastedLetterTimer=setTimeout(createPastedPath,120);
 });
 pasteInput.addEventListener("paste",()=>{
   setTimeout(()=>{
     const raw=pasteInput.value.trim();
-    if(/^[A-Za-z]$/.test(raw)) createPastedPath();
+    if(normalizePastedLetter(raw)) createPastedPath();
   },0);
 });
 pathSvg.addEventListener("pointerdown",event=>{const target=event.target;if(!target.classList.contains("path-edit-point"))return;activePointDrag=Number(target.dataset.contour);pathSvg.setPointerCapture?.(event.pointerId);event.preventDefault();});
