@@ -41,3 +41,12 @@ test("stabilizer zero disables curve rendering and Curve Pen follows the selecte
   assert.match(html, /const points = useSmooth \? smoothPoints\(stroke\.points, strength\(\)\) : stroke\.points/);
   assert.doesNotMatch(html, /Math\.max\(strength\(\), 0\.85\)/);
 });
+
+
+test("original preview renders raw captured strokes independently of selected pen mode", async () => {
+  const html = await readFile(new URL("./writing-lab.html", import.meta.url), "utf8");
+  assert.match(html, /function drawStroke\(context, stroke, width, height, smooth = false, progress = 1, raw = false\)/);
+  assert.match(html, /const mode = raw \? "freehand" : penModeSelect\.value/);
+  assert.match(html, /const useSmooth = !raw && strength\(\) > 0/);
+  assert.match(html, /smooth, 1, el === originalCanvas/);
+});
