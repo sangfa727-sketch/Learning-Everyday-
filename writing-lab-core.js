@@ -54,7 +54,7 @@ export function smoothPoints(points, strength = 1) {
 
   // Blend neighbors more strongly at higher settings. Preserve corners by
   // reducing the blend where the path changes direction sharply.
-  const neighborWeight = 0.08 + 0.38 * level;
+  const neighborWeight = 0.08 + 0.22 * level;
   return filtered.map((point, index) => {
     if (index === 0 || index === filtered.length - 1) return { ...point };
     const previous = filtered[index - 1];
