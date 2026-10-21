@@ -24,6 +24,12 @@ test("Smart Writing Lab paste-to-path editor exposes conversion, draggable order
   assert.match(html, /function renderSavedPaths\(\)/);
   assert.match(html, /saved-path-list/);
   assert.match(html, /သိမ်းထားသော path ကို ပြန်ဖွင့်ပြီးပါပြီ/);
+  assert.match(html, /function isValidSavedPath\(item\)/);
+  assert.match(html, /Number\.isInteger\(contour\.start\)/);
+  assert.match(html, /point\.x >= 0 && point\.x <= 100 && point\.y >= 0 && point\.y <= 100/);
+  assert.match(html, /new Set\(item\.order\)\.size === item\.contours\.length/);
+  assert.match(html, /JSON download မစတင်နိုင်ပါ/);
+  assert.match(html, /ဖျက်သိမ်းမှုကို သိမ်းမထားနိုင်ပါ/);
 });
 
 test("embedded Smart Writing Lab module passes Node syntax validation", async () => {
