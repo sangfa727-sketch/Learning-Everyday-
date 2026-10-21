@@ -11,7 +11,9 @@ export const DICTIONARY = Object.freeze({
   learn: { meaning: "to gain knowledge or a new skill", usage: "I learn a little every day.", my: "သင်ယူသည်" },
   every: { meaning: "each one in a group or period of time", usage: "I practice every day.", my: "တိုင်း၊ အားလုံးသော" },
   tree: { meaning: "a tall plant with a trunk and branches", usage: "The bird sits in the tree.", my: "သစ်ပင်" },
-  song: { meaning: "a short piece of music with words or melody", usage: "Maya hears the bird's song.", my: "သီချင်း" }
+  song: { meaning: "a short piece of music with words or melody", usage: "Maya hears the bird's song.", my: "သီချင်း" },
+  hear: { meaning: "to notice a sound with your ears", usage: "She hears a bird sing.", my: "ကြားသည်" },
+  feel: { meaning: "to experience an emotion or sensation", usage: "Maya feels happy.", my: "ခံစားရသည်" }
 });
 
 export function normalizeWord(value) {
@@ -20,7 +22,29 @@ export function normalizeWord(value) {
 
 export function lookupWord(value, dictionary = DICTIONARY) {
   const word = normalizeWord(value);
-  return word && Object.prototype.hasOwnProperty.call(dictionary, word) ? dictionary[word] : null;
+  if (!word) return null;
+  if (Object.prototype.hasOwnProperty.call(dictionary, word)) return dictionary[word];
+
+  // Small, deterministic morphology fallback for common English inflections.
+  // Keep it conservative: only return a definition when a candidate exists locally.
+  const candidates = [];
+  if (word.endsWith("ies") && word.length > 4) candidates.push(word.slice(0, -3) + "y");
+  if (word.endsWith("es") && word.length > 4) candidates.push(word.slice(0, -2), word.slice(0, -1));
+  if (word.endsWith("s") && word.length > 3) candidates.push(word.slice(0, -1));
+  if (word.endsWith("ing") && word.length > 5) {
+    const stem = word.slice(0, -3);
+    candidates.push(stem, stem + "e");
+    if (stem.length > 2 && stem.at(-1) === stem.at(-2)) candidates.push(stem.slice(0, -1));
+  }
+  if (word.endsWith("ed") && word.length > 4) {
+    const stem = word.slice(0, -2);
+    candidates.push(stem, stem + "e");
+    if (stem.length > 2 && stem.at(-1) === stem.at(-2)) candidates.push(stem.slice(0, -1));
+  }
+  for (const candidate of candidates) {
+    if (Object.prototype.hasOwnProperty.call(dictionary, candidate)) return dictionary[candidate];
+  }
+  return null;
 }
 
 export function tokenizeStory(text) {
