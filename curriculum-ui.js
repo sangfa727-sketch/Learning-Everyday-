@@ -341,7 +341,7 @@ function renderLetterGuide() {
     glyph.textContent = selectedStyle === "cursive" ? (CURSIVE_GLYPHS[selectedLetter] ?? selectedLetter) : selectedLetter;
     svg.append(glyph);
   }
-  const visibleStrokeCount = stylePaths.reduce((count, d) => count + d.trim().split(/(?=M\\s*[-\\d.])/).filter(Boolean).length, 0);
+  const visibleStrokeCount = stylePaths.reduce((count, d) => count + d.trim().split(/(?=M\s*[-\d.])/).filter(Boolean).length, 0);
   $("#letter-stroke-count").textContent = visibleStrokeCount
     ? selectedStyle === "print"
       ? (language === "my" ? `မျဉ်း ${visibleStrokeCount} ကြောင်း · အစဉ်လိုက် မျဉ်းဆွဲလှုပ်ရှားမှု` : `${visibleStrokeCount} strokes · animated in order`)
