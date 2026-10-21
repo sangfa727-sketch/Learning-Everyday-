@@ -196,6 +196,27 @@ function renderTraceTemplate() {
   context.lineWidth = 1.5;
   context.strokeStyle = "rgba(90, 124, 91, 0.28)";
   context.strokeText(selectedLetter, rect.width / 2, rect.height * 0.76);
+
+  // Repaint learner strokes after the canvas backing store is resized.
+  for (const stroke of traceStrokes) {
+    if (stroke.points.length < 1) continue;
+    context.beginPath();
+    context.strokeStyle = stroke.style === "calligraphy" ? "#24554a" : "#477b62";
+    context.lineWidth = stroke.style === "calligraphy" ? 5 : stroke.style === "cursive" ? 3.5 : 4;
+    context.lineCap = "round";
+    context.lineJoin = "round";
+    stroke.points.forEach((point, index) => {
+      const x = point.x * rect.width;
+      const y = point.y * rect.height;
+      if (index === 0) context.moveTo(x, y);
+      else context.lineTo(x, y);
+    });
+    if (stroke.points.length === 1) {
+      const point = stroke.points[0];
+      context.lineTo(point.x * rect.width + 0.1, point.y * rect.height + 0.1);
+    }
+    context.stroke();
+  }
 }
 
 function renderLetterOptions() {
@@ -312,38 +333,59 @@ $("#practice-action").addEventListener("click", () => {
   utterance.onend = () => setStatus(language === "my" ? "နားထောင်ပြီး လိုက်လေ့ကျင့်ပါ။" : "Now repeat or answer the exercise.");
   window.speechSynthesis.speak(utterance);
 });
-$("#letter-select").addEventListener("change", (event) => { selectedLetter = event.target.value; renderLetterGuide(); });
-$("#letter-style").addEventListener("change", (event) => { selectedStyle = event.target.value; renderLetterGuide(); });
+$("#letter-select").addEventListener("change", (event) => {
+  selectedLetter = event.target.value;
+  traceStrokes = [];
+  renderLetterGuide();
+});
+$("#letter-style").addEventListener("change", (event) => {
+  selectedStyle = event.target.value;
+  traceStrokes = [];
+  renderLetterGuide();
+});
 $("#replay-letter").addEventListener("click", () => { renderLetterGuide(); setStatus(language === "my" ? "လမ်းညွှန်ကို ပြန်ဖော်ပြပြီးပါပြီ။ အောက်တွင် လက်ဖြင့်လိုက်ရေးပါ။" : "Guide refreshed. Trace the faint letter on the board below."); });
 
 const tracingCanvas = $("#letter-tracing");
 let traceDrawing = false;
 let traceLastPoint = null;
+let traceStrokes = [];
 tracingCanvas.addEventListener("pointerdown", (event) => {
   const rect = tracingCanvas.getBoundingClientRect();
   const context = tracingCanvas.getContext("2d");
-  if (!context) return;
+  if (!context || !rect.width || !rect.height) return;
   traceDrawing = true;
   traceLastPoint = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+  traceStrokes.push({
+    style: selectedStyle,
+    points: [{ x: traceLastPoint.x / rect.width, y: traceLastPoint.y / rect.height }]
+  });
   tracingCanvas.setPointerCapture(event.pointerId);
-  context.beginPath(); context.moveTo(traceLastPoint.x, traceLastPoint.y);
+  context.beginPath();
+  context.moveTo(traceLastPoint.x, traceLastPoint.y);
 });
 tracingCanvas.addEventListener("pointermove", (event) => {
   if (!traceDrawing || !traceLastPoint) return;
   const rect = tracingCanvas.getBoundingClientRect();
   const context = tracingCanvas.getContext("2d");
-  if (!context) return;
+  if (!context || !rect.width || !rect.height) return;
   const point = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+  const stroke = traceStrokes[traceStrokes.length - 1];
+  stroke.points.push({ x: point.x / rect.width, y: point.y / rect.height });
   context.strokeStyle = selectedStyle === "calligraphy" ? "#24554a" : "#477b62";
   context.lineWidth = selectedStyle === "calligraphy" ? 5 : selectedStyle === "cursive" ? 3.5 : 4;
-  context.lineCap = "round"; context.lineJoin = "round";
-  context.lineTo(point.x, point.y); context.stroke();
+  context.lineCap = "round";
+  context.lineJoin = "round";
+  context.lineTo(point.x, point.y);
+  context.stroke();
   traceLastPoint = point;
 });
 const stopTrace = () => { traceDrawing = false; traceLastPoint = null; };
 tracingCanvas.addEventListener("pointerup", stopTrace);
 tracingCanvas.addEventListener("pointercancel", stopTrace);
-$("#clear-tracing").addEventListener("click", () => renderTraceTemplate());
+$("#clear-tracing").addEventListener("click", () => {
+  traceStrokes = [];
+  renderTraceTemplate();
+});
 window.addEventListener("resize", () => renderTraceTemplate());
 
 $("#complete-practice").addEventListener("click", () => {
