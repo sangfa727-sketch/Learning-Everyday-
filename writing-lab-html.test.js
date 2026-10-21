@@ -35,9 +35,18 @@ test("Smart Writing Lab exposes pen assistance modes and an adjustable stabilize
 
 test("stabilizer zero disables curve rendering and Curve Pen follows the selected strength", async () => {
   const html = await readFile(new URL("./writing-lab.html", import.meta.url), "utf8");
-  assert.match(html, /const useSmooth = strength\(\) > 0 && \(smooth \|\| mode === "stabilized" \|\| mode === "curve"\)/);
+  assert.match(html, /const useSmooth = !raw && strength\(\) > 0 && \(smooth \|\| mode === "stabilized" \|\| mode === "curve"\)/);
   assert.match(html, /const useCurve = mode === "curve" && strength\(\) > 0/);
   assert.match(html, /if \(useCurve && points\.length > 2\)/);
   assert.match(html, /const points = useSmooth \? smoothPoints\(stroke\.points, strength\(\)\) : stroke\.points/);
   assert.doesNotMatch(html, /Math\.max\(strength\(\), 0\.85\)/);
+});
+
+
+test("original preview renders raw captured strokes independently of selected pen mode", async () => {
+  const html = await readFile(new URL("./writing-lab.html", import.meta.url), "utf8");
+  assert.match(html, /function drawStroke\(context, stroke, width, height, smooth = false, progress = 1, raw = false\)/);
+  assert.match(html, /const mode = raw \? "freehand" : penModeSelect\.value/);
+  assert.match(html, /const useSmooth = !raw && strength\(\) > 0/);
+  assert.match(html, /smooth, 1, el === originalCanvas/);
 });
