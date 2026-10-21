@@ -515,3 +515,10 @@ body[data-page="listening"] #practice-panel { max-width: 100%; }
   .story-card-summary { grid-column: 2; }
   .story-card-action { grid-column: 2; margin-top: 9px; }
 }
+
+
+/* Word lookup: instant device pronunciation and an explicit Myanmar translation line. */
+.word-myanmar-translation { margin: 8px 0 14px; padding: 10px 12px; border-radius: 10px; background: #f0f5eb; color: #315b40; line-height: 1.75; }
+.word-card-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.word-card-actions .secondary-button { min-height: 40px; }
+@media (max-width: 480px) { .word-card-actions { align-items: stretch; flex-direction: column; } .word-card-actions button { width: 100%; } }
