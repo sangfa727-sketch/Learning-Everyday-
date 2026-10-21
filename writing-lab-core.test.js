@@ -1,0 +1,58 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import {
+  LETTERS, WRITING_STYLES, normalizePoint, smoothPoints, getStrokeEndpoints,
+  buildSample, parseSavedSamples, serializeSavedSamples
+} from "./writing-lab-core.js";
+
+test("all 52 English uppercase and lowercase letters are available", () => {
+  assert.equal(LETTERS.length, 52);
+  for (const letter of "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz") assert.ok(LETTERS.includes(letter));
+});
+
+test("pointer points retain normalized coordinates, elapsed time, and pressure", () => {
+  assert.deepEqual(normalizePoint(60, 40, { left: 10, top: 20, width: 100, height: 40 }, 1250, 0.8, 1000),
+    { x: 0.5, y: 0.5, t: 250, pressure: 0.8 });
+});
+
+test("smoothing preserves exact start and end points", () => {
+  const points = [{x:0,y:0,t:0,pressure:0.5},{x:0.4,y:0.8,t:10,pressure:0.6},{x:1,y:1,t:20,pressure:0.7}];
+  const smooth = smoothPoints(points);
+  assert.deepEqual(smooth[0], points[0]);
+  assert.deepEqual(smooth.at(-1), points.at(-1));
+  assert.equal(smooth.length, points.length);
+});
+
+test("a saved sample records target letter, style, duration, stroke order and endpoints", () => {
+  const sample = buildSample({
+    letter: "g", style: "cursive", startedAt: 100, finishedAt: 850, createdAt: "2026-10-22T00:00:00.000Z",
+    strokes: [{points:[
+      {x:0.1,y:0.2,t:0,pressure:0.5},
+      {x:0.4,y:0.7,t:300,pressure:0.8},
+      {x:0.8,y:0.9,t:700,pressure:0.7}
+    ]}]
+  });
+  assert.equal(sample.targetLetter, "g");
+  assert.equal(sample.style, "cursive");
+  assert.equal(sample.durationMs, 750);
+  assert.equal(sample.strokeCount, 1);
+  assert.deepEqual(sample.strokes[0].startPoint, {x:0.1,y:0.2,t:0,pressure:0.5});
+  assert.deepEqual(sample.strokes[0].endPoint, {x:0.8,y:0.9,t:700,pressure:0.7});
+  assert.equal(sample.recognition.status, "not-automatically-verified");
+});
+
+test("invalid target, style and empty sample are rejected", () => {
+  assert.throws(() => buildSample({letter:"@",style:"print",strokes:[{points:[{x:0,y:0,t:0}]}],startedAt:0,finishedAt:1}));
+  assert.throws(() => buildSample({letter:"A",style:"neon",strokes:[{points:[{x:0,y:0,t:0}]}],startedAt:0,finishedAt:1}));
+  assert.throws(() => buildSample({letter:"A",style:"print",strokes:[],startedAt:0,finishedAt:1}));
+  assert.deepEqual(WRITING_STYLES, ["print","cursive","calligraphy"]);
+});
+
+test("saved sample list safely round-trips and ignores invalid storage", () => {
+  const sample = buildSample({letter:"B",style:"calligraphy",strokes:[{points:[{x:0.2,y:0.2,t:0,pressure:0.5}]}],startedAt:0,finishedAt:20});
+  const parsed = parseSavedSamples(serializeSavedSamples([sample]));
+  assert.equal(parsed.length, 1);
+  assert.equal(parsed[0].targetLetter, "B");
+  assert.deepEqual(parseSavedSamples("{bad json"), []);
+  assert.deepEqual(parseSavedSamples(JSON.stringify([{targetLetter:"?",style:"print",kind:"learning-everyday-handwriting-sample",strokes:[]}])), []);
+});
