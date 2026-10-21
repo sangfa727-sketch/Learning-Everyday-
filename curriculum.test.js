@@ -3,8 +3,9 @@ import assert from "node:assert/strict";
 import { LEVELS, VOCABULARY_CATEGORIES, SKILL_PRACTICE, EXTRA_SKILL_PRACTICE, LETTER_GUIDES, ALPHABET, getPractice, getPracticeCount } from "./curriculum.js";
 
 test("vocabulary categories have unique ids and bilingual words with examples", () => {
-  assert.ok(VOCABULARY_CATEGORIES.length >= 10);
+  assert.ok(VOCABULARY_CATEGORIES.length >= 16);
   assert.equal(new Set(VOCABULARY_CATEGORIES.map((category) => category.id)).size, VOCABULARY_CATEGORIES.length);
+  assert.ok(VOCABULARY_CATEGORIES.reduce((total, category) => total + category.words.length, 0) >= 128);
   for (const category of VOCABULARY_CATEGORIES) {
     assert.ok(category.en && category.my && category.words.length >= 8);
     for (const [word, meaning, example] of category.words) assert.ok(word && meaning && example);
