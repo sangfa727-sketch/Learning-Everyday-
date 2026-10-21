@@ -1,6 +1,6 @@
-const CACHE_NAME = "learning-everyday-shell-v11";
+const CACHE_NAME = "learning-everyday-shell-v12";
 const APP_CACHE_PREFIX = "learning-everyday-";
-const APP_SHELL = ["./", "./index.html", "./writing-lab.html", "./styles.css", "./app.js", "./learning-core.js", "./local-state.js", "./pdf-import.js", "./curriculum.js", "./curriculum-ui.js", "./progress-state.js", "./manifest.webmanifest", "./icon.svg"];
+const APP_SHELL = ["./", "./index.html", "./writing-lab.html", "./writing-lab-core.js", "./styles.css", "./app.js", "./learning-core.js", "./local-state.js", "./pdf-import.js", "./curriculum.js", "./curriculum-ui.js", "./progress-state.js", "./manifest.webmanifest", "./icon.svg"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
