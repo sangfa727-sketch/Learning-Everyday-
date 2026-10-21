@@ -10,7 +10,8 @@ A mobile-first, offline-first English-learning Progressive Web App (PWA) for Mya
 - Local English definitions, example usage, and Myanmar meanings for a small starter vocabulary set.
 - Conservative offline lookup for common inflected words (for example, `flowers` → `flower`).
 - Device text-to-speech with speed controls and stop action; voice availability depends on the browser and installed voices.
-- Writing practice with a Unicode-aware character counter.
+- Writing practice with a Unicode-aware character counter and locally saved draft.
+- Local persistence for interface language and writing draft, with storage failures handled safely.
 - Optional browser speech-recognition practice where supported; it is not required for core use.
 - PWA manifest, app icon, service worker, and app-shell caching.
 - Zero-dependency Node.js unit tests and GitHub Actions test workflow.
