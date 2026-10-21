@@ -1,4 +1,4 @@
-const CACHE_NAME = "learning-everyday-shell-v3";
+const CACHE_NAME = "learning-everyday-shell-v4";
 const APP_CACHE_PREFIX = "learning-everyday-";
 const APP_SHELL = ["./", "./index.html", "./styles.css", "./app.js", "./learning-core.js", "./local-state.js", "./pdf-import.js", "./manifest.webmanifest", "./icon.svg"];
 
@@ -16,12 +16,17 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   const request = event.request;
-  if (request.method !== "GET" || new URL(request.url).origin !== self.location.origin) return;
+  if (request.method !== "GET") return;
+  const url = new URL(request.url);
+  const isPinnedPdfAsset = url.origin === "https://cdn.jsdelivr.net"
+    && /^\/npm\/pdfjs-dist@4\.10\.38\/build\/pdf(?:\.worker)?\.min\.mjs$/.test(url.pathname);
+  if (url.origin !== self.location.origin && !isPinnedPdfAsset) return;
   event.respondWith(
     caches.match(request).then((cached) => {
       if (cached) return cached;
       return fetch(request).then((response) => {
-        if (response.ok && response.type === "basic") {
+        // Cache only same-origin app files and the two explicitly pinned PDF.js assets.
+        if (response.ok && (response.type === "basic" || (isPinnedPdfAsset && response.type === "cors"))) {
           const copy = response.clone();
           void caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
         }
