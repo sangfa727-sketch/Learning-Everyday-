@@ -18,15 +18,17 @@ h1{font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.15;margin:22px 0 8px}h2{font
 .script-reference{display:grid;grid-template-columns:minmax(0,1fr) minmax(150px,.65fr);gap:16px;align-items:center;margin-top:12px}
 .script-reference-stage{min-height:190px;display:grid;place-items:center;border:1px solid var(--line);border-radius:14px;background:repeating-linear-gradient(to bottom,#fff 0,#fff 46px,#e2eae2 47px,#fff 48px)}
 .script-reference-stage svg{width:100%;height:190px;overflow:visible}
-.script-reference-glyph{font-family:"Cambria Math","STIX Two Math","Noto Sans Math","Segoe UI Symbol",serif;font-size:76px;text-anchor:middle;dominant-baseline:middle;fill:rgba(71,123,98,.08);stroke:#477b62;stroke-width:1.2;stroke-dasharray:1000;stroke-dashoffset:1000}
-.script-reference-glyph.is-animating{animation:script-reference-trace 1.8s ease-out forwards}
-@keyframes script-reference-trace{0%{stroke-dashoffset:1000;fill:transparent}82%{stroke-dashoffset:0;fill:transparent}100%{stroke-dashoffset:0;fill:rgba(71,123,98,.08)}}
+.script-reference-glyph{fill:none;stroke:#477b62;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;animation:script-reference-trace .62s linear forwards}
+.script-reference-text{font-family:"Cambria Math","STIX Two Math","Noto Sans Math","Segoe UI Symbol",serif;font-size:76px;text-anchor:middle;dominant-baseline:middle;fill:rgba(71,123,98,.08);stroke:#477b62;stroke-width:1.2;stroke-dasharray:1000;stroke-dashoffset:1000}
+.script-reference-text.is-animating{animation:script-reference-text-trace 1.8s ease-out forwards}
+@keyframes script-reference-trace{0%{stroke-dashoffset:1}100%{stroke-dashoffset:0}}
+@keyframes script-reference-text-trace{0%{stroke-dashoffset:1000;fill:transparent}82%{stroke-dashoffset:0;fill:transparent}100%{stroke-dashoffset:0;fill:rgba(71,123,98,.08)}}
 .script-reference-copy{min-width:0}.script-reference-copy .sample-letter{font-size:clamp(2.8rem,9vw,5rem);line-height:1.1}
 .letter-picker-grid{display:grid;grid-template-columns:repeat(13,minmax(0,1fr));gap:4px;margin-top:12px}
 .letter-picker-grid button{min-width:0;min-height:34px;padding:2px 0;border:1px solid var(--line);background:#fff;color:var(--green);font-size:.95rem}
 .letter-picker-grid button[aria-pressed="true"]{background:#e3eee3;border-width:2px;border-color:var(--green)}
 @media(max-width:520px){.script-reference{grid-template-columns:1fr}.script-reference-stage,.script-reference-stage svg{height:160px;min-height:160px}.letter-picker-grid{gap:2px}.letter-picker-grid button{min-height:30px;padding:1px 0;font-size:.8rem}}
-@media(prefers-reduced-motion:reduce){.script-reference-glyph.is-animating{animation:none;stroke-dashoffset:0;fill:rgba(71,123,98,.08)}}
+@media(prefers-reduced-motion:reduce){.script-reference-glyph{animation:none!important;stroke-dashoffset:0!important}.script-reference-text.is-animating{animation:none;stroke-dashoffset:0;fill:rgba(71,123,98,.08)}}
 </style>
 </head>
 <body><main>
@@ -53,7 +55,7 @@ h1{font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.15;margin:22px 0 8px}h2{font
 <p class="small">အက္ခရာအကြီး/အသေးကို အောက်တွင် တိုက်ရိုက်ရွေးပါ။ Cursive ရေးဟန်တွင် နမူနာ glyph နှင့် outline animation ကို တူညီသော Script glyph မှ ပြသသည်။ ဤ outline သည် ဘောပင်၏ တကယ့် stroke order ကို အစားမထိုးပါ။</p>
 <div class="letter-picker-grid" id="letter-picker-grid" aria-label="Choose uppercase or lowercase letter"></div>
 <div class="script-reference">
-<div class="script-reference-stage"><svg id="script-reference-svg" viewBox="0 0 200 180" role="img" aria-label="Animated reference letter"><text id="script-reference-glyph" class="script-reference-glyph" x="100" y="88">𝒶</text></svg></div>
+<div class="script-reference-stage"><svg id="script-reference-svg" viewBox="0 0 200 180" role="img" aria-label="Animated reference letter"><text id="script-reference-glyph" class="script-reference-text" x="100" y="88">𝒶</text></svg></div>
 <div class="script-reference-copy"><div class="sample-letter" id="script-reference-plain">a</div><strong id="script-reference-name">Lowercase a · Cursive</strong><p class="small" id="script-reference-note">နမူနာစာလုံးနှင့် animation ကို စစ်ဆေးပါ။</p><button id="replay-reference" type="button">နမူနာ Animation ပြန်ကြည့်</button></div>
 </div>
 </div>
@@ -67,19 +69,21 @@ h1{font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.15;margin:22px 0 8px}h2{font
 <script type="module">
 import { LETTERS, normalizePoint, smoothPoints, buildSample, parseSavedSamples, serializeSavedSamples, SAVED_SAMPLES_KEY } from "./writing-lab-core.js";
 import { CURSIVE_GLYPHS } from "./curriculum.js";
+import { cursivePathsFor, splitCursiveStrokes } from "./cursive-paths.js";
 (() => {
 const $ = (id) => document.getElementById(id);
 const canvas = $("draw"), ctx = canvas.getContext("2d");
 const originalCanvas = $("original"), originalCtx = originalCanvas.getContext("2d");
 const smoothCanvas = $("smoothed"), smoothCtx = smoothCanvas.getContext("2d");
 const letterSelect = $("letter"), styleSelect = $("style");
+const referenceSvg = $("script-reference-svg");
 for (const group of [{label:"Uppercase",letters:LETTERS.slice(0,26)},{label:"Lowercase",letters:LETTERS.slice(26)}]) {
   const optgroup = document.createElement("optgroup"); optgroup.label = group.label;
   for (const letter of group.letters) { const option = document.createElement("option"); option.value = letter; option.textContent = letter; optgroup.append(option); }
   letterSelect.append(optgroup);
 }
 letterSelect.value = "a";
-const letterPicker = $("letter-picker-grid"), referenceGlyph = $("script-reference-glyph");
+const letterPicker = $("letter-picker-grid");
 for (const letter of LETTERS) {
   const button = document.createElement("button");
   button.type = "button";
@@ -96,20 +100,36 @@ for (const letter of LETTERS) {
 function renderReference() {
   const letter = letterSelect.value, style = styleSelect.value;
   const glyph = style === "cursive" ? (CURSIVE_GLYPHS[letter] ?? letter) : letter;
-  referenceGlyph.classList.remove("is-animating");
-  referenceGlyph.textContent = glyph;
-  referenceGlyph.setAttribute("font-family", style === "cursive"
-    ? '"Cambria Math","STIX Two Math","Noto Sans Math","Segoe UI Symbol",serif'
-    : style === "calligraphy" ? '"URW Chancery L","Brush Script MT","Apple Chancery",cursive' : 'Arial,sans-serif');
-  referenceGlyph.setAttribute("font-style", style === "calligraphy" ? "italic" : "normal");
-  referenceGlyph.setAttribute("font-weight", style === "print" ? "700" : "400");
-  referenceGlyph.setAttribute("font-size", glyph.length > 1 ? "72" : "88");
-  void referenceGlyph.getBoundingClientRect().width;
-  referenceGlyph.classList.add("is-animating");
+  referenceSvg.replaceChildren();
+  const paths = style === "cursive" ? splitCursiveStrokes(cursivePathsFor(letter)) : [];
+  if (paths.length) {
+    paths.forEach((d, index) => {
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path.setAttribute("d", d);
+      path.setAttribute("transform", "translate(50 30)");
+      path.setAttribute("pathLength", "1");
+      path.setAttribute("class", "script-reference-glyph");
+      path.style.animationDelay = (index * 650) + "ms";
+      referenceSvg.append(path);
+    });
+  } else {
+    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute("id", "script-reference-glyph");
+    text.setAttribute("class", "script-reference-text is-animating");
+    text.setAttribute("x", "100");
+    text.setAttribute("y", "88");
+    text.setAttribute("font-family", style === "cursive"
+      ? '"Cambria Math","STIX Two Math","Noto Sans Math","Segoe UI Symbol",serif'
+      : style === "calligraphy" ? '"URW Chancery L","Brush Script MT","Apple Chancery",cursive' : 'Arial,sans-serif');
+    text.setAttribute("font-style", style === "calligraphy" ? "italic" : "normal");
+    text.setAttribute("font-weight", style === "print" ? "700" : "400");
+    text.textContent = glyph;
+    referenceSvg.append(text);
+  }
   $("script-reference-plain").textContent = letter;
   $("script-reference-name").textContent = (letter === letter.toUpperCase() ? "Uppercase " : "Lowercase ") + letter + " · " + style[0].toUpperCase() + style.slice(1);
   $("script-reference-note").textContent = style === "cursive"
-    ? "Script glyph outline ကို ပြန်ဖော်ပြသည်။ တကယ့် pen-stroke order မဟုတ်သေးပါ။"
+    ? (paths.length ? "တူညီသော hand-drawn stroke paths ကို နမူနာနှင့် လေ့ကျင့်ရေး target နှစ်ခုလုံးတွင် အသုံးပြုထားသည်။ နံပါတ်စဉ်သည် ဘောပင်မမြှောက်ဘဲ ဆက်ရေးရမည့်မျဉ်းအတွင်းရှိ pen lift များကို မခန့်မှန်းပါ။" : "ဤစာလုံးအတွက် hand-drawn path မရှိသေးပါ။ Unicode glyph ကို fallback အဖြစ် ပြထားသည်။")
     : "ရွေးထားသော အက္ခရာပုံစံကို နမူနာအဖြစ် ပြထားသည်။";
   letterPicker.querySelectorAll("button").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.letter === letter)));
 }
@@ -128,7 +148,24 @@ function setupCanvas(el, context) {
   context.setTransform(dpr, 0, 0, dpr, 0, 0);
 }
 function drawTarget(context, width, height, letter, style) {
-  context.save(); context.globalAlpha = 0.13; context.fillStyle = "#547568";
+  context.save();
+  if (style === "cursive") {
+    const paths = splitCursiveStrokes(cursivePathsFor(letter));
+    if (paths.length && typeof Path2D === "function") {
+      const scale = Math.min(width * 0.78 / 100, height * 0.68 / 100);
+      context.globalAlpha = 0.22;
+      context.strokeStyle = "#547568";
+      context.lineWidth = 2.4 / Math.max(0.7, scale);
+      context.lineCap = "round";
+      context.lineJoin = "round";
+      context.translate((width - 100 * scale) / 2, (height - 100 * scale) / 2);
+      context.scale(scale, scale);
+      for (const d of paths) context.stroke(new Path2D(d));
+      context.restore();
+      return;
+    }
+  }
+  context.globalAlpha = 0.13; context.fillStyle = "#547568";
   context.textAlign = "center"; context.textBaseline = "middle";
   const fontSize = Math.min(height * 0.78, width * 0.42);
   context.font = style === "print" ? "700 " + fontSize + "px system-ui, sans-serif"
