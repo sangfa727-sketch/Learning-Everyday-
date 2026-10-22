@@ -235,7 +235,7 @@ test("tapping a Listening story card immediately renders the selected story read
   assert.match(handler, /renderPage\(\);/);
   assert.match(handler, /window\.scrollTo\(\{ top: 0, behavior: "auto" \}\)/);
   const routeStart = app.indexOf("function syncListeningView");
-  const routeEnd = app.indexOf("\\nfunction renderStoryTranslation", routeStart);
+  const routeEnd = app.indexOf("\nfunction renderStoryTranslation", routeStart);
   assert.ok(routeStart >= 0 && routeEnd > routeStart, "story route renderer should exist");
-  assert.match(app.slice(routeStart, routeEnd), /library\\.hidden = true;\\s*panel\\.hidden = false;\\s*back\\.hidden = false;/);
+  assert.match(app.slice(routeStart, routeEnd), /library\.hidden = true;\s*panel\.hidden = false;\s*back\.hidden = false;/);
 });
