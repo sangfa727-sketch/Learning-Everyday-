@@ -221,3 +221,18 @@ test("tapping an English story word speaks it aloud and translation follows the 
   assert.ok(translationSource.includes("${currentStoryParagraphIndex + 1}."));
   assert.ok(!translationSource.includes("]).entries()"), "translation should not render every paragraph at once");
 });
+
+test("tapping a Listening story card immediately renders the selected story reader", () => {
+  const libraryStart = app.indexOf("function renderListeningLibrary()");
+  const libraryEnd = app.indexOf("\nwindow.addEventListener(\"hashchange\"", libraryStart);
+  assert.ok(libraryStart >= 0 && libraryEnd > libraryStart, "story library renderer should exist");
+  const source = app.slice(libraryStart, libraryEnd);
+  const clickStart = source.indexOf('card.addEventListener("click"');
+  const clickEnd = source.indexOf("\n    });", clickStart);
+  assert.ok(clickStart >= 0 && clickEnd > clickStart, "story card click handler should exist");
+  const handler = source.slice(clickStart, clickEnd);
+  assert.match(handler, /location\.hash = `#\/listening\/\$\{item\.id\}`;/);
+  assert.match(handler, /renderPage\(\);/);
+  assert.match(handler, /window\.scrollTo\(\{ top: 0, behavior: "auto" \}\)/);
+  assert.match(source, /library\.hidden = true;\s*panel\.hidden = false;\s*back\.hidden = false;/);
+});
