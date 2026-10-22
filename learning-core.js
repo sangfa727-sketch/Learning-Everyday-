@@ -164,10 +164,29 @@ export function lookupWordInContext(value, context = "", dictionary = DICTIONARY
   if (!entry) return null;
 
   // Context rules belong to dictionary headwords. Reuse them for possessives
-  // and inflected forms that resolve through lookupWord (for example Rose's
-  // and changed) instead of silently falling back to a mixed-sense definition.
+  // and inflected forms that resolve through lookupWord (for example Rose's,
+  // changed, and presented) instead of falling back to a mixed-sense entry.
   const possessiveBase = word.endsWith("'s") ? word.slice(0, -2) : word;
-  let senses = CONTEXTUAL_SENSES[possessiveBase] ?? CONTEXTUAL_SENSES[word];
+  const candidates = [possessiveBase, word];
+  if (word.endsWith("ed") && word.length > 4) {
+    const stem = word.slice(0, -2);
+    candidates.push(stem, stem + "e");
+    if (stem.length > 2 && stem.at(-1) === stem.at(-2)) candidates.push(stem.slice(0, -1));
+  }
+  if (word.endsWith("ing") && word.length > 5) {
+    const stem = word.slice(0, -3);
+    candidates.push(stem, stem + "e");
+    if (stem.length > 2 && stem.at(-1) === stem.at(-2)) candidates.push(stem.slice(0, -1));
+  }
+  if (word.endsWith("s") && word.length > 3) candidates.push(word.slice(0, -1));
+
+  let senses;
+  for (const candidate of candidates) {
+    if (CONTEXTUAL_SENSES[candidate]) {
+      senses = CONTEXTUAL_SENSES[candidate];
+      break;
+    }
+  }
   if (!senses) {
     const contextualHeadword = Object.keys(CONTEXTUAL_SENSES)
       .find((headword) => dictionary[headword] === entry);
