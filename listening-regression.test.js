@@ -258,8 +258,21 @@ test("Listening word lookup prioritizes Myanmar meaning and includes common Maya
 
 
 test("every distinct word in Maya’s Garden story has an offline dictionary entry", async () => {
-  const app = await readFile(new URL("./app.js", import.meta.url), "utf8");
-  const storyStart = app.indexOf('id: "garden-bird"');
+  const appText = await readFile(new URL("./app.js", import.meta.url), "utf8");
+  const storyStart = appText.indexOf('id: "garden-bird"');
+  const storyEnd = appText.indexOf("\n  },", storyStart);
+  const story = appText.slice(storyStart, storyEnd);
+  const textStart = story.indexOf("text: [");
+  const textEnd = story.indexOf("].join", textStart);
+  const paragraphs = [...story.slice(textStart, textEnd).matchAll(/^\s*("(?:\\.|[^"\\])*")\s*,?\s*$/gm)]
+    .map((match) => JSON.parse(match[1]));
+  const missing = [...new Set(tokenizeStory(paragraphs.join(" ")).filter((token) => token.word).map((token) => token.word).filter((word) => !lookupWord(word)))];
+  assert.deepEqual(missing, [], "Every word in Maya’s Garden should have a Myanmar dictionary entry");
+});
+
+test("every tappable word in The River That Remembered resolves to an offline dictionary entry", () => {
+  const storyStart = app.indexOf('id: "river-remembers"');
+  assert.ok(storyStart >= 0, "River story should exist in Listening");
   const storyEnd = app.indexOf("\n  },", storyStart);
   const story = app.slice(storyStart, storyEnd);
   const textStart = story.indexOf("text: [");
