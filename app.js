@@ -10,6 +10,7 @@ let activeListeningStoryId = null;
 let activeStoryTranslations = [];
 let activeStoryUtterance = null;
 let activeWordParagraphIndex = 0;
+let activeWordButton = null;
 let currentStoryParagraphIndex = 0;
 const LISTENING_STORIES = [
   {
@@ -499,7 +500,11 @@ function renderStory() {
     button.dataset.speechStart = String(partStart);
     button.dataset.speechEnd = String(speechOffset);
     button.setAttribute("aria-label", `Look up ${part.word}`);
-    button.addEventListener("click", () => showWord(part.word, currentStoryParagraphIndex, button));
+    const wordParagraphIndex = currentStoryParagraphIndex;
+    button.addEventListener("click", () => {
+      activeWordButton = button;
+      showWord(part.word, wordParagraphIndex);
+    });
     container.append(button);
   }
   const pager = $("#story-pagination");
@@ -544,7 +549,8 @@ function sentenceAtOffset(paragraph, offset) {
   return found ? { text: found[0].trim(), index: sentences.indexOf(found) } : { text: paragraph, index: 0 };
 }
 
-function showWord(word, paragraphIndex = 0, wordButton = null) {
+function showWord(word, paragraphIndex = 0) {
+  const wordButton = activeWordButton;
   activeWordParagraphIndex = paragraphIndex;
   const entry = lookupWord(word);
   const paragraphs = getStoryParagraphs();
@@ -610,7 +616,7 @@ function setLanguage(next) {
   $("#status-message").textContent = translations[next].voiceNote;
   updateSkill(activeSkill);
   renderPage();
-  if (!$("#word-card").hidden) showWord($("#word-title").textContent, activeWordParagraphIndex, document.querySelector("#lesson-text .lesson-word:focus"));
+  if (!$("#word-card").hidden) showWord($("#word-title").textContent, activeWordParagraphIndex);
 }
 
 function updateSkill(skill) {
@@ -696,7 +702,10 @@ function speakStory() {
   const paragraphPattern = /[^\n]+/g;
   for (const match of story.matchAll(paragraphPattern)) {
     const text = match[0].trim();
-    if (text) paragraphs.push({ text, start: match.index + match[0].indexOf(text), index: paragraphs.length });
+    if (text) {
+      paragraphs.push({ text, start: match.index + match[0].indexOf(text) });
+      paragraphs[paragraphs.length - 1].index = paragraphs.length - 1;
+    }
   }
   if (!paragraphs.length) {
     $("#status-message").textContent = translations[language].voiceNote;
