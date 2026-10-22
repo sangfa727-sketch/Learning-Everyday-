@@ -376,6 +376,10 @@ test("context-aware word lookup selects the sense supported by the tapped senten
   assert.match(lookupWordInContext("saw", "The carpenter used a saw to cut wood.").my, /လွှ/);
   assert.match(lookupWordInContext("well", "The village well supplied water.").my, /ရေတွင်း/);
   assert.match(lookupWordInContext("well", "The students worked well together.").my, /ကောင်းစွာ/);
+  assert.match(lookupWordInContext("found", "Lina found the puppy near the market.").my, /တွေ့ရှိခဲ့သည်/);
+  assert.match(lookupWordInContext("change", "Mr Lin returned the correct change.").my, /ပြန်အမ်းငွေ/);
+  assert.match(lookupWordInContext("change", "She changed her daily routine.").my, /ပြောင်းလဲသည်/);
+  assert.match(lookupWordInContext("means", "Caring for nature means asking questions.").my, /ဆိုလိုသည်/);
 });
 
 test("shared dictionary preserves common ambiguous word senses found in Listening stories", () => {
