@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { DICTIONARY, lookupWord, tokenizeStory } from "./learning-core.js";
+import { DICTIONARY, lookupWord, lookupWordInContext, tokenizeStory } from "./learning-core.js";
 import { readFile } from "node:fs/promises";
 
 const app = await readFile(new URL("./app.js", import.meta.url), "utf8");
@@ -365,6 +365,18 @@ test("shared dictionary covers multiple senses used by Listening story context",
   assert.match(DICTIONARY.present.meaning, /show or explain/i);
 });
 
+
+
+test("context-aware word lookup selects the sense supported by the tapped sentence", () => {
+  assert.match(lookupWordInContext("rose", "The river rose after heavy rain.").my, /မြင့်တက်လာခဲ့သည်/);
+  assert.match(lookupWordInContext("rose", "A red rose grew in the garden.").my, /နှင်းဆီပန်း/);
+  assert.match(lookupWordInContext("looking back", "Looking back, I learned from my mistake.").my, /အတိတ်ကို ပြန်လည်စဉ်းစားကြည့်သည်/);
+  assert.match(lookupWordInContext("back", "She turned back and looked at the house.").my, /နောက်ဘက်/);
+  assert.match(lookupWordInContext("saw", "They saw the bird in the tree.").my, /မြင်တွေ့ခဲ့သည်/);
+  assert.match(lookupWordInContext("saw", "The carpenter used a saw to cut wood.").my, /လွှ/);
+  assert.match(lookupWordInContext("well", "The village well supplied water.").my, /ရေတွင်း/);
+  assert.match(lookupWordInContext("well", "The students worked well together.").my, /ကောင်းစွာ/);
+});
 
 test("shared dictionary preserves common ambiguous word senses found in Listening stories", () => {
   assert.match(DICTIONARY.lives.meaning, /is alive|resides/i);
