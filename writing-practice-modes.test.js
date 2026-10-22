@@ -154,7 +154,7 @@ test("Story narration tracks and visibly highlights the currently spoken word", 
   assert.match(app, /function stopStoryNarration\(\)/);
   assert.match(app, /function clearSpeechHighlight\(\)/);
   assert.match(app, /function highlightSpeechWord\(charIndex\)/);
-  assert.match(app, /function stopStoryNarration\(\) \{\s*activeStoryUtterance = null;\s*activeWordUtterance = null;\s*if \("speechSynthesis" in window\) window\.speechSynthesis\.cancel\(\);\s*clearSpeechHighlight\(\);\s*const playButton = \$\("#play-button"\);\s*if \(playButton\) playButton\.disabled = false;/);
+  assert.match(app, /function stopStoryNarration\(\) \{\s*activeStoryUtterance = null;\s*activeWordUtterance = null;\s*clearSpeechHighlightTimer\(\);\s*if \("speechSynthesis" in window\) window\.speechSynthesis\.cancel\(\);\s*clearSpeechHighlight\(\);\s*const playButton = \$\("#play-button"\);\s*if \(playButton\) playButton\.disabled = false;/);
   assert.match(app, /\$\("#stop-button"\)\.addEventListener\("click", \(\) => \{\s*stopStoryNarration\(\);/);
   assert.match(app, /if \(activeListeningStoryId\) stopStoryNarration\(\);/);
   assert.match(app, /button\.dataset\.speechStart = String\(partStart\)/);
