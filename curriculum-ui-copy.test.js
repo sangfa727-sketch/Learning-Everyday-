@@ -38,5 +38,5 @@ test("vocabulary topic picker and word-card speaker stay integrated with animate
   assert.match(css, /\.vocabulary-speaker\{position:absolute/);
   assert.match(css, /@keyframes vocabulary-detail-out/);
   assert.match(css, /prefers-reduced-motion:reduce/);
-  assert.match(worker, /learning-everyday-shell-v35/);
+  assert.match(worker, /learning-everyday-shell-v36/);
 });
