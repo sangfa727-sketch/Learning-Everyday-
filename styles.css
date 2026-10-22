@@ -564,3 +564,37 @@ body[data-page="reading"] #curriculum-workbench .curriculum-header .section-inde
 }
 
 .story-translation-number { display: inline-block; min-width: 1.8em; color: #66805c; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+
+/* Listening word lookup: keep meanings readable on wide screens and phones. */
+.word-card {
+  grid-template-columns: minmax(0, .72fr) minmax(0, 1.28fr);
+  align-items: start;
+}
+.word-card-head { grid-column: 1; }
+#word-definition { grid-column: 2; }
+.word-card .word-myanmar-translation,
+.word-card .word-context-translation {
+  grid-column: 1 / -1;
+  overflow-wrap: anywhere;
+}
+.word-card-actions {
+  grid-column: 1 / -1;
+  justify-content: flex-end;
+}
+@media (max-width: 760px) {
+  .word-card { grid-template-columns: minmax(0, 1fr); }
+  .word-card-head,
+  #word-definition,
+  .word-card .word-myanmar-translation,
+  .word-card .word-context-translation,
+  .word-card-actions {
+    grid-column: 1;
+    grid-row: auto;
+    min-width: 0;
+  }
+}
+.story-translation-paragraph {
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
