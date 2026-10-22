@@ -214,26 +214,26 @@ test("Every Listening story keeps one non-empty Myanmar translation for each Eng
     .map((match) => JSON.parse('"' + match[1] + '"'));
 
   for (let index = 0; index < ids.length; index += 1) {
-    const storyStart = source.indexOf(\`id: "\${ids[index]}"\`);
+    const storyStart = source.indexOf(`id: "${ids[index]}"`);
     const storyEnd = index + 1 < ids.length
-      ? source.indexOf(\`id: "\${ids[index + 1]}"\`, storyStart)
+      ? source.indexOf(`id: "${ids[index + 1]}"`, storyStart)
       : source.length;
     const story = source.slice(storyStart, storyEnd);
     const englishMatch = story.match(/text: \[([\s\S]*?)\]\.join\("\\n\\n"\)/);
     const translationMatch = story.match(/paragraphTranslations: \[([\s\S]*?)\]\s*\}/);
-    assert.ok(englishMatch, \`\${ids[index]} should define English paragraphs\`);
-    assert.ok(translationMatch, \`\${ids[index]} should define Myanmar translations\`);
+    assert.ok(englishMatch, `${ids[index]} should define English paragraphs`);
+    assert.ok(translationMatch, `${ids[index]} should define Myanmar translations`);
 
     const englishParagraphs = readQuotedStrings(englishMatch[1]);
     const translationsForStory = readQuotedStrings(translationMatch[1]);
     assert.equal(
       translationsForStory.length,
       englishParagraphs.length,
-      \`\${ids[index]} must have exactly one translation per English paragraph\`
+      `${ids[index]} must have exactly one translation per English paragraph`
     );
     assert.ok(
       translationsForStory.every((paragraph) => paragraph.trim().length >= 40),
-      \`\${ids[index]} translations should not be empty or placeholder text\`
+      `${ids[index]} translations should not be empty or placeholder text`
     );
   }
 });
