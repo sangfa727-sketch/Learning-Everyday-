@@ -224,7 +224,7 @@ test("tapping an English story word speaks it aloud and translation follows the 
 
 test("tapping a Listening story card immediately renders the selected story reader", () => {
   const libraryStart = app.indexOf("function renderListeningLibrary()");
-  const libraryEnd = app.indexOf("\nwindow.addEventListener(\"hashchange\"", libraryStart);
+  const libraryEnd = app.indexOf("\nfunction syncListeningView", libraryStart);
   assert.ok(libraryStart >= 0 && libraryEnd > libraryStart, "story library renderer should exist");
   const source = app.slice(libraryStart, libraryEnd);
   const clickStart = source.indexOf('card.addEventListener("click"');
