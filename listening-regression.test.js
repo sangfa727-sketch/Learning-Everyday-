@@ -405,3 +405,25 @@ test("shared dictionary preserves common ambiguous word senses found in Listenin
   assert.ok(lookupWord("found") === DICTIONARY.found, "exact word should retain its contextual senses");
   assert.ok(lookupWord("means") === DICTIONARY.means, "exact word should retain its contextual senses");
 });
+
+
+test("Listening word pronunciation selects an English voice and uses an English locale fallback", () => {
+  const start = app.indexOf("function selectedEnglishVoice()");
+  const end = app.indexOf("\nif (\"speechSynthesis\" in window)", start);
+  assert.ok(start >= 0 && end > start, "English voice selection helper should exist");
+  const voiceSource = app.slice(start, end);
+  assert.match(voiceSource, /\^en\(\[_-\]\|\$\)/i, "only English-language voices should be selected");
+  assert.match(voiceSource, /en-US/i, "US English should be the explicit fallback preference");
+  const pronounceStart = app.indexOf("function pronounceWord(word)");
+  const pronounceEnd = app.indexOf("\nfunction sentenceAtOffset", pronounceStart);
+  const pronounceSource = app.slice(pronounceStart, pronounceEnd);
+  assert.match(pronounceSource, /utterance\.lang = voice\?\.lang \|\| \"en-US\"/);
+  assert.match(pronounceSource, /window\.speechSynthesis\.cancel\(\)/, "a new word request should cancel overlapping speech");
+  assert.match(pronounceSource, /clampSpeechRate\(/, "speech speed should use the validated rate");
+});
+
+test("Shared dictionary covers common words and keeps name translations reusable", () => {
+  for (const word of ["town", "books", "into", "stood", "used", "damaged", "higher", "felt", "understood", "leaving", "thanked", "prepared", "quickly", "village", "lina", "nora", "ben", "daniel", "milo"]) {
+    assert.ok(lookupWord(word), "shared dictionary should include " + word);
+  }
+});
