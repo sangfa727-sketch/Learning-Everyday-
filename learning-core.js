@@ -173,6 +173,30 @@ const CONTEXTUAL_SENSES = Object.freeze({
   hard: [
     { test: /\bhard work\b/i, meaning: "requiring effort; effort put into work", my: "ကြိုးစားအားထုတ်မှု" },
     { test: /\bhard (?:to|for|task|problem|decision)\b/i, meaning: "difficult and requiring effort", my: "ခက်ခဲသော" }
+  ],
+  water: [
+    { test: /\b(?:more than|too much|much|clean|drinking|river|flood|upstream|fast|dangerous|safe|fresh|clear|warm|cold|rain|brown|moving|running|dirty)\s+water\b|\bwater\s+(?:moving|entered|was|had|rose|level|rushed|soaked|moved|might|would|looked|travelled|could|is|in|from|into|under|across|ran|carried|to|for)\b|\b(?:dish|bowl|cup|source|supply|amount|quality|sample|samples|pot|glass|body|flow)\s+of water\b/i, meaning: "the clear liquid essential to life", my: "ရေ" },
+    { test: /\bwater(?:s|ed|ing)?\s+(?:the|each|every|my|your|their|these|those|plants|flowers|garden|soil|them|it)\b|\bwaters\s+(?:the|each|every|plants|flowers|garden|soil|them|it)\b/i, meaning: "to give water to a plant or living thing", my: "ရေလောင်းသည်" }
+  ],
+  watered: [
+    { test: /\bwatered\s+(?:the|each|every|plants|flowers|garden|soil|them|it)\b/i, meaning: "gave water to a plant or living thing", my: "ရေလောင်းခဲ့သည်" }
+  ],
+  plant: [
+    { test: /\b(?:a|an|the|each|every|young|healthy|weak|small|one|this|that|other|another)\s+plant\b|\bplants?\s+(?:need|needs|needed|looked|was|is|are|can|could|has|had|grew|grows)\b/i, meaning: "a living thing that grows in soil", my: "အပင်" },
+    { test: /\bplant(?:s|ed|ing)?\s+(?:trees|flowers|seeds|native|suitable|a|the|some|vegetables|crops|them|more)\b/i, meaning: "to put a plant or seed into the ground", my: "စိုက်ပျိုးသည်" }
+  ],
+  planted: [
+    { test: /\bplanted\s+(?:trees|flowers|seeds|native|suitable|a|the|some|vegetables|crops|them|more)\b/i, meaning: "put a plant or seed into the ground", my: "စိုက်ပျိုးခဲ့သည်" }
+  ],
+  records: [
+    { test: /\b(?:the|official|town|water-level|repair|flood|written|old|public|medical|these|their|early|reliable)\s+records\b|\brecords\s+(?:and|of|for|from|were|show|include|contained|remained|had|helped|indicate)\b/i, meaning: "written accounts or stored information", my: "မှတ်တမ်းများ" },
+    { test: /\b(?:they|students|team|Lina|she|he|we|officials|Mr Daniel)\s+records\b|\brecords\s+(?:the|each|every|date|amount|reading|change|information)\b/i, meaning: "to write down or store information", my: "မှတ်တမ်းတင်သည်" }
+  ],
+  changed: [
+    { test: /\b(?:routine|plan|weather|different|become|decide|way|shape|colour|color)\b/i, meaning: "became or made something different", my: "ပြောင်းလဲခဲ့သည်" }
+  ],
+  changes: [
+    { test: /\b(?:these|many|several|some|small|major|recent|important|noticeable|the)\s+changes\b|\bchanges\s+(?:in|to|over|after|include|were|could|show)\b/i, meaning: "differences or developments over time", my: "ပြောင်းလဲမှုများ" }
   ]
 });
 
