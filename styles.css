@@ -619,3 +619,16 @@ body[data-page="reading"] #curriculum-workbench .curriculum-header .section-inde
   .story-pagination { gap:6px; font-size:11px; }
   .story-page-button { padding:0 8px; min-height:40px; }
 }
+
+
+/* Keep the requested Myanmar word meaning visible before dictionary detail. */
+.word-card .word-myanmar-translation {
+  font-size: 15px;
+  line-height: 1.75;
+  font-weight: 750;
+  color: var(--forest, #173c35);
+  background: #e7f0dc;
+  border: 1px solid #d8e6ca;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
