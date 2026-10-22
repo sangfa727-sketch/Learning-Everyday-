@@ -8,6 +8,7 @@ let readingStory = DEFAULT_STORY;
 let story = DEFAULT_STORY;
 let activeListeningStoryId = null;
 let activeStoryTranslations = [];
+let activeStoryUtterance = null;
 let activeWordParagraphIndex = 0;
 const LISTENING_STORIES = [
   {
@@ -425,6 +426,7 @@ function renderStoryTranslation(selected) {
 }
 
 function stopStoryNarration() {
+  activeStoryUtterance = null;
   if ("speechSynthesis" in window) window.speechSynthesis.cancel();
   clearSpeechHighlight();
   const playButton = $("#play-button");
@@ -493,6 +495,9 @@ function pronounceWord(word) {
     $("#status-message").textContent = translations[language].noSpeech;
     return;
   }
+  activeStoryUtterance = null;
+  clearSpeechHighlight();
+  $("#play-button").disabled = false;
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(word);
   const voice = selectedEnglishVoice();
@@ -616,20 +621,39 @@ function speakStory() {
     $("#status-message").textContent = translations[language].noSpeech;
     return;
   }
+  activeStoryUtterance = null;
   window.speechSynthesis.cancel();
   clearSpeechHighlight();
   const utterance = new SpeechSynthesisUtterance(story);
+  activeStoryUtterance = utterance;
   const voice = selectedEnglishVoice();
   utterance.lang = voice?.lang || "en-US";
   if (voice) utterance.voice = voice;
   utterance.rate = clampSpeechRate($("#speech-speed").value);
-  clearSpeechHighlight();
-  utterance.onstart = () => { clearSpeechHighlight(); $("#play-button").disabled = true; $("#status-message").textContent = language === "my" ? "နားထောင်နေသည်…" : "Playing story…"; };
+  utterance.onstart = () => {
+    if (activeStoryUtterance !== utterance) return;
+    clearSpeechHighlight();
+    $("#play-button").disabled = true;
+    $("#status-message").textContent = language === "my" ? "နားထောင်နေသည်…" : "Playing story…";
+  };
   utterance.onboundary = (event) => {
+    if (activeStoryUtterance !== utterance) return;
     if (event.name === "word" || Number.isFinite(event.charIndex)) highlightSpeechWord(event.charIndex);
   };
-  utterance.onend = () => { clearSpeechHighlight(); $("#play-button").disabled = false; $("#status-message").textContent = translations[language].voiceNote; };
-  utterance.onerror = () => { clearSpeechHighlight(); $("#play-button").disabled = false; $("#status-message").textContent = translations[language].noSpeech; };
+  utterance.onend = () => {
+    if (activeStoryUtterance !== utterance) return;
+    activeStoryUtterance = null;
+    clearSpeechHighlight();
+    $("#play-button").disabled = false;
+    $("#status-message").textContent = translations[language].voiceNote;
+  };
+  utterance.onerror = () => {
+    if (activeStoryUtterance !== utterance) return;
+    activeStoryUtterance = null;
+    clearSpeechHighlight();
+    $("#play-button").disabled = false;
+    $("#status-message").textContent = translations[language].noSpeech;
+  };
   window.speechSynthesis.speak(utterance);
 }
 
