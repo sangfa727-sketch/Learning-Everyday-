@@ -105,7 +105,7 @@ function speakVocabulary(text, label) {
   utterance.lang = voice?.lang || "en-US";
   if (voice) utterance.voice = voice;
   utterance.rate = Number($("#speech-speed")?.value || 0.9);
-  utterance.onstart = () => setStatus(language === "my" ? `${label} ကို နားထောင်နေသည်…` : `Playing ${label.toLowerCase()}…`);
+  utterance.onstart = () => setStatus(language === "my" ? "အသံထွက်ဖတ်နေသည်…" : `Playing ${label.toLowerCase()}…`);
   utterance.onend = () => setStatus(language === "my" ? "နားထောင်ပြီးပါပြီ။" : "Playback finished.");
   window.speechSynthesis.speak(utterance);
 }
