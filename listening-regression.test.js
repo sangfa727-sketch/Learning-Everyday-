@@ -397,6 +397,17 @@ test("ambiguous Listening vocabulary includes the story-relevant senses", () => 
 });
 
 
+test("rose context distinguishes a flower held in a hand from a hand moving upward", () => {
+  const flower = lookupWordInContext("rose", "She carried a rose in her hand.");
+  assert.match(flower.meaning, /flowering plant/i);
+  assert.equal(flower.my, "နှင်းဆီပန်း");
+
+  const movement = lookupWordInContext("rose", "Her hand rose slowly above her head.");
+  assert.match(movement.meaning, /past tense of rise/i);
+  assert.match(movement.my, /မြင့်တက်လာခဲ့သည်/);
+});
+
+
 test("shared dictionary covers multiple senses used by Listening story context", () => {
   assert.match(DICTIONARY.close.meaning, /near in distance/i);
   assert.match(DICTIONARY.close.meaning, /shut something/i);
