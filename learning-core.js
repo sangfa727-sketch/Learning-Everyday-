@@ -229,6 +229,10 @@ const CONTEXTUAL_SENSES = Object.freeze({
   addresses: [
     { test: /\b(?:home|private|postal|mailing|street|office|email)\s+addresses\b|\baddresses\s+(?:were|are|for|of)\b/i, meaning: "locations where people live or receive mail", my: "လိပ်စာများ" },
     { test: /\b(?:plan|report|map|notice|policy|solution|team|school)\s+addresses\b|\baddresses\s+(?:the|a|an|this|that|need|problem|issue|question|concern|risk)\b/i, meaning: "deals with or takes action on an issue", my: "ကိုင်တွယ်ဖြေရှင်းသည်" }
+  ],
+  mistake: [
+    { test: /\b(?:a|the|its|many|some|several|few|major|small|past|same|serious|honest)\s+mistakes?\b|\bmistakes?\s+(?:and|were|show|revealed|happened|in)\b/i, meaning: "an error or incorrect action", my: "အမှား" },
+    { test: /\bmistake\s+(?:one|it|them|someone|something)\s+for\b/i, meaning: "to understand or identify something incorrectly", my: "မှားယွင်းယူဆသည်" }
   ]
 });
 
