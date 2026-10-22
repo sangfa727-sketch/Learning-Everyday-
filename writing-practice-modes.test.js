@@ -100,9 +100,9 @@ test("Former Reading card is now a focused Vocabulary page, while stories stay i
 });
 
 
-test("All six listening stories have complete paragraphs and matching Myanmar translations", () => {
-  assert.equal((app.match(/id: "(?:garden-bird|market-morning|rainy-day|lost-puppy|school-trip|village-library)"/g) ?? []).length, 6);
-  assert.equal((app.match(/paragraphTranslations: \[/g) ?? []).length, 6);
+test("All seven listening stories have complete paragraphs and matching Myanmar translations", () => {
+  assert.equal((app.match(/id: "(?:garden-bird|market-morning|rainy-day|lost-puppy|school-trip|village-library|river-remembers)"/g) ?? []).length, 7);
+  assert.equal((app.match(/paragraphTranslations: \[/g) ?? []).length, 7);
   assert.match(app, /text: \[\s*"Maya lived in a small house/);
   assert.match(app, /text: \[\s*"For many years, children in Pine Village/);
   assert.match(app, /Books belong to everyone/);
@@ -153,4 +153,28 @@ test("Story narration tracks and visibly highlights the currently spoken word", 
   assert.match(css, /\.lesson-word\.speech-current-word/);
   assert.match(css, /background: #ffe58a/);
   assert.match(app, /active\.scrollIntoView\(\{ block: "nearest", behavior: "smooth" \}\)/);
+});
+
+test("The River That Remembered is a long story with one Myanmar translation per paragraph", () => {
+  const start = app.indexOf('id: "river-remembers"');
+  const end = app.indexOf("\\n  }\\n];\\nconst translations =", start);
+  assert.ok(start >= 0 && end > start);
+  const story = app.slice(start, end);
+  const textStart = story.indexOf("text: [");
+  const textEnd = story.indexOf("].join", textStart);
+  const textParts = [...story.slice(textStart, textEnd).matchAll(/"((?:[^"\\\\]|\\\\.)*)"/g)].map((match) => JSON.parse('"' + match[1] + '"'));
+  const englishText = textParts.join(" ");
+  assert.ok(englishText.trim().split(/\\s+/).length >= 5000, "long story should contain at least 5,000 whitespace-separated English words");
+  const translationStart = story.indexOf("paragraphTranslations: [");
+  const translationText = story.slice(translationStart);
+  const translations = [...translationText.matchAll(/"((?:[^"\\\\]|\\\\.)*)"/g)].map((match) => JSON.parse('"' + match[1] + '"'));
+  assert.equal(translations.length, textParts.length);
+  assert.ok(translations.every((paragraph) => paragraph.trim().length > 20));
+  assert.match(story, /Lina and her classmates/);
+});
+
+test("Offline dictionary includes vocabulary for the long river story", () => {
+  for (const word of ["watershed", "wetland", "resilience", "drainage", "gauge", "upstream", "downstream", "rainfall", "verify", "reliable", "evacuate", "forecast", "vulnerable", "coordinate", "maintenance", "survey"]) {
+    assert.match(fallbackDictionarySource, new RegExp("\\\\b" + word + ": \\\\{"));
+  }
 });
