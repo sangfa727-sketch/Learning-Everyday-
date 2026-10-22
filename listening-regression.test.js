@@ -735,4 +735,7 @@ test("Listening Myanmar translations preserve the meaning of nearby people and m
   const museum = app.slice(museumStart, museumEnd);
   assert.match(museum, /ပြတိုက်က အဖြေရှာရာတွင် ကူညီပေးနိုင်မည့် မေးခွန်းနှစ်ခု/);
   assert.doesNotMatch(museum, /ပြတိုက်က ဖြေရှင်းပေးနိုင်မည့် မေးခွန်းနှစ်ခု/);
+  assert.match(museum, /ခေတ်မီစက်များ အသုံးများမလာမီ/);
+  assert.doesNotMatch(museum, /ခေတ်မီစက်များ မပေါ်ပေါက်မီ/);
+  assert.match(puppy, /ခွေးကလေးသည် တုန်နေခြင်း ရပ်သွားပြီး/);
 });
