@@ -182,3 +182,17 @@ test("Offline dictionary includes vocabulary for the long river story", () => {
     assert.match(fallbackDictionarySource, new RegExp("\\b" + word + ": \\{"));
   }
 });
+
+
+test("Listening exposes an optional full Myanmar translation aligned to story paragraphs", () => {
+  assert.match(html, /id="toggle-story-translation"[^>]*aria-expanded="false"[^>]*aria-controls="story-translation"/);
+  assert.match(html, /id="story-translation"[^>]*hidden/);
+  assert.match(html, /id="story-translation-paragraphs"/);
+  assert.match(app, /function renderStoryTranslation\(selected\)/);
+  assert.match(app, /for \(const translation of selected\.paragraphTranslations \|\| \[\]\)/);
+  assert.match(app, /paragraph\.className = "story-translation-paragraph"/);
+  assert.match(app, /panel\.hidden = !panel\.hidden/);
+  assert.match(app, /translationToggle\.setAttribute\("aria-expanded", "false"\)/);
+  assert.match(css, /\.story-translation-paragraph \+ \.story-translation-paragraph/);
+  assert.match(css, /@media \(max-width: 480px\)/);
+});
