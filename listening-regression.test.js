@@ -412,6 +412,11 @@ test("context-aware lookup distinguishes common story senses for kind, left, mea
   assert.match(lookupWordInContext("still", "Maya made sure there was still room for every visitor.").my, /ကျန်ရှိနေသေးသော/);
 });
 
+test("context-aware lookup identifies presentation verbs separately from being present", () => {
+  assert.match(lookupWordInContext("presented", "Lina and her classmates presented their findings at the meeting.").my, /တင်ပြသည်/);
+  assert.match(lookupWordInContext("present", "The students recorded readings with an adult present.").my, /ရောက်ရှိနေသော/);
+});
+
 test("context-aware word lookup selects the sense supported by the tapped sentence", () => {
   assert.match(lookupWordInContext("rose", "The river rose after heavy rain.").my, /မြင့်တက်လာခဲ့သည်/);
   assert.match(lookupWordInContext("rose", "A red rose grew in the garden.").my, /နှင်းဆီပန်း/);
