@@ -12,6 +12,8 @@ let selectedExerciseIndex = 0;
 let selectedLetter = "A";
 let selectedStyle = "print";
 let selectedWord = null;
+let vocabularyTitleNode = null;
+let vocabularyListNode = null;
 let activeSkill = "reading";
 let language = document.documentElement.lang === "my" ? "my" : "en";
 let progress = loadProgress();
@@ -108,8 +110,10 @@ function renderCategoryOptions() {
     select.insertAdjacentElement("afterend", picker);
   }
 
-  const title = $("#vocabulary-category-title");
-  const list = $("#vocabulary-list");
+  const title = vocabularyTitleNode || $("#vocabulary-category-title");
+  const list = vocabularyListNode || $("#vocabulary-list");
+  vocabularyTitleNode = title;
+  vocabularyListNode = list;
   picker.replaceChildren();
   const topicIcons = {
     home: "⌂", electrical: "ϟ", kitchen: "♨", food: "◉", clothing: "◇",
@@ -180,9 +184,11 @@ function speakVocabulary(text, label) {
 
 function renderVocabulary() {
   const category = VOCABULARY_CATEGORIES.find((item) => item.id === selectedCategory);
-  const list = $("#vocabulary-list");
+  const list = vocabularyListNode || $("#vocabulary-list");
+  vocabularyListNode = list;
   list.replaceChildren();
-  const title = $("#vocabulary-category-title");
+  const title = vocabularyTitleNode || $("#vocabulary-category-title");
+  vocabularyTitleNode = title;
   if (!category) {
     title.textContent = "";
     title.hidden = true;
