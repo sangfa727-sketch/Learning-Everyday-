@@ -307,3 +307,26 @@ test("unknown and empty word lookups do not return an unrelated translation", ()
   assert.equal(lookupWord("   "), null);
   assert.equal(lookupWord("qzxv-unlisted-word"), null);
 });
+
+test("shared dictionary covers common A1 market vocabulary and resolves the irregular form woke", () => {
+  const words = [
+    "wake", "breakfast", "cloth", "apple", "banana", "egg", "bunch", "coriander",
+    "count", "walk", "familiar", "smell", "arrange", "neat", "row", "baker",
+    "shopper", "price", "greet", "firm", "skin", "brown", "spot", "pick",
+    "stall", "search", "card", "coin", "enough", "loaf", "item", "pay",
+    "correct", "offer", "carry", "basket", "gate", "expensive", "consider",
+    "flavour", "value", "comfortable", "wonder", "busy", "praise", "polite",
+    "decide", "trip", "brother", "practise", "wash", "toast", "table", "tea",
+    "elderly", "kindness", "choice"
+  ];
+  for (const word of words) {
+    const entry = lookupWord(word);
+    assert.ok(entry, "shared dictionary should resolve " + word);
+    assert.ok(entry.meaning.trim(), word + " should have an English meaning");
+    assert.ok(entry.usage.trim(), word + " should have an example sentence");
+    assert.ok(entry.my.trim(), word + " should have a Myanmar meaning");
+  }
+  assert.equal(lookupWord("woke"), DICTIONARY.wake, "woke should resolve through its irregular base form");
+  assert.ok(lookupWord("apples"), "regular plural forms should reuse the shared apple entry");
+  assert.ok(lookupWord("counted"), "regular past forms should reuse the shared count entry");
+});
