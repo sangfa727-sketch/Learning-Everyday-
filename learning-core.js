@@ -160,27 +160,27 @@ export function splitEnglishSentences(value) {
     if (punctuation === "." && text[index + 1] === ".") continue;
 
     const candidate = text.slice(start, index + 1).trimEnd();
-    if (punctuation === "." && /\\b(?:Mr|Mrs|Ms|Dr|Prof|St|Jr|Sr|Mt|No|vs|etc)\\.$/i.test(candidate)) {
+    if (punctuation === "." && /\b(?:Mr|Mrs|Ms|Dr|Prof|St|Jr|Sr|Mt|No|vs|etc)\.$/i.test(candidate)) {
       continue;
     }
 
     let end = index + 1;
-    while (end < text.length && /["'”’)}\\]]/.test(text[end])) end += 1;
+    while (end < text.length && /["'”’)}\]]/.test(text[end])) end += 1;
     const sentenceText = text.slice(start, end).trim();
     if (sentenceText) {
-      const leadingWhitespace = text.slice(start, end).search(/\\S/);
+      const leadingWhitespace = text.slice(start, end).search(/\S/);
       const sentenceStart = start + Math.max(0, leadingWhitespace);
       sentences.push({ text: sentenceText, index: sentences.length, start: sentenceStart, end });
     }
 
     start = end;
-    while (start < text.length && /\\s/.test(text[start])) start += 1;
+    while (start < text.length && /\s/.test(text[start])) start += 1;
     index = start - 1;
   }
 
   const remainder = text.slice(start).trim();
   if (remainder) {
-    const leadingWhitespace = text.slice(start).search(/\\S/);
+    const leadingWhitespace = text.slice(start).search(/\S/);
     const sentenceStart = start + Math.max(0, leadingWhitespace);
     sentences.push({ text: remainder, index: sentences.length, start: sentenceStart, end: text.length });
   }
