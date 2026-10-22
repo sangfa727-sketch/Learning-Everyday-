@@ -122,8 +122,6 @@ function renderCategoryOptions() {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "vocabulary-topic-card";
-    button.setAttribute("aria-pressed", "false");
-    button.setAttribute("aria-expanded", "false");
     button.setAttribute("aria-label", language === "my"
       ? `${categoryLabel(category)} — ဝေါဟာရစာမျက်နှာသို့ ဝင်ရန်`
       : `Open ${categoryLabel(category)} vocabulary`);
