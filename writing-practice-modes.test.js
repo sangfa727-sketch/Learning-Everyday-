@@ -6,7 +6,7 @@ const html = readFileSync(new URL("./index.html", import.meta.url), "utf8");
 const ui = readFileSync(new URL("./curriculum-ui.js", import.meta.url), "utf8");
 const app = readFileSync(new URL("./app.js", import.meta.url), "utf8");
 const css = readFileSync(new URL("./styles.css", import.meta.url), "utf8");
-const fallbackDictionarySource = readFileSync(new URL("./learning-core.js", import.meta.url), "utf8");
+const fallbackDictionarySource = readFileSync(new URL("./dictionary.js", import.meta.url), "utf8");
 
 test("Writing Practice exposes exactly Print and Handwriting mode controls", () => {
   assert.ok(html.includes('id="writing-mode-print"'));
