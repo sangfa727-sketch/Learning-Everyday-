@@ -387,6 +387,11 @@ test("shared dictionary covers multiple senses used by Listening story context",
 
 
 
+test("context-aware lookup keeps possessive names and inflected verbs context-correct", () => {
+  assert.match(lookupWordInContext("Rose's", "Ms Rose's class visited the town museum.").my, /လူအမည်/);
+  assert.match(lookupWordInContext("changed", "She changed her daily routine.").my, /ပြောင်းလဲ/);
+});
+
 test("context-aware word lookup selects the sense supported by the tapped sentence", () => {
   assert.match(lookupWordInContext("rose", "The river rose after heavy rain.").my, /မြင့်တက်လာခဲ့သည်/);
   assert.match(lookupWordInContext("rose", "A red rose grew in the garden.").my, /နှင်းဆီပန်း/);
