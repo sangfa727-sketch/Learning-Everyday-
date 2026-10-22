@@ -525,3 +525,20 @@ body[data-page="listening"] #practice-panel { max-width: 100%; }
 
 .word-context-translation { margin: 8px 0 14px; padding: 12px; border: 1px solid #dce7d8; border-radius: 10px; color: #334d3b; line-height: 1.8; white-space: normal; }
 \n\n/* Vocabulary is the focused replacement for the former Reading card. */\nbody[data-page="reading"] #practice-panel{display:none}\nbody[data-page="reading"] #curriculum-workbench .curriculum-card:nth-child(2){display:none}\nbody[data-page="reading"] #curriculum-workbench .curriculum-grid{grid-template-columns:minmax(0,1fr)}\nbody[data-page="reading"] #curriculum-workbench .curriculum-header .section-index{display:none}\n@media(max-width:720px){body[data-page="reading"] #curriculum-workbench .curriculum-grid{grid-template-columns:minmax(0,1fr)}}\n
+
+/* Live narration tracking: keep the word spoken by English voice visibly selected. */
+#lesson-text .lesson-word.speech-current-word {
+  position: relative;
+  border-radius: 5px;
+  background: #ffe58a;
+  color: #183b2c;
+  box-shadow: 0 0 0 2px #e2ad31;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  transition: background-color .08s ease, box-shadow .08s ease;
+}
+#lesson-text .lesson-word.speech-current-word:focus-visible {
+  outline: 3px solid #315b40;
+  outline-offset: 3px;
+}
