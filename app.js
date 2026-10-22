@@ -10,6 +10,7 @@ let activeListeningStoryId = null;
 let activeStoryTranslations = [];
 let activeStoryUtterance = null;
 let activeWordParagraphIndex = 0;
+let currentStoryParagraphIndex = 0;
 const LISTENING_STORIES = [
   {
     id: "garden-bird", title: "Maya’s Garden", myTitle: "Maya ၏ ဥယျာဉ်", level: "A1", category: "Nature", myCategory: "သဘာဝ", icon: "🌱",
@@ -350,6 +351,7 @@ function syncListeningView(page = currentPage()) {
       story = readingStory;
       activeStoryTranslations = [];
       activeListeningStoryId = null;
+      currentStoryParagraphIndex = 0;
       renderStory();
     }
     return;
@@ -364,6 +366,7 @@ function syncListeningView(page = currentPage()) {
     if (translationPanel) translationPanel.hidden = true;
     stopStoryNarration();
     activeListeningStoryId = null;
+    currentStoryParagraphIndex = 0;
     story = readingStory;
     activeStoryTranslations = [];
     renderStory();
@@ -378,6 +381,7 @@ function syncListeningView(page = currentPage()) {
     if (translationPanel) translationPanel.hidden = true;
     if (translationToggle) translationToggle.setAttribute("aria-expanded", "false");
     activeListeningStoryId = selected.id;
+    currentStoryParagraphIndex = 0;
     story = selected.text.join("\n\n");
     activeStoryTranslations = selected.paragraphTranslations || [];
     renderStory();
@@ -464,16 +468,27 @@ function highlightSpeechWord(charIndex) {
   }
 }
 
+function getStoryParagraphs() {
+  return String(story ?? "").split(/\n\s*\n/).map((paragraph) => paragraph.trim()).filter(Boolean);
+}
+
+function getStoryParagraphStart(index, paragraphs = getStoryParagraphs()) {
+  return paragraphs.slice(0, index).reduce((total, paragraph) => total + paragraph.length, 0) + Math.max(0, index) * 2;
+}
+
 function renderStory() {
   const container = $("#lesson-text");
+  const paragraphs = getStoryParagraphs();
+  if (currentStoryParagraphIndex >= paragraphs.length) currentStoryParagraphIndex = Math.max(0, paragraphs.length - 1);
+  if (currentStoryParagraphIndex < 0) currentStoryParagraphIndex = 0;
+  const paragraph = paragraphs[currentStoryParagraphIndex] || "";
+  const paragraphStart = getStoryParagraphStart(currentStoryParagraphIndex, paragraphs);
   container.replaceChildren();
-  let paragraphIndex = 0;
-  let speechOffset = 0;
-  for (const part of tokenizeStory(story)) {
+  let speechOffset = paragraphStart;
+  for (const part of tokenizeStory(paragraph)) {
     const partStart = speechOffset;
     speechOffset += part.text.length;
     if (!part.word) {
-      paragraphIndex += (part.text.match(/\n\s*\n/g) || []).length;
       container.append(document.createTextNode(part.text));
       continue;
     }
@@ -484,9 +499,24 @@ function renderStory() {
     button.dataset.speechStart = String(partStart);
     button.dataset.speechEnd = String(speechOffset);
     button.setAttribute("aria-label", `Look up ${part.word}`);
-    const wordParagraphIndex = paragraphIndex;
-    button.addEventListener("click", () => showWord(part.word, wordParagraphIndex));
+    button.addEventListener("click", () => showWord(part.word, currentStoryParagraphIndex, button));
     container.append(button);
+  }
+  const pager = $("#story-pagination");
+  const pageLabel = $("#story-page-label");
+  const previous = $("#story-previous");
+  const next = $("#story-next");
+  if (pager) pager.hidden = paragraphs.length <= 1;
+  if (pageLabel) pageLabel.textContent = language === "my"
+    ? `စာပိုဒ် ${currentStoryParagraphIndex + 1} / ${paragraphs.length}`
+    : `Paragraph ${currentStoryParagraphIndex + 1} of ${paragraphs.length}`;
+  if (previous) {
+    previous.disabled = currentStoryParagraphIndex === 0;
+    previous.textContent = language === "my" ? "← ရှေ့စာပိုဒ်" : "← Previous";
+  }
+  if (next) {
+    next.disabled = currentStoryParagraphIndex >= paragraphs.length - 1;
+    next.textContent = language === "my" ? "နောက်စာပိုဒ် →" : "Next →";
   }
 }
 
@@ -508,29 +538,64 @@ function pronounceWord(word) {
   window.speechSynthesis.speak(utterance);
 }
 
-function showWord(word, paragraphIndex = 0) {
+function sentenceAtOffset(paragraph, offset) {
+  const sentences = [...paragraph.matchAll(/[^.!?]+(?:[.!?]+|$)/g)];
+  const found = sentences.find((match) => offset >= match.index && offset <= match.index + match[0].length);
+  return found ? { text: found[0].trim(), index: sentences.indexOf(found) } : { text: paragraph, index: 0 };
+}
+
+function showWord(word, paragraphIndex = 0, wordButton = null) {
   activeWordParagraphIndex = paragraphIndex;
   const entry = lookupWord(word);
+  const paragraphs = getStoryParagraphs();
+  const paragraph = paragraphs[paragraphIndex] || "";
+  const paragraphStart = getStoryParagraphStart(paragraphIndex, paragraphs);
+  const localOffset = wordButton ? Math.max(0, Number(wordButton.dataset.speechStart) - paragraphStart) : 0;
+  const sentence = sentenceAtOffset(paragraph, localOffset);
   $("#word-title").textContent = word;
   $("#word-definition").textContent = entry ? entry.meaning + ". " + entry.usage : translations[language].unknown;
+  const sentenceContext = $("#word-sentence-context");
+  if (sentenceContext) sentenceContext.textContent = sentence.text;
   const contextTranslation = $("#word-context-translation");
   if (contextTranslation) {
-    const translated = activeStoryTranslations[paragraphIndex];
-    contextTranslation.textContent = translated
-      ? "စာပိုဒ်၏ မြန်မာဘာသာပြန် — " + translated
-      : "စာပိုဒ်၏ မြန်မာဘာသာပြန် — ဤစာပိုဒ်အတွက် ဘာသာပြန်ကို မထည့်ရသေးပါ။";
+    const translatedParagraph = activeStoryTranslations[paragraphIndex] || "";
+    const translatedSentences = translatedParagraph.split("။").map((part) => part.trim()).filter(Boolean).map((part) => part + "။");
+    const englishSentences = [...paragraph.matchAll(/[^.!?]+(?:[.!?]+|$)/g)].map((match) => match[0].trim()).filter(Boolean);
+    if (translatedParagraph && translatedSentences.length === englishSentences.length && translatedSentences[sentence.index]) {
+      contextTranslation.textContent = "ဝါကျဘာသာပြန် — " + translatedSentences[sentence.index];
+    } else {
+      contextTranslation.textContent = translatedParagraph
+        ? "စာပိုဒ်ဘာသာပြန် — " + translatedParagraph
+        : "ဘာသာပြန်ကို မထည့်ရသေးပါ။";
+    }
   }
   const myTranslation = $("#word-myanmar-translation");
   if (myTranslation) {
     myTranslation.textContent = entry?.my
-      ? "မြန်မာအဓိပ္ပာယ် — " + entry.my
-      : "မြန်မာအဓိပ္ပာယ် — ဤစကားလုံးအတွက် offline အဘိဓာန်အချက်အလက် မထည့်ရသေးပါ။";
+      ? "စကားလုံးအဓိပ္ပာယ် — " + entry.my
+      : "ဤစကားလုံးအတွက် offline အဘိဓာန်အချက်အလက် မထည့်ရသေးပါ။";
   }
   $("#pronounce-word").textContent = language === "my" ? "🔊 အသံထွက် နားထောင်ရန်" : "🔊 Hear pronunciation";
   $("#pronounce-word").setAttribute("aria-label", "Pronounce " + word);
-  $("#word-card").hidden = false;
+  const card = $("#word-card");
+  card.hidden = false;
+  card.classList.add("word-card-floating");
+  const anchor = wordButton?.getBoundingClientRect();
+  const width = Math.min(420, window.innerWidth - 24);
+  const left = anchor ? Math.max(12, Math.min(anchor.left, window.innerWidth - width - 12)) : 12;
+  card.style.left = `${left}px`;
+  card.style.width = `${width}px`;
+  card.style.top = "12px";
+  requestAnimationFrame(() => {
+    if (card.hidden) return;
+    const height = card.getBoundingClientRect().height;
+    const preferredTop = anchor ? anchor.bottom + 8 : 12;
+    const top = preferredTop + height <= window.innerHeight - 12
+      ? preferredTop
+      : Math.max(12, (anchor?.top ?? 12) - height - 8);
+    card.style.top = `${top}px`;
+  });
   pronounceWord(word);
-  $("#word-card").scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
 function setLanguage(next) {
@@ -545,7 +610,7 @@ function setLanguage(next) {
   $("#status-message").textContent = translations[next].voiceNote;
   updateSkill(activeSkill);
   renderPage();
-  if (!$("#word-card").hidden) showWord($("#word-title").textContent, activeWordParagraphIndex);
+  if (!$("#word-card").hidden) showWord($("#word-title").textContent, activeWordParagraphIndex, document.querySelector("#lesson-text .lesson-word:focus"));
 }
 
 function updateSkill(skill) {
@@ -631,7 +696,7 @@ function speakStory() {
   const paragraphPattern = /[^\n]+/g;
   for (const match of story.matchAll(paragraphPattern)) {
     const text = match[0].trim();
-    if (text) paragraphs.push({ text, start: match.index + match[0].indexOf(text) });
+    if (text) paragraphs.push({ text, start: match.index + match[0].indexOf(text), index: paragraphs.length });
   }
   if (!paragraphs.length) {
     $("#status-message").textContent = translations[language].voiceNote;
@@ -651,6 +716,11 @@ function speakStory() {
       return;
     }
     const paragraph = paragraphs[paragraphIndex++];
+    if (currentStoryParagraphIndex !== paragraph.index) {
+      currentStoryParagraphIndex = paragraph.index;
+      $("#word-card").hidden = true;
+      renderStory();
+    }
     const utterance = new SpeechSynthesisUtterance(paragraph.text);
     activeStoryUtterance = utterance;
     utterance.lang = voice?.lang || "en-US";
@@ -728,7 +798,34 @@ $("#stop-button").addEventListener("click", () => {
   stopStoryNarration();
   $("#status-message").textContent = translations[language].voiceNote;
 });
+$("#story-previous").addEventListener("click", () => {
+  if (currentStoryParagraphIndex <= 0) return;
+  stopStoryNarration();
+  currentStoryParagraphIndex -= 1;
+  $("#word-card").hidden = true;
+  renderStory();
+});
+$("#story-next").addEventListener("click", () => {
+  if (currentStoryParagraphIndex >= getStoryParagraphs().length - 1) return;
+  stopStoryNarration();
+  currentStoryParagraphIndex += 1;
+  $("#word-card").hidden = true;
+  renderStory();
+});
 $("#close-word").addEventListener("click", () => { $("#word-card").hidden = true; });
+document.addEventListener("pointerdown", (event) => {
+  const card = $("#word-card");
+  if (card.hidden) return;
+  if (event.target.closest("#word-card") || event.target.closest(".lesson-word")) return;
+  card.hidden = true;
+});
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") $("#word-card").hidden = true;
+});
+window.addEventListener("resize", () => {
+  const card = $("#word-card");
+  if (!card.hidden) card.hidden = true;
+});
 $("#pronounce-word").addEventListener("click", () => pronounceWord($("#word-title").textContent));
 $("#writing-input").value = readLocalValue("le.writingDraft", "");
 $("#writing-count").textContent = `${countCharacters($("#writing-input").value)} ${translations[language].characters}`;
