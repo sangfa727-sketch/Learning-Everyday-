@@ -164,6 +164,36 @@
       <div id="listening-story-grid" class="listening-story-grid" aria-live="polite"></div>
     </section>
 
+    <section id="speaking-library" class="speaking-library" aria-labelledby="speaking-library-title" hidden>
+      <div id="speaking-category-list">
+        <div class="speaking-library-heading">
+          <div>
+            <p class="eyebrow">SPEAK · LISTEN · PRACTISE</p>
+            <h2 id="speaking-library-title">Conversations by topic</h2>
+            <p id="speaking-library-intro" class="speaking-library-intro">Choose a topic to read the dialogue and listen to alternating speakers.</p>
+          </div>
+          <span id="speaking-library-count" class="speaking-library-count">5 TOPICS</span>
+        </div>
+        <div id="speaking-category-grid" class="speaking-category-grid" aria-live="polite"></div>
+      </div>
+      <section id="speaking-conversation" class="speaking-conversation" aria-labelledby="speaking-conversation-title" hidden>
+        <button id="speaking-back" class="story-library-back" type="button">← Back to topics</button>
+        <div class="speaking-conversation-heading">
+          <p class="eyebrow">EVERYDAY ENGLISH · DIALOGUE</p>
+          <h2 id="speaking-conversation-title">Greetings &amp; introductions</h2>
+          <p id="speaking-conversation-summary" class="speaking-library-intro"></p>
+        </div>
+        <div class="speaking-play-controls">
+          <button id="speaking-play-all" class="primary-button" type="button">▶ Play conversation</button>
+          <button id="speaking-stop" class="secondary-button" type="button">■ Stop</button>
+          <label class="speaking-speed-control" for="speaking-speed"><span>Speech speed</span><select id="speaking-speed"><option value="0.72">0.72×</option><option value="0.88" selected>0.88×</option><option value="1">1×</option></select></label>
+        </div>
+        <p id="speaking-status" class="status-message" role="status" aria-live="polite">Ready to play this conversation.</p>
+        <div id="speaking-dialogue-lines" class="speaking-dialogue-lines"></div>
+        <p id="speaking-voice-note" class="speaking-voice-note"></p>
+      </section>
+    </section>
+
     <section id="practice-panel" class="practice-panel" aria-labelledby="panel-title">
       <button id="back-to-story-library" class="story-library-back" type="button" hidden>← All stories</button>
       <div class="panel-topline"><span class="panel-label"><span class="panel-label-dot"></span><span data-i18n="practice">YOUR PRACTICE SPACE</span></span><span class="lesson-number">LESSON 01</span></div>
@@ -193,5 +223,6 @@
   </main>
   <script type="module" src="./app.js"></script>
   <script type="module" src="./curriculum-ui.js"></script>
+  <script type="module" src="./speaking.js"></script>
 </body>
 </html>
