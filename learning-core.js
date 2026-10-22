@@ -155,6 +155,24 @@ const CONTEXTUAL_SENSES = Object.freeze({
   still: [
     { test: /\bstill\s+(?:room|space|enough|time|available|standing|open)\b/i, meaning: "remaining or continuing to be present", my: "ကျန်ရှိနေသေးသော၊ ရှိနေဆဲ" },
     { test: /\bstill\s+(?:could not|cannot|can't|did not|does not|needed|needs|had|was|were|is|are|stands|stood|remains|remained)\b/i, meaning: "continuing up to that time", my: "ယခုထိ၊ ဆက်လက်၍" }
+  ],
+  bank: [
+    { test: /\b(bank account|bank branch|deposit|withdraw|loan|cash|financial)\b/i, meaning: "a financial institution", my: "ဘဏ်" },
+    { test: /\b(river|water|shore|flood|stone near the bank|near the bank|riverbank|river bank)\b/i, meaning: "the land alongside a river", my: "မြစ်ကမ်းပါး" }
+  ],
+  current: [
+    { test: /\b(?:river|water|stream)\s+current\b|\bcurrent (?:was|is|became|grew|too strong|strong)\b/i, meaning: "the flow of water in a river or stream", my: "ရေစီးကြောင်း၊ ရေစီးအား" },
+    { test: /\bcurrent (?:river|water|level|conditions|status|plan|year|information)\b/i, meaning: "happening or existing now", my: "လက်ရှိဖြစ်နေသော" }
+  ],
+  level: [
+    { test: /\b(?:river|water|flood|gauge|measurements?|rise|rose|rising)\b/i, meaning: "the height or amount of water", my: "ရေအမြင့်၊ ရေပမာဏ" }
+  ],
+  matter: [
+    { test: /\b(?:open area|area|place|safety|evidence|observation|community)\b.*\b(?:matter|matters|mattered)\b|\b(?:matter|matters|mattered)\b.*\b(?:important|difference|effect)\b/i, meaning: "to be important or have an effect", my: "အရေးပါသည်၊ အရေးပါခဲ့သည်" }
+  ],
+  hard: [
+    { test: /\bhard work\b/i, meaning: "requiring effort; effort put into work", my: "ကြိုးစားအားထုတ်မှု" },
+    { test: /\bhard (?:to|for|task|problem|decision)\b/i, meaning: "difficult and requiring effort", my: "ခက်ခဲသော" }
   ]
 });
 
