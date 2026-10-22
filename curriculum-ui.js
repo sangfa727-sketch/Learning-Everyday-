@@ -92,6 +92,51 @@ function renderCategoryOptions() {
     select.append(option);
   }
   select.value = selectedCategory;
+  select.hidden = true;
+
+  let picker = $("#vocabulary-topic-picker");
+  if (!picker) {
+    picker = document.createElement("div");
+    picker.id = "vocabulary-topic-picker";
+    picker.className = "vocabulary-topic-picker";
+    picker.setAttribute("role", "group");
+    picker.setAttribute("aria-label", language === "my" ? "ဝေါဟာရအမျိုးအစားရွေးရန်" : "Choose a vocabulary topic");
+    select.insertAdjacentElement("afterend", picker);
+  }
+  picker.replaceChildren();
+  const topicIcons = {
+    home: "⌂", electrical: "ϟ", kitchen: "♨", food: "◉", clothing: "◇",
+    school: "✎", bathroom: "◌", transport: "↗", weather: "☼", work: "▣",
+    health: "✚", family: "♡", shopping: "♧", technology: "⌘", town: "⌖", time: "◷"
+  };
+  for (const category of VOCABULARY_CATEGORIES) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "vocabulary-topic-card";
+    button.setAttribute("aria-pressed", String(category.id === selectedCategory));
+    button.setAttribute("aria-label", categoryLabel(category));
+    const icon = document.createElement("span");
+    icon.className = "vocabulary-topic-icon";
+    icon.setAttribute("aria-hidden", "true");
+    icon.textContent = topicIcons[category.id] || "✦";
+    const label = document.createElement("span");
+    label.className = "vocabulary-topic-label";
+    label.textContent = categoryLabel(category);
+    const marker = document.createElement("span");
+    marker.className = "vocabulary-topic-marker";
+    marker.setAttribute("aria-hidden", "true");
+    marker.textContent = category.id === selectedCategory ? "✓" : "↗";
+    button.append(icon, label, marker);
+    button.addEventListener("click", () => {
+      if (selectedCategory === category.id) return;
+      selectedCategory = category.id;
+      selectedWord = null;
+      select.value = selectedCategory;
+      renderCategoryOptions();
+      renderVocabulary();
+    });
+    picker.append(button);
+  }
 }
 
 function speakVocabulary(text, label) {
@@ -128,13 +173,30 @@ function renderVocabulary() {
     wordButton.type = "button";
     wordButton.className = "vocabulary-word";
     wordButton.setAttribute("aria-pressed", String(selectedWord === word));
-    wordButton.setAttribute("aria-label", `${word}: ${meaning}`);
+    wordButton.setAttribute("aria-label", language === "my" ? `${word} — ${meaning}; အဓိပ္ပာယ်နှင့် ဥပမာဝါကျပြရန်` : `${word}: show meaning and example`);
     const wordEl = document.createElement("strong");
     wordEl.textContent = word;
     const meaningEl = document.createElement("span");
     meaningEl.textContent = meaning;
     wordButton.append(wordEl, meaningEl);
     wordButton.addEventListener("click", () => {
+      if (selectedWord === word) {
+        const detail = entry.querySelector(".vocabulary-detail");
+        selectedWord = null;
+        wordButton.setAttribute("aria-pressed", "false");
+        if (detail) {
+          detail.classList.remove("vocabulary-detail-in");
+          detail.classList.add("is-closing");
+          const finishClose = () => {
+            if (selectedWord === null && list.contains(entry)) renderVocabulary();
+          };
+          detail.addEventListener("animationend", finishClose, { once: true });
+          window.setTimeout(finishClose, 240);
+        } else {
+          renderVocabulary();
+        }
+        return;
+      }
       selectedWord = word;
       renderVocabulary();
     });
@@ -152,7 +214,7 @@ function renderVocabulary() {
 
     if (selectedWord === word) {
       const detail = document.createElement("div");
-      detail.className = "vocabulary-detail";
+      detail.className = "vocabulary-detail vocabulary-detail-in";
       detail.setAttribute("aria-live", "polite");
 
       const meaningHeading = document.createElement("strong");
