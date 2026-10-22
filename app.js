@@ -12,6 +12,7 @@ let activeStoryUtterance = null;
 let activeWordUtterance = null;
 let activeWordParagraphIndex = 0;
 let activeWordButton = null;
+let dismissedWordButton = null;
 let currentStoryParagraphIndex = 0;
 const LISTENING_STORIES = [
   {
@@ -526,6 +527,12 @@ function renderStory() {
     button.setAttribute("aria-label", `Look up ${part.word}`);
     const wordParagraphIndex = currentStoryParagraphIndex;
     button.addEventListener("click", () => {
+      // If the current card was dismissed by this same tap, do not immediately reopen it.
+      if (dismissedWordButton === button) {
+        dismissedWordButton = null;
+        return;
+      }
+      dismissedWordButton = null;
       activeWordButton = button;
       showWord(part.word, wordParagraphIndex);
       pronounceWord(part.word);
@@ -865,8 +872,23 @@ $("#story-next").addEventListener("click", () => {
 $("#close-word").addEventListener("click", () => { $("#word-card").hidden = true; });
 document.addEventListener("pointerdown", (event) => {
   const card = $("#word-card");
-  if (card.hidden) return;
-  if (event.target.closest("#word-card") || event.target.closest(".lesson-word")) return;
+  const tappedWord = event.target.closest(".lesson-word");
+  if (card.hidden) {
+    // Clear a stale marker if a previous touch did not produce a click event.
+    dismissedWordButton = null;
+    return;
+  }
+  if (event.target.closest("#word-card")) {
+    dismissedWordButton = null;
+    return;
+  }
+  if (tappedWord) {
+    // Dismiss the existing card on this tap; require a separate tap to open another word.
+    dismissedWordButton = tappedWord;
+    card.hidden = true;
+    return;
+  }
+  dismissedWordButton = null;
   card.hidden = true;
 });
 document.addEventListener("keydown", (event) => {
