@@ -595,6 +595,13 @@ test("contextual lookup distinguishes closed places, phone calls, and presented 
   assert.match(lookupWordInContext("mattered", "Lina wondered why the open area mattered.").my, /^အရေးပါခဲ့သည်$/);
 });
 
+test("context-aware lookup resolves gerunds and participles in common Listening phrases", () => {
+  assert.match(lookupWordInContext("meeting", "The school marked a safe meeting point.").my, /တွေ့ဆုံရာနေရာ/);
+  assert.match(lookupWordInContext("drinking", "The shelter provided drinking water.").my, /^သောက်သုံးရေ$/);
+  assert.match(lookupWordInContext("standing", "The bridge was still standing after the storm.").my, /မပြိုမလဲ ကျန်ရှိနေသော/);
+  assert.match(lookupWordInContext("moving", "They listened to water moving under thin sheets of ice.").my, /စီးဆင်းနေသော/);
+});
+
 test("sentence-by-sentence Myanmar translation aligns with every English sentence in all Listening stories", () => {
   const storiesStart = app.indexOf("const LISTENING_STORIES = [");
   const arrayStart = app.indexOf("[", storiesStart);
