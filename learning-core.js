@@ -91,7 +91,7 @@ const CONTEXTUAL_SENSES = Object.freeze({
     { test: /\b(they|we|i|she|he|maya|nora|lina|students|people)\s+saw\b/i, meaning: "past tense of see; noticed or witnessed", my: "မြင်တွေ့ခဲ့သည်၊ တွေ့မြင်ခဲ့သည်" }
   ],
   found: [
-    { test: /\b(found|foundation|founded)\b/i, meaning: "established or set up", my: "တည်ထောင်ခဲ့သည်" },
+    { test: /\b(founded|foundation|established|set up)\b/i, meaning: "established or set up", my: "တည်ထောင်ခဲ့သည်" },
     { test: /\b(found|discovered|located|puppy|evidence|enough|money|item|place)\b/i, meaning: "past tense of find; discovered or located", my: "တွေ့ရှိခဲ့သည်၊ ရှာတွေ့ခဲ့သည်" }
   ],
   means: [
@@ -115,7 +115,7 @@ const CONTEXTUAL_SENSES = Object.freeze({
     { test: /\b(near|distance|nearby|house|school|shop|friend)\b/i, meaning: "near in distance or relationship", my: "နီးသော၊ ရင်းနှီးသော" }
   ],
   change: [
-    { test: /\b(change|returned|coins|money|cash|pay|price)\b/i, meaning: "money returned after paying more than the cost", my: "ပြန်အမ်းငွေ" },
+    { test: /\b(returned|coins|money|cash|pay|price)\b/i, meaning: "money returned after paying more than the cost", my: "ပြန်အမ်းငွေ" },
     { test: /\b(change|routine|plan|weather|become|different|decide|changed)\b/i, meaning: "to make or become different", my: "ပြောင်းလဲသည်၊ ပြောင်းလဲမှု" }
   ],
   present: [
