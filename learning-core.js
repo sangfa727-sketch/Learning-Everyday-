@@ -197,6 +197,20 @@ const CONTEXTUAL_SENSES = Object.freeze({
   ],
   changes: [
     { test: /\b(?:these|many|several|some|small|major|recent|important|noticeable|the)\s+changes\b|\bchanges\s+(?:in|to|over|after|include|were|could|show)\b/i, meaning: "differences or developments over time", my: "ပြောင်းလဲမှုများ" }
+  ],
+  closed: [
+    { test: /\bclosed\s+(?:shop|store|gate|door|window|room|library|road|bridge)\b/i, meaning: "not open; shut", my: "ပိတ်ထားသော" },
+    { test: /\b(?:was|were|had been|has been|is|are)\s+closed\b/i, meaning: "was or were shut", my: "ပိတ်ထားသည်၊ ပိတ်ထားခဲ့သည်" }
+  ],
+  called: [
+    { test: /\bcalled\s+(?:the number|a number|the office|the service|a neighbour|a neighbor|the owner)\b/i, meaning: "contacted someone or a service by phone", my: "ဖုန်းဆက်ခဲ့သည်" },
+    { test: /\bcalled\s+(?:its|his|her|the puppy|the animal)\s+(?:name|Milo|a name)\b/i, meaning: "used a name to call someone or something", my: "အမည်ဖြင့် ခေါ်ခဲ့သည်" }
+  ],
+  presented: [
+    { test: /\bpresented\b.{0,100}\b(findings|results|report|information|proposal|map|idea)\b/i, meaning: "showed or explained information to others", my: "တင်ပြခဲ့သည်" }
+  ],
+  mattered: [
+    { test: /\b(?:open area|area|place|safety|evidence|observation|community)\b.*\bmattered\b|\bmattered\b.*\b(?:important|difference|effect)\b/i, meaning: "was important or had an effect", my: "အရေးပါခဲ့သည်" }
   ]
 });
 
