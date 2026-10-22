@@ -187,7 +187,8 @@ function syncVocabularyRoute() {
     const categoryTitle = $("#vocabulary-category-title");
     if (categoryTitle) categoryTitle.textContent = categoryLabel(category);
   }
-  syncVocabularyRoute();
+  renderCategoryOptions();
+  renderVocabulary();
 }
 
 function speakVocabulary(text, label) {
