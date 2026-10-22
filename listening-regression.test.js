@@ -782,7 +782,7 @@ test("river-story vocabulary distinguishes a staff gauge from school staff and a
 
   const drainScreen = lookupWordInContext("screen", "The town council agreed to repair the damaged drainage screen.");
   assert.match(drainScreen.meaning, /grate or barrier/);
-  assert.match(drainScreen.my, /ဇကာကာ/);
+  assert.match(drainScreen.my, /ရေထုတ်ပေါက်တွင် အမှိုက်များ မဝင်စေရန် တပ်ဆင်ထားသော ဇကာ/);
 
   const displayScreen = lookupWordInContext("screen", "She looked at the computer screen.");
   assert.match(displayScreen.meaning, /surface that displays images or information/);
