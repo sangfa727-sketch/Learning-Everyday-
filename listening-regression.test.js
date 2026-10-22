@@ -417,6 +417,14 @@ test("context-aware lookup identifies presentation verbs separately from being p
   assert.match(lookupWordInContext("present", "The students recorded readings with an adult present.").my, /ရောက်ရှိနေသော/);
 });
 
+test("context-aware lookup resolves river, importance, and effort vocabulary", () => {
+  assert.match(lookupWordInContext("bank", "Lina counted marks on a stone near the bank.").my, /မြစ်ကမ်းပါး/);
+  assert.match(lookupWordInContext("current", "The bridge was closed because the current was too strong.").my, /ရေစီးအား/);
+  assert.match(lookupWordInContext("level", "The river level rose overnight.").my, /ရေအမြင့်/);
+  assert.match(lookupWordInContext("mattered", "Lina wondered why that open area mattered.").my, /အရေးပါခဲ့သည်/);
+  assert.match(lookupWordInContext("hard", "Careful observation was as important as hard work.").my, /ကြိုးစားအားထုတ်မှု/);
+});
+
 test("context-aware word lookup selects the sense supported by the tapped sentence", () => {
   assert.match(lookupWordInContext("rose", "The river rose after heavy rain.").my, /မြင့်တက်လာခဲ့သည်/);
   assert.match(lookupWordInContext("rose", "A red rose grew in the garden.").my, /နှင်းဆီပန်း/);
