@@ -120,3 +120,23 @@ test("Offline dictionary includes key vocabulary from all listening stories", ()
   assert.match(fallbackDictionarySource, /community: \{/);
   assert.match(fallbackDictionarySource, /contribute: \{/);
 });
+
+
+test("Expanded listening stories include further learning scenes and aligned Myanmar translations", () => {
+  const storySection = app.slice(app.indexOf("const LISTENING_STORIES = ["), app.indexOf("function renderListeningLibrary"));
+  assert.equal((storySection.match(/paragraphTranslations: \[/g) ?? []).length, 6);
+  assert.match(storySection, /careful observation was just as important as hard work/);
+  assert.match(storySection, /buying fruit in season often meant better flavour/);
+  assert.match(storySection, /asking who took a photograph, when it was taken/);
+  assert.match(storySection, /contact a responsible adult or an animal-care service/);
+  assert.match(storySection, /learning often begins with a question/);
+  assert.match(storySection, /weekly reading circle/);
+  assert.match(storySection, /အာရုံစိုက်လေ့လာခြင်းလည်း အရေးကြီးကြောင်း Maya သိလာသည်|ဂရုတစိုက်လေ့လာခြင်းလည်း အရေးကြီးကြောင်း Maya သိလာသည်/);
+  assert.match(storySection, /စာဖတ်သူအများဆုံးကို အထောက်အကူပြုမည့် စာအုပ်အနည်းငယ်/);
+});
+
+test("Expanded listening vocabulary remains available offline", () => {
+  for (const word of ["lane", "nest", "bargain", "budget", "shelter", "approach", "identify", "exhibit", "artifact", "evidence", "accessible", "schedule", "maintain", "shortage", "transparent", "cooperate", "resource", "routine", "observe", "fragile", "reassure"]) {
+    assert.match(fallbackDictionarySource, new RegExp("\\b" + word + ": \\{"));
+  }
+});
