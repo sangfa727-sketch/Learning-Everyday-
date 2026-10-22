@@ -587,7 +587,7 @@ function showWord(word, paragraphIndex = 0) {
   const contextTranslation = $("#word-context-translation");
   if (contextTranslation) {
     const translatedParagraph = activeStoryTranslations[paragraphIndex] || "";
-    const translatedSentences = translatedParagraph.split("။").map((part) => part.trim()).filter(Boolean).map((part) => part + "။");
+    const translatedSentences = translatedParagraph.split(/[။.]+/).map((part) => part.trim()).filter(Boolean);
     const englishSentences = splitEnglishSentences(paragraph);
     if (translatedParagraph && translatedSentences.length === englishSentences.length && translatedSentences[sentence.index]) {
       contextTranslation.textContent = "ဝါကျဘာသာပြန် — " + translatedSentences[sentence.index];
