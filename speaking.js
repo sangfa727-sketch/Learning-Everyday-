@@ -175,7 +175,8 @@ function renderConversation(conversation) {
     listen.title = isMyanmar ? "ဤစာကြောင်းကို နားထောင်ရန်" : "Listen to this line";
     listen.addEventListener("click", () => {
       stopPlayback();
-      speakLine(line);
+      // Do not overwrite the text-only fallback message when TTS is unavailable.
+      if (!speakLine(line)) return;
       const status = $("#speaking-status");
       if (status) status.textContent = isMyanmar ? line[0] + " ပြောနေသည်…" : line[0] + " is speaking…";
     });
