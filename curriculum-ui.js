@@ -6,7 +6,7 @@ const $ = (selector, root = document) => root.querySelector(selector);
 const ns = "http://www.w3.org/2000/svg";
 
 
-let selectedCategory = VOCABULARY_CATEGORIES[0].id;
+let selectedCategory = null;
 let selectedLevel = "A1";
 let selectedExerciseIndex = 0;
 let selectedLetter = "A";
@@ -85,13 +85,17 @@ function setStatus(message) {
 function renderCategoryOptions() {
   const select = $("#vocabulary-category");
   select.replaceChildren();
+  const placeholder = document.createElement("option");
+  placeholder.value = "";
+  placeholder.textContent = language === "my" ? "အမျိုးအစားရွေးပါ" : "Choose a topic";
+  select.append(placeholder);
   for (const category of VOCABULARY_CATEGORIES) {
     const option = document.createElement("option");
     option.value = category.id;
     option.textContent = categoryLabel(category);
     select.append(option);
   }
-  select.value = selectedCategory;
+  select.value = selectedCategory || "";
   select.hidden = true;
 
   let picker = $("#vocabulary-topic-picker");
@@ -103,6 +107,9 @@ function renderCategoryOptions() {
     picker.setAttribute("aria-label", language === "my" ? "ဝေါဟာရအမျိုးအစားရွေးရန်" : "Choose a vocabulary topic");
     select.insertAdjacentElement("afterend", picker);
   }
+
+  const title = $("#vocabulary-category-title");
+  const list = $("#vocabulary-list");
   picker.replaceChildren();
   const topicIcons = {
     home: "⌂", electrical: "ϟ", kitchen: "♨", food: "◉", clothing: "◇",
@@ -110,10 +117,15 @@ function renderCategoryOptions() {
     health: "✚", family: "♡", shopping: "♧", technology: "⌘", town: "⌖", time: "◷"
   };
   for (const category of VOCABULARY_CATEGORIES) {
+    const selected = category.id === selectedCategory;
+    const shell = document.createElement("section");
+    shell.className = selected ? "vocabulary-topic-shell is-selected" : "vocabulary-topic-shell";
+
     const button = document.createElement("button");
     button.type = "button";
     button.className = "vocabulary-topic-card";
-    button.setAttribute("aria-pressed", String(category.id === selectedCategory));
+    button.setAttribute("aria-pressed", String(selected));
+    button.setAttribute("aria-expanded", String(selected));
     button.setAttribute("aria-label", categoryLabel(category));
     const icon = document.createElement("span");
     icon.className = "vocabulary-topic-icon";
@@ -125,17 +137,28 @@ function renderCategoryOptions() {
     const marker = document.createElement("span");
     marker.className = "vocabulary-topic-marker";
     marker.setAttribute("aria-hidden", "true");
-    marker.textContent = category.id === selectedCategory ? "✓" : "↗";
+    marker.textContent = selected ? "⌄" : "+";
     button.append(icon, label, marker);
     button.addEventListener("click", () => {
-      if (selectedCategory === category.id) return;
-      selectedCategory = category.id;
+      selectedCategory = selected ? null : category.id;
       selectedWord = null;
-      select.value = selectedCategory;
+      select.value = selectedCategory || "";
       renderCategoryOptions();
       renderVocabulary();
     });
-    picker.append(button);
+    shell.append(button);
+
+    if (selected) {
+      title.hidden = false;
+      list.hidden = false;
+      title.textContent = categoryLabel(category);
+      shell.append(title, list);
+    }
+    picker.append(shell);
+  }
+  if (!selectedCategory) {
+    title.hidden = true;
+    list.hidden = true;
   }
 }
 
@@ -159,7 +182,16 @@ function renderVocabulary() {
   const category = VOCABULARY_CATEGORIES.find((item) => item.id === selectedCategory);
   const list = $("#vocabulary-list");
   list.replaceChildren();
-  $("#vocabulary-category-title").textContent = categoryLabel(category);
+  const title = $("#vocabulary-category-title");
+  if (!category) {
+    title.textContent = "";
+    title.hidden = true;
+    list.hidden = true;
+    return;
+  }
+  title.textContent = categoryLabel(category);
+  title.hidden = false;
+  list.hidden = false;
   if (selectedWord && !category.words.some(([word]) => word === selectedWord)) selectedWord = null;
 
   for (const [word, meaning, example] of category.words) {
