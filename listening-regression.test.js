@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 
 const app = await readFile(new URL("./app.js", import.meta.url), "utf8");
 const html = await readFile(new URL("./index.html", import.meta.url), "utf8");
+const css = await readFile(new URL("./styles.css", import.meta.url), "utf8");
 
 test("Listening narration queues paragraph chunks with story-global highlight offsets", () => {
   const start = app.indexOf("function speakStory()");
@@ -51,4 +52,13 @@ test("Listening translation control exists and keeps its expanded state synchron
   assert.match(source, /panel\.hidden = !panel\.hidden/);
   assert.match(source, /setAttribute\("aria-expanded", String\(!panel\.hidden\)\)/);
   assert.match(source, /renderStoryTranslation\(selected\)/);
+});
+
+
+test("Listening word lookup remains readable and non-overlapping on mobile", () => {
+  assert.match(css, /\.word-card\s*\{\s*grid-template-columns:\s*minmax\(0,\s*\.72fr\)\s+minmax\(0,\s*1\.28fr\)/);
+  assert.match(css, /#word-definition\s*\{\s*grid-column:\s*2/);
+  assert.match(css, /@media\s*\(max-width:\s*760px\)\s*\{\s*\.word-card\s*\{\s*grid-template-columns:\s*minmax\(0,\s*1fr\)/);
+  assert.match(css, /\.word-card \.word-context-translation,\s*\.word-card-actions\s*\{\s*grid-column:\s*1;\s*grid-row:\s*auto/);
+  assert.match(css, /\.story-translation-paragraph\s*\{[^}]*overflow-wrap:\s*anywhere/s);
 });
