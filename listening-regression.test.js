@@ -427,3 +427,50 @@ test("Shared dictionary covers common words and keeps name translations reusable
     assert.ok(lookupWord(word), "shared dictionary should include " + word);
   }
 });
+
+test("every English word in all seven Listening stories resolves through the shared dictionary", () => {
+  const storiesStart = app.indexOf("const LISTENING_STORIES = [");
+  const arrayStart = app.indexOf("[", storiesStart);
+  const storiesSource = findBalancedBlock(app, arrayStart, "[", "]");
+  const storyBlocks = [];
+  let quote = null;
+  let escaped = false;
+  let objectDepth = 0;
+  let objectStart = -1;
+  for (let index = 0; index < storiesSource.length; index += 1) {
+    const char = storiesSource[index];
+    if (quote) {
+      if (escaped) escaped = false;
+      else if (char === "\\") escaped = true;
+      else if (char === quote) quote = null;
+      continue;
+    }
+    if (char === '"' || char === "'" || char === "`") {
+      quote = char;
+      continue;
+    }
+    if (char === "{") {
+      if (objectDepth === 0) objectStart = index;
+      objectDepth += 1;
+    } else if (char === "}") {
+      objectDepth -= 1;
+      if (objectDepth === 0 && objectStart >= 0) {
+        storyBlocks.push(storiesSource.slice(objectStart, index + 1));
+        objectStart = -1;
+      }
+    }
+  }
+
+  assert.equal(storyBlocks.length, 7, "expected the seven current Listening stories");
+  const missingByStory = [];
+  for (const block of storyBlocks) {
+    const id = block.match(/id: *"([^"]+)"/)?.[1] ?? "unknown";
+    const words = countArrayStringEntries(block, "text")
+      .join(" ")
+      .match(/[A-Za-z]+(?:['’-][A-Za-z]+)*/g) ?? [];
+    const missing = [...new Set(words.map((word) => word.toLowerCase()))]
+      .filter((word) => !lookupWord(word));
+    if (missing.length) missingByStory.push({ id, missing });
+  }
+  assert.deepEqual(missingByStory, [], "every story word should resolve, with no missing words: " + JSON.stringify(missingByStory));
+});
