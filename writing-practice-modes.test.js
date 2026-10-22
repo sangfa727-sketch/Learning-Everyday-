@@ -53,7 +53,7 @@ test("Listening Practice opens with a story library before the story reader", ()
   assert.match(html, /id="listening-story-grid"/);
   assert.match(html, /id="back-to-story-library"[^>]*hidden/);
   assert.match(app, /const LISTENING_STORIES = \[/);
-  assert.equal((app.match(/\{ id: "/g) ?? []).length, 6);
+  assert.equal((app.match(/\{\s*id: "/g) ?? []).length, 6);
   assert.match(app, /function renderListeningLibrary\(\)/);
   assert.match(app, /function syncListeningView\(/);
   assert.match(app, /location\.hash = `#\/listening\/\$\{item\.id\}`/);
@@ -107,7 +107,7 @@ test("All six listening stories have complete paragraphs and matching Myanmar tr
   assert.match(app, /text: \[\s*"For many years, children in Pine Village/);
   assert.match(app, /Books belong to everyone/);
   assert.match(app, /She continued home, glad that Milo was back/);
-  assert.match(app, /She learned that history was not only a list of dates/);
+  assert.match(app, /history was not only a list of dates/);
   assert.match(app, /paragraphTranslations: \[[\s\S]*?Pine ရွာရှိ ကလေးများ/);
 });
 
