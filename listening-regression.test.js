@@ -244,7 +244,7 @@ test("tapping a Listening story card immediately renders the selected story read
 
 test("Listening word lookup prioritizes Myanmar meaning and includes common Maya story vocabulary", async () => {
   const html = await readFile(new URL("./index.html", import.meta.url), "utf8");
-  const core = await readFile(new URL("./learning-core.js", import.meta.url), "utf8");
+  const core = await readFile(new URL("./dictionary.js", import.meta.url), "utf8");
   const head = html.indexOf('<div class="word-card-head">');
   const meaning = html.indexOf('id="word-myanmar-translation"', head);
   const definition = html.indexOf('id="word-definition"', head);
