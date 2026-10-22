@@ -377,3 +377,24 @@ test("shared dictionary covers lost-puppy and museum vocabulary with inflected w
     assert.equal(lookupWord(form), DICTIONARY[base], form + " should resolve to " + base);
   }
 });
+
+test("shared dictionary covers village-library vocabulary and irregular shelf plural", () => {
+  const words = [
+    "textbook", "nearest", "unused", "become", "solve", "villager", "carpenter",
+    "shelf", "collect", "paint", "lock", "donation", "progress", "rule", "reader",
+    "weekday", "hour", "turn", "welcome", "sign", "belong", "aloud", "teenager",
+    "month", "finish", "homework", "announce", "event", "organise", "request",
+    "activity", "dictionary", "graded", "practical", "business", "weekly", "circle",
+    "passage", "learner", "unfamiliar", "embarrass", "publish", "individual",
+    "respect", "habit", "member", "celebration", "regularly", "invite"
+  ];
+  for (const word of words) {
+    const entry = lookupWord(word);
+    assert.ok(entry, "shared dictionary should resolve " + word);
+    assert.ok(entry.meaning.trim() && entry.usage.trim() && entry.my.trim(), word + " should have all dictionary fields");
+  }
+  assert.equal(lookupWord("shelves"), DICTIONARY.shelf);
+  assert.ok(lookupWord("villagers"));
+  assert.ok(lookupWord("dictionaries"));
+  assert.ok(lookupWord("activities"));
+});
