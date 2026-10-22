@@ -23,8 +23,8 @@ test("sentence segmentation does not split English titles or quoted sentence end
 });
 
 test("Listening word context and sentence translation use the same sentence segmentation helper", () => {
-  assert.match(app, /function sentenceAtOffset\\(paragraph, offset\\) \\{\\s*const sentences = splitEnglishSentences\\(paragraph\\)/);
-  assert.match(app, /const englishSentences = splitEnglishSentences\\(paragraph\\)/);
+  assert.match(app, /function sentenceAtOffset\(paragraph, offset\) \{\s*const sentences = splitEnglishSentences\(paragraph\)/);
+  assert.match(app, /const englishSentences = splitEnglishSentences\(paragraph\)/);
 });
 
 test("Listening story selection accepts the existing joined text and legacy paragraph arrays", () => {
