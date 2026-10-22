@@ -568,10 +568,10 @@ function showWord(word, paragraphIndex = 0) {
     const translatedSentences = translatedParagraph.split("။").map((part) => part.trim()).filter(Boolean).map((part) => part + "။");
     const englishSentences = [...paragraph.matchAll(/[^.!?]+(?:[.!?]+|$)/g)].map((match) => match[0].trim()).filter(Boolean);
     if (translatedParagraph && translatedSentences.length === englishSentences.length && translatedSentences[sentence.index]) {
-      contextTranslation.textContent = "ဝါကျ၏ မြန်မာဘာသာပြန် — " + translatedSentences[sentence.index];
+      contextTranslation.textContent = "ဝါကျဘာသာပြန် — " + translatedSentences[sentence.index];
     } else {
       contextTranslation.textContent = translatedParagraph
-        ? "စာပိုဒ်၏ မြန်မာဘာသာပြန် — " + translatedParagraph
+        ? "စာပိုဒ်ဘာသာပြန် — " + translatedParagraph
         : "ဘာသာပြန်ကို မထည့်ရသေးပါ။";
     }
   }
