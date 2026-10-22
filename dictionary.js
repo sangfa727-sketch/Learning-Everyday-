@@ -1188,7 +1188,7 @@ export const DICTIONARY = Object.freeze({
   development: { meaning: "the process of growing or changing", usage: "New development replaced some wetlands and ponds.", my: "ဖွံ့ဖြိုးတိုးတက်မှု" },
   differences: { meaning: "ways in which things are not the same", usage: "The children noted differences between the two maps.", my: "ကွာခြားချက်များ" },
   difficult: { meaning: "not easy to do or understand", usage: "It was difficult to identify every source of rubbish.", my: "ခက်ခဲသော" },
-  direct: { meaning: "to guide or control the course of something", usage: "Wetlands can direct rainwater more slowly toward streams.", my: "လမ်းညွှန်သည်၊ ဦးတည်စေသည်" },
+  direct: { meaning: "to guide or control the course of something", usage: "Wetlands can direct rainwater more slowly toward streams.", my: "လမ်းကြောင်းကို ထိန်းညှိသည်၊ ဦးတည်စေသည်" },
   directed: { meaning: "guided or pointed toward a place", usage: "The teacher directed the students to a safe viewing platform.", my: "ညွှန်ကြားခဲ့သည်" },
   dirty: { meaning: "not clean", usage: "The students discussed ways to prevent dirty water from reaching homes.", my: "ညစ်ပတ်သော" },
   disagreement: { meaning: "a situation where people have different opinions", usage: "The team listened respectfully during a disagreement.", my: "သဘောထားကွဲလွဲမှု" },
