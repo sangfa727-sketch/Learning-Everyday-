@@ -10,6 +10,7 @@ let activeListeningStoryId = null;
 let activeStoryTranslations = [];
 let activeStoryUtterance = null;
 let activeWordUtterance = null;
+let activeSpeechHighlightTimer = null;
 let activeWordParagraphIndex = 0;
 let activeWordButton = null;
 let dismissedWordButton = null;
@@ -454,9 +455,15 @@ function refreshCurrentStoryTranslation() {
   if (selected) renderStoryTranslation(selected);
 }
 
+function clearSpeechHighlightTimer() {
+  if (activeSpeechHighlightTimer !== null) window.clearInterval(activeSpeechHighlightTimer);
+  activeSpeechHighlightTimer = null;
+}
+
 function stopStoryNarration() {
   activeStoryUtterance = null;
   activeWordUtterance = null;
+  clearSpeechHighlightTimer();
   if ("speechSynthesis" in window) window.speechSynthesis.cancel();
   clearSpeechHighlight();
   const playButton = $("#play-button");
@@ -738,6 +745,7 @@ function speakStory() {
   }
   activeStoryUtterance = null;
   activeWordUtterance = null;
+  clearSpeechHighlightTimer();
   window.speechSynthesis.cancel();
   clearSpeechHighlight();
 
@@ -781,23 +789,53 @@ function speakStory() {
     utterance.lang = voice?.lang || "en-US";
     if (voice) utterance.voice = voice;
     utterance.rate = rate;
+    let receivedBoundaryEvent = false;
+    let utteranceStartedAt = 0;
+    const estimatedDurationMs = Math.max(
+      1000,
+      (paragraph.text.trim().split(/\s+/).length / (2.4 * rate)) * 1000
+    );
     utterance.onstart = () => {
       if (activeStoryUtterance !== utterance) return;
       $("#play-button").disabled = true;
       $("#status-message").textContent = language === "my" ? "နားထောင်နေသည်…" : "Playing story…";
+      utteranceStartedAt = Date.now();
+      // Some mobile TTS engines never emit word-boundary events. Use an
+      // approximate character-position fallback only until a real boundary arrives.
+      clearSpeechHighlightTimer();
+      activeSpeechHighlightTimer = window.setInterval(() => {
+        if (activeStoryUtterance !== utterance) {
+          clearSpeechHighlightTimer();
+          return;
+        }
+        if (receivedBoundaryEvent) {
+          clearSpeechHighlightTimer();
+          return;
+        }
+        const progress = Math.min(0.96, (Date.now() - utteranceStartedAt) / estimatedDurationMs);
+        const estimatedCharIndex = Math.min(
+          paragraph.text.length - 1,
+          Math.max(0, Math.floor(progress * paragraph.text.length))
+        );
+        highlightSpeechWord(paragraph.start + estimatedCharIndex);
+      }, 120);
     };
     utterance.onboundary = (event) => {
       if (activeStoryUtterance !== utterance) return;
       if (event.name === "word" || Number.isFinite(event.charIndex)) {
+        receivedBoundaryEvent = true;
+        clearSpeechHighlightTimer();
         highlightSpeechWord(paragraph.start + event.charIndex);
       }
     };
     utterance.onend = () => {
       if (activeStoryUtterance !== utterance) return;
+      clearSpeechHighlightTimer();
       speakNextParagraph();
     };
     utterance.onerror = () => {
       if (activeStoryUtterance !== utterance) return;
+      clearSpeechHighlightTimer();
       activeStoryUtterance = null;
       clearSpeechHighlight();
       $("#play-button").disabled = false;
