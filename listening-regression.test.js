@@ -48,6 +48,18 @@ test("Listening narration queues paragraph chunks with story-global highlight of
   assert.match(source, /utterance\.onend = \(\) => \{\s*if \(activeStoryUtterance !== utterance\) return;\s*speakNextParagraph\(\);/);
 });
 
+test("spoken-word highlighting is visibly styled, accessible, and scrolls into view", () => {
+  const start = app.indexOf("function highlightSpeechWord(charIndex)");
+  const end = app.indexOf("\\nfunction getStoryParagraphs()", start);
+  assert.ok(start >= 0 && end > start, "speech highlight helper should exist");
+  const source = app.slice(start, end);
+  assert.match(source, /active\\.classList\\.add\\("speech-current-word"\\)/);
+  assert.match(source, /active\\.setAttribute\\("aria-current", "true"\\)/);
+  assert.match(source, /scrollIntoView\\(\\{ block: "nearest", behavior: "smooth" \\}\\)/);
+  assert.match(css, /\\.speech-current-word\\s*\\{[^}]*background:\\s*#ffe58a/s);
+  assert.match(css, /#lesson-text \\.lesson-word\\.speech-current-word:focus-visible/);
+});
+
 test("stale speech events cannot change the current playback or highlight state", () => {
   const start = app.indexOf("function speakStory()");
   const end = app.indexOf("\nfunction startSpeakingPractice()", start);
