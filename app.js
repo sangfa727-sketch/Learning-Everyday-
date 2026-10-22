@@ -8,6 +8,7 @@ let readingStory = DEFAULT_STORY;
 let story = DEFAULT_STORY;
 let activeListeningStoryId = null;
 let activeStoryTranslations = [];
+let activeWordParagraphIndex = 0;
 const LISTENING_STORIES = [
   { id: "garden-bird", title: "Maya’s Garden", myTitle: "Maya ၏ ဥယျာဉ်", level: "A1", category: "Nature", myCategory: "သဘာဝ", icon: "🌱", summary: "A little bird brings joy to a quiet garden.", mySummary: "ငှက်ကလေးတစ်ကောင်က ဥယျာဉ်လေးထဲ ပျော်ရွှင်မှုယူလာပုံ။", text: DEFAULT_STORY, paragraphTranslations: ["Maya တွင် ပန်းပင်များစိုက်ထားသော ဥယျာဉ်ငယ်တစ်ခုရှိသည်။ သူမသည် မနက်တိုင်း ပန်းများကို ရေလောင်းသည်။ အဝါရောင်ငှက်ကလေးတစ်ကောင် ဥယျာဉ်သို့လာပြီး သစ်ပင်ပေါ်တွင် သီချင်းဆိုသည်။ ငှက်ကလေး၏သီချင်းကို ကြားရသောအခါ Maya ပျော်ရွှင်သည်။"] },
   { id: "market-morning", title: "A Morning at the Market", myTitle: "ဈေးထဲက မနက်ခင်း", level: "A1", category: "Everyday life", myCategory: "နေ့စဉ်ဘဝ", icon: "🧺", summary: "Nora visits the market to buy fruit for her family.", mySummary: "Nora က မိသားစုအတွက် သစ်သီးဝယ်ရန် ဈေးသို့သွားသည်။", text: "Nora goes to the market early in the morning. She buys three apples, some bananas, and a loaf of bread. The fruit seller smiles and puts everything in a small bag. Nora walks home and prepares breakfast for her family.", paragraphTranslations: ["Nora သည် မနက်စောစော ဈေးသို့သွားသည်။ ပန်းသီးသုံးလုံး၊ ငှက်ပျောသီးအချို့နှင့် ပေါင်မုန့်တစ်လုံး ဝယ်သည်။ သစ်သီးရောင်းသူက ပြုံးပြီး ပစ္စည်းအားလုံးကို အိတ်ငယ်တစ်လုံးထဲ ထည့်ပေးသည်။ Nora သည် အိမ်သို့ပြန်လာပြီး မိသားစုအတွက် မနက်စာပြင်ဆင်သည်။"] },
@@ -198,6 +199,7 @@ function pronounceWord(word) {
 }
 
 function showWord(word, paragraphIndex = 0) {
+  activeWordParagraphIndex = paragraphIndex;
   const entry = lookupWord(word);
   $("#word-title").textContent = word;
   $("#word-definition").textContent = entry ? entry.meaning + ". " + entry.usage : translations[language].unknown;
@@ -233,7 +235,7 @@ function setLanguage(next) {
   $("#status-message").textContent = translations[next].voiceNote;
   updateSkill(activeSkill);
   renderPage();
-  if (!$("#word-card").hidden) showWord($("#word-title").textContent);
+  if (!$("#word-card").hidden) showWord($("#word-title").textContent, activeWordParagraphIndex);
 }
 
 function updateSkill(skill) {
