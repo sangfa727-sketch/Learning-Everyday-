@@ -161,6 +161,7 @@ const CONTEXTUAL_SENSES = Object.freeze({
     { test: /\b(river|water|shore|flood|stone near the bank|near the bank|riverbank|river bank)\b/i, meaning: "the land alongside a river", my: "မြစ်ကမ်းပါး" }
   ],
   current: [
+    { test: /\bcurrent (?:contact|phone|telephone|emergency|mobile) (?:number|details|information)\b/i, meaning: "up-to-date and presently valid", my: "လက်ရှိအသုံးပြုနေသော၊ နောက်ဆုံးအခြေအနေနှင့်ကိုက်ညီသော" },
     { test: /\b(?:river|water|stream)\s+current\b|\bcurrent (?:was|is|became|grew|too strong|strong)\b/i, meaning: "the flow of water in a river or stream", my: "ရေစီးကြောင်း၊ ရေစီးအား" },
     { test: /\bcurrent (?:river|water|level|conditions|status|plan|year|information)\b/i, meaning: "happening or existing now", my: "လက်ရှိဖြစ်နေသော" }
   ],
@@ -203,6 +204,7 @@ const CONTEXTUAL_SENSES = Object.freeze({
     { test: /\b(?:was|were|had been|has been|is|are)\s+closed\b/i, meaning: "was or were shut", my: "ပိတ်ထားသည်၊ ပိတ်ထားခဲ့သည်" }
   ],
   called: [
+    { test: /\b(?:bell|alarm|signal|announcement|school bell)\s+(?:called|calls)\b|\bcalled\s+(?:children|students|people|residents|everyone)\s+(?:to|for)\b/i, meaning: "summoned or signaled people to come or act", my: "ခေါ်ယူခဲ့သည်၊ အသိပေးခေါ်ဆိုခဲ့သည်" },
     { test: /\bcalled\s+(?:the number|a number|the office|the service|a neighbour|a neighbor|the owner)\b/i, meaning: "contacted someone or a service by phone", my: "ဖုန်းဆက်ခဲ့သည်" },
     { test: /\bcalled\s+(?:its|his|her|the puppy|the animal)\s+(?:name|Milo|a name)\b/i, meaning: "used a name to call someone or something", my: "အမည်ဖြင့် ခေါ်ခဲ့သည်" }
   ],
