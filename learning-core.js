@@ -1,4 +1,5 @@
 export const DICTIONARY = Object.freeze({
+  grandmother: { meaning: "the mother of someone's parent", usage: "Her grandmother started the garden.", my: "အဘွား" },
   garden: { meaning: "a place where flowers, fruit, or vegetables are grown", usage: "Maya has a small garden.", my: "ပန်းပင်၊ ဟင်းသီးဟင်းရွက် စိုက်ပျိုးရာနေရာ" },
   morning: { meaning: "the early part of the day", usage: "Every morning, she waters the flowers.", my: "မနက်ခင်း" },
   water: { meaning: "to give water to a plant or living thing", usage: "She waters the flowers.", my: "ရေလောင်းသည်" },
