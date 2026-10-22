@@ -232,8 +232,7 @@ function pluralNounMeaning(value, context, entry, dictionary) {
   const word = normalizeWord(value);
   if (!word.endsWith("s") || word.endsWith("'s") || Object.prototype.hasOwnProperty.call(dictionary, word)) return null;
   const meaning = String(entry?.my ?? "").trim();
-  if (!meaning || meaning.includes("၊") || meaning.includes("ဝါကျအလိုက်") || meaning.includes("များ") ||
-      /(?:သည်|သော|ခြင်း|တယ်|နေသည်|နေသော)$/.test(meaning)) return null;
+  if (!meaning || meaning.includes("ဝါကျအလိုက်")) return null;
 
   // Story vocabulary is normalized to letters, apostrophes, and hyphens, so it
   // can be inserted into this word-boundary expression without regex escaping.
@@ -255,7 +254,13 @@ function pluralNounMeaning(value, context, entry, dictionary) {
     "reduced", "prevented", "changed", "improved", "cleaned", "removed", "called", "showing", "making"
   ].join("|");
   const pattern = new RegExp("(?:^|[.!?]\\s+|[,;:]\\s*|\\b(?:" + nounClues + ")\\s+)" + word + "\\b", "i");
-  return pattern.test(String(context ?? "")) ? meaning + "များ" : null;
+  if (!pattern.test(String(context ?? ""))) return null;
+  const pluralParts = meaning.split("၊").map((part) => {
+    const trimmed = part.trim();
+    if (!trimmed || trimmed.includes("များ") || /(?:သည်|သော|ခြင်း|တယ်|နေသည်|နေသော)$/.test(trimmed)) return trimmed;
+    return trimmed + "များ";
+  });
+  return pluralParts.join("၊ ");
 }
 
 export function lookupWordInContext(value, context = "", dictionary = DICTIONARY) {
