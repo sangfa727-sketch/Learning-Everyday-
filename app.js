@@ -822,7 +822,7 @@ function speakStory() {
     };
     utterance.onboundary = (event) => {
       if (activeStoryUtterance !== utterance) return;
-      if (event.name === "word" || Number.isFinite(event.charIndex)) {
+      if (Number.isFinite(event.charIndex)) {
         receivedBoundaryEvent = true;
         clearSpeechHighlightTimer();
         highlightSpeechWord(paragraph.start + event.charIndex);
