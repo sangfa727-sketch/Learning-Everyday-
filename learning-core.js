@@ -228,6 +228,36 @@ const CONTEXTUAL_SENSES = Object.freeze({
   ]
 });
 
+function pluralNounMeaning(value, context, entry, dictionary) {
+  const word = normalizeWord(value);
+  if (!word.endsWith("s") || word.endsWith("'s") || Object.prototype.hasOwnProperty.call(dictionary, word)) return null;
+  const meaning = String(entry?.my ?? "").trim();
+  if (!meaning || meaning.includes("၊") || meaning.includes("ဝါကျအလိုက်") || meaning.includes("များ") ||
+      /(?:သည်|သော|ခြင်း|တယ်|နေသည်|နေသော)$/.test(meaning)) return null;
+
+  // Story vocabulary is normalized to letters, apostrophes, and hyphens, so it
+  // can be inserted into this word-boundary expression without regex escaping.
+  const nounClues = [
+    "the", "these", "those", "many", "some", "several", "few", "two", "three", "four", "five", "six",
+    "all", "both", "other", "their", "our", "your", "my", "local", "new", "old", "small", "large",
+    "young", "healthy", "damaged", "public", "important", "reliable", "official", "remaining", "suitable",
+    "native", "different", "various", "visible", "common", "early", "current", "flood", "river", "town",
+    "school", "family", "community", "nearby", "certain", "clear", "market", "water-level", "high-water",
+    "and", "or", "but", "while", "with", "among", "between", "including", "from", "to", "of", "for", "by",
+    "near", "beside", "around", "above", "below", "under", "across", "through", "after", "before", "during",
+    "inside", "outside", "following", "compared", "showed", "checked", "collected", "recorded", "counted",
+    "photographed", "observed", "measured", "planted", "moved", "repaired", "inspected", "reviewed", "updated",
+    "displayed", "shared", "asked", "provided", "included", "contained", "found", "gathered", "separated",
+    "selected", "used", "created", "built", "made", "placed", "took", "brought", "returned", "added", "marked",
+    "visited", "helped", "needed", "required", "gave", "offered", "wrote", "read", "borrowed", "requested",
+    "received", "donated", "kept", "preserved", "protected", "followed", "warned", "encouraged", "told",
+    "invited", "explained", "mentioned", "described", "presented", "announced", "confirmed", "supported",
+    "reduced", "prevented", "changed", "improved", "cleaned", "removed", "called", "showing", "making"
+  ].join("|");
+  const pattern = new RegExp("(?:^|[.!?]\\s+|[,;:]\\s*|\\b(?:" + nounClues + ")\\s+)" + word + "\\b", "i");
+  return pattern.test(String(context ?? "")) ? meaning + "များ" : null;
+}
+
 export function lookupWordInContext(value, context = "", dictionary = DICTIONARY) {
   const word = normalizeWord(value);
   const entry = lookupWord(word, dictionary);
@@ -265,8 +295,10 @@ export function lookupWordInContext(value, context = "", dictionary = DICTIONARY
   if (!senses) return entry;
 
   const sentence = String(context ?? "");
-  const selected = senses.find((sense) => sense.test.test(sentence));
-  return selected ? { ...entry, meaning: selected.meaning, my: selected.my } : entry;
+  const selected = senses?.find((sense) => sense.test.test(sentence));
+  const resolved = selected ? { ...entry, meaning: selected.meaning, my: selected.my } : entry;
+  const pluralMeaning = pluralNounMeaning(word, sentence, resolved, dictionary);
+  return pluralMeaning ? { ...resolved, my: pluralMeaning } : resolved;
 }
 
 export function splitEnglishSentences(value) {
