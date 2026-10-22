@@ -609,6 +609,11 @@ test("context-aware lookup preserves plural nouns without pluralizing third-pers
   assert.match(lookupWordInContext("waters", "Maya waters the flowers.").my, /^ရေလောင်းသည်$/);
 });
 
+test("dictionary returns correct plural forms for children and contextual mistakes", () => {
+  assert.equal(lookupWord("children")?.my, "ကလေးများ");
+  assert.equal(lookupWordInContext("mistakes", "The town learned from its mistakes.").my, "အမှားများ");
+});
+
 test("context-aware lookup distinguishes address nouns and verbs and plural nouns", () => {
   assert.match(lookupWordInContext("addresses", "The map did not include private home addresses.").my, /^လိပ်စာများ$/);
   assert.match(lookupWordInContext("addresses", "The plan addresses the town's need for clear warnings.").my, /^ကိုင်တွယ်ဖြေရှင်းသည်$/);
