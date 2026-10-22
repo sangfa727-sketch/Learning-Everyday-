@@ -754,3 +754,18 @@ test("contextual dictionary distinguishes a current contact number from river cu
   assert.match(bell.meaning, /summoned or signaled people/);
   assert.match(bell.my, /ခေါ်ယူခဲ့သည်/);
 });
+
+
+test("contextual dictionary distinguishes looking at something from looking a certain way", () => {
+  const lookedClear = lookupWordInContext("looked", "She explained that water that looked clear could still be unsafe.");
+  assert.match(lookedClear.meaning, /appeared or seemed/);
+  assert.match(lookedClear.my, /ပုံရသည်/);
+
+  const lookedAt = lookupWordInContext("looked", "The puppy stopped shaking and looked at her.");
+  assert.match(lookedAt.my, /ကြည့်/);
+  assert.doesNotMatch(lookedAt.my, /ပုံရသည်/);
+
+  const changedLives = lookupWordInContext("changed", "The building changed their lives.");
+  assert.match(changedLives.meaning, /affected or altered people's lives/);
+  assert.match(changedLives.my, /ဘဝများကို ပြောင်းလဲစေခဲ့သည်/);
+});
