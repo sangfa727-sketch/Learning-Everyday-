@@ -313,7 +313,7 @@ function renderListeningLibrary() {
     action.textContent = isMyanmar ? "ဖတ်ရှုနားထောင်ရန် →" : "Read & listen →";
     card.append(art, meta, title, summary, action);
     card.addEventListener("click", () => {
-      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+      stopStoryNarration();
       location.hash = `#/listening/${item.id}`;
     });
     grid.append(card);
@@ -336,6 +336,7 @@ function syncListeningView(page = currentPage()) {
     panel.hidden = false;
     back.hidden = true;
     if (activeListeningStoryId) {
+      stopStoryNarration();
       story = readingStory;
       activeStoryTranslations = [];
       activeListeningStoryId = null;
@@ -345,7 +346,7 @@ function syncListeningView(page = currentPage()) {
   }
   const selected = LISTENING_STORIES.find((item) => item.id === route[1]);
   if (!selected) {
-    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    stopStoryNarration();
     activeListeningStoryId = null;
     story = readingStory;
     activeStoryTranslations = [];
@@ -357,6 +358,7 @@ function syncListeningView(page = currentPage()) {
     return;
   }
   if (activeListeningStoryId !== selected.id) {
+    if (activeListeningStoryId) stopStoryNarration();
     activeListeningStoryId = selected.id;
     story = selected.text;
     activeStoryTranslations = selected.paragraphTranslations || [];
@@ -371,6 +373,13 @@ function syncListeningView(page = currentPage()) {
   $(".panel-heading .eyebrow").textContent = language === "my" ? "နားထောင်လေ့ကျင့်ခန်း" : "LISTENING STORY";
   $("#lesson-level-tag").textContent = `${selected.level} · ${selected.level === "A1" ? (language === "my" ? "အစပြုသူ" : "Beginner") : selected.level === "A2" ? (language === "my" ? "အခြေခံ" : "Elementary") : (language === "my" ? "အလယ်အလတ်" : "Intermediate")}`;
   $(".lesson-number").textContent = language === "my" ? "ပုံပြင်" : "STORY";
+}
+
+function stopStoryNarration() {
+  if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+  clearSpeechHighlight();
+  const playButton = $("#play-button");
+  if (playButton) playButton.disabled = false;
 }
 
 function clearSpeechHighlight() {
@@ -603,10 +612,13 @@ document.querySelectorAll("[data-skill]").forEach((button) => button.addEventLis
 $("#language-toggle").addEventListener("click", () => setLanguage(language === "en" ? "my" : "en"));
 $("#play-button").addEventListener("click", speakStory);
 $("#back-to-story-library").addEventListener("click", () => {
-  if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+  stopStoryNarration();
   location.hash = "#/listening";
 });
-$("#stop-button").addEventListener("click", () => { if ("speechSynthesis" in window) window.speechSynthesis.cancel(); $("#play-button").disabled = false; $("#status-message").textContent = translations[language].voiceNote; });
+$("#stop-button").addEventListener("click", () => {
+  stopStoryNarration();
+  $("#status-message").textContent = translations[language].voiceNote;
+});
 $("#close-word").addEventListener("click", () => { $("#word-card").hidden = true; });
 $("#pronounce-word").addEventListener("click", () => pronounceWord($("#word-title").textContent));
 $("#writing-input").value = readLocalValue("le.writingDraft", "");
