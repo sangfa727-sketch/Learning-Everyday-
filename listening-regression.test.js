@@ -319,3 +319,22 @@ test("word tap triggers only one pronunciation request", () => {
   assert.ok(!showSource.includes("pronounceWord(word)"), "showWord should not speak automatically because the click handler owns pronunciation");
   assert.ok(app.includes("showWord(part.word, wordParagraphIndex);\n      pronounceWord(part.word);"), "tapping a word should display its details and request pronunciation exactly once");
 });
+
+
+test("shared dictionary keys are unique and every entry has complete English and Myanmar fields", async () => {
+  const dictionarySource = await readFile(new URL("./dictionary.js", import.meta.url), "utf8");
+  const keys = [...dictionarySource.matchAll(/^\\s{2}([a-z][a-z'-]*):\\s*\\{/gm)].map((match) => match[1]);
+  assert.ok(keys.length > 0, "shared dictionary should contain entries");
+  assert.equal(new Set(keys).size, keys.length, "shared dictionary source must not contain duplicate keys");
+
+  for (const key of keys) {
+    const entry = DICTIONARY[key];
+    assert.ok(entry, `dictionary entry should export: ${key}`);
+    assert.equal(typeof entry.meaning, "string", `${key} should have an English meaning`);
+    assert.ok(entry.meaning.trim(), `${key} English meaning must not be empty`);
+    assert.equal(typeof entry.usage, "string", `${key} should have an example sentence`);
+    assert.ok(entry.usage.trim(), `${key} example sentence must not be empty`);
+    assert.equal(typeof entry.my, "string", `${key} should have a Myanmar meaning`);
+    assert.ok(entry.my.trim(), `${key} Myanmar meaning must not be empty`);
+  }
+});
