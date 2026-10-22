@@ -781,6 +781,12 @@ test("contextual dictionary distinguishes looking at something from looking a ce
 });
 
 
+test("direct uses a natural Myanmar meaning when describing rainwater flow", () => {
+  const direct = lookupWordInContext("direct", "Wetlands can direct rainwater more slowly toward streams.");
+  assert.match(direct.meaning, /guide or control the course/);
+  assert.match(direct.my, /လမ်းကြောင်းကို ထိန်းညှိသည်/);
+});
+
 test("river-story vocabulary distinguishes a staff gauge from school staff and a drainage screen from a display screen", () => {
   const gauge = lookupWordInContext("staff", "Ms Khin showed them a safe staff gauge fixed beside a protected viewing platform.");
   assert.match(gauge.meaning, /marked pole or measuring device/);
