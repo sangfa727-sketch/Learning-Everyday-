@@ -7,6 +7,7 @@ const DEFAULT_STORY = "Maya has a small garden. Every morning, she waters the fl
 let readingStory = DEFAULT_STORY;
 let story = DEFAULT_STORY;
 let activeListeningStoryId = null;
+let activeStoryTranslations = [];
 const LISTENING_STORIES = [
   { id: "garden-bird", title: "Maya’s Garden", myTitle: "Maya ၏ ဥယျာဉ်", level: "A1", category: "Nature", myCategory: "သဘာဝ", icon: "🌱", summary: "A little bird brings joy to a quiet garden.", mySummary: "ငှက်ကလေးတစ်ကောင်က ဥယျာဉ်လေးထဲ ပျော်ရွှင်မှုယူလာပုံ။", text: DEFAULT_STORY },
   { id: "market-morning", title: "A Morning at the Market", myTitle: "ဈေးထဲက မနက်ခင်း", level: "A1", category: "Everyday life", myCategory: "နေ့စဉ်ဘဝ", icon: "🧺", summary: "Nora visits the market to buy fruit for her family.", mySummary: "Nora က မိသားစုအတွက် သစ်သီးဝယ်ရန် ဈေးသို့သွားသည်။", text: "Nora goes to the market early in the morning. She buys three apples, some bananas, and a loaf of bread. The fruit seller smiles and puts everything in a small bag. Nora walks home and prepares breakfast for her family." },
@@ -124,6 +125,7 @@ function syncListeningView(page = currentPage()) {
     back.hidden = true;
     if (activeListeningStoryId) {
       story = readingStory;
+      activeStoryTranslations = [];
       activeListeningStoryId = null;
       renderStory();
     }
@@ -134,6 +136,7 @@ function syncListeningView(page = currentPage()) {
     if ("speechSynthesis" in window) window.speechSynthesis.cancel();
     activeListeningStoryId = null;
     story = readingStory;
+    activeStoryTranslations = [];
     renderStory();
     renderListeningLibrary();
     library.hidden = false;
@@ -144,6 +147,7 @@ function syncListeningView(page = currentPage()) {
   if (activeListeningStoryId !== selected.id) {
     activeListeningStoryId = selected.id;
     story = selected.text;
+    activeStoryTranslations = selected.paragraphTranslations || [];
     renderStory();
     $("#word-card").hidden = true;
     $("#status-message").textContent = translations[language].voiceNote;
@@ -160,14 +164,19 @@ function syncListeningView(page = currentPage()) {
 function renderStory() {
   const container = $("#lesson-text");
   container.replaceChildren();
+  let paragraphIndex = 0;
   for (const part of tokenizeStory(story)) {
-    if (!part.word) { container.append(document.createTextNode(part.text)); continue; }
+    if (!part.word) {
+      paragraphIndex += (part.text.match(/\n\s*\n/g) || []).length;
+      container.append(document.createTextNode(part.text));
+      continue;
+    }
     const button = document.createElement("button");
     button.type = "button";
     button.className = "lesson-word";
     button.textContent = part.text;
     button.setAttribute("aria-label", `Look up ${part.word}`);
-    button.addEventListener("click", () => showWord(part.word));
+    button.addEventListener("click", () => showWord(part.word, paragraphIndex));
     container.append(button);
   }
 }
@@ -187,10 +196,17 @@ function pronounceWord(word) {
   window.speechSynthesis.speak(utterance);
 }
 
-function showWord(word) {
+function showWord(word, paragraphIndex = 0) {
   const entry = lookupWord(word);
   $("#word-title").textContent = word;
   $("#word-definition").textContent = entry ? entry.meaning + ". " + entry.usage : translations[language].unknown;
+  const contextTranslation = $("#word-context-translation");
+  if (contextTranslation) {
+    const translated = activeStoryTranslations[paragraphIndex];
+    contextTranslation.textContent = translated
+      ? "စာပိုဒ်၏ မြန်မာဘာသာပြန် — " + translated
+      : "စာပိုဒ်၏ မြန်မာဘာသာပြန် — ဤစာပိုဒ်အတွက် ဘာသာပြန်ကို မထည့်ရသေးပါ။";
+  }
   const myTranslation = $("#word-myanmar-translation");
   if (myTranslation) {
     myTranslation.textContent = entry?.my
