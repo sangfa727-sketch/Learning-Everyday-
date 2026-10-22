@@ -81,7 +81,7 @@ const CONTEXTUAL_SENSES = Object.freeze({
   rose: [
     { test: /\b(ms|mr|mrs|miss|teacher|class)\s+rose\b/i, meaning: "Rose, a person's name", my: "ရို့စ် (လူအမည်)" },
     { test: /\b(river|water|level|flood|sun|temperature|price|number|smoke|mist|voice|hand\s+rose|head|from .*seat|early)\b/i, meaning: "past tense of rise; moved upward or increased", my: "မြင့်တက်လာခဲ့သည်၊ မြင့်တက်ခဲ့သည်" },
-    { test: /\b(garden|flower|petal|stem|bloom|red|pink|thorn|plant|bouquet|vase)\b/i, meaning: "a rose, a kind of flowering plant", my: "နှင်းဆီပန်း" }
+    { test: /\b(?:a|the|red|pink|white|single|beautiful)\s+rose\b|\b(garden|flower|petal|stem|bloom|red|pink|thorn|plant|bouquet|vase)\b/i, meaning: "a rose, a kind of flowering plant", my: "နှင်းဆီပန်း" }
   ],
   lives: [
     { test: /\b(life|people's|many people's|our|their|his|her|different)\s+lives\b/i, meaning: "plural of life", my: "ဘဝများ၊ အသက်တာများ" },
