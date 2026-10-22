@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { DICTIONARY, lookupWord, lookupWordInContext, tokenizeStory, splitEnglishSentences } from "./learning-core.js";
 import { readFile } from "node:fs/promises";
+import { VOCABULARY_CATEGORIES } from "./curriculum.js";
 
 const app = await readFile(new URL("./app.js", import.meta.url), "utf8");
 const html = await readFile(new URL("./index.html", import.meta.url), "utf8");
@@ -827,7 +828,7 @@ test("tapping another story word dismisses the open card without opening a repla
 
 test("service worker refreshes the app shell cache and includes the shared offline dictionary", async () => {
   const sw = await readFile(new URL("./sw.js", import.meta.url), "utf8");
-  assert.match(sw, /CACHE_NAME\s*=\s*"learning-everyday-shell-v35"/);
+  assert.match(sw, /CACHE_NAME\s*=\s*"learning-everyday-shell-v36"/);
   assert.match(sw, /APP_SHELL\s*=\s*\[[^\]]*"\.\/dictionary\.js"/s);
 });
 
@@ -836,4 +837,24 @@ test("every shared dictionary entry has a non-empty Myanmar meaning", () => {
     .filter(([word, entry]) => !entry || typeof entry.my !== "string" || !entry.my.trim())
     .map(([word]) => word);
   assert.deepEqual(missing, [], "all offline dictionary entries should include a Myanmar meaning");
+});
+
+
+test("all topic vocabulary translations are available from the shared offline dictionary without duplicate headwords", () => {
+  const sourceKeys = [...dictionarySource.matchAll(/^\\s{2}(?:([a-z][a-z0-9'-]*)|"([^"]+)"): \\{/gm)]
+    .map((match) => (match[1] || match[2]).toLocaleLowerCase("en"));
+  assert.equal(new Set(sourceKeys).size, sourceKeys.length, "dictionary headwords, including multi-word phrases, must not be duplicated");
+
+  let checked = 0;
+  for (const category of VOCABULARY_CATEGORIES) {
+    for (const [word, translation, example] of category.words) {
+      const entry = lookupWord(word);
+      assert.ok(entry, `topic vocabulary should resolve in the shared dictionary: ${word}`);
+      assert.ok(entry.my?.trim(), `${word} should have a Myanmar translation`);
+      assert.ok(entry.meaning?.trim(), `${word} should have an English meaning`);
+      assert.ok(entry.usage?.trim(), `${word} should have an example sentence`);
+      checked += 1;
+    }
+  }
+  assert.equal(checked, 320, "all 320 topic vocabulary cards should connect to the shared dictionary");
 });
