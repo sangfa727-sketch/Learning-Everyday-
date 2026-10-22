@@ -489,6 +489,21 @@ test("shared dictionary preserves common ambiguous word senses found in Listenin
 });
 
 
+test("canceled word-pronunciation events cannot overwrite the status of newer speech", () => {
+  assert.match(app, /let activeWordUtterance = null;/);
+  const start = app.indexOf("function pronounceWord(word)");
+  const end = app.indexOf("\nfunction sentenceAtOffset()", start);
+  assert.ok(start >= 0 && end > start, "pronounceWord should be defined");
+  const source = app.slice(start, end);
+  assert.match(source, /activeWordUtterance = utterance;/);
+  assert.match(source, /utterance\.onend = \(\) => \{\s*if \(activeWordUtterance === utterance\) activeWordUtterance = null;/);
+  assert.match(source, /utterance\.onerror = \(\) => \{\s*if \(activeWordUtterance !== utterance\) return;/);
+  assert.match(source, /activeWordUtterance = null;[\s\S]*?window\.speechSynthesis\.cancel\(\);/);
+  const stopStart = app.indexOf("function stopStoryNarration()");
+  const stopEnd = app.indexOf("\nfunction clearSpeechHighlight()", stopStart);
+  assert.match(app.slice(stopStart, stopEnd), /activeWordUtterance = null;/);
+});
+
 test("Listening word pronunciation selects an English voice and uses an English locale fallback", () => {
   const start = app.indexOf("function selectedEnglishVoice()");
   const end = app.indexOf("\nif (\"speechSynthesis\" in window)", start);
