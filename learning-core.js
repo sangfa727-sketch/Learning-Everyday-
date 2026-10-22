@@ -33,6 +33,9 @@ const IRREGULAR_WORD_BASES = Object.freeze({
   had: "have", has: "have",
   children: "child", men: "man", women: "woman",
   feet: "foot", teeth: "tooth", mice: "mouse",
+  worn: "wear", rang: "ring", rung: "ring", began: "begin",
+  safer: "safe", taller: "tall", lighter: "light", easier: "easy",
+  hurried: "hurry", recognised: "recognise",
 });
 
 export function lookupWord(value, dictionary = DICTIONARY) {
