@@ -291,3 +291,21 @@ test("curly apostrophe possessives remain tappable and reuse the base-word meani
   assert.equal(lookupWord("Lina’s"), DICTIONARY.lina);
   assert.equal(lookupWord("river’s"), DICTIONARY.river);
 });
+
+
+test("every clickable word in every Listening story resolves in the shared offline dictionary", () => {
+  const storyRefs = [...app.matchAll(/id:\s*"([^"]+)",\s*title:\s*"([^"]+)"/g)];
+  assert.equal(storyRefs.length, 7, "all seven Listening stories should be audited");
+  for (let i = 0; i < storyRefs.length; i += 1) {
+    const storyStart = storyRefs[i].index;
+    const storyEnd = i + 1 < storyRefs.length ? storyRefs[i + 1].index : app.length;
+    const story = app.slice(storyStart, storyEnd);
+    const textStart = story.indexOf("text: [");
+    const textEnd = story.indexOf("].join", textStart);
+    assert.ok(textStart >= 0 && textEnd > textStart, storyRefs[i][2] + " should have readable story text");
+    const paragraphs = [...story.slice(textStart, textEnd).matchAll(/^\s*("(?:\\.|[^"\\])*")\s*,?\s*$/gm)]
+      .map((match) => JSON.parse(match[1]));
+    const missing = [...new Set(tokenizeStory(paragraphs.join(" ")).filter((token) => token.word).map((token) => token.word).filter((word) => !lookupWord(word)))];
+    assert.deepEqual(missing, [], storyRefs[i][2] + " has clickable words missing from the shared dictionary");
+  }
+});
