@@ -368,7 +368,7 @@ export const DICTIONARY = Object.freeze({
   behind: { meaning: "at the back of something", usage: "The garden was behind the house.", my: "နောက်ဘက်တွင်" },
   started: { meaning: "began to do or make something", usage: "Her grandmother started the garden.", my: "စတင်ခဲ့သည်" },
   years: { meaning: "periods of twelve months", usage: "The garden began many years ago.", my: "နှစ်များ" },
-  rose: { meaning: "a flower that often grows on a thorny bush", usage: "The garden had roses.", my: "နှင်းဆီပန်း" },
+  rose: { meaning: "the past tense of rise (to move upward); also a flower with a pleasant scent and often thorns", usage: "The river rose after heavy rain. A red rose grew in the garden.", my: "မြင့်တက်လာခဲ့သည်၊ နှင်းဆီပန်း (ဝါကျအလိုက် အဓိပ္ပာယ်ကွဲသည်)" },
   sunflower: { meaning: "a tall plant with a large yellow flower", usage: "A sunflower grew beside the path.", my: "နေကြာပန်း" },
   mint: { meaning: "a plant with fragrant leaves used in food and drinks", usage: "Maya grew mint in the garden.", my: "ပူစီနံ" },
   mango: { meaning: "a sweet tropical fruit, or the tree that grows it", usage: "A small mango tree stood in the garden.", my: "သရက်သီး၊ သရက်ပင်" },
