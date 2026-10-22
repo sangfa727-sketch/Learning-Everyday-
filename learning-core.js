@@ -169,6 +169,14 @@ const CONTEXTUAL_SENSES = Object.freeze({
   level: [
     { test: /\b(?:river|water|flood|gauge|measurements?|rise|rose|rising)\b/i, meaning: "the height or amount of water", my: "ရေအမြင့်၊ ရေပမာဏ" }
   ],
+  staff: [
+    { test: /\bstaff gauge\b|\b(?:read|fixed|painted|installed)\s+(?:a|the)?\s*staff\b/i, meaning: "a marked pole or measuring device used to read water level", my: "ရေအမြင့်တိုင်းတာရန် အမှတ်အသားပါသော တိုင်" },
+    { test: /\b(?:school|library|clinic|office|town) staff\b|\bstaff (?:and|members|checked|explained|helped)\b/i, meaning: "people who work for an organisation", my: "ဝန်ထမ်းများ" }
+  ],
+  screen: [
+    { test: /\bdrainage screen\b|\b(?:damaged|blocked|repaired|replace[dt]?)\s+(?:the|a)?\s*screen\b/i, meaning: "a grate or barrier fitted over an opening to catch debris", my: "အမှိုက်နှင့် အရာဝတ္ထုများကို တားဆီးဖမ်းယူသည့် ဇကာကာ" },
+    { test: /\b(?:computer|phone|television|display|touch) screen\b/i, meaning: "a surface that displays images or information", my: "မျက်နှာပြင်" }
+  ],
   matter: [
     { test: /\b(?:open area|area|place|safety|evidence|observation|community)\b.*\b(?:matter|matters|mattered)\b|\b(?:matter|matters|mattered)\b.*\b(?:important|difference|effect)\b/i, meaning: "to be important or have an effect", my: "အရေးပါသည်၊ အရေးပါခဲ့သည်" }
   ],
