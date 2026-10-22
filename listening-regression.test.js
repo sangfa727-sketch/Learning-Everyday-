@@ -137,7 +137,7 @@ test("every Listening story has one non-empty Myanmar translation per English pa
   assert.ok(storyBlocks.length > 0, "At least one Listening story should be defined");
   const storyIds = new Set();
   for (const block of storyBlocks) {
-    const id = block.match(/\\bid:\\s*"([^"]+)"/)?.[1];
+    const id = block.match(/id: *"([^"]+)"/)?.[1];
     assert.ok(id, "Each Listening story should have an ID");
     assert.ok(!storyIds.has(id), `Duplicate Listening story ID: ${id}`);
     storyIds.add(id);
