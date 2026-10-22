@@ -740,7 +740,7 @@ test("Listening Myanmar translations preserve the meaning of nearby people and m
   assert.match(puppy, /ခွေးကလေးသည် တုန်နေခြင်း ရပ်သွားပြီး/);
 
   const riverStart = app.indexOf('id: "river-remembers"');
-  const riverEnd = app.indexOf("\n  },", riverStart);
+  const riverEnd = app.indexOf("\n\n];", riverStart);
   assert.ok(riverStart >= 0 && riverEnd > riverStart, "River story should exist");
   const river = app.slice(riverStart, riverEnd);
   assert.match(river, /ရေစီးသန်သော အန္တရာယ်ရှိသည့် ရေထဲသို့ မဝင်ရ/);
