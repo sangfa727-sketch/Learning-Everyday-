@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { lookupWord } from "./learning-core.js";
+import { DICTIONARY, lookupWord } from "./learning-core.js";
 import { readFile } from "node:fs/promises";
 
 const app = await readFile(new URL("./app.js", import.meta.url), "utf8");
@@ -269,16 +269,40 @@ test("every distinct word in Maya’s Garden story has an offline dictionary ent
   assert.deepEqual(missing, [], "Every word in Maya’s Garden should have a Myanmar dictionary entry");
 });
 
-import { DICTIONARY as SHARED_DICTIONARY } from "./dictionary.js";
-import { DICTIONARY as CORE_DICTIONARY } from "./learning-core.js";
-
-test("Listening uses one standalone shared dictionary as the source of truth", () => {
-  assert.ok(Object.keys(SHARED_DICTIONARY).length >= 300, "shared dictionary should retain the existing vocabulary");
-  assert.equal(SHARED_DICTIONARY, CORE_DICTIONARY, "core and standalone dictionary should re-export the same dictionary object");
+test("Listening uses one standalone shared dictionary as the source of truth", async () => {
+  const dictionarySource = await readFile(new URL("./dictionary.js", import.meta.url), "utf8");
+  const declaredKeys = [...dictionarySource.matchAll(/^\\s{2}([a-z][a-z'-]*):\\s*\\{/gm)].map((match) => match[1]);
+  assert.ok(Object.keys(DICTIONARY).length >= 300, "shared dictionary should retain the existing vocabulary");
+  assert.equal(new Set(declaredKeys).size, declaredKeys.length, "dictionary source must not declare duplicate word keys");
+  assert.equal(declaredKeys.length, Object.keys(DICTIONARY).length, "every declared dictionary entry should be represented exactly once");
 });
 
-test("word lookup resolves common irregular English forms without duplicate translations", () => {
-  for (const word of ["went", "saw", "took", "gave", "brought", "bought", "thought", "caught", "found", "told", "said", "ran", "sat", "fell", "knew", "wrote", "ate", "drank", "spoke", "broke", "chose", "kept", "slept", "heard", "lost", "won", "sent", "spent", "built", "met", "children", "men", "women", "feet", "teeth", "mice"]) {
-    assert.ok(lookupWord(word), "dictionary lookup should cover irregular form " + word);
+test("irregular forms reuse the exact base-word entry instead of duplicating translations", () => {
+  const pairs = [
+    ["went", "go"], ["gone", "go"], ["saw", "see"], ["seen", "see"],
+    ["took", "take"], ["taken", "take"], ["gave", "give"], ["given", "give"],
+    ["brought", "bring"], ["bought", "buy"], ["thought", "think"], ["caught", "catch"],
+    ["found", "find"], ["told", "tell"], ["said", "say"], ["ran", "run"],
+    ["sat", "sit"], ["fell", "fall"], ["stood", "stand"], ["felt", "feel"],
+    ["knew", "know"], ["known", "know"], ["understood", "understand"],
+    ["wrote", "write"], ["written", "write"], ["ate", "eat"], ["eaten", "eat"],
+    ["drank", "drink"], ["drunk", "drink"], ["spoke", "speak"], ["spoken", "speak"],
+    ["broke", "break"], ["broken", "break"], ["chose", "choose"], ["chosen", "choose"],
+    ["kept", "keep"], ["slept", "sleep"], ["forgot", "forget"], ["forgotten", "forget"],
+    ["held", "hold"], ["heard", "hear"], ["lost", "lose"], ["won", "win"],
+    ["sent", "send"], ["spent", "spend"], ["built", "build"], ["met", "meet"],
+    ["made", "make"], ["did", "do"], ["done", "do"], ["had", "have"],
+    ["children", "child"], ["men", "man"], ["women", "woman"],
+    ["feet", "foot"], ["teeth", "tooth"], ["mice", "mouse"],
+  ];
+  for (const [form, base] of pairs) {
+    assert.ok(DICTIONARY[base], "base dictionary entry should exist for " + form + " -> " + base);
+    assert.equal(lookupWord(form), DICTIONARY[base], form + " should reuse the base entry for " + base);
   }
+});
+
+test("unknown and empty word lookups do not return an unrelated translation", () => {
+  assert.equal(lookupWord(""), null);
+  assert.equal(lookupWord("   "), null);
+  assert.equal(lookupWord("qzxv-unlisted-word"), null);
 });
