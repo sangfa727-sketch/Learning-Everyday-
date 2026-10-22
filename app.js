@@ -9,6 +9,7 @@ let story = DEFAULT_STORY;
 let activeListeningStoryId = null;
 let activeStoryTranslations = [];
 let activeStoryUtterance = null;
+let activeWordUtterance = null;
 let activeWordParagraphIndex = 0;
 let activeWordButton = null;
 let currentStoryParagraphIndex = 0;
@@ -454,6 +455,7 @@ function refreshCurrentStoryTranslation() {
 
 function stopStoryNarration() {
   activeStoryUtterance = null;
+  activeWordUtterance = null;
   if ("speechSynthesis" in window) window.speechSynthesis.cancel();
   clearSpeechHighlight();
   const playButton = $("#play-button");
@@ -558,6 +560,7 @@ function pronounceWord(word) {
     return;
   }
   activeStoryUtterance = null;
+  activeWordUtterance = null;
   clearSpeechHighlight();
   $("#play-button").disabled = false;
   window.speechSynthesis.cancel();
@@ -566,7 +569,15 @@ function pronounceWord(word) {
   utterance.lang = voice?.lang || "en-US";
   if (voice) utterance.voice = voice;
   utterance.rate = clampSpeechRate($("#speech-speed")?.value ?? 0.85);
-  utterance.onerror = () => { $("#status-message").textContent = translations[language].noSpeech; };
+  activeWordUtterance = utterance;
+  utterance.onend = () => {
+    if (activeWordUtterance === utterance) activeWordUtterance = null;
+  };
+  utterance.onerror = () => {
+    if (activeWordUtterance !== utterance) return;
+    activeWordUtterance = null;
+    $("#status-message").textContent = translations[language].noSpeech;
+  };
   window.speechSynthesis.speak(utterance);
 }
 
@@ -719,6 +730,7 @@ function speakStory() {
     return;
   }
   activeStoryUtterance = null;
+  activeWordUtterance = null;
   window.speechSynthesis.cancel();
   clearSpeechHighlight();
 
