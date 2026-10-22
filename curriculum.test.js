@@ -1,13 +1,16 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import { LEVELS, VOCABULARY_CATEGORIES, SKILL_PRACTICE, EXTRA_SKILL_PRACTICE, LETTER_GUIDES, ALPHABET, CURSIVE_GLYPHS, getPractice, getPracticeCount } from "./curriculum.js";
 
 test("vocabulary categories have unique ids and bilingual words with examples", () => {
   assert.ok(VOCABULARY_CATEGORIES.length >= 16);
   assert.equal(new Set(VOCABULARY_CATEGORIES.map((category) => category.id)).size, VOCABULARY_CATEGORIES.length);
-  assert.ok(VOCABULARY_CATEGORIES.reduce((total, category) => total + category.words.length, 0) >= 128);
+  assert.equal(VOCABULARY_CATEGORIES.reduce((total, category) => total + category.words.length, 0), VOCABULARY_CATEGORIES.length * 20);
   for (const category of VOCABULARY_CATEGORIES) {
-    assert.ok(category.en && category.my && category.words.length >= 8);
+    assert.ok(category.en && category.my && category.words.length === 20, `${category.id} should contain exactly 20 words`);
+    const normalizedWords = category.words.map(([word]) => word.trim().toLocaleLowerCase("en-US"));
+    assert.equal(new Set(normalizedWords).size, 20, `${category.id} should not contain duplicate words`);
     for (const [word, meaning, example] of category.words) assert.ok(word && meaning && example);
   }
 });
@@ -78,4 +81,23 @@ test("cursive alphabet mapping covers uppercase and lowercase without collisions
   assert.equal(CURSIVE_GLYPHS.o, "ℴ");
   assert.notEqual(CURSIVE_GLYPHS.a, CURSIVE_GLYPHS.o);
   for (const letter of ALPHABET) assert.ok(CURSIVE_GLYPHS[letter], `Missing script glyph for ${letter}`);
+});
+
+test("vocabulary UI places example sentences inside the selected card and provides word and sentence audio", async () => {
+  const [ui, html, css, worker] = await Promise.all([
+    readFile(new URL("./curriculum-ui.js", import.meta.url), "utf8"),
+    readFile(new URL("./index.html", import.meta.url), "utf8"),
+    readFile(new URL("./styles.css", import.meta.url), "utf8"),
+    readFile(new URL("./sw.js", import.meta.url), "utf8")
+  ]);
+  assert.match(ui, /function speakVocabulary\(text, label\)/);
+  assert.match(ui, /className = "vocabulary-speaker"/);
+  assert.match(ui, /className = "vocabulary-sentence-speaker"/);
+  assert.match(ui, /entry\.append\(detail\)/, "example detail must be appended to its matching vocabulary entry");
+  assert.match(ui, /speakVocabulary\(word, "word pronunciation"\)/);
+  assert.match(ui, /speakVocabulary\(example, "example sentence"\)/);
+  assert.doesNotMatch(html, /id="vocabulary-detail"/, "obsolete bottom-of-list detail panel should be removed");
+  assert.match(css, /\.vocabulary-entry-row/);
+  assert.match(css, /\.vocabulary-sentence-row/);
+  assert.match(worker, /learning-everyday-shell-v34/);
 });

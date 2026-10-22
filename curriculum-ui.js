@@ -94,33 +94,90 @@ function renderCategoryOptions() {
   select.value = selectedCategory;
 }
 
+function speakVocabulary(text, label) {
+  if (!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) {
+    setStatus(language === "my" ? "ဤ browser တွင် အသံထွက်ဖတ်ခြင်း မရနိုင်ပါ။" : "Text-to-speech is not available in this browser.");
+    return;
+  }
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  const voice = preferredEnglishVoice();
+  utterance.lang = voice?.lang || "en-US";
+  if (voice) utterance.voice = voice;
+  utterance.rate = Number($("#speech-speed")?.value || 0.9);
+  utterance.onstart = () => setStatus(language === "my" ? "အသံထွက်ဖတ်နေသည်…" : `Playing ${label.toLowerCase()}…`);
+  utterance.onend = () => setStatus(language === "my" ? "နားထောင်ပြီးပါပြီ။" : "Playback finished.");
+  window.speechSynthesis.speak(utterance);
+}
+
 function renderVocabulary() {
   const category = VOCABULARY_CATEGORIES.find((item) => item.id === selectedCategory);
   const list = $("#vocabulary-list");
   list.replaceChildren();
   $("#vocabulary-category-title").textContent = categoryLabel(category);
+  if (selectedWord && !category.words.some(([word]) => word === selectedWord)) selectedWord = null;
+
   for (const [word, meaning, example] of category.words) {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "vocabulary-word";
-    button.setAttribute("aria-pressed", String(selectedWord === word));
+    const entry = document.createElement("article");
+    entry.className = "vocabulary-entry";
+
+    const row = document.createElement("div");
+    row.className = "vocabulary-entry-row";
+
+    const wordButton = document.createElement("button");
+    wordButton.type = "button";
+    wordButton.className = "vocabulary-word";
+    wordButton.setAttribute("aria-pressed", String(selectedWord === word));
+    wordButton.setAttribute("aria-label", `${word}: ${meaning}`);
     const wordEl = document.createElement("strong");
     wordEl.textContent = word;
     const meaningEl = document.createElement("span");
     meaningEl.textContent = meaning;
-    button.append(wordEl, meaningEl);
-    button.addEventListener("click", () => {
+    wordButton.append(wordEl, meaningEl);
+    wordButton.addEventListener("click", () => {
       selectedWord = word;
-      $("#vocabulary-meaning").textContent = meaning;
-      $("#vocabulary-example").textContent = example;
-      $("#vocabulary-detail").hidden = false;
       renderVocabulary();
     });
-    list.append(button);
-  }
-  if (selectedWord && !category.words.some(([word]) => word === selectedWord)) {
-    selectedWord = null;
-    $("#vocabulary-detail").hidden = true;
+    row.append(wordButton);
+
+    const wordSpeaker = document.createElement("button");
+    wordSpeaker.type = "button";
+    wordSpeaker.className = "vocabulary-speaker";
+    wordSpeaker.textContent = "🔊";
+    wordSpeaker.setAttribute("aria-label", language === "my" ? `${word} အသံထွက်ဖတ်ရန်` : `Play pronunciation of ${word}`);
+    wordSpeaker.title = language === "my" ? "စကားလုံးအသံထွက်" : "Play word pronunciation";
+    wordSpeaker.addEventListener("click", () => speakVocabulary(word, "word pronunciation"));
+    row.append(wordSpeaker);
+    entry.append(row);
+
+    if (selectedWord === word) {
+      const detail = document.createElement("div");
+      detail.className = "vocabulary-detail";
+      detail.setAttribute("aria-live", "polite");
+
+      const meaningHeading = document.createElement("strong");
+      meaningHeading.className = "vocabulary-detail-meaning";
+      meaningHeading.textContent = meaning;
+
+      const sentenceRow = document.createElement("div");
+      sentenceRow.className = "vocabulary-sentence-row";
+      const sentence = document.createElement("p");
+      sentence.className = "vocabulary-example";
+      sentence.textContent = example;
+
+      const sentenceSpeaker = document.createElement("button");
+      sentenceSpeaker.type = "button";
+      sentenceSpeaker.className = "vocabulary-sentence-speaker";
+      sentenceSpeaker.textContent = "🔊";
+      sentenceSpeaker.setAttribute("aria-label", language === "my" ? "ဥပမာဝါကျကို အသံထွက်ဖတ်ရန်" : "Play example sentence");
+      sentenceSpeaker.title = language === "my" ? "ဝါကျအသံထွက်" : "Play example sentence";
+      sentenceSpeaker.addEventListener("click", () => speakVocabulary(example, "example sentence"));
+
+      sentenceRow.append(sentence, sentenceSpeaker);
+      detail.append(meaningHeading, sentenceRow);
+      entry.append(detail);
+    }
+    list.append(entry);
   }
 }
 
@@ -548,7 +605,6 @@ window.addEventListener("hashchange", () => {
 $("#vocabulary-category").addEventListener("change", (event) => {
   selectedCategory = event.target.value;
   selectedWord = null;
-  $("#vocabulary-detail").hidden = true;
   renderVocabulary();
 });
 
