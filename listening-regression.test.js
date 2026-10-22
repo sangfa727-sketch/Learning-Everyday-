@@ -268,3 +268,17 @@ test("every distinct word in Maya’s Garden story has an offline dictionary ent
   const missing = words.filter((word) => !lookupWord(word));
   assert.deepEqual(missing, [], "Every word in Maya’s Garden should have a Myanmar dictionary entry");
 });
+
+import { DICTIONARY as SHARED_DICTIONARY } from "./dictionary.js";
+import { DICTIONARY as CORE_DICTIONARY } from "./learning-core.js";
+
+test("Listening uses one standalone shared dictionary as the source of truth", () => {
+  assert.ok(Object.keys(SHARED_DICTIONARY).length >= 300, "shared dictionary should retain the existing vocabulary");
+  assert.equal(SHARED_DICTIONARY, CORE_DICTIONARY, "core and standalone dictionary should re-export the same dictionary object");
+});
+
+test("word lookup resolves common irregular English forms without duplicate translations", () => {
+  for (const word of ["went", "saw", "took", "gave", "brought", "bought", "thought", "caught", "found", "told", "said", "ran", "sat", "fell", "knew", "wrote", "ate", "drank", "spoke", "broke", "chose", "kept", "slept", "heard", "lost", "won", "sent", "spent", "built", "met", "children", "men", "women", "feet", "teeth", "mice"]) {
+    assert.ok(lookupWord(word), "dictionary lookup should cover irregular form " + word);
+  }
+});
