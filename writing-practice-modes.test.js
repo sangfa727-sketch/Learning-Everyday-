@@ -6,6 +6,7 @@ const html = readFileSync(new URL("./index.html", import.meta.url), "utf8");
 const ui = readFileSync(new URL("./curriculum-ui.js", import.meta.url), "utf8");
 const app = readFileSync(new URL("./app.js", import.meta.url), "utf8");
 const css = readFileSync(new URL("./styles.css", import.meta.url), "utf8");
+const fallbackDictionarySource = readFileSync(new URL("./learning-core.js", import.meta.url), "utf8");
 
 test("Writing Practice exposes exactly Print and Handwriting mode controls", () => {
   assert.ok(html.includes('id="writing-mode-print"'));
@@ -96,4 +97,26 @@ test("Former Reading card is now a focused Vocabulary page, while stories stay i
   assert.match(css, /body\[data-page="reading"\] #practice-panel\{display:none\}/);
   assert.match(css, /body\[data-page="reading"\] #curriculum-workbench \.curriculum-card:nth-child\(2\)\{display:none\}/);
   assert.match(app, /Stories to listen to and read/);
+});
+
+
+test("All six listening stories have complete paragraphs and matching Myanmar translations", () => {
+  assert.equal((app.match(/id: "(?:garden-bird|market-morning|rainy-day|lost-puppy|school-trip|village-library)"/g) ?? []).length, 6);
+  assert.equal((app.match(/paragraphTranslations: \[/g) ?? []).length, 6);
+  assert.match(app, /text: \[\s*"Maya lived in a small house/);
+  assert.match(app, /text: \[\s*"For many years, children in Pine Village/);
+  assert.match(app, /Books belong to everyone/);
+  assert.match(app, /She continued home, glad that Milo was back/);
+  assert.match(app, /She learned that history was not only a list of dates/);
+  assert.match(app, /paragraphTranslations: \[[\s\S]*?Pine ရွာရှိ ကလေးများ/);
+});
+
+test("Offline dictionary includes key vocabulary from all listening stories", () => {
+  assert.match(fallbackDictionarySource, /grandmother: \{/);
+  assert.match(fallbackDictionarySource, /market: \{/);
+  assert.match(fallbackDictionarySource, /disappointed: \{/);
+  assert.match(fallbackDictionarySource, /whimper: \{/);
+  assert.match(fallbackDictionarySource, /museum: \{/);
+  assert.match(fallbackDictionarySource, /community: \{/);
+  assert.match(fallbackDictionarySource, /contribute: \{/);
 });
