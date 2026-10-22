@@ -8,7 +8,7 @@ export function normalizeWord(value) {
 
 const IRREGULAR_WORD_BASES = Object.freeze({
   am: "be", is: "be", are: "be", was: "be", were: "be", been: "be", being: "be",
-  went: "go", gone: "go", goes: "go", going: "go", came: "come", woke: "wake",
+  went: "go", gone: "go", goes: "go", going: "go", came: "come", woke: "wake", grown: "grow", risen: "rise", lives: "life",
   saw: "see", seen: "see",
   took: "take", taken: "take",
   gave: "give", given: "give",
