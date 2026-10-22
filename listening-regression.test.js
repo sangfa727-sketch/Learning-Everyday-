@@ -249,7 +249,7 @@ test("Listening word lookup prioritizes Myanmar meaning and includes common Maya
   const definition = html.indexOf('id="word-definition"', head);
   assert.ok(head >= 0 && meaning > head && definition > meaning, "Myanmar meaning should appear directly after the selected word, before English definition");
   for (const [word, meaningText] of [["small", "သေးငယ်သော"], ["house", "အိမ်"], ["garden", "ပန်းပင်"]]) {
-    const entry = core.match(new RegExp("\\b" + word + ": \\{[^}]*my: \\"([^\\"]+)\\""));
+    const entry = core.match(new RegExp(String.raw`\\b${word}: \\{[^}]*my: "([^"]+)"`));
     assert.ok(entry, "offline dictionary should define " + word);
     assert.ok(entry[1].includes(meaningText), word + " should have a Myanmar meaning");
   }
