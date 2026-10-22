@@ -388,7 +388,7 @@ function syncListeningView(page = currentPage()) {
     if (translationToggle) translationToggle.setAttribute("aria-expanded", "false");
     activeListeningStoryId = selected.id;
     currentStoryParagraphIndex = 0;
-    story = selected.text.join("\n\n");
+    story = typeof selected.text === "string" ? selected.text : selected.text.join("\n\n");
     activeStoryTranslations = selected.paragraphTranslations || [];
     renderStory();
     $("#word-card").hidden = true;
