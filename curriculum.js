@@ -11,7 +11,7 @@ export const VOCABULARY_CATEGORIES = [
   { id: "home", en: "Household items", my: "အိမ်သုံးပစ္စည်းများ", words: [
     ["chair", "ကုလားထိုင်", "Please sit on the chair."], ["table", "စားပွဲ", "The keys are on the table."],
     ["lamp", "မီးအိမ်", "Turn on the lamp."], ["mirror", "မှန်", "The mirror is beside the door."],
-    ["pillow", "ခေါင်းအုံး", "I need a soft pillow."], ["blanket", "စောင်", "The blanket is warm."], ["shelf", "စင်", "Put the books on the shelf."], ["curtain", "လိုက်ကာ", "Close the curtain at night."]
+    ["pillow", "ခေါင်းအုံး", "I need a soft pillow."], ["blanket", "စောင်", "The blanket is warm."], ["shelf", "စင်", "Put the books on the shelf."], ["curtain", "လိုက်ကာ", "Close the curtain at night."],
     ["sofa", "ဆိုဖာ", "The sofa is comfortable."],
     ["desk", "စာရေးစားပွဲ", "I do my homework at the desk."],
     ["drawer", "အံဆွဲ", "The keys are in the drawer."],
@@ -28,7 +28,7 @@ export const VOCABULARY_CATEGORIES = [
   { id: "electrical", en: "Electrical appliances", my: "လျှပ်စစ်ပစ္စည်းများ", words: [
     ["fan", "ပန်ကာ", "The fan is running."], ["refrigerator", "ရေခဲသေတ္တာ", "Keep the milk in the refrigerator."],
     ["washing machine", "အဝတ်လျှော်စက်", "The washing machine is full."], ["television", "ရုပ်မြင်သံကြား", "We watch television at night."],
-    ["iron", "မီးပူ", "The iron is hot."], ["charger", "အားသွင်းကိရိယာ", "My phone charger is here."], ["microwave", "မိုက်ခရိုဝေ့ဖ်", "Heat the soup in the microwave."], ["vacuum cleaner", "ဖုန်စုပ်စက်", "Use the vacuum cleaner on the carpet."]
+    ["iron", "မီးပူ", "The iron is hot."], ["charger", "အားသွင်းကိရိယာ", "My phone charger is here."], ["microwave", "မိုက်ခရိုဝေ့ဖ်", "Heat the soup in the microwave."], ["vacuum cleaner", "ဖုန်စုပ်စက်", "Use the vacuum cleaner on the carpet."],
     ["air conditioner", "လေအေးပေးစက်", "The air conditioner keeps the room cool."],
     ["rice cooker", "ထမင်းပေါင်းအိုး", "The rice cooker is ready."],
     ["electric kettle", "လျှပ်စစ်ရေနွေးအိုး", "The electric kettle boils water quickly."],
@@ -45,7 +45,7 @@ export const VOCABULARY_CATEGORIES = [
   { id: "kitchen", en: "Kitchen", my: "မီးဖိုချောင်", words: [
     ["spoon", "ဇွန်း", "Use a spoon to stir the soup."], ["fork", "ခက်ရင်း", "Put the fork beside the plate."],
     ["knife", "ဓား", "This knife is sharp."], ["plate", "ပန်းကန်ပြား", "The plate is clean."],
-    ["kettle", "ရေနွေးအိုး", "The kettle is boiling."], ["frying pan", "ဒယ်အိုး", "Heat the frying pan."], ["cutting board", "လှီးဖြတ်ဘုတ်", "Place the carrot on the cutting board."], ["spatula", "ဟင်းလှန်ဇွန်း", "Use a spatula to turn the egg."]
+    ["kettle", "ရေနွေးအိုး", "The kettle is boiling."], ["frying pan", "ဒယ်အိုး", "Heat the frying pan."], ["cutting board", "လှီးဖြတ်ဘုတ်", "Place the carrot on the cutting board."], ["spatula", "ဟင်းလှန်ဇွန်း", "Use a spatula to turn the egg."],
     ["bowl", "ပန်းကန်လုံး", "Put the soup in a bowl."],
     ["cup", "ခွက်", "She poured tea into a cup."],
     ["mug", "လက်ကိုင်ခွက်", "This mug is full of coffee."],
@@ -62,7 +62,7 @@ export const VOCABULARY_CATEGORIES = [
   { id: "food", en: "Food and drink", my: "အစားအစာနှင့် သောက်စရာ", words: [
     ["rice", "ထမင်း၊ ဆန်", "We eat rice for lunch."], ["bread", "ပေါင်မုန့်", "I would like some bread."],
     ["water", "ရေ", "Please drink more water."], ["milk", "နို့", "The child drinks milk."],
-    ["vegetable", "ဟင်းသီးဟင်းရွက်", "Fresh vegetables are healthy."], ["fruit", "သစ်သီး", "Fruit makes a good snack."], ["egg", "ကြက်ဥ", "I eat an egg for breakfast."], ["juice", "ဖျော်ရည်", "Would you like a glass of juice?"]
+    ["vegetable", "ဟင်းသီးဟင်းရွက်", "Fresh vegetables are healthy."], ["fruit", "သစ်သီး", "Fruit makes a good snack."], ["egg", "ကြက်ဥ", "I eat an egg for breakfast."], ["juice", "ဖျော်ရည်", "Would you like a glass of juice?"],
     ["noodles", "ခေါက်ဆွဲ", "We are having noodles for dinner."],
     ["chicken", "ကြက်သား", "The chicken is ready to eat."],
     ["fish", "ငါး", "He bought fresh fish at the market."],
@@ -79,7 +79,7 @@ export const VOCABULARY_CATEGORIES = [
   { id: "clothing", en: "Clothing", my: "အဝတ်အစား", words: [
     ["shirt", "ရှပ်အင်္ကျီ", "My shirt is blue."], ["trousers", "ဘောင်းဘီရှည်", "These trousers are comfortable."],
     ["shoes", "ဖိနပ်", "Please take off your shoes."], ["jacket", "ဂျာကင်အင်္ကျီ", "Wear a jacket outside."],
-    ["dress", "ဂါဝန်", "She is wearing a red dress."], ["belt", "ခါးပတ်", "My belt is black."], ["socks", "ခြေအိတ်", "These socks are clean."], ["hat", "ဦးထုပ်", "Wear a hat in the sun."]
+    ["dress", "ဂါဝန်", "She is wearing a red dress."], ["belt", "ခါးပတ်", "My belt is black."], ["socks", "ခြေအိတ်", "These socks are clean."], ["hat", "ဦးထုပ်", "Wear a hat in the sun."],
     ["skirt", "စကတ်", "She wears a skirt to work."],
     ["shorts", "ဘောင်းဘီတို", "He wears shorts in hot weather."],
     ["sweater", "ဆွယ်တာ", "This sweater keeps me warm."],
@@ -96,7 +96,7 @@ export const VOCABULARY_CATEGORIES = [
   { id: "school", en: "School and study", my: "ကျောင်းနှင့် စာသင်ကြားရေး", words: [
     ["notebook", "မှတ်စုစာအုပ်", "Write the answer in your notebook."], ["pencil", "ခဲတံ", "Use a pencil to draw."],
     ["eraser", "ခဲဖျက်", "I need an eraser."], ["lesson", "သင်ခန်းစာ", "Today's lesson is useful."],
-    ["question", "မေးခွန်း", "Please answer the question."], ["dictionary", "အဘိဓာန်", "Look up the word in a dictionary."], ["backpack", "ကျောပိုးအိတ်", "My backpack is heavy."], ["ruler", "ပေတံ", "Draw a straight line with a ruler."]
+    ["question", "မေးခွန်း", "Please answer the question."], ["dictionary", "အဘိဓာန်", "Look up the word in a dictionary."], ["backpack", "ကျောပိုးအိတ်", "My backpack is heavy."], ["ruler", "ပေတံ", "Draw a straight line with a ruler."],
     ["textbook", "ပြဋ္ဌာန်းစာအုပ်", "Open your textbook to page ten."],
     ["blackboard", "သင်ပုန်း", "The teacher wrote on the blackboard."],
     ["whiteboard", "ဝှိုက်ဘုတ်", "Write the answer on the whiteboard."],
@@ -112,7 +112,7 @@ export const VOCABULARY_CATEGORIES = [
   ]},
 
   { id: "bathroom", en: "Bathroom and personal care", my: "ရေချိုးခန်းနှင့် ကိုယ်ရေးကိုယ်တာ", words: [
-    ["towel", "မျက်နှာသုတ်ပဝါ", "Please bring a clean towel."], ["soap", "ဆပ်ပြာ", "Wash your hands with soap."], ["toothbrush", "သွားတိုက်တံ", "My toothbrush is beside the sink."], ["toothpaste", "သွားတိုက်ဆေး", "We need more toothpaste."], ["shampoo", "ခေါင်းလျှော်ရည်", "This shampoo smells fresh."], ["comb", "ဘီး", "She keeps a comb in her bag."], ["hairbrush", "ဆံပင်ဖြီးဘီး", "I use a hairbrush every morning."], ["sink", "လက်ဆေးခွက်", "The sink is clean."]
+    ["towel", "မျက်နှာသုတ်ပဝါ", "Please bring a clean towel."], ["soap", "ဆပ်ပြာ", "Wash your hands with soap."], ["toothbrush", "သွားတိုက်တံ", "My toothbrush is beside the sink."], ["toothpaste", "သွားတိုက်ဆေး", "We need more toothpaste."], ["shampoo", "ခေါင်းလျှော်ရည်", "This shampoo smells fresh."], ["comb", "ဘီး", "She keeps a comb in her bag."], ["hairbrush", "ဆံပင်ဖြီးဘီး", "I use a hairbrush every morning."], ["sink", "လက်ဆေးခွက်", "The sink is clean."],
     ["shower", "ရေပန်း", "I take a shower every morning."],
     ["bathtub", "ရေချိုးကန်", "The child is playing in the bathtub."],
     ["toilet", "အိမ်သာ", "The toilet is down the hall."],
@@ -127,7 +127,7 @@ export const VOCABULARY_CATEGORIES = [
     ["nail clipper", "လက်သည်းညှပ်", "The nail clipper is in the drawer."],
   ]},
   { id: "transport", en: "Transport and travel", my: "သယ်ယူပို့ဆောင်ရေးနှင့် ခရီးသွား", words: [
-    ["bus", "ဘတ်စ်ကား", "I take the bus to work."], ["train", "ရထား", "The train arrives at six."], ["bicycle", "စက်ဘီး", "She rides her bicycle to school."], ["motorbike", "ဆိုင်ကယ်", "Wear a helmet on a motorbike."], ["ticket", "လက်မှတ်", "Keep your ticket until the end of the trip."], ["station", "ဘူတာရုံ", "Meet me at the station."], ["traffic lights", "မီးပွိုင့်", "Stop when the traffic lights are red."], ["passenger", "ခရီးသည်", "Every passenger needs a seat."]
+    ["bus", "ဘတ်စ်ကား", "I take the bus to work."], ["train", "ရထား", "The train arrives at six."], ["bicycle", "စက်ဘီး", "She rides her bicycle to school."], ["motorbike", "ဆိုင်ကယ်", "Wear a helmet on a motorbike."], ["ticket", "လက်မှတ်", "Keep your ticket until the end of the trip."], ["station", "ဘူတာရုံ", "Meet me at the station."], ["traffic lights", "မီးပွိုင့်", "Stop when the traffic lights are red."], ["passenger", "ခရီးသည်", "Every passenger needs a seat."],
     ["car", "ကား", "My car is parked outside."],
     ["taxi", "တက္ကစီ", "We took a taxi to the airport."],
     ["airplane", "လေယာဉ်", "The airplane leaves at noon."],
@@ -142,7 +142,7 @@ export const VOCABULARY_CATEGORIES = [
     ["luggage", "ခရီးဆောင်အိတ်များ", "Our luggage is in the car."],
   ]},
   { id: "weather", en: "Weather and nature", my: "ရာသီဥတုနှင့် သဘာဝ", words: [
-    ["sunny", "နေသာသော", "It is sunny this morning."], ["cloudy", "တိမ်ထူသော", "The sky looks cloudy."], ["rainy", "မိုးရွာသော", "Take an umbrella on a rainy day."], ["windy", "လေတိုက်သော", "It is too windy to fly a kite."], ["storm", "မုန်တိုင်း", "The storm may arrive tonight."], ["river", "မြစ်", "The village is beside a river."], ["mountain", "တောင်", "We can see a mountain in the distance."], ["forest", "သစ်တော", "Many birds live in the forest."]
+    ["sunny", "နေသာသော", "It is sunny this morning."], ["cloudy", "တိမ်ထူသော", "The sky looks cloudy."], ["rainy", "မိုးရွာသော", "Take an umbrella on a rainy day."], ["windy", "လေတိုက်သော", "It is too windy to fly a kite."], ["storm", "မုန်တိုင်း", "The storm may arrive tonight."], ["river", "မြစ်", "The village is beside a river."], ["mountain", "တောင်", "We can see a mountain in the distance."], ["forest", "သစ်တော", "Many birds live in the forest."],
     ["sunshine", "နေရောင်ခြည်", "The plants need sunshine."],
     ["rain", "မိုး", "The rain stopped in the afternoon."],
     ["cloud", "တိမ်", "A dark cloud covered the sun."],
@@ -157,7 +157,7 @@ export const VOCABULARY_CATEGORIES = [
     ["winter", "ဆောင်းရာသီ", "Winter nights can be cold."],
   ]},
   { id: "work", en: "Work and occupations", my: "အလုပ်နှင့် အလုပ်အကိုင်", words: [
-    ["teacher", "ဆရာ၊ ဆရာမ", "The teacher explains the lesson."], ["nurse", "သူနာပြု", "The nurse helps the patient."], ["farmer", "လယ်သမား", "The farmer grows rice."], ["driver", "ယာဉ်မောင်း", "The driver checks the bus."], ["manager", "မန်နေဂျာ", "The manager leads the team."], ["meeting", "အစည်းအဝေး", "Our meeting starts at nine."], ["salary", "လစာ", "She saves part of her salary."], ["schedule", "အချိန်ဇယား", "Check the schedule before you leave."]
+    ["teacher", "ဆရာ၊ ဆရာမ", "The teacher explains the lesson."], ["nurse", "သူနာပြု", "The nurse helps the patient."], ["farmer", "လယ်သမား", "The farmer grows rice."], ["driver", "ယာဉ်မောင်း", "The driver checks the bus."], ["manager", "မန်နေဂျာ", "The manager leads the team."], ["meeting", "အစည်းအဝေး", "Our meeting starts at nine."], ["salary", "လစာ", "She saves part of her salary."], ["schedule", "အချိန်ဇယား", "Check the schedule before you leave."],
     ["doctor", "ဆရာဝန်", "The doctor examined the patient."],
     ["engineer", "အင်ဂျင်နီယာ", "The engineer designed the bridge."],
     ["chef", "စားဖိုမှူး", "The chef prepared a delicious meal."],
@@ -172,7 +172,7 @@ export const VOCABULARY_CATEGORIES = [
     ["uniform", "အလုပ်ဝတ်စုံ", "The workers wear a uniform."],
   ]},
   { id: "health", en: "Health and feelings", my: "ကျန်းမာရေးနှင့် ခံစားချက်", words: [
-    ["headache", "ခေါင်းကိုက်ခြင်း", "I have a mild headache."], ["fever", "ဖျားနာခြင်း", "He stayed home because of a fever."], ["tired", "ပင်ပန်းသော", "I feel tired after work."], ["thirsty", "ရေဆာသော", "I am thirsty after the walk."], ["worried", "စိုးရိမ်သော", "She is worried about the exam."], ["excited", "စိတ်လှုပ်ရှားပျော်ရွှင်သော", "We are excited about the trip."], ["appointment", "ချိန်းဆိုမှု", "I have a doctor's appointment tomorrow."], ["medicine", "ဆေးဝါး", "Take medicine only as directed."]
+    ["headache", "ခေါင်းကိုက်ခြင်း", "I have a mild headache."], ["fever", "ဖျားနာခြင်း", "He stayed home because of a fever."], ["tired", "ပင်ပန်းသော", "I feel tired after work."], ["thirsty", "ရေဆာသော", "I am thirsty after the walk."], ["worried", "စိုးရိမ်သော", "She is worried about the exam."], ["excited", "စိတ်လှုပ်ရှားပျော်ရွှင်သော", "We are excited about the trip."], ["appointment", "ချိန်းဆိုမှု", "I have a doctor's appointment tomorrow."], ["medicine", "ဆေးဝါး", "Take medicine only as directed."],
     ["cough", "ချောင်းဆိုးခြင်း", "His cough is getting better."],
     ["sore throat", "လည်ချောင်းနာခြင်း", "I have a sore throat today."],
     ["stomachache", "ဗိုက်နာခြင်း", "She has a stomachache after lunch."],
@@ -190,7 +190,7 @@ export const VOCABULARY_CATEGORIES = [
     ["mother", "မိခင်", "My mother makes tea every morning."], ["father", "ဖခင်", "My father walks to work."],
     ["sister", "အစ်မ၊ ညီမ", "My sister is learning English."], ["brother", "အစ်ကို၊ ညီ", "My brother plays football after school."],
     ["grandmother", "အဘွား", "My grandmother tells wonderful stories."], ["grandfather", "အဘိုး", "My grandfather grows vegetables."],
-    ["cousin", "ဝမ်းကွဲမောင်နှမ", "My cousin lives in another town."], ["relative", "ဆွေမျိုး", "We visit our relatives during the holiday."]
+    ["cousin", "ဝမ်းကွဲမောင်နှမ", "My cousin lives in another town."], ["relative", "ဆွေမျိုး", "We visit our relatives during the holiday."],
     ["parents", "မိဘများ", "My parents live near the river."],
     ["son", "သား", "Their son starts school this year."],
     ["daughter", "သမီး", "Her daughter loves drawing."],
@@ -208,7 +208,7 @@ export const VOCABULARY_CATEGORIES = [
     ["price", "ဈေးနှုန်း", "What is the price of this bag?"], ["cashier", "ငွေရှင်းကောင်တာဝန်ထမ်း", "The cashier gave me a receipt."],
     ["receipt", "ပြေစာ", "Please keep your receipt."], ["discount", "လျှော့ဈေး", "This shop offers a ten percent discount."],
     ["change", "အမ်းငွေ", "Here is your change."], ["basket", "ဈေးဝယ်ခြင်းတောင်း", "Put the fruit in the basket."],
-    ["size", "အရွယ်အစား", "Do you have this shirt in a larger size?"], ["wallet", "ပိုက်ဆံအိတ်", "I keep my cards in my wallet."]
+    ["size", "အရွယ်အစား", "Do you have this shirt in a larger size?"], ["wallet", "ပိုက်ဆံအိတ်", "I keep my cards in my wallet."],
     ["shop assistant", "အရောင်းဝန်ထမ်း", "The shop assistant helped me choose a size."],
     ["price tag", "ဈေးနှုန်းတံဆိပ်", "Check the price tag before buying."],
     ["bargain", "ဈေးသက်သာသောပစ္စည်း", "This jacket was a real bargain."],
@@ -226,7 +226,7 @@ export const VOCABULARY_CATEGORIES = [
     ["keyboard", "ကီးဘုတ်", "Use the keyboard to type your name."], ["screen", "မျက်နှာပြင်", "The screen is too bright."],
     ["password", "စကားဝှက်", "Never share your password."], ["email", "အီးမေးလ်", "I sent the document by email."],
     ["website", "ဝက်ဘ်ဆိုက်", "The school website has the timetable."], ["message", "စာတို", "I received your message this morning."],
-    ["headphones", "နားကြပ်", "Use headphones to listen quietly."], ["battery", "ဘက်ထရီ", "My phone battery is almost empty."]
+    ["headphones", "နားကြပ်", "Use headphones to listen quietly."], ["battery", "ဘက်ထရီ", "My phone battery is almost empty."],
     ["laptop", "လက်ပ်တော့", "I use my laptop for studying."],
     ["tablet", "တက်ဘလက်", "The child reads on a tablet."],
     ["smartphone", "စမတ်ဖုန်း", "My smartphone needs charging."],
@@ -244,7 +244,7 @@ export const VOCABULARY_CATEGORIES = [
     ["hospital", "ဆေးရုံ", "The hospital is near the main road."], ["market", "ဈေး", "We buy fresh vegetables at the market."],
     ["library", "စာကြည့်တိုက်", "I borrow books from the library."], ["bank", "ဘဏ်", "The bank opens at nine o'clock."],
     ["pharmacy", "ဆေးဆိုင်", "You can buy medicine at the pharmacy."], ["station", "ဘူတာရုံ", "We met at the bus station."],
-    ["post office", "စာတိုက်", "I sent a parcel from the post office."], ["restaurant", "စားသောက်ဆိုင်", "They had lunch at a small restaurant."]
+    ["post office", "စာတိုက်", "I sent a parcel from the post office."], ["restaurant", "စားသောက်ဆိုင်", "They had lunch at a small restaurant."],
     ["school", "ကျောင်း", "The school is beside the park."],
     ["park", "ပန်းခြံ", "Children play in the park."],
     ["bus stop", "ဘတ်စ်ကားမှတ်တိုင်", "Meet me at the bus stop."],
@@ -262,7 +262,7 @@ export const VOCABULARY_CATEGORIES = [
     ["morning", "နံနက်", "I study English in the morning."], ["afternoon", "နေ့လယ်ပိုင်း", "The meeting is in the afternoon."],
     ["evening", "ညနေပိုင်း", "We walk in the evening."], ["midnight", "သန်းခေါင်ယံ", "The train arrives just after midnight."],
     ["yesterday", "မနေ့က", "I finished the lesson yesterday."], ["tomorrow", "မနက်ဖြန်", "We will practise again tomorrow."],
-    ["weekday", "ရုံးဖွင့်ရက်", "I usually work on weekdays."], ["weekend", "စနေ၊ တနင်္ဂနွေ", "We visit our grandparents at the weekend."]
+    ["weekday", "ရုံးဖွင့်ရက်", "I usually work on weekdays."], ["weekend", "စနေ၊ တနင်္ဂနွေ", "We visit our grandparents at the weekend."],
     ["second", "စက္ကန့်", "Wait for one second."],
     ["minute", "မိနစ်", "The bus will arrive in five minutes."],
     ["hour", "နာရီ", "I read for one hour every evening."],
