@@ -6,6 +6,14 @@ const app = await readFile(new URL("./app.js", import.meta.url), "utf8");
 const html = await readFile(new URL("./index.html", import.meta.url), "utf8");
 const css = await readFile(new URL("./styles.css", import.meta.url), "utf8");
 
+test("Listening story paragraph arrays are joined with paragraph breaks before rendering and speech", () => {
+  const routeStart = app.indexOf('if (activeListeningStoryId !== selected.id)');
+  const routeEnd = app.indexOf('library.hidden = true;', routeStart);
+  assert.ok(routeStart >= 0 && routeEnd > routeStart, "Listening story selection route should exist");
+  const source = app.slice(routeStart, routeEnd);
+  assert.match(source, /story = selected\.text\.join\("\\n\\n"\);/);
+});
+
 test("Listening narration queues paragraph chunks with story-global highlight offsets", () => {
   const start = app.indexOf("function speakStory()");
   const end = app.indexOf("\nfunction startSpeakingPractice()", start);
