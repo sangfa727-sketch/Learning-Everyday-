@@ -135,6 +135,25 @@ const CONTEXTUAL_SENSES = Object.freeze({
     { test: /\b(gift|birthday|wrapped|gave|receive|Christmas)\b/i, meaning: "a gift", my: "လက်ဆောင်" },
     { test: /\b(adult|teacher|parent|someone)\s+present\b|\bwith .* present\b/i, meaning: "being there at a particular time", my: "ရှိနေသော၊ ရောက်ရှိနေသော" },
     { test: /\b(attend|in the room|being|there|at school|currently)\b/i, meaning: "being in a place; existing now", my: "ရှိနေသော၊ လက်ရှိ" }
+  ],
+  kind: [
+    { test: /\b(?:kind|kinds)\s+of\b|\bwhat kind\b|\bthis kind\b|\bthat kind\b/i, meaning: "a type or sort of something", my: "အမျိုးအစား" },
+    { test: /\bkind\s+(?:to|person|words|gesture|act|helpful)\b|\bwas kind\b/i, meaning: "caring, friendly, and considerate", my: "ကြင်နာသော၊ သဘောကောင်းသော" }
+  ],
+  left: [
+    { test: /\b(?:to|on|at|the)\s+left\b|\bleft (?:hand|side)\b|\bturn(?:ed)? left\b/i, meaning: "the side opposite right", my: "ဘယ်ဘက်" },
+    { test: /\bleft\b/i, meaning: "past tense of leave; kept something in a place or went away", my: "ချန်ထားခဲ့သည်၊ ထွက်ခွာခဲ့သည်" }
+  ],
+  mean: [
+    { test: /\b(?:did not|does not|do not|doesn't|don't|not)\s+mean\b|\bmean(?:s|t)?\s+(?:that|being|to|something|the|an|a)\b/i, meaning: "to signify or express an idea", my: "ဆိုလိုသည်၊ ဖော်ပြသည်" }
+  ],
+  like: [
+    { test: /\blike\s+(?:a|an|the|natural|tiny|something|it|this|that)\b/i, meaning: "similar to; used to compare things", my: "ကဲ့သို့၊ နှင့်ဆင်တူသော" },
+    { test: /\b(?:would|really|do|does|did|don't|doesn't)\s+like\b/i, meaning: "to enjoy or prefer something", my: "နှစ်သက်သည်၊ သဘောကျသည်" }
+  ],
+  still: [
+    { test: /\bstill\s+(?:room|space|enough|time|available|standing|open)\b/i, meaning: "remaining or continuing to be present", my: "ကျန်ရှိနေသေးသော၊ ရှိနေဆဲ" },
+    { test: /\bstill\s+(?:could not|cannot|can't|did not|does not|needed|needs|had|was|were|is|are|stands|stood|remains|remained)\b/i, meaning: "continuing up to that time", my: "ယခုထိ၊ ဆက်လက်၍" }
   ]
 });
 
