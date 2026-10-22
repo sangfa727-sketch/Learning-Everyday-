@@ -1,4 +1,9 @@
 export const DICTIONARY = Object.freeze({
+  lives: { meaning: "the verb form meaning 'is alive' or 'resides'; also the plural of life", usage: "She lives near the river. The flood changed many people's lives.", my: "နေထိုင်သည်၊ အသက်ရှင်နေသည်၊ ဘဝများ (ဝါကျအလိုက် အဓိပ္ပာယ်ကွဲသည်)" },
+  saw: { meaning: "the past tense of see; also a tool used for cutting wood", usage: "They saw the river rise after the rain. The carpenter used a saw to repair the shelf.", my: "မြင်တွေ့ခဲ့သည်၊ လွှ (ဝါကျအလိုက် အဓိပ္ပာယ်ကွဲသည်)" },
+  found: { meaning: "the past tense of find; discovered or located something", usage: "Lina found the puppy near the market. The students found evidence in the records.", my: "တွေ့ရှိခဲ့သည်၊ ရှာတွေ့ခဲ့သည်" },
+  means: { meaning: "the verb form of mean; also a method or way of doing something", usage: "Helping responsibly means asking an adult. A map is a useful means of sharing information.", my: "ဆိုလိုသည်၊ နည်းလမ်း (ဝါကျအလိုက် အဓိပ္ပာယ်ကွဲသည်)" },
+  well: { meaning: "in a good or satisfactory way; also healthy, or a deep hole for water", usage: "The students worked well together. The village well supplied water.", my: "ကောင်းစွာ၊ ကျန်းမာသော၊ ရေတွင်း (ဝါကျအလိုက် အဓိပ္ပာယ်ကွဲသည်)" },
   textbook: { meaning: "a book used for studying a subject", usage: "The village library lent textbooks to students.", my: "ပြဋ္ဌာန်းစာအုပ်" },
   nearest: { meaning: "closest in distance or position", usage: "The nearest library was far from the village.", my: "အနီးဆုံး" },
   unused: { meaning: "not being used", usage: "The carpenter offered unused wood for the shelves.", my: "အသုံးမပြုရသေးသော" },
