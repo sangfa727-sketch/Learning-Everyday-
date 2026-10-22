@@ -624,37 +624,64 @@ function speakStory() {
   activeStoryUtterance = null;
   window.speechSynthesis.cancel();
   clearSpeechHighlight();
-  const utterance = new SpeechSynthesisUtterance(story);
-  activeStoryUtterance = utterance;
-  const voice = selectedEnglishVoice();
-  utterance.lang = voice?.lang || "en-US";
-  if (voice) utterance.voice = voice;
-  utterance.rate = clampSpeechRate($("#speech-speed").value);
-  utterance.onstart = () => {
-    if (activeStoryUtterance !== utterance) return;
-    clearSpeechHighlight();
-    $("#play-button").disabled = true;
-    $("#status-message").textContent = language === "my" ? "နားထောင်နေသည်…" : "Playing story…";
-  };
-  utterance.onboundary = (event) => {
-    if (activeStoryUtterance !== utterance) return;
-    if (event.name === "word" || Number.isFinite(event.charIndex)) highlightSpeechWord(event.charIndex);
-  };
-  utterance.onend = () => {
-    if (activeStoryUtterance !== utterance) return;
-    activeStoryUtterance = null;
-    clearSpeechHighlight();
-    $("#play-button").disabled = false;
+
+  // Short paragraph utterances are more reliable on mobile speech engines than
+  // one utterance containing an entire multi-thousand-word story.
+  const paragraphs = [];
+  const paragraphPattern = /[^\n]+/g;
+  for (const match of story.matchAll(paragraphPattern)) {
+    const text = match[0].trim();
+    if (text) paragraphs.push({ text, start: match.index + match[0].indexOf(text) });
+  }
+  if (!paragraphs.length) {
     $("#status-message").textContent = translations[language].voiceNote;
+    return;
+  }
+
+  const voice = selectedEnglishVoice();
+  const rate = clampSpeechRate($("#speech-speed").value);
+  let paragraphIndex = 0;
+
+  const speakNextParagraph = () => {
+    if (paragraphIndex >= paragraphs.length) {
+      activeStoryUtterance = null;
+      clearSpeechHighlight();
+      $("#play-button").disabled = false;
+      $("#status-message").textContent = translations[language].voiceNote;
+      return;
+    }
+    const paragraph = paragraphs[paragraphIndex++];
+    const utterance = new SpeechSynthesisUtterance(paragraph.text);
+    activeStoryUtterance = utterance;
+    utterance.lang = voice?.lang || "en-US";
+    if (voice) utterance.voice = voice;
+    utterance.rate = rate;
+    utterance.onstart = () => {
+      if (activeStoryUtterance !== utterance) return;
+      $("#play-button").disabled = true;
+      $("#status-message").textContent = language === "my" ? "နားထောင်နေသည်…" : "Playing story…";
+    };
+    utterance.onboundary = (event) => {
+      if (activeStoryUtterance !== utterance) return;
+      if (event.name === "word" || Number.isFinite(event.charIndex)) {
+        highlightSpeechWord(paragraph.start + event.charIndex);
+      }
+    };
+    utterance.onend = () => {
+      if (activeStoryUtterance !== utterance) return;
+      speakNextParagraph();
+    };
+    utterance.onerror = () => {
+      if (activeStoryUtterance !== utterance) return;
+      activeStoryUtterance = null;
+      clearSpeechHighlight();
+      $("#play-button").disabled = false;
+      $("#status-message").textContent = translations[language].noSpeech;
+    };
+    window.speechSynthesis.speak(utterance);
   };
-  utterance.onerror = () => {
-    if (activeStoryUtterance !== utterance) return;
-    activeStoryUtterance = null;
-    clearSpeechHighlight();
-    $("#play-button").disabled = false;
-    $("#status-message").textContent = translations[language].noSpeech;
-  };
-  window.speechSynthesis.speak(utterance);
+
+  speakNextParagraph();
 }
 
 function startSpeakingPractice() {
