@@ -413,7 +413,7 @@ test("context-aware lookup distinguishes common story senses for kind, left, mea
 });
 
 test("context-aware lookup identifies presentation verbs separately from being present", () => {
-  assert.match(lookupWordInContext("presented", "Lina and her classmates presented their findings at the meeting.").my, /တင်ပြသည်/);
+  assert.match(lookupWordInContext("presented", "Lina and her classmates presented their findings at the meeting.").my, /တင်ပြခဲ့သည်/);
   assert.match(lookupWordInContext("present", "The students recorded readings with an adult present.").my, /ရောက်ရှိနေသော/);
 });
 
@@ -560,6 +560,39 @@ test("Listening Myanmar translations preserve key safety and everyday meanings",
   assert.match(app, /မည်မျှမကြာခဏ တီးလေ့ရှိခဲ့သလဲ/);
   assert.match(app, /စာအုပ်ငှားရန်သာမက အခြားလုပ်ငန်းများအတွက်ပါ အသုံးဝင်သောနေရာ/);
   assert.match(app, /ရေထည့်ထားသော ပန်းကန်တိမ်တိမ်မှ ရေသောက်ရန်/);
+});
+
+test("common Listening past-tense words retain past-tense Myanmar meanings", () => {
+  const expected = {
+    explained: /ရှင်းပြခဲ့သည်/,
+    showed: /ပြသခဲ့သည်/,
+    compared: /နှိုင်းယှဉ်ခဲ့သည်/,
+    noticed: /သတိပြုမိခဲ့သည်/,
+    agreed: /သဘောတူခဲ့သည်/,
+    called: /ခေါ်ခဲ့သည်|ဖုန်းဆက်ခဲ့သည်/,
+    shared: /မျှဝေခဲ့သည်/,
+    worked: /လုပ်ဆောင်ခဲ့သည်|အလုပ်လုပ်ခဲ့သည်/,
+    repaired: /ပြုပြင်ခဲ့သည်/,
+    displayed: /ပြသခဲ့သည်/,
+    gathered: /စုဆောင်းခဲ့သည်|စုပုံခဲ့သည်/,
+    confirmed: /အတည်ပြုခဲ့သည်/,
+    updated: /ပြင်ဆင်မွမ်းမံခဲ့သည်/,
+    visited: /သွားရောက်လည်ပတ်ခဲ့သည်/,
+    discussed: /ဆွေးနွေးခဲ့သည်/,
+    recognised: /မှတ်မိခဲ့သည်|ခွဲခြားသိရှိခဲ့သည်/
+  };
+  for (const [word, meaning] of Object.entries(expected)) {
+    assert.match(lookupWord(word)?.my ?? "", meaning, word + " should keep its past-tense meaning");
+  }
+});
+
+test("contextual lookup distinguishes closed places, phone calls, and presented findings", () => {
+  assert.match(lookupWordInContext("closed", "Lina heard a whimper near a closed shop.").my, /^ပိတ်ထားသော$/);
+  assert.match(lookupWordInContext("closed", "The bridge had been closed because the current was too strong.").my, /ပိတ်ထားသည်/);
+  assert.match(lookupWordInContext("called", "He called the number on the tag.").my, /^ဖုန်းဆက်ခဲ့သည်$/);
+  assert.match(lookupWordInContext("called", "The girl called its name, Milo.").my, /အမည်ဖြင့် ခေါ်ခဲ့သည်/);
+  assert.match(lookupWordInContext("presented", "The students presented their findings to officials.").my, /^တင်ပြခဲ့သည်$/);
+  assert.match(lookupWordInContext("mattered", "Lina wondered why the open area mattered.").my, /^အရေးပါခဲ့သည်$/);
 });
 
 test("sentence-by-sentence Myanmar translation aligns with every English sentence in all Listening stories", () => {
