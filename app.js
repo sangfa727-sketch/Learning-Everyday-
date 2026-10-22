@@ -623,7 +623,6 @@ function showWord(word, paragraphIndex = 0) {
       : Math.max(12, (anchor?.top ?? 12) - height - 8);
     card.style.top = `${top}px`;
   });
-  pronounceWord(word);
 }
 
 function setLanguage(next) {
