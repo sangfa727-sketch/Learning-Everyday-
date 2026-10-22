@@ -110,7 +110,6 @@ export const DICTIONARY = Object.freeze({
   woven: { meaning: "made by crossing threads or strips over each other", usage: "The basket is woven by hand.", my: "ယက်လုပ်ထားသော" },
   community: { meaning: "people living in the same area or sharing something", usage: "The community builds a library.", my: "လူမှုအသိုင်းအဝိုင်း" },
   donate: { meaning: "to give something to help others", usage: "Families donate books.", my: "လှူဒါန်းသည်" },
-  volunteer: { meaning: "a person who helps without being paid", usage: "Volunteers repair the room.", my: "စေတနာ့ဝန်ထမ်း" },
   expense: { meaning: "money spent on something", usage: "They record every expense.", my: "ကုန်ကျစရိတ်" },
   noticeboard: { meaning: "a board used to display information", usage: "The noticeboard shares local news.", my: "ကြေညာဘုတ်" },
   borrow: { meaning: "to take something and return it later", usage: "Children borrow one book at a time.", my: "ငှားယူသည်" },
