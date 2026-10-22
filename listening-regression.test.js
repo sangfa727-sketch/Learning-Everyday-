@@ -6,6 +6,7 @@ import { readFile } from "node:fs/promises";
 const app = await readFile(new URL("./app.js", import.meta.url), "utf8");
 const html = await readFile(new URL("./index.html", import.meta.url), "utf8");
 const css = await readFile(new URL("./styles.css", import.meta.url), "utf8");
+const dictionarySource = await readFile(new URL("./dictionary.js", import.meta.url), "utf8");
 
 test("Listening story selection accepts the existing joined text and legacy paragraph arrays", () => {
   const routeStart = app.indexOf('if (activeListeningStoryId !== selected.id)');
@@ -473,4 +474,14 @@ test("every English word in all seven Listening stories resolves through the sha
     if (missing.length) missingByStory.push({ id, missing });
   }
   assert.deepEqual(missingByStory, [], "every story word should resolve, with no missing words: " + JSON.stringify(missingByStory));
+});
+
+test("shared dictionary contains no duplicate English headword declarations", () => {
+  const seen = new Set();
+  const duplicates = [];
+  for (const [, word] of dictionarySource.matchAll(/^\s{2}"?([a-z'-]+)"?:\s*\{/gm)) {
+    if (seen.has(word)) duplicates.push(word);
+    seen.add(word);
+  }
+  assert.deepEqual(duplicates, [], "duplicate headwords cause silent last-entry-wins translation changes");
 });
