@@ -329,11 +329,13 @@ function syncListeningView(page = currentPage()) {
   const library = $("#listening-library");
   const panel = $("#practice-panel");
   const back = $("#back-to-story-library");
+  const translationTools = $("#story-translation-tools");
   const translationToggle = $("#toggle-story-translation");
   const translationPanel = $("#story-translation");
   if (!library || !panel || !back) return;
   const route = location.hash.slice(1).split("/").filter(Boolean);
   if (page !== "listening") {
+    if (translationTools) translationTools.hidden = true;
     if (translationToggle) {
       translationToggle.hidden = true;
       translationToggle.setAttribute("aria-expanded", "false");
@@ -353,7 +355,11 @@ function syncListeningView(page = currentPage()) {
   }
   const selected = LISTENING_STORIES.find((item) => item.id === route[1]);
   if (!selected) {
-    if (translationToggle) translationToggle.hidden = true;
+    if (translationTools) translationTools.hidden = true;
+    if (translationToggle) {
+      translationToggle.hidden = true;
+      translationToggle.setAttribute("aria-expanded", "false");
+    }
     if (translationPanel) translationPanel.hidden = true;
     stopStoryNarration();
     activeListeningStoryId = null;
@@ -388,11 +394,13 @@ function syncListeningView(page = currentPage()) {
 }
 
 function renderStoryTranslation(selected) {
+  const tools = $("#story-translation-tools");
   const toggle = $("#toggle-story-translation");
   const panel = $("#story-translation");
   const title = $("#story-translation-title");
   const paragraphs = $("#story-translation-paragraphs");
   if (!toggle || !panel || !title || !paragraphs) return;
+  if (tools) tools.hidden = !selected;
   toggle.hidden = !selected;
   if (!selected) {
     panel.hidden = true;
