@@ -425,6 +425,17 @@ test("context-aware lookup resolves river, importance, and effort vocabulary", (
   assert.match(lookupWordInContext("hard", "Careful observation was as important as hard work.").my, /ကြိုးစားအားထုတ်မှု/);
 });
 
+test("context-aware lookup distinguishes water, plant, records, and changes by usage", () => {
+  assert.match(lookupWordInContext("water", "The river gave the town drinking water, fish, and fertile soil.").my, /^ရေ$/);
+  assert.match(lookupWordInContext("water", "Maya decided to water the garden early.").my, /ရေလောင်းသည်/);
+  assert.match(lookupWordInContext("watered", "Maya watered the plants before sunrise.").my, /ရေလောင်းခဲ့သည်/);
+  assert.match(lookupWordInContext("plant", "They proposed to plant suitable trees along the bank.").my, /စိုက်ပျိုးသည်/);
+  assert.match(lookupWordInContext("plant", "Each plant needs care.").my, /^အပင်$/);
+  assert.match(lookupWordInContext("records", "Together they checked the records and found a route.").my, /^မှတ်တမ်းများ$/);
+  assert.match(lookupWordInContext("changed", "Grandmother helped her change her routine.").my, /ပြောင်းလဲခဲ့သည်/);
+  assert.match(lookupWordInContext("changes", "Lina noticed these changes near the river.").my, /^ပြောင်းလဲမှုများ$/);
+});
+
 test("context-aware word lookup selects the sense supported by the tapped sentence", () => {
   assert.match(lookupWordInContext("rose", "The river rose after heavy rain.").my, /မြင့်တက်လာခဲ့သည်/);
   assert.match(lookupWordInContext("rose", "A red rose grew in the garden.").my, /နှင်းဆီပန်း/);
