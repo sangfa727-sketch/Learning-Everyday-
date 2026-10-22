@@ -201,8 +201,8 @@ test("Listening exposes an optional full Myanmar translation aligned to story pa
   assert.match(html, /id="story-translation-paragraphs"/);
   assert.match(app, /function renderStoryTranslation\(selected\)/);
   assert.match(app, /paragraph\.className = "story-translation-paragraph"/);
-  assert.match(app, /for \(const \[index, translation\] of \(selected\.paragraphTranslations \|\| \[\]\)\.entries\(\)\)/);
-  assert.match(app, /number\.textContent = `\$\{index \+ 1\}\.`;/);
+  assert.match(app, /const translation = \(selected\.paragraphTranslations \|\| \[\]\)\[currentStoryParagraphIndex\]/);
+      assert.ok(app.includes('number.textContent = `${currentStoryParagraphIndex + 1}.`;'));
   assert.match(app, /panel\.hidden = !panel\.hidden/);
   assert.match(app, /translationToggle\.setAttribute\("aria-expanded", "false"\)/);
   assert.match(css, /\.story-translation-paragraph \+ \.story-translation-paragraph/);

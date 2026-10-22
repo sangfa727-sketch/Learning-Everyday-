@@ -203,3 +203,39 @@ test("story-card navigation is committed before speech cleanup so cleanup errors
   assert.ok(navigation >= 0 && cleanup > navigation, "route must change before speech cleanup");
   assert.match(source, /try\s*\{\s*stopStoryNarration\(\);\s*\}\s*catch\s*\{/);
 });
+
+test("tapping an English story word speaks it aloud and translation follows the current paragraph", () => {
+  const renderStart = app.indexOf("function renderStory()");
+  const renderEnd = app.indexOf("\nfunction pronounceWord", renderStart);
+  assert.ok(renderStart >= 0 && renderEnd > renderStart, "story renderer should exist");
+  const renderSource = app.slice(renderStart, renderEnd);
+  assert.ok(renderSource.includes("showWord(part.word, wordParagraphIndex);"));
+  assert.ok(renderSource.includes("pronounceWord(part.word);"));
+  assert.ok(renderSource.includes("renderStoryTranslation(selected)"));
+
+  const translationStart = app.indexOf("function renderStoryTranslation(selected)");
+  const translationEnd = app.indexOf("\nfunction stopStoryNarration", translationStart);
+  assert.ok(translationStart >= 0 && translationEnd > translationStart, "translation renderer should exist");
+  const translationSource = app.slice(translationStart, translationEnd);
+  assert.ok(translationSource.includes("])[currentStoryParagraphIndex]"));
+  assert.ok(translationSource.includes("${currentStoryParagraphIndex + 1}."));
+  assert.ok(!translationSource.includes("]).entries()"), "translation should not render every paragraph at once");
+});
+
+test("tapping a Listening story card immediately renders the selected story reader", () => {
+  const libraryStart = app.indexOf("function renderListeningLibrary()");
+  const libraryEnd = app.indexOf("\nfunction syncListeningView", libraryStart);
+  assert.ok(libraryStart >= 0 && libraryEnd > libraryStart, "story library renderer should exist");
+  const source = app.slice(libraryStart, libraryEnd);
+  const clickStart = source.indexOf('card.addEventListener("click"');
+  const clickEnd = source.indexOf("\n    });", clickStart);
+  assert.ok(clickStart >= 0 && clickEnd > clickStart, "story card click handler should exist");
+  const handler = source.slice(clickStart, clickEnd);
+  assert.match(handler, /location\.hash = `#\/listening\/\$\{item\.id\}`;/);
+  assert.match(handler, /renderPage\(\);/);
+  assert.match(handler, /window\.scrollTo\(\{ top: 0, behavior: "auto" \}\)/);
+  const routeStart = app.indexOf("function syncListeningView");
+  const routeEnd = app.indexOf("\nfunction renderStoryTranslation", routeStart);
+  assert.ok(routeStart >= 0 && routeEnd > routeStart, "story route renderer should exist");
+  assert.match(app.slice(routeStart, routeEnd), /library\.hidden = true;\s*panel\.hidden = false;\s*back\.hidden = false;/);
+});
