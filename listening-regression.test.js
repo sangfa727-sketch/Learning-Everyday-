@@ -745,6 +745,7 @@ test("Listening Myanmar translations preserve the meaning of nearby people and m
   const river = app.slice(riverStart, riverEnd);
   assert.match(river, /ရေစီးသန်ပြီး အန္တရာယ်ရှိသော ရေထဲသို့ မဝင်ရ/);
   assert.match(river, /ကြည်လင်နေသောရေသည်ပင် သောက်သုံးရန် ဘေးကင်းမည်ဟု မဆိုနိုင်ကြောင်း/);
+  assert.match(river, /သောက်ရေထောက်ပံ့မှု အခြေအနေကို စစ်ဆေး/);
   assert.doesNotMatch(river, /အန္တရာယ်ရှိအောင် မြန်မြန်စီးနေသောရေထဲသို့/);
 });
 
