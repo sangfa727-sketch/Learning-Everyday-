@@ -248,6 +248,7 @@ function pluralNounMeaning(value, context, entry, dictionary) {
     "the", "these", "those", "many", "some", "several", "few", "two", "three", "four", "five", "six",
     "all", "both", "other", "their", "our", "your", "my", "its", "local", "new", "old", "small", "large",
     "young", "healthy", "damaged", "public", "important", "reliable", "official", "remaining", "suitable",
+    "simple", "short", "long", "easy", "difficult", "careful", "useful", "accurate", "safe", "safer", "correct", "right", "wrong", "clearer", "private", "home", "written", "spoken", "necessary", "possible", "first", "second", "last", "next", "additional", "wooden", "firm", "ripe", "shallow", "quiet", "red", "yellow", "green", "blue", "brown", "white", "black", "grey", "gray", "pink", "orange", "separate", "basic", "older", "younger", "fresh", "cold", "warm", "strong", "weak", "busy", "crowded", "narrow", "wide", "clean", "dirty", "dry", "wet", "high", "low",
     "native", "different", "various", "visible", "common", "early", "current", "flood", "river", "town",
     "school", "family", "community", "nearby", "certain", "clear", "market", "water-level", "high-water",
     "and", "or", "but", "while", "with", "among", "between", "including", "from", "to", "of", "for", "by",
