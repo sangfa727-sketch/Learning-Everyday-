@@ -102,9 +102,17 @@ const CONTEXTUAL_SENSES = Object.freeze({
     { test: /\b(water|village|deep|dug|hole|bucket|drawn from)\b/i, meaning: "a deep hole from which water is obtained", my: "ရေတွင်း" },
     { test: /\b(healthy|sick|ill|feel|looks|doing|worked|spoke|performed|together)\b/i, meaning: "in a good or satisfactory way; healthy", my: "ကောင်းစွာ၊ ကျန်းမာသော" }
   ],
+  looking: [
+    { test: /\blooking back(?: on\b|,\s*(?:i|we|they|she|he)\b)/i, meaning: "reflecting on the past", my: "အတိတ်ကို ပြန်လည်စဉ်းစားကြည့်ခြင်း" },
+    { test: /\blooking back at\b/i, meaning: "turning one's eyes toward something behind", my: "နောက်ဘက်သို့ လှည့်ကြည့်ခြင်း" }
+  ],
+  looked: [
+    { test: /\blocked back on\b/i, meaning: "reflected on the past", my: "အတိတ်ကို ပြန်လည်စဉ်းစားကြည့်ခဲ့သည်" },
+    { test: /\blocked back at\b/i, meaning: "turned one's eyes toward something behind", my: "နောက်ဘက်သို့ လှည့်ကြည့်ခဲ့သည်" }
+  ],
   back: [
-    { test: /\b(looking back|looked back|look back|looking back on|looking back,|thinking back)\b/i, meaning: "to think about or reflect on the past", my: "အတိတ်ကို ပြန်လည်စဉ်းစားကြည့်သည်" },
-    { test: /\b(turned back|turn back|look back at|looked back at|behind|back door|back of)\b/i, meaning: "the rear part; toward the rear", my: "နောက်ဘက်၊ နောက်သို့" }
+    { test: /\b(looking back(?: on\b|,\s*(?:i|we|they|she|he)\b)|look back on|thinking back)\b/i, meaning: "to think about or reflect on the past", my: "အတိတ်ကို ပြန်လည်စဉ်းစားကြည့်သည်" },
+    { test: /\b(turned back|turn back|look back at|looked back at|looking back at|looked back toward|behind|back door|back of)\b/i, meaning: "the rear part; toward the rear", my: "နောက်ဘက်၊ နောက်သို့" }
   ],
   light: [
     { test: /\b(heavy|carry|weight|bag|basket|box)\b/i, meaning: "not heavy", my: "ပေါ့ပါးသော" },
