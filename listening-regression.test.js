@@ -348,3 +348,32 @@ test("shared dictionary covers key rainy-afternoon vocabulary and common inflect
   assert.equal(lookupWord("tapped"), DICTIONARY.tap);
   assert.equal(lookupWord("coloured"), DICTIONARY.colour);
 });
+
+test("shared dictionary covers lost-puppy and museum vocabulary with inflected word lookup", () => {
+  const words = [
+    "cardboard", "paw", "tired", "hurt", "distance", "shake", "bowl", "shopkeeper",
+    "online", "daughter", "hurry", "girl", "recognise", "wag", "tail", "slip",
+    "grocery", "poster", "step", "chase", "injury", "guidance", "seriously",
+    "rescue", "alone", "pet", "readable", "properly", "herself", "hero", "pause",
+    "allow", "situation", "promise", "safe", "mean", "love", "friday", "enter",
+    "calmly", "receive", "task", "discover", "wear", "pot", "glass", "modern",
+    "machine", "equipment", "farm", "today", "letter", "classroom", "desk",
+    "encourage", "memorise", "bell", "warn", "begin", "pattern", "question",
+    "research", "ring", "complete", "explanation", "match", "correction", "source",
+    "claim", "study", "meaningful", "connect", "sketch", "ready", "closely"
+  ];
+  for (const word of words) {
+    const entry = lookupWord(word);
+    assert.ok(entry, "shared dictionary should resolve " + word);
+    assert.ok(entry.meaning.trim() && entry.usage.trim() && entry.my.trim(), word + " should have all dictionary fields");
+  }
+  for (const [form, base] of [
+    ["walking", "walk"], ["paws", "paw"], ["shopkeepers", "shopkeeper"],
+    ["hurried", "hurry"], ["recognised", "recognise"], ["wagged", "wag"],
+    ["slipped", "slip"], ["groceries", "grocery"], ["received", "receive"],
+    ["worn", "wear"], ["rung", "ring"], ["began", "begin"],
+    ["safer", "safe"], ["taller", "tall"], ["lighter", "light"], ["easier", "easy"]
+  ]) {
+    assert.equal(lookupWord(form), DICTIONARY[base], form + " should resolve to " + base);
+  }
+});
