@@ -76,3 +76,13 @@ test("Tapping a story word exposes pronunciation and Myanmar meaning controls", 
   assert.match(css, /\.word-myanmar-translation/);
   assert.match(css, /\.word-card-actions/);
 });
+
+
+test("Word lookup displays the selected story paragraph translation when available", () => {
+  assert.match(html, /id="word-context-translation"/);
+  assert.match(app, /let activeStoryTranslations = \[\]/);
+  assert.match(app, /activeStoryTranslations = selected\.paragraphTranslations \|\| \[\]/);
+  assert.match(app, /showWord\(part\.word, paragraphIndex\)/);
+  assert.match(app, /activeStoryTranslations\[paragraphIndex\]/);
+  assert.match(css, /\.word-context-translation/);
+});
