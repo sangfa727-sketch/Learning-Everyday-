@@ -323,7 +323,7 @@ test("word tap triggers only one pronunciation request", () => {
 
 test("shared dictionary keys are unique and every entry has complete English and Myanmar fields", async () => {
   const dictionarySource = await readFile(new URL("./dictionary.js", import.meta.url), "utf8");
-  const keys = [...dictionarySource.matchAll(/^\\s{2}([a-z][a-z'-]*):\\s*\\{/gm)].map((match) => match[1]);
+  const keys = [...dictionarySource.matchAll(/^\s{2}([a-z][a-z'-]*):\s*\{/gm)].map((match) => match[1]);
   assert.ok(keys.length > 0, "shared dictionary should contain entries");
   assert.equal(new Set(keys).size, keys.length, "shared dictionary source must not contain duplicate keys");
 
