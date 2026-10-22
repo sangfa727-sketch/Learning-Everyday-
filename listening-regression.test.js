@@ -723,14 +723,14 @@ test("sentence-by-sentence Myanmar translation aligns with every English sentenc
 
 test("Listening Myanmar translations preserve the meaning of nearby people and museum questions", () => {
   const puppyStart = app.indexOf('id: "lost-puppy"');
-  const puppyEnd = app.indexOf("\\n  },", puppyStart);
+  const puppyEnd = app.indexOf("\n  },", puppyStart);
   assert.ok(puppyStart >= 0 && puppyEnd > puppyStart, "Lost Puppy story should exist");
   const puppy = app.slice(puppyStart, puppyEnd);
   assert.match(puppy, /အနီးအနားတွင် လူတစ်ဦးမျှ မရှိပါ/);
   assert.doesNotMatch(puppy, /အနီးတွင် ပိုင်ရှင်မရှိပါ/);
 
   const museumStart = app.indexOf('id: "school-trip"');
-  const museumEnd = app.indexOf("\\n  },", museumStart);
+  const museumEnd = app.indexOf("\n  },", museumStart);
   assert.ok(museumStart >= 0 && museumEnd > museumStart, "Museum story should exist");
   const museum = app.slice(museumStart, museumEnd);
   assert.match(museum, /ပြတိုက်က အဖြေရှာရာတွင် ကူညီပေးနိုင်မည့် မေးခွန်းနှစ်ခု/);
