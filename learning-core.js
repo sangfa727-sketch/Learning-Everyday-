@@ -110,7 +110,8 @@ const CONTEXTUAL_SENSES = Object.freeze({
   ],
   looked: [
     { test: /\blooked back on\b/i, meaning: "reflected on the past", my: "အတိတ်ကို ပြန်လည်စဉ်းစားကြည့်ခဲ့သည်" },
-    { test: /\blooked back at\b/i, meaning: "turned one's eyes toward something behind", my: "နောက်ဘက်သို့ လှည့်ကြည့်ခဲ့သည်" }
+    { test: /\blooked back at\b/i, meaning: "turned one's eyes toward something behind", my: "နောက်ဘက်သို့ လှည့်ကြည့်ခဲ့သည်" },
+    { test: /\blooked\s+(?:tired|frightened|worried|weak|clear|current|peaceful|attractive|bright|welcoming|seriously hurt|muddy|safe|different|unwell|confused|comfortable|happy|sad|angry|empty|full|dangerous|familiar|similar|strange|beautiful|calm|quiet|busy|ready|afraid|uncertain)\b/i, meaning: "appeared or seemed to have a particular quality or condition", my: "ပုံရသည်၊ ထင်ရသည်" }
   ],
   back: [
     { test: /\bback at (school|home|work|the office)\b/i, meaning: "returned to a place", my: "ပြန်လည်ရောက်ရှိသောအခါ" },
@@ -194,6 +195,7 @@ const CONTEXTUAL_SENSES = Object.freeze({
     { test: /\b(?:they|students|team|Lina|she|he|we|officials|Mr Daniel)\s+records\b|\brecords\s+(?:the|each|every|date|amount|reading|change|information)\b/i, meaning: "to write down or store information", my: "မှတ်တမ်းတင်သည်" }
   ],
   changed: [
+    { test: /\bchanged\s+(?:my|your|his|her|their|people's|many people's)\s+lives\b/i, meaning: "affected or altered people's lives", my: "ဘဝများကို ပြောင်းလဲစေခဲ့သည်" },
     { test: /\b(?:routine|plan|weather|different|become|decide|way|shape|colour|color)\b/i, meaning: "became or made something different", my: "ပြောင်းလဲခဲ့သည်" }
   ],
   changes: [
