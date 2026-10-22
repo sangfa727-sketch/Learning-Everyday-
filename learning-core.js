@@ -142,8 +142,19 @@ export function lookupWordInContext(value, context = "", dictionary = DICTIONARY
   const word = normalizeWord(value);
   const entry = lookupWord(word, dictionary);
   if (!entry) return null;
-  const senses = CONTEXTUAL_SENSES[word];
+
+  // Context rules belong to dictionary headwords. Reuse them for possessives
+  // and inflected forms that resolve through lookupWord (for example Rose's
+  // and changed) instead of silently falling back to a mixed-sense definition.
+  const possessiveBase = word.endsWith("'s") ? word.slice(0, -2) : word;
+  let senses = CONTEXTUAL_SENSES[possessiveBase] ?? CONTEXTUAL_SENSES[word];
+  if (!senses) {
+    const contextualHeadword = Object.keys(CONTEXTUAL_SENSES)
+      .find((headword) => dictionary[headword] === entry);
+    if (contextualHeadword) senses = CONTEXTUAL_SENSES[contextualHeadword];
+  }
   if (!senses) return entry;
+
   const sentence = String(context ?? "");
   const selected = senses.find((sense) => sense.test.test(sentence));
   return selected ? { ...entry, meaning: selected.meaning, my: selected.my } : entry;
