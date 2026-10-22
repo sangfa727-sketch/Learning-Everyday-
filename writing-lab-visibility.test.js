@@ -26,7 +26,7 @@ test("Smart Writing Lab is hidden from navigation while the Writing Practice sho
   assert.match(css, /#legacy-letter-tools\[hidden\]\{display:none!important\}/);
   assert.match(curriculum, /letterTitle: "Script-style alphabet reference"/);
   assert.match(curriculum, /letterTitle: "Script အက္ခရာ နမူနာ"/);
-  assert.match(sw, /learning-everyday-shell-v29/);
+  assert.match(sw, /learning-everyday-shell-v30/);
   assert.match(lab, /id="paste-path-editor"/);
   assert.match(lab, /id="editable-path-svg"/);
   assert.match(lab, /id="path-point-list"/);
