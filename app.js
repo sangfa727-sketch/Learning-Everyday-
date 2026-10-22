@@ -294,11 +294,45 @@ function syncListeningView(page = currentPage()) {
   $(".lesson-number").textContent = language === "my" ? "ပုံပြင်" : "STORY";
 }
 
+function clearSpeechHighlight() {
+  document.querySelectorAll("#lesson-text .speech-current-word").forEach((element) => {
+    element.classList.remove("speech-current-word");
+    element.removeAttribute("aria-current");
+  });
+}
+
+function highlightSpeechWord(charIndex) {
+  if (!Number.isFinite(charIndex) || charIndex < 0) return;
+  const words = document.querySelectorAll("#lesson-text .lesson-word[data-speech-start]");
+  let active = null;
+  for (const word of words) {
+    const start = Number(word.dataset.speechStart);
+    const end = Number(word.dataset.speechEnd);
+    if (charIndex >= start && charIndex < end) {
+      active = word;
+      break;
+    }
+  }
+  if (!active) return;
+  const previous = $("#lesson-text .speech-current-word");
+  if (previous === active) return;
+  clearSpeechHighlight();
+  active.classList.add("speech-current-word");
+  active.setAttribute("aria-current", "true");
+  const bounds = active.getBoundingClientRect();
+  if (bounds.top < 72 || bounds.bottom > window.innerHeight - 48) {
+    active.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }
+}
+
 function renderStory() {
   const container = $("#lesson-text");
   container.replaceChildren();
   let paragraphIndex = 0;
+  let speechOffset = 0;
   for (const part of tokenizeStory(story)) {
+    const partStart = speechOffset;
+    speechOffset += part.text.length;
     if (!part.word) {
       paragraphIndex += (part.text.match(/\n\s*\n/g) || []).length;
       container.append(document.createTextNode(part.text));
@@ -308,6 +342,8 @@ function renderStory() {
     button.type = "button";
     button.className = "lesson-word";
     button.textContent = part.text;
+    button.dataset.speechStart = String(partStart);
+    button.dataset.speechEnd = String(speechOffset);
     button.setAttribute("aria-label", `Look up ${part.word}`);
     const wordParagraphIndex = paragraphIndex;
     button.addEventListener("click", () => showWord(part.word, wordParagraphIndex));
@@ -444,14 +480,19 @@ function speakStory() {
     return;
   }
   window.speechSynthesis.cancel();
+  clearSpeechHighlight();
   const utterance = new SpeechSynthesisUtterance(story);
   const voice = selectedEnglishVoice();
   utterance.lang = voice?.lang || "en-US";
   if (voice) utterance.voice = voice;
   utterance.rate = clampSpeechRate($("#speech-speed").value);
-  utterance.onstart = () => { $("#play-button").disabled = true; $("#status-message").textContent = language === "my" ? "နားထောင်နေသည်…" : "Playing story…"; };
-  utterance.onend = () => { $("#play-button").disabled = false; $("#status-message").textContent = translations[language].voiceNote; };
-  utterance.onerror = () => { $("#play-button").disabled = false; $("#status-message").textContent = translations[language].noSpeech; };
+  clearSpeechHighlight();
+  utterance.onstart = () => { clearSpeechHighlight(); $("#play-button").disabled = true; $("#status-message").textContent = language === "my" ? "နားထောင်နေသည်…" : "Playing story…"; };
+  utterance.onboundary = (event) => {
+    if (event.name === "word" || Number.isFinite(event.charIndex)) highlightSpeechWord(event.charIndex);
+  };
+  utterance.onend = () => { clearSpeechHighlight(); $("#play-button").disabled = false; $("#status-message").textContent = translations[language].voiceNote; };
+  utterance.onerror = () => { clearSpeechHighlight(); $("#play-button").disabled = false; $("#status-message").textContent = translations[language].noSpeech; };
   window.speechSynthesis.speak(utterance);
 }
 
