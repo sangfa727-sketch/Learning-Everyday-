@@ -107,7 +107,7 @@ const CONTEXTUAL_SENSES = Object.freeze({
     { test: /\blooking back at\b/i, meaning: "turning one's eyes toward something behind", my: "နောက်ဘက်သို့ လှည့်ကြည့်ခြင်း" }
   ],
   looked: [
-    { test: /\blocked back on\b/i, meaning: "reflected on the past", my: "အတိတ်ကို ပြန်လည်စဉ်းစားကြည့်ခဲ့သည်" },
+    { test: /\blooked back on\b/i, meaning: "reflected on the past", my: "အတိတ်ကို ပြန်လည်စဉ်းစားကြည့်ခဲ့သည်" },
     { test: /\blocked back at\b/i, meaning: "turned one's eyes toward something behind", my: "နောက်ဘက်သို့ လှည့်ကြည့်ခဲ့သည်" }
   ],
   back: [
