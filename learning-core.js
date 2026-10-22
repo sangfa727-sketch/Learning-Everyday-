@@ -225,6 +225,10 @@ const CONTEXTUAL_SENSES = Object.freeze({
   moving: [
     { test: /\bwater moving\b|\bmoving water\b|\bwater\s+(?:moved|moves|flowed)\b/i, meaning: "water flowing or changing position", my: "စီးဆင်းနေသော၊ ရွေ့လျားနေသော" },
     { test: /\bmoving (?:the|a|some|these|those|books|furniture|goods)\b/i, meaning: "taking something to another place", my: "ရွှေ့ပြောင်းခြင်း" }
+  ],
+  addresses: [
+    { test: /\b(?:home|private|postal|mailing|street|office|email)\s+addresses\b|\baddresses\s+(?:were|are|for|of)\b/i, meaning: "locations where people live or receive mail", my: "လိပ်စာများ" },
+    { test: /\b(?:plan|report|map|notice|policy|solution|team|school)\s+addresses\b|\baddresses\s+(?:the|a|an|this|that|need|problem|issue|question|concern|risk)\b/i, meaning: "deals with or takes action on an issue", my: "ကိုင်တွယ်ဖြေရှင်းသည်" }
   ]
 });
 
@@ -238,7 +242,7 @@ function pluralNounMeaning(value, context, entry, dictionary) {
   // can be inserted into this word-boundary expression without regex escaping.
   const nounClues = [
     "the", "these", "those", "many", "some", "several", "few", "two", "three", "four", "five", "six",
-    "all", "both", "other", "their", "our", "your", "my", "local", "new", "old", "small", "large",
+    "all", "both", "other", "their", "our", "your", "my", "its", "local", "new", "old", "small", "large",
     "young", "healthy", "damaged", "public", "important", "reliable", "official", "remaining", "suitable",
     "native", "different", "various", "visible", "common", "early", "current", "flood", "river", "town",
     "school", "family", "community", "nearby", "certain", "clear", "market", "water-level", "high-water",
