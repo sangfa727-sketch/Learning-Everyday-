@@ -1,383 +1,58 @@
-export const DICTIONARY = Object.freeze({
-  watershed: { meaning: "an area of land where water drains toward the same river or lake", usage: "The students studied how rain moved through the watershed.", my: "မြစ်ရေစုဝေးစီးဆင်းရာ ရေဝေရေလဲဒေသ" },
-  resilience: { meaning: "the ability to recover after difficulty", usage: "Good preparation improved the town's resilience.", my: "အခက်အခဲမှ ပြန်လည်ရပ်တည်နိုင်စွမ်း" },
-  drainage: { meaning: "a system that carries away extra water", usage: "Workers repaired the blocked drainage opening.", my: "ရေစီးထုတ်စနစ်" },
-  gauge: { meaning: "a tool used to measure or show an amount", usage: "Lina read the river gauge from a safe platform.", my: "တိုင်းတာကိရိယာ" },
-  upstream: { meaning: "in the direction from which a river flows", usage: "Heavy rain upstream raised the river level.", my: "မြစ်ညာဘက်တွင်" },
-  downstream: { meaning: "in the direction a river flows", usage: "The town downstream prepared for rising water.", my: "မြစ်အောက်ဘက်တွင်" },
-  floodwater: { meaning: "water that has spread over land during a flood", usage: "Residents were told not to walk through floodwater.", my: "ရေကြီးရေလျှံရေ" },
-  rainfall: { meaning: "the amount of rain that falls", usage: "The team compared rainfall with river levels.", my: "မိုးရေချိန်" },
-  measurement: { meaning: "the act or result of finding the size or amount of something", usage: "Repeated measurements helped reveal a pattern.", my: "တိုင်းတာချက်" },
-  wetland: { meaning: "land that is often covered or soaked with water", usage: "The wetland held extra rainwater during the storm.", my: "စိုစွတ်မြေ" },
-  verify: { meaning: "to check that information is true or accurate", usage: "The students verified the date before sharing the report.", my: "မှန်ကန်ကြောင်း စစ်ဆေးသည်" },
-  reliable: { meaning: "able to be trusted to be correct or work well", usage: "Residents checked a reliable official warning.", my: "ယုံကြည်စိတ်ချရသော" },
-  volunteer: { meaning: "a person who offers to help without being paid", usage: "Volunteers helped organise the temporary shelter.", my: "စေတနာ့ဝန်ထမ်း" },
-  evacuate: { meaning: "to move people away from a dangerous place", usage: "Officials told families to evacuate the low streets.", my: "အန္တရာယ်ရှိရာမှ ရွှေ့ပြောင်းသည်" },
-  contamination: { meaning: "the presence of something harmful or unwanted", usage: "Floodwater may cause contamination of drinking water.", my: "ညစ်ညမ်းမှု" },
-  forecast: { meaning: "a statement about what is likely to happen in the future", usage: "A notebook is not a substitute for an official flood forecast.", my: "ခန့်မှန်းချက်" },
-  inspect: { meaning: "to examine something carefully", usage: "Officials inspected the bridge before reopening it.", my: "အသေးစိတ်စစ်ဆေးသည်" },
-  vulnerable: { meaning: "easily harmed or damaged", usage: "Families moved away from vulnerable low areas.", my: "အန္တရာယ်ထိခိုက်လွယ်သော" },
-  coordinate: { meaning: "to organise people or activities so they work well together", usage: "The town office coordinated volunteers and supplies.", my: "ညှိနှိုင်းစီစဉ်သည်" },
-  maintenance: { meaning: "work done to keep something in good condition", usage: "Regular maintenance kept the drain clear.", my: "ပုံမှန်ထိန်းသိမ်းပြုပြင်မှု" },
-  survey: { meaning: "a set of questions used to collect information", usage: "The students conducted a short resident survey.", my: "စစ်တမ်း" },
-  reassure: { meaning: "to make someone feel less worried", usage: "The shop owner spoke calmly to reassure the girl.", my: "စိတ်အေးစေသည်" },
-  fragile: { meaning: "easily broken or damaged", usage: "She placed the fragile eggs at the top of the bag.", my: "ကျိုးပဲ့လွယ်သော" },
-  observe: { meaning: "to watch something carefully", usage: "Maya observed the bird from the doorway.", my: "စောင့်ကြည့်လေ့လာသည်" },
-  routine: { meaning: "a regular way of doing things", usage: "Maya made garden care part of her morning routine.", my: "ပုံမှန်လုပ်ရိုးလုပ်စဉ်" },
-  resource: { meaning: "something useful that people can use or learn from", usage: "The library became a valuable learning resource.", my: "အရင်းအမြစ်" },
-  cooperate: { meaning: "to work together toward the same goal", usage: "Neighbours cooperated to repair the roof.", my: "ပူးပေါင်းဆောင်ရွက်သည်" },
-  transparent: { meaning: "open and clear so people can understand what is happening", usage: "A transparent record helped everyone trust the project.", my: "ပွင့်လင်းမြင်သာသော" },
-  shortage: { meaning: "a situation in which there is not enough of something", usage: "The village had a shortage of books.", my: "ရှားပါးမှု" },
-  maintain: { meaning: "to keep something working or in good condition", usage: "The community must maintain the library.", my: "ထိန်းသိမ်းပြုပြင်သည်" },
-  schedule: { meaning: "a plan that shows when things will happen", usage: "Volunteers made a schedule for opening the library.", my: "အချိန်ဇယား" },
-  accessible: { meaning: "easy to reach, use, or understand", usage: "A low shelf made books accessible to children.", my: "လက်လှမ်းမီသော" },
-  preserve: { meaning: "to keep something safe and in good condition", usage: "The villagers worked to preserve old photographs.", my: "ထိန်းသိမ်းသည်" },
-  evidence: { meaning: "information that helps show whether something is true", usage: "The class separated evidence from imagination.", my: "သက်သေအထောက်အထား" },
-  artifact: { meaning: "an object made or used by people in the past", usage: "The museum displayed artifacts from the village.", my: "ရှေးဟောင်းအသုံးအဆောင်ပစ္စည်း" },
-  exhibit: { meaning: "an object or item shown to the public", usage: "Sam chose an exhibit for his notebook.", my: "ပြသထားသောပစ္စည်း" },
-  identify: { meaning: "to recognise and name someone or something", usage: "The girl could identify her puppy at once.", my: "ခွဲခြားသိရှိသည်" },
-  approach: { meaning: "to move closer to someone or something", usage: "Lina did not approach the frightened puppy too quickly.", my: "အနီးသို့ချဉ်းကပ်သည်" },
-  shelter: { meaning: "a place that gives protection from weather or danger", usage: "The puppy waited in a sheltered corner.", my: "အကာအကွယ်ပေးရာနေရာ" },
-  budget: { meaning: "a plan for how to spend money", usage: "The family made a small budget for the market trip.", my: "အသုံးစရိတ်အစီအစဉ်" },
-  receipt: { meaning: "a paper showing what you paid for", usage: "Nora kept the receipt in her bag.", my: "ပြေစာ" },
-  bargain: { meaning: "something bought for a good or low price", usage: "Nora compared prices before deciding whether something was a bargain.", my: "ဈေးတန်သောပစ္စည်း၊ ဈေးဆစ်သည်" },
-  crowded: { meaning: "full of many people", usage: "The market was crowded in the morning.", my: "လူစည်ကားသော" },
-  cupboard: { meaning: "a piece of furniture with shelves or doors for storage", usage: "Grandfather kept the photographs in a cupboard.", my: "ဗီရို" },
-  gather: { meaning: "to come together in one place", usage: "Dark clouds gather before the rain.", my: "စုဝေးသည်၊ စုလာသည်" },
-  nest: { meaning: "a place where a bird lays eggs and raises its young", usage: "People should not disturb a bird's nest.", my: "ငှက်သိုက်" },
-  watering: { meaning: "giving water to plants", usage: "Maya carried a watering can outside.", my: "ရေလောင်းခြင်း" },
-  lane: { meaning: "a narrow road or path", usage: "Their house stood at the end of a quiet lane.", my: "လမ်းကျဉ်း" },
-  grandmother: { meaning: "the mother of someone's parent", usage: "Her grandmother started the garden.", my: "အဘွား" },
-  garden: { meaning: "a place where flowers, fruit, or vegetables are grown", usage: "Maya has a small garden.", my: "ပန်းပင်၊ ဟင်းသီးဟင်းရွက် စိုက်ပျိုးရာနေရာ" },
-  morning: { meaning: "the early part of the day", usage: "Every morning, she waters the flowers.", my: "မနက်ခင်း" },
-  water: { meaning: "to give water to a plant or living thing", usage: "She waters the flowers.", my: "ရေလောင်းသည်" },
-  flower: { meaning: "the colorful part of a plant", usage: "The flowers are beautiful.", my: "ပန်း" },
-  bird: { meaning: "an animal with feathers, wings, and a beak", usage: "A yellow bird visits the garden.", my: "ငှက်" },
-  visit: { meaning: "to go to see a person or place", usage: "A bird visits the garden.", my: "လာရောက်လည်ပတ်သည်" },
-  sing: { meaning: "to make musical sounds with the voice", usage: "The bird sings in the tree.", my: "သီချင်းဆိုသည်" },
-  happy: { meaning: "feeling pleased or glad", usage: "Maya feels happy.", my: "ပျော်ရွှင်သော" },
-  small: { meaning: "little in size", usage: "She has a small garden.", my: "သေးငယ်သော" },
-  learn: { meaning: "to gain knowledge or a new skill", usage: "I learn a little every day.", my: "သင်ယူသည်" },
-  every: { meaning: "each one in a group or period of time", usage: "I practice every day.", my: "တိုင်း၊ အားလုံးသော" },
-  tree: { meaning: "a tall plant with a trunk and branches", usage: "The bird sits in the tree.", my: "သစ်ပင်" },
-  song: { meaning: "a short piece of music with words or melody", usage: "Maya hears the bird's song.", my: "သီချင်း" },
-  hear: { meaning: "to notice a sound with your ears", usage: "She hears a bird sing.", my: "ကြားသည်" },
-  feel: { meaning: "to experience an emotion or sensation", usage: "Maya feels happy.", my: "ခံစားရသည်" },
-  carefully: { meaning: "in a way that shows attention", usage: "She checks each plant carefully.", my: "ဂရုတစိုက်" },
-  soil: { meaning: "the top layer of earth where plants grow", usage: "Healthy soil helps plants grow.", my: "မြေဆီလွှာ" },
-  sunlight: { meaning: "light that comes from the sun", usage: "Plants need sunlight.", my: "နေရောင်ခြည်" },
-  weed: { meaning: "a plant growing where it is not wanted", usage: "Maya pulls weeds from the garden.", my: "ပေါင်းပင်" },
-  recover: { meaning: "to become healthy or well again", usage: "The weak plant may recover.", my: "ပြန်လည်ကောင်းမွန်လာသည်" },
-  branch: { meaning: "a part of a tree that grows from the trunk", usage: "The bird sits on a branch.", my: "သစ်ကိုင်း" },
-  shallow: { meaning: "not deep", usage: "The bird drinks from a shallow dish.", my: "ရေတိမ်သော" },
-  butterfly: { meaning: "an insect with large colourful wings", usage: "Butterflies visit the flowers.", my: "လိပ်ပြာ" },
-  season: { meaning: "one of the parts of the year", usage: "Flowers open at the end of the season.", my: "ရာသီ" },
-  patience: { meaning: "the ability to wait calmly", usage: "Gardening takes patience.", my: "စိတ်ရှည်မှု" },
-  market: { meaning: "a place where people buy and sell things", usage: "Nora walks to the market.", my: "ဈေး" },
-  seller: { meaning: "a person who sells things", usage: "The seller helps Nora choose apples.", my: "ရောင်းသူ" },
-  bruise: { meaning: "a dark mark caused by damage", usage: "Choose apples without bruises.", my: "အနာအဆာ" },
-  ripe: { meaning: "ready to eat or use", usage: "Ripe bananas have yellow skins.", my: "မှည့်သော" },
-  compare: { meaning: "to look at things to see how they are different", usage: "Shoppers compare prices.", my: "နှိုင်းယှဉ်သည်" },
-  purse: { meaning: "a small bag for money", usage: "Nora counts the money in her purse.", my: "ပိုက်ဆံအိတ်" },
-  relief: { meaning: "a feeling of comfort after worry ends", usage: "The woman smiles with relief.", my: "စိတ်သက်သာရာ" },
-  change: { meaning: "money returned after paying too much", usage: "The seller gives the correct change.", my: "ပြန်အမ်းငွေ" },
-  reuse: { meaning: "to use something again", usage: "Reuse the cloth bag.", my: "ပြန်လည်အသုံးပြုသည်" },
-  thoughtful: { meaning: "showing care and good judgment", usage: "Nora makes thoughtful choices.", my: "စဉ်းစားချင့်ချိန်တတ်သော" },
-  cloud: { meaning: "a white or grey mass in the sky", usage: "Dark clouds gather above the houses.", my: "မိုးတိမ်" },
-  disappointed: { meaning: "sad because something did not happen as hoped", usage: "Ben feels disappointed about football.", my: "စိတ်ပျက်သော" },
-  slippery: { meaning: "not firm to walk on; easy to slide", usage: "A wet field can be slippery.", my: "ချော်လွယ်သော" },
-  photograph: { meaning: "a picture made with a camera", usage: "Grandfather shows old photographs.", my: "ဓာတ်ပုံ" },
-  neighbourhood: { meaning: "the area around where people live", usage: "The neighbourhood has changed.", my: "ရပ်ကွက်" },
-  imagine: { meaning: "to make a picture or idea in your mind", usage: "Ben imagines the old street.", my: "စိတ်ကူးကြည့်သည်" },
-  caption: { meaning: "words under a picture", usage: "They write captions beneath the pictures.", my: "ပုံအောက်စာတန်း" },
-  folder: { meaning: "a cover used to keep papers together", usage: "Ben puts the pictures in a folder.", my: "ဖိုင်တွဲ" },
-  whimper: { meaning: "a low, soft sound made when upset or hurt", usage: "Lina hears a puppy whimper.", my: "ညည်းသံ" },
-  frightened: { meaning: "afraid or scared", usage: "The puppy looks frightened.", my: "ကြောက်ရွံ့သော" },
-  gentle: { meaning: "kind and soft, not rough", usage: "Lina speaks in a gentle voice.", my: "နူးညံ့သော" },
-  collar: { meaning: "a band around an animal's neck", usage: "The puppy wears a collar.", my: "လည်ပတ်" },
-  tag: { meaning: "a small label attached to something", usage: "The collar has a phone-number tag.", my: "အမှတ်ပြား" },
-  responsible: { meaning: "able to be trusted to do what is right", usage: "Ask a responsible adult for help.", my: "တာဝန်ယူတတ်သော" },
-  reunite: { meaning: "to bring people or animals together again", usage: "They reunite the puppy with its family.", my: "ပြန်လည်ဆုံစည်းစေသည်" },
-  museum: { meaning: "a place where important or old objects are displayed", usage: "The class visits a museum.", my: "ပြတိုက်" },
-  display: { meaning: "to put something where people can see it", usage: "Old tools are on display.", my: "ပြသထားသည်" },
-  farmer: { meaning: "a person who grows crops or raises animals", usage: "Farmers use tools to grow food.", my: "လယ်သမား" },
-  tool: { meaning: "an object used to do a job", usage: "The museum has old tools.", my: "ကိရိယာ" },
-  plough: { meaning: "a tool used to turn soil for planting", usage: "The wooden plough is behind glass.", my: "ထွန်" },
-  sickle: { meaning: "a curved tool used to cut plants", usage: "The farmer used a sickle.", my: "တံစဉ်" },
-  clay: { meaning: "a type of soft earth used to make pots", usage: "A clay pot holds water.", my: "မြေစေး" },
-  history: { meaning: "the study of the past", usage: "The museum helps students learn history.", my: "သမိုင်း" },
-  fact: { meaning: "something known to be true", usage: "Separate facts from guesses.", my: "အချက်အလက်" },
-  woven: { meaning: "made by crossing threads or strips over each other", usage: "The basket is woven by hand.", my: "ယက်လုပ်ထားသော" },
-  community: { meaning: "people living in the same area or sharing something", usage: "The community builds a library.", my: "လူမှုအသိုင်းအဝိုင်း" },
-  donate: { meaning: "to give something to help others", usage: "Families donate books.", my: "လှူဒါန်းသည်" },
-  expense: { meaning: "money spent on something", usage: "They record every expense.", my: "ကုန်ကျစရိတ်" },
-  noticeboard: { meaning: "a board used to display information", usage: "The noticeboard shares local news.", my: "ကြေညာဘုတ်" },
-  borrow: { meaning: "to take something and return it later", usage: "Children borrow one book at a time.", my: "ငှားယူသည်" },
-  repair: { meaning: "to fix something damaged", usage: "The carpenter repairs the shelves.", my: "ပြုပြင်သည်" },
-  ongoing: { meaning: "continuing over time", usage: "The library needs ongoing care.", my: "ဆက်လက်လုပ်ဆောင်ရသော" },
-  contribute: { meaning: "to give or do something to help a group", usage: "Everyone contributes to the library.", my: "ပံ့ပိုးသည်" },
-  shelf: { meaning: "a flat surface used to hold things", usage: "Books stand on a shelf.", my: "စင်" },
-  safe: { meaning: "protected from danger or harm", usage: "Keep the puppy safe.", my: "လုံခြုံသော" },
-  privacy: { meaning: "the right to keep personal information private", usage: "Protect the owner's privacy.", my: "ကိုယ်ရေးကိုယ်တာလုံခြုံမှု" },
-  traffic: { meaning: "vehicles moving along a road", usage: "Lina checks the traffic.", my: "ယာဉ်အသွားအလာ" },
-  lesson: { meaning: "something learned from an experience", usage: "Lina learns an important lesson.", my: "သင်ခန်းစာ" },
-  patient: { meaning: "able to wait without becoming upset", usage: "Be patient with young plants.", my: "စိတ်ရှည်သော" },
-  peaceful: { meaning: "quiet and calm", usage: "The garden is peaceful.", my: "အေးချမ်းသော" },
-  careful: { meaning: "giving attention to avoid mistakes or danger", usage: "Be careful with the eggs.", my: "ဂရုစိုက်သော" },
-  useful: { meaning: "helpful or serving a purpose", usage: "The afternoon becomes useful.", my: "အသုံးဝင်သော" },
-  choose: { meaning: "to decide which thing you want", usage: "Choose one object for the project.", my: "ရွေးချယ်သည်" },
-  common: { meaning: "happening often or found in many places", usage: "Modern machines became common.", my: "အများအားဖြင့်တွေ့ရသော" },
-  ordinary: { meaning: "normal and not special", usage: "History tells us about ordinary people.", my: "သာမန်" },
-  house: { meaning: "a building where people live", usage: "We live in a small house.", my: "အိမ်" },
-  lived: { meaning: "had a home in a place in the past", usage: "Maya lived in a small house.", my: "နေထိုင်ခဲ့သည်" },
-  quiet: { meaning: "making little or no noise", usage: "They walked along a quiet lane.", my: "တိတ်ဆိတ်သော" },
-  behind: { meaning: "at the back of something", usage: "The garden was behind the house.", my: "နောက်ဘက်တွင်" },
-  started: { meaning: "began to do or make something", usage: "Her grandmother started the garden.", my: "စတင်ခဲ့သည်" },
-  years: { meaning: "periods of twelve months", usage: "The garden began many years ago.", my: "နှစ်များ" },
-  rose: { meaning: "a flower that often grows on a thorny bush", usage: "The garden had roses.", my: "နှင်းဆီပန်း" },
-  sunflower: { meaning: "a tall plant with a large yellow flower", usage: "A sunflower grew beside the path.", my: "နေကြာပန်း" },
-  mint: { meaning: "a plant with fragrant leaves used in food and drinks", usage: "Maya grew mint in the garden.", my: "ပူစီနံ" },
-  mango: { meaning: "a sweet tropical fruit, or the tree that grows it", usage: "A small mango tree stood in the garden.", my: "သရက်သီး၊ သရက်ပင်" },
-  carried: { meaning: "took something from one place to another", usage: "Maya carried a watering can.", my: "သယ်ဆောင်ခဲ့သည်" },
-  outside: { meaning: "not inside a building", usage: "Maya went outside to check the plants.", my: "အပြင်ဘက်တွင်" },
-  checked: { meaning: "looked at something to make sure it was right", usage: "She checked each plant carefully.", my: "စစ်ဆေးခဲ့သည်" },
-  plant: { meaning: "a living thing that grows in soil and usually has leaves", usage: "Each plant needs care.", my: "အပင်" },
-  healthy: { meaning: "in good condition and not ill", usage: "Healthy soil helps plants grow.", my: "ကျန်းမာသော၊ ကောင်းမွန်သော" },
-  grow: { meaning: "to become bigger or develop", usage: "Young plants need time to grow.", my: "ကြီးထွားသည်" },
-  pulled: { meaning: "used force to move something toward oneself", usage: "Maya pulled weeds gently.", my: "ဆွဲနုတ်ခဲ့သည်" },
-  gently: { meaning: "in a soft and careful way", usage: "She pulled the weeds gently.", my: "ညင်သာစွာ" },
-  weeds: { meaning: "unwanted plants growing among other plants", usage: "Maya removed weeds from the garden.", my: "ပေါင်းပင်များ" },
-  added: { meaning: "put something together with something else", usage: "She added dry leaves to the soil.", my: "ထည့်ခဲ့သည်" },
-  leaves: { meaning: "the flat green parts of a plant", usage: "Dry leaves covered the soil.", my: "အရွက်များ" },
-  moved: { meaning: "changed the position of something", usage: "She moved the flowers away from the wind.", my: "ရွှေ့ခဲ့သည်" },
-  young: { meaning: "having lived or grown for only a short time", usage: "Young flowers need protection.", my: "ငယ်ရွယ်သော" },
-  away: { meaning: "at a distance from something", usage: "Move the flowers away from strong wind.", my: "ဝေးရာသို့" },
-  strong: { meaning: "having great force or power", usage: "Strong wind can damage flowers.", my: "ပြင်းထန်သော" },
-  wind: { meaning: "moving air, especially outdoors", usage: "The wind moved the leaves.", my: "လေ၊ လေတိုက်ခြင်း" },
-  weak: { meaning: "not strong or healthy", usage: "The plant looked weak.", my: "အားနည်းသော" },
-  throw: { meaning: "to send something through the air or get rid of it", usage: "Do not throw a healthy plant away.", my: "ပစ်သည်၊ စွန့်ပစ်သည်" },
-  asked: { meaning: "said something to get information", usage: "Maya asked what the plant needed.", my: "မေးခဲ့သည်" },
-  tried: { meaning: "made an effort to do something", usage: "She tried to help the plant recover.", my: "ကြိုးစားခဲ့သည်" },
-  warm: { meaning: "slightly hot in a comfortable way", usage: "It was a warm morning.", my: "နွေးသော" },
-  heard: { meaning: "noticed a sound with your ears", usage: "Maya heard a soft sound.", my: "ကြားခဲ့သည်" },
-  soft: { meaning: "not loud, rough, or hard", usage: "A soft sound came from the tree.", my: "ပျော့ပျောင်းသော၊ အသံတိုးသော" },
-  sound: { meaning: "something that can be heard", usage: "Maya heard a sound in the garden.", my: "အသံ" },
-  yellow: { meaning: "the colour of ripe lemons", usage: "A yellow bird sat on a branch.", my: "အဝါရောင်" },
-  sat: { meaning: "rested with the body supported on the bottom", usage: "The bird sat on a branch.", my: "ထိုင်ခဲ့သည်" },
-  looking: { meaning: "directing your eyes toward something", usage: "The bird was looking around.", my: "ကြည့်နေသော" },
-  around: { meaning: "on every side or in different directions", usage: "The bird looked around the garden.", my: "ပတ်လည်တွင်" },
-  closer: { meaning: "at a shorter distance", usage: "Maya wanted to move closer.", my: "ပိုနီးသော" },
-  reminded: { meaning: "helped someone remember something", usage: "Grandmother reminded Maya to be quiet.", my: "သတိပေးခဲ့သည်" },
-  space: { meaning: "an area that is available or empty", usage: "Give the bird space.", my: "နေရာလွတ်" },
-  watched: { meaning: "looked at something for a period of time", usage: "Maya watched the bird quietly.", my: "စောင့်ကြည့်ခဲ့သည်" },
-  doorway: { meaning: "an entrance or opening where a door is", usage: "Maya watched from the doorway.", my: "တံခါးဝ" },
-  soon: { meaning: "after a short time", usage: "Soon, the bird began to sing.", my: "မကြာမီ" },
-  sang: { meaning: "made musical sounds with the voice", usage: "The bird sang a song.", my: "သီချင်းဆိုခဲ့သည်" },
-  bright: { meaning: "full of light or strong in colour", usage: "The bird sang a bright little song.", my: "တောက်ပသော" },
-  flew: { meaning: "moved through the air using wings", usage: "The bird flew down to the dish.", my: "ပျံသန်းခဲ့သည်" },
-  drink: { meaning: "to take liquid into the mouth and swallow it", usage: "The bird came to drink water.", my: "သောက်သည်" },
-  dish: { meaning: "a flat or bowl-shaped container used for food", usage: "Maya put water in a dish.", my: "ပန်းကန်" },
-  kept: { meaning: "continued to have or hold something", usage: "Maya kept a clean dish of water.", my: "ထားရှိခဲ့သည်" },
-  clean: { meaning: "not dirty", usage: "She left a clean dish of water.", my: "သန့်ရှင်းသော" },
-  corner: { meaning: "a place where two edges or walls meet", usage: "The dish stood in a safe corner.", my: "ထောင့်" },
-  planted: { meaning: "put a seed or plant into the ground", usage: "Maya planted flowers for butterflies.", my: "စိုက်ပျိုးခဲ့သည်" },
-  attracted: { meaning: "made someone or something come closer", usage: "The flowers attracted butterflies.", my: "ဆွဲဆောင်ခဲ့သည်" },
-  butterflies: { meaning: "insects with large colourful wings", usage: "Butterflies visited the flowers.", my: "လိပ်ပြာများ" },
-  patch: { meaning: "a small area of land or surface", usage: "She left a patch of soil for insects.", my: "မြေကွက်ငယ်" },
-  insects: { meaning: "small animals with six legs", usage: "Insects lived in the garden.", my: "အင်းဆက်ပိုးမွှားများ" },
-  nests: { meaning: "places where birds lay eggs and raise their young", usage: "Do not touch birds' nests.", my: "ငှက်သိုက်များ" },
-  feed: { meaning: "to give food to a person or animal", usage: "Do not feed wild animals unsuitable food.", my: "အစာကျွေးသည်" },
-  wild: { meaning: "living or growing in nature, not kept by people", usage: "Wild animals need space.", my: "တောရိုင်း" },
-  animals: { meaning: "living creatures that can move and respond to their surroundings", usage: "Wild animals need suitable food.", my: "တိရစ္ဆာန်များ" },
-  unsuitable: { meaning: "not right or appropriate for a purpose", usage: "Some food is unsuitable for wild birds.", my: "မသင့်တော်သော" },
-  visitor: { meaning: "a person or animal that comes to a place for a short time", usage: "Every visitor had room in the garden.", my: "ဧည့်သည်" },
-  following: { meaning: "coming after something in time", usage: "During the following weeks, Maya kept notes.", my: "နောက်ဆက်တွဲ၊ နောက်လာသော" },
-  weeks: { meaning: "periods of seven days", usage: "She observed the garden for several weeks.", my: "ရက်သတ္တပတ်များ" },
-  notebook: { meaning: "a small book for writing notes", usage: "Maya kept a notebook by the door.", my: "မှတ်စုစာအုပ်" },
-  beside: { meaning: "at the side of something", usage: "The notebook was beside the back door.", my: "ဘေးတွင်" },
-  wrote: { meaning: "used written words to record information", usage: "Maya wrote down what she observed.", my: "ရေးသားခဲ့သည်" },
-  appeared: { meaning: "became visible or began to exist", usage: "New leaves appeared in spring.", my: "ပေါ်လာခဲ့သည်" },
-  rain: { meaning: "water falling from clouds", usage: "Maya recorded how much rain fell.", my: "မိုး" },
-  fell: { meaning: "moved downward, often under gravity", usage: "Rain fell during the night.", my: "ကျဆင်းခဲ့သည်" },
-  early: { meaning: "before the usual or expected time", usage: "She watered the garden early.", my: "စောစော" },
-  before: { meaning: "earlier than a particular time", usage: "Water plants before the sun gets strong.", my: "မတိုင်မီ" },
-  sun: { meaning: "the star that gives Earth light and heat", usage: "The sun grew strong by noon.", my: "နေ" },
-  mistake: { meaning: "something done incorrectly", usage: "Giving too much water was a mistake.", my: "အမှား" },
-  giving: { meaning: "providing or handing something to someone", usage: "Giving a plant too much water can harm it.", my: "ပေးခြင်း" },
-  signs: { meaning: "things that show that something exists or is happening", usage: "Yellow leaves can be signs of a problem.", my: "လက္ခဏာများ" },
-  discovered: { meaning: "found out something new", usage: "Maya discovered that observation was important.", my: "ရှာဖွေတွေ့ရှိခဲ့သည်" },
-  observation: { meaning: "the act of watching something carefully to learn about it", usage: "Careful observation helps gardeners.", my: "လေ့လာစောင့်ကြည့်ခြင်း" },
-  important: { meaning: "having great value or significance", usage: "Observation is important in gardening.", my: "အရေးကြီးသော" },
-  hard: { meaning: "needing a lot of effort", usage: "Hard work helped the garden grow.", my: "ခက်ခဲသော၊ ကြိုးစားသော" },
-  afternoon: { meaning: "the part of the day after noon", usage: "A neighbour visited one afternoon.", my: "နေ့လယ်ပိုင်း" },
-  neighbour: { meaning: "a person who lives near you", usage: "A neighbour asked Maya for advice.", my: "အိမ်နီးချင်း" },
-  cut: { meaning: "to divide or remove something with a sharp tool", usage: "The neighbour wanted to cut a yellow leaf.", my: "ဖြတ်သည်" },
-  first: { meaning: "before anything else in order or time", usage: "Maya asked her grandmother first.", my: "ပထမဦးစွာ" },
-  few: { meaning: "a small number of", usage: "A few yellow leaves may be normal.", my: "အနည်းငယ်" },
-  part: { meaning: "a piece or portion of something", usage: "A yellow leaf can be part of natural growth.", my: "အစိတ်အပိုင်း" },
-  natural: { meaning: "existing in nature, not made by people", usage: "Some yellow leaves are part of natural growth.", my: "သဘာဝအတိုင်းဖြစ်သော" },
-  while: { meaning: "during the time that something else happens; but", usage: "Some leaves are normal, while others show a problem.", my: "စဉ်တွင်၊ သော်လည်း" },
-  show: { meaning: "to make something visible or clear", usage: "Yellow leaves may show a problem.", my: "ပြသသည်၊ ဖော်ပြသည်" },
-  problem: { meaning: "something that is difficult or wrong", usage: "The leaves may show a problem.", my: "ပြဿနာ" },
-  examined: { meaning: "looked at something carefully", usage: "They examined the soil and roots.", my: "စစ်ဆေးခဲ့သည်" },
-  roots: { meaning: "the parts of a plant that usually grow underground", usage: "They checked the plant's roots.", my: "အမြစ်များ" },
-  deciding: { meaning: "choosing after thinking carefully", usage: "They examined the plant before deciding.", my: "ဆုံးဖြတ်ခြင်း" },
-  nature: { meaning: "the physical world and living things around us", usage: "Caring for nature takes patience.", my: "သဘာဝ" },
-  questions: { meaning: "sentences or thoughts used to ask for information", usage: "Maya learned by asking questions.", my: "မေးခွန်းများ" },
-  patiently: { meaning: "in a calm way without rushing", usage: "She learned patiently.", my: "စိတ်ရှည်စွာ" },
-  avoiding: { meaning: "keeping away from something or not doing it", usage: "Avoiding quick decisions can help.", my: "ရှောင်ကြဉ်ခြင်း" },
-  quick: { meaning: "happening or done in a short time", usage: "She avoided quick decisions.", my: "လျင်မြန်သော၊ အလျင်စလိုသော" },
-  decisions: { meaning: "choices made after thinking", usage: "Maya learned to make careful decisions.", my: "ဆုံးဖြတ်ချက်များ" },
-  end: { meaning: "the final part of something", usage: "The house stood at the end of the lane.", my: "အဆုံး" },
-  opened: { meaning: "became open or started to bloom", usage: "The flowers opened in many colours.", my: "ပွင့်လာခဲ့သည်" },
-  colours: { meaning: "the different appearances of things such as red, blue, or green", usage: "The flowers opened in many colours.", my: "အရောင်များ" },
-  tiny: { meaning: "very small", usage: "The mango tree carried tiny green fruit.", my: "အလွန်သေးငယ်သော" },
-  green: { meaning: "the colour of grass and leaves", usage: "The fruit was still green.", my: "အစိမ်းရောင်" },
-  fruit: { meaning: "the part of a plant that contains seeds and can be eaten", usage: "The tree carried tiny green fruit.", my: "သစ်သီး" },
-  picture: { meaning: "a drawing, painting, or photograph", usage: "Maya drew a picture of the garden.", my: "ပုံ၊ ရုပ်ပုံ" },
-  school: { meaning: "a place where children learn", usage: "Maya made a school project.", my: "ကျောင်း" },
-  project: { meaning: "a planned piece of work", usage: "She drew the garden for a school project.", my: "စီမံကိန်း၊ လုပ်ငန်း" },
-  action: { meaning: "something that a person does", usage: "Caring for nature takes many small actions.", my: "လုပ်ဆောင်မှု" },
-  actions: { meaning: "things that people do", usage: "Small actions can help nature.", my: "လုပ်ဆောင်ချက်များ" },
-  repeated: { meaning: "done or said again", usage: "She repeated small actions with patience.", my: "ထပ်ခါတလဲလဲပြုလုပ်သော" },
-  returned: { meaning: "came back to a place", usage: "The yellow bird returned to the garden.", my: "ပြန်လာခဲ့သည်" },
-  smiled: { meaning: "made a happy expression with the face", usage: "Maya smiled when the bird returned.", my: "ပြုံးခဲ့သည်" },
-  peace: { meaning: "a state of calm without disturbance", usage: "Maya let the bird sing in peace.", my: "ငြိမ်းချမ်းမှု" },
-  let: { meaning: "allowed someone or something to do something", usage: "Maya let the bird sing in peace.", my: "ခွင့်ပြုခဲ့သည်" },
-  mangoes: { meaning: "the sweet fruits of a mango tree", usage: "The mango tree grew small mangoes.", my: "သရက်သီးများ" },
-  a: { meaning: "used before a singular countable noun when it is not specific", usage: "Maya lived in a small house.", my: "တစ်ခုသော၊ တစ်ယောက်သော (မသတ်မှတ်ထားသော)" },
-  an: { meaning: "used before a singular noun beginning with a vowel sound", usage: "An old tree stood near the house.", my: "တစ်ခုသော၊ တစ်ယောက်သော" },
-  the: { meaning: "used for a particular person or thing known to the speaker", usage: "The garden was behind the house.", my: "ထို၊ သတ်မှတ်ထားသော" },
-  and: { meaning: "used to join words or ideas", usage: "Maya and her grandmother cared for the garden.", my: "နှင့်၊ ပြီးတော့" },
-  or: { meaning: "used to show another possibility", usage: "Flowers or fruit may grow in a garden.", my: "သို့မဟုတ်" },
-  but: { meaning: "used to introduce a contrast", usage: "The garden was small but beautiful.", my: "သို့သော်" },
-  as: { meaning: "in the role or way of something", usage: "Maya worked as a careful gardener.", my: "အဖြစ်၊ သကဲ့သို့" },
-  at: { meaning: "used to show a place or time", usage: "Maya lived at the end of a lane.", my: "တွင်၊ ၌" },
-  in: { meaning: "inside or within a place or period", usage: "The bird sat in the tree.", my: "ထဲတွင်၊ အတွင်း၌" },
-  on: { meaning: "touching and supported by a surface", usage: "The bird sat on a branch.", my: "ပေါ်တွင်" },
-  of: { meaning: "showing a relationship or belonging", usage: "The end of the lane was quiet.", my: "၏၊ မှ" },
-  to: { meaning: "toward a place, or used before a verb", usage: "Maya went to the garden to water plants.", my: "သို့၊ ရန်" },
-  for: { meaning: "intended to help or be used by someone", usage: "Maya left water for the bird.", my: "အတွက်" },
-  from: { meaning: "showing where something starts or comes from", usage: "Maya watched from the doorway.", my: "မှ" },
-  with: { meaning: "together with or using something", usage: "Maya worked with her grandmother.", my: "နှင့်အတူ၊ ဖြင့်" },
-  by: { meaning: "near something, or indicating who did an action", usage: "The notebook was by the door.", my: "ဘေးတွင်၊ မှ" },
-  about: { meaning: "concerning a subject", usage: "Maya learned about plants.", my: "အကြောင်း" },
-  after: { meaning: "later than a time or event", usage: "After that day, Maya left water for the bird.", my: "ပြီးနောက်" },
-  during: { meaning: "throughout a period of time", usage: "During the following weeks, she kept notes.", my: "အတွင်း၊ ကာလအတွင်း" },
-  when: { meaning: "at the time that something happens", usage: "Maya smiled when the bird returned.", my: "သောအခါ" },
-  if: { meaning: "used to describe a possible condition", usage: "If a plant looked weak, Maya checked it.", my: "လျှင်၊ အကယ်၍" },
-  because: { meaning: "for the reason that", usage: "Maya smiled because the bird returned.", my: "သောကြောင့်" },
-  so: { meaning: "for that reason; also used to show a result", usage: "The soil was dry, so Maya watered it.", my: "ထို့ကြောင့်" },
-  than: { meaning: "used to compare things", usage: "The garden was smaller than the field.", my: "ထက်" },
-  very: { meaning: "to a high degree", usage: "The garden was not very large.", my: "အလွန်" },
-  too: { meaning: "more than is needed or wanted", usage: "Too much water can harm a plant.", my: "လွန်းသော၊ လည်း" },
-  more: { meaning: "a greater amount or number", usage: "Plants need more than water.", my: "ပို၍၊ ပိုများသော" },
-  many: { meaning: "a large number of", usage: "Many flowers grew in the garden.", my: "များစွာသော" },
-  each: { meaning: "every one considered separately", usage: "Maya checked each plant.", my: "တစ်ခုချင်းစီ" },
-  one: { meaning: "the number 1; a single person or thing", usage: "Maya cared for one small garden.", my: "တစ်ခု၊ တစ်ယောက်" },
-  some: { meaning: "an amount or number that is not stated exactly", usage: "Some leaves were yellow.", my: "အချို့၊ အနည်းငယ်" },
-  all: { meaning: "the whole amount or every member", usage: "She did not cut all the leaves.", my: "အားလုံး" },
-  other: { meaning: "different from the one already mentioned", usage: "Other leaves showed a problem.", my: "အခြားသော" },
-  another: { meaning: "one more or a different one", usage: "Another bird visited the garden.", my: "နောက်တစ်ခု၊ အခြားတစ်ခု" },
-  this: { meaning: "used to point to something near or currently discussed", usage: "This garden was very special to Maya.", my: "ဤ၊ ဒီ" },
-  that: { meaning: "used to point to something or introduce a clause", usage: "Grandmother said that plants need sunlight.", my: "ထို၊ အဲဒီ" },
-  these: { meaning: "the plural of this", usage: "These flowers attract butterflies.", my: "ဤအရာများ" },
-  those: { meaning: "the plural of that", usage: "Those plants need more water.", my: "ထိုအရာများ" },
-  it: { meaning: "a pronoun for a thing, animal, or situation", usage: "It was a warm morning.", my: "၎င်း၊ အဲဒါ" },
-  its: { meaning: "belonging to a thing or animal", usage: "The bird spread its wings.", my: "၎င်း၏" },
-  she: { meaning: "a female person previously mentioned", usage: "She watered the flowers.", my: "သူမ" },
-  her: { meaning: "belonging to or referring to a female person", usage: "Her grandmother taught her about plants.", my: "သူမ၏၊ သူမကို" },
-  they: { meaning: "more than one person, animal, or thing", usage: "They examined the soil together.", my: "သူတို့" },
-  their: { meaning: "belonging to them", usage: "They checked their plants.", my: "သူတို့၏" },
-  we: { meaning: "the speaker and at least one other person", usage: "We care for nature together.", my: "ကျွန်ုပ်တို့" },
-  you: { meaning: "the person or people being spoken to", usage: "You can learn from the garden.", my: "သင်၊ သင်တို့" },
-  he: { meaning: "a male person previously mentioned", usage: "He watered the tree.", my: "သူ" },
-  his: { meaning: "belonging to a male person", usage: "His garden was full of flowers.", my: "သူ၏" },
-  be: { meaning: "to exist or have a particular state", usage: "Plants need to be healthy.", my: "ဖြစ်သည်၊ ရှိသည်" },
-  is: { meaning: "the present form of be for he, she, it, or a singular noun", usage: "The garden is small.", my: "ဖြစ်သည်၊ ရှိသည်" },
-  are: { meaning: "the present form of be for you, we, they, and plural nouns", usage: "The flowers are yellow.", my: "ဖြစ်ကြသည်၊ ရှိကြသည်" },
-  was: { meaning: "the past form of be for I, he, she, it, or a singular noun", usage: "The garden was quiet.", my: "ဖြစ်ခဲ့သည်၊ ရှိခဲ့သည်" },
-  were: { meaning: "the past form of be for you, we, they, and plural nouns", usage: "The plants were healthy.", my: "ဖြစ်ခဲ့ကြသည်၊ ရှိခဲ့ကြသည်" },
-  had: { meaning: "owned, held, or experienced something in the past", usage: "The garden had roses and sunflowers.", my: "ရှိခဲ့သည်၊ ပိုင်ဆိုင်ခဲ့သည်" },
-  has: { meaning: "owns or contains something; present form for he, she, or it", usage: "Maya has a small garden.", my: "ရှိသည်" },
-  have: { meaning: "own, hold, or experience something", usage: "Plants have roots and leaves.", my: "ရှိသည်၊ ပိုင်ဆိုင်သည်" },
-  do: { meaning: "to perform an action; also used in questions and negatives", usage: "What do plants need?", my: "လုပ်သည်" },
-  did: { meaning: "the past form of do", usage: "Maya did her work carefully.", my: "လုပ်ခဲ့သည်" },
-  not: { meaning: "used to make a statement negative", usage: "The garden was not very large.", my: "မ၊ မဟုတ်" },
-  can: { meaning: "to be able to do something", usage: "Maya can care for the plants.", my: "နိုင်သည်" },
-  could: { meaning: "the past form of can, or a polite possibility", usage: "Maya could hear the bird.", my: "နိုင်ခဲ့သည်၊ ဖြစ်နိုင်သည်" },
-  might: { meaning: "used to show possibility", usage: "A yellow leaf might be normal.", my: "ဖြစ်နိုင်သည်" },
-  will: { meaning: "used to show a future action", usage: "The garden will grow.", my: "မည်၊ လိမ့်မည်" },
-  would: { meaning: "used for imagined situations or polite requests", usage: "Maya would help a weak plant.", my: "မည်၊ လုပ်လေ့ရှိမည်" },
-  what: { meaning: "asking for information about a thing or action", usage: "Maya asked what the plant needed.", my: "ဘာ၊ မည်သည့်အရာ" },
-  which: { meaning: "asking or identifying one from a group", usage: "She checked which flowers attracted butterflies.", my: "ဘယ်ဟာ၊ မည်သည့်" },
-  who: { meaning: "asking about a person", usage: "Who planted the garden?", my: "ဘယ်သူ" },
-  where: { meaning: "asking about a place", usage: "Where did the bird sit?", my: "ဘယ်နေရာ" },
-  how: { meaning: "asking about a method, condition, or amount", usage: "Maya learned how plants grow.", my: "ဘယ်လို၊ မည်မျှ" },
-  why: { meaning: "asking for a reason", usage: "Why did Maya water the plant?", my: "ဘာကြောင့်" },
-  there: { meaning: "in or at that place; also used to say something exists", usage: "There was a garden behind the house.", my: "အဲဒီနေရာတွင်၊ ရှိသည်" },
-  here: { meaning: "in this place", usage: "Come here and look at the flowers.", my: "ဒီနေရာတွင်" },
-  then: { meaning: "at that time or next in order", usage: "Maya checked the soil, then watered the plant.", my: "ထို့နောက်" },
-  now: { meaning: "at the present time", usage: "The garden is peaceful now.", my: "ယခု" },
-  ago: { meaning: "before the present time", usage: "Her grandmother started the garden many years ago.", my: "ကတည်းက၊ လွန်ခဲ့သော" },
-  still: { meaning: "continuing up to this time", usage: "There was still room for visitors.", my: "ဆက်လက်၍၊ ရှိနေဆဲ" },
-  just: { meaning: "only; exactly; or a short time ago", usage: "Careful observation was just as important.", my: "သာ၊ တိတိကျကျ" },
-  also: { meaning: "in addition", usage: "Plants also need sunlight.", my: "လည်း၊ ထို့အပြင်" },
-  only: { meaning: "no more than; and no one or nothing else", usage: "The garden was only a small space.", my: "သာ၊ တစ်ခုတည်းသော" },
-  own: { meaning: "belonging to oneself", usage: "Maya had her own notebook.", my: "ကိုယ်ပိုင်" },
-  same: { meaning: "not different", usage: "The same bird returned.", my: "တူညီသော" },
-  such: { meaning: "of the type already mentioned", usage: "Such small actions can help nature.", my: "ထိုကဲ့သို့သော" },
-  big: { meaning: "large in size", usage: "The garden was not big.", my: "ကြီးမားသော" },
-  large: { meaning: "big in size or amount", usage: "The garden was not very large.", my: "ကြီးမားသော" },
-  day: { meaning: "a period of twenty-four hours", usage: "Maya watered the plants every day.", my: "နေ့" },
-  days: { meaning: "more than one period of twenty-four hours", usage: "On hot days, she watered early.", my: "နေ့များ" },
-  grew: { meaning: "became bigger or developed", usage: "The mango tree grew over time.", my: "ကြီးထွားလာခဲ့သည်" },
-  growth: { meaning: "the process of becoming bigger or developing", usage: "Some yellow leaves are part of natural growth.", my: "ကြီးထွားမှု" },
-  began: { meaning: "started to happen or do something", usage: "The flowers began to open.", my: "စတင်ခဲ့သည်" },
-  notice: { meaning: "to see or become aware of something", usage: "Maya learned to notice changes in leaves.", my: "သတိပြုမိသည်" },
-  taught: { meaning: "showed someone how to do or understand something", usage: "Grandmother taught Maya about plants.", my: "သင်ပေးခဲ့သည်" },
-  understand: { meaning: "to know the meaning of something", usage: "Maya began to understand nature.", my: "နားလည်သည်" },
-  caring: { meaning: "showing kindness or attention to someone or something", usage: "Caring for nature takes patience.", my: "ဂရုစိုက်ခြင်း" },
-  asking: { meaning: "putting a question to someone to get information", usage: "Maya learned by asking careful questions.", my: "မေးမြန်းခြင်း" },
-  back: { meaning: "the rear part of something; toward an earlier place", usage: "The garden was behind the house, near the back door.", my: "နောက်ဘက်၊ ပြန်" },
-  became: { meaning: "started to be or changed into something", usage: "The garden became busier over time.", my: "ဖြစ်လာခဲ့သည်" },
-  blue: { meaning: "the colour of a clear daytime sky", usage: "Maya carried a blue watering can.", my: "အပြာရောင်" },
-  busier: { meaning: "having more activity than before", usage: "The garden became busier when birds arrived.", my: "ပိုမိုစည်ကားသော" },
-  door: { meaning: "a movable panel used to enter or leave a building", usage: "Maya kept a notebook beside the back door.", my: "တံခါး" },
-  down: { meaning: "toward a lower place or position", usage: "The bird flew down to drink water.", my: "အောက်သို့" },
-  drew: { meaning: "made a picture with a pen, pencil, or similar tool", usage: "Maya drew a picture of the garden.", my: "ပုံဆွဲခဲ့သည်" },
-  dry: { meaning: "not wet or containing little water", usage: "She added dry leaves to the soil.", my: "ခြောက်သွေ့သော" },
-  food: { meaning: "things that people or animals eat", usage: "Wild animals need suitable food.", my: "အစားအစာ" },
-  give: { meaning: "to provide or allow someone to have something", usage: "Grandmother told Maya to give the bird space.", my: "ပေးသည်" },
-  help: { meaning: "to make something easier or better for someone", usage: "Maya tried to help the weak plant.", my: "ကူညီသည်" },
-  helped: { meaning: "made something easier or better for someone", usage: "Grandmother helped Maya care for the garden.", my: "ကူညီခဲ့သည်" },
-  hot: { meaning: "having a high temperature", usage: "Maya watered the garden early on hot days.", my: "ပူသော" },
-  leaf: { meaning: "one of the flat green parts of a plant", usage: "A yellow leaf can be part of natural growth.", my: "အရွက်" },
-  left: { meaning: "allowed something to remain; also the opposite of right", usage: "Maya left a patch of soil for insects.", my: "ချန်ထားခဲ့သည်၊ ဘယ်ဘက်" },
-  little: { meaning: "small in size or amount", usage: "A little yellow bird sat on a branch.", my: "သေးငယ်သော၊ အနည်းငယ်" },
-  looked: { meaning: "appeared to be or directed the eyes toward something", usage: "The plant looked weak.", my: "ကြည့်ခဲ့သည်၊ ပုံပေါ်ခဲ့သည်" },
-  made: { meaning: "created or caused something to happen", usage: "Maya made a picture for her school project.", my: "ပြုလုပ်ခဲ့သည်" },
-  maya: { meaning: "the name of the girl in the story", usage: "Maya cared for the garden every morning.", my: "မာယာ (လူအမည်)" },
-  meant: { meaning: "had a particular meaning or intention", usage: "Caring for nature meant making thoughtful choices.", my: "ဆိုလိုခဲ့သည်" },
-  move: { meaning: "to change position or place", usage: "Maya wanted to move closer to the bird.", my: "ရွှေ့သည်၊ လှုပ်ရှားသည်" },
-  much: { meaning: "a large amount of something", usage: "Maya learned how much rain fell.", my: "များစွာသော၊ မည်မျှ" },
-  needed: { meaning: "required something", usage: "Plants needed sunlight, soil, and time.", my: "လိုအပ်ခဲ့သည်" },
-  new: { meaning: "not existing or known before; recently made", usage: "Maya watched for new leaves.", my: "အသစ်သော" },
-  room: { meaning: "an area or space available for someone or something", usage: "Maya left room for every visitor.", my: "နေရာလွတ်၊ အခန်း" },
-  sure: { meaning: "certain or confident about something", usage: "Maya checked with Grandmother to be sure.", my: "သေချာသော" },
-  time: { meaning: "what is measured in seconds, minutes, hours, and days", usage: "Plants need time to grow.", my: "အချိန်" },
-  touch: { meaning: "to put a hand or part of the body on something", usage: "People should not touch bird nests.", my: "ထိတွေ့သည်" },
-  wanted: { meaning: "wished or desired to do or have something", usage: "Maya wanted to move closer to the bird.", my: "လိုချင်ခဲ့သည်" },
-  work: { meaning: "an activity involving effort to achieve something", usage: "Careful observation was as important as hard work.", my: "အလုပ်၊ ကြိုးစားအားထုတ်မှု" },
-});
+import { DICTIONARY } from "./dictionary.js";
+
+export { DICTIONARY };
+
 export function normalizeWord(value) {
-  return String(value ?? "").toLocaleLowerCase("en").replace(/^[^a-z'-]+|[^a-z'-]+$/g, "");
+  return String(value ?? "")
+    .toLocaleLowerCase("en")
+    .replace(/[’‘]/g, "'")
+    .replace(/^[^a-z'-]+|[^a-z'-]+$/g, "");
 }
+
+const IRREGULAR_WORD_BASES = Object.freeze({
+  am: "be", is: "be", are: "be", was: "be", were: "be", been: "be", being: "be",
+  went: "go", gone: "go", goes: "go", going: "go", came: "come", woke: "wake", grown: "grow", risen: "rise", lives: "life",
+  saw: "see", seen: "see",
+  took: "take", taken: "take",
+  gave: "give", given: "give",
+  got: "get", gotten: "get",
+  brought: "bring", bought: "buy",
+  thought: "think", caught: "catch",
+  found: "find", told: "tell", said: "say",
+  ran: "run", sat: "sit", fell: "fall", stood: "stand", felt: "feel",
+  knew: "know", known: "know", understood: "understand",
+  wrote: "write", written: "write",
+  ate: "eat", eaten: "eat",
+  drank: "drink", drunk: "drink",
+  spoke: "speak", spoken: "speak",
+  broke: "break", broken: "break",
+  chose: "choose", chosen: "choose",
+  kept: "keep", slept: "sleep", forgot: "forget", forgotten: "forget",
+  held: "hold", heard: "hear",
+  lost: "lose", won: "win",
+  sent: "send", spent: "spend",
+  built: "build", met: "meet",
+  made: "make", did: "do", done: "do",
+  had: "have", has: "have",
+  children: "child", men: "man", women: "woman",
+  feet: "foot", teeth: "tooth", mice: "mouse",
+  worn: "wear", rang: "ring", rung: "ring", began: "begin", shelves: "shelf",
+  safer: "safe", taller: "tall", lighter: "light", easier: "easy",
+  hurried: "hurry", recognised: "recognise",
+});
 
 export function lookupWord(value, dictionary = DICTIONARY) {
   const word = normalizeWord(value);
   if (!word) return null;
   if (Object.prototype.hasOwnProperty.call(dictionary, word)) return dictionary[word];
+  // Curly/straight possessives should remain tappable as a whole word and reuse
+  // the noun/name entry instead of producing an untranslated token.
+  if (word.endsWith("'s")) {
+    const possessiveBase = word.slice(0, -2);
+    if (Object.prototype.hasOwnProperty.call(dictionary, possessiveBase)) return dictionary[possessiveBase];
+  }
+  const irregularBase = IRREGULAR_WORD_BASES[word];
+  if (irregularBase && Object.prototype.hasOwnProperty.call(dictionary, irregularBase)) return dictionary[irregularBase];
 
   // Small, deterministic morphology fallback for common English inflections.
   // Keep it conservative: only return a definition when a candidate exists locally.
@@ -399,6 +74,294 @@ export function lookupWord(value, dictionary = DICTIONARY) {
     if (Object.prototype.hasOwnProperty.call(dictionary, candidate)) return dictionary[candidate];
   }
   return null;
+}
+
+
+const CONTEXTUAL_SENSES = Object.freeze({
+  rose: [
+    { test: /\b(ms|mr|mrs|miss|teacher|class)\s+rose\b/i, meaning: "Rose, a person's name", my: "ရို့စ် (လူအမည်)" },
+    { test: /\b(?:river|water|level|floodwater|sun|temperature|price|number|smoke|mist|voice|hand|head)\b.{0,35}\brose\b|\brose\s+(?:early|higher|again|above)\b|\brose from .{0,30}\bseat\b/i, meaning: "past tense of rise; moved upward or increased", my: "မြင့်တက်လာခဲ့သည်၊ မြင့်တက်ခဲ့သည်" },
+    { test: /\b(?:a|the|red|pink|white|single|beautiful)\s+rose\b|\b(garden|flower|petal|stem|bloom|red|pink|thorn|plant|bouquet|vase)\b/i, meaning: "a rose, a kind of flowering plant", my: "နှင်းဆီပန်း" }
+  ],
+  lives: [
+    { test: /\b(life|people's|many people's|our|their|his|her|different)\s+lives\b/i, meaning: "plural of life", my: "ဘဝများ၊ အသက်တာများ" },
+    { test: /\b(near|in|at|with|she|he|it|who|that|there)\b/i, meaning: "verb: is alive or resides", my: "အသက်ရှင်နေသည်၊ နေထိုင်သည်" }
+  ],
+  saw: [
+    { test: /\b(carpenter|wood|cut|tool|blade|workshop|repair)\b/i, meaning: "a tool used for cutting wood or other material", my: "လွှ" },
+    { test: /\b(they|we|i|she|he|maya|nora|lina|students|people)\s+saw\b/i, meaning: "past tense of see; noticed or witnessed", my: "မြင်တွေ့ခဲ့သည်၊ တွေ့မြင်ခဲ့သည်" }
+  ],
+  found: [
+    { test: /\b(founded|foundation|established|set up)\b/i, meaning: "established or set up", my: "တည်ထောင်ခဲ့သည်" },
+    { test: /\b(found|discovered|located|puppy|evidence|enough|money|item|place)\b/i, meaning: "past tense of find; discovered or located", my: "တွေ့ရှိခဲ့သည်၊ ရှာတွေ့ခဲ့သည်" }
+  ],
+  means: [
+    { test: /\b(a means|useful means|by means|means of|method|way|transport)\b/i, meaning: "a method or way of doing something", my: "နည်းလမ်း၊ အကြောင်းနည်းလမ်း" },
+    { test: /\b(means|mean|means that|means asking|means making|means doing)\b/i, meaning: "indicates or expresses an idea; involves", my: "ဆိုလိုသည်၊ ပါဝင်သည်" }
+  ],
+  well: [
+    { test: /\bwell[- ]intentioned\b/i, meaning: "having good intentions", my: "ရည်ရွယ်ချက်ကောင်းရှိသော" },
+    { test: /\b(water|village|deep|dug|hole|bucket|drawn from)\b/i, meaning: "a deep hole from which water is obtained", my: "ရေတွင်း" },
+    { test: /\b(healthy|sick|ill|feel|looks|doing|worked|spoke|performed|together)\b/i, meaning: "in a good or satisfactory way; healthy", my: "ကောင်းစွာ၊ ကျန်းမာသော" }
+  ],
+  looking: [
+    { test: /\blooking back(?: on\b|,\s*(?:i|we|they|she|he)\b)/i, meaning: "reflecting on the past", my: "အတိတ်ကို ပြန်လည်စဉ်းစားကြည့်ခြင်း" },
+    { test: /\blooking back at\b/i, meaning: "turning one's eyes toward something behind", my: "နောက်ဘက်သို့ လှည့်ကြည့်ခြင်း" }
+  ],
+  looked: [
+    { test: /\blooked back on\b/i, meaning: "reflected on the past", my: "အတိတ်ကို ပြန်လည်စဉ်းစားကြည့်ခဲ့သည်" },
+    { test: /\blooked back at\b/i, meaning: "turned one's eyes toward something behind", my: "နောက်ဘက်သို့ လှည့်ကြည့်ခဲ့သည်" },
+    { test: /\blooked\s+(?:tired|frightened|worried|weak|clear|current|peaceful|attractive|bright|welcoming|seriously hurt|muddy|safe|different|unwell|confused|comfortable|happy|sad|angry|empty|full|dangerous|familiar|similar|strange|beautiful|calm|quiet|busy|ready|afraid|uncertain)\b/i, meaning: "appeared or seemed to have a particular quality or condition", my: "ပုံရသည်၊ ထင်ရသည်" }
+  ],
+  back: [
+    { test: /\bback at (school|home|work|the office)\b/i, meaning: "returned to a place", my: "ပြန်လည်ရောက်ရှိသောအခါ" },
+    { test: /\bon (its|his|her|their) back\b/i, meaning: "the rear side of a body or object", my: "နောက်ကျောဘက်တွင်" },
+    { test: /\b(looking back(?: on\b|,\s*(?:i|we|they|she|he)\b)|look back on|thinking back)\b/i, meaning: "to think about or reflect on the past", my: "အတိတ်ကို ပြန်လည်စဉ်းစားကြည့်သည်" },
+    { test: /\b(turned back|turn back|look back at|looked back at|looking back at|looked back toward|behind|back door|back of)\b/i, meaning: "the rear part; toward the rear", my: "နောက်ဘက်၊ နောက်သို့" }
+  ],
+  light: [
+    { test: /\blight (shower|rain|rainfall)\b/i, meaning: "small in amount or intensity", my: "မိုးဖွဲဖွဲ၊ မိုးနည်းနည်း" },
+    { test: /\b(heavy|carry|weight|bag|basket|box)\b/i, meaning: "not heavy", my: "ပေါ့ပါးသော" },
+    { test: /\b(sun|lamp|bright|dark|see|shine|torch)\b/i, meaning: "brightness that makes things visible", my: "အလင်းရောင်" }
+  ],
+  close: [
+    { test: /\b(door|gate|window|shut|open|lid|book)\b/i, meaning: "to shut or cover an opening", my: "ပိတ်သည်" },
+    { test: /\b(near|distance|nearby|house|school|shop|friend|river|water|walkway|doorway|riverbank)\b/i, meaning: "near in distance or relationship", my: "နီးသော၊ ရင်းနှီးသော" }
+  ],
+  change: [
+    { test: /\b(returned|coins|money|cash|pay|price)\b/i, meaning: "money returned after paying more than the cost", my: "ပြန်အမ်းငွေ" },
+    { test: /\b(change|routine|plan|weather|become|different|decide|changed)\b/i, meaning: "to make or become different", my: "ပြောင်းလဲသည်၊ ပြောင်းလဲမှု" }
+  ],
+  present: [
+    { test: /\b(present|presented|presenting)\b.{0,100}\b(findings|results|report|information|proposal|map|idea)\b/i, meaning: "to show or explain information to others", my: "တင်ပြသည်" },
+    { test: /\b(gift|birthday|wrapped|gave|receive|Christmas)\b/i, meaning: "a gift", my: "လက်ဆောင်" },
+    { test: /\b(adult|teacher|parent|someone)\s+present\b|\bwith .* present\b/i, meaning: "being there at a particular time", my: "ရှိနေသော၊ ရောက်ရှိနေသော" },
+    { test: /\b(attend|in the room|being|there|at school|currently)\b/i, meaning: "being in a place; existing now", my: "ရှိနေသော၊ လက်ရှိ" }
+  ],
+  kind: [
+    { test: /\b(?:kind|kinds)\s+of\b|\bwhat kind\b|\bthis kind\b|\bthat kind\b/i, meaning: "a type or sort of something", my: "အမျိုးအစား" },
+    { test: /\bkind\s+(?:to|person|words|gesture|act|helpful)\b|\bwas kind\b/i, meaning: "caring, friendly, and considerate", my: "ကြင်နာသော၊ သဘောကောင်းသော" }
+  ],
+  left: [
+    { test: /\b(?:to|on|at|the)\s+left\b|\bleft (?:hand|side)\b|\bturn(?:ed)? left\b/i, meaning: "the side opposite right", my: "ဘယ်ဘက်" },
+    { test: /\bleft\b/i, meaning: "past tense of leave; kept something in a place or went away", my: "ချန်ထားခဲ့သည်၊ ထွက်ခွာခဲ့သည်" }
+  ],
+  mean: [
+    { test: /\b(?:did not|does not|do not|doesn't|don't|not)\s+mean\b|\bmean(?:s|t)?\s+(?:that|being|to|something|the|an|a)\b/i, meaning: "to signify or express an idea", my: "ဆိုလိုသည်၊ ဖော်ပြသည်" }
+  ],
+  like: [
+    { test: /\blike\s+(?:a|an|the|natural|tiny|something|it|this|that)\b/i, meaning: "similar to; used to compare things", my: "ကဲ့သို့၊ နှင့်ဆင်တူသော" },
+    { test: /\b(?:would|really|do|does|did|don't|doesn't)\s+like\b/i, meaning: "to enjoy or prefer something", my: "နှစ်သက်သည်၊ သဘောကျသည်" }
+  ],
+  still: [
+    { test: /\bstill\s+(?:room|space|enough|time|available|standing|open)\b/i, meaning: "remaining or continuing to be present", my: "ကျန်ရှိနေသေးသော၊ ရှိနေဆဲ" },
+    { test: /\bstill\s+(?:could not|cannot|can't|did not|does not|needed|needs|had|was|were|is|are|stands|stood|remains|remained)\b/i, meaning: "continuing up to that time", my: "ယခုထိ၊ ဆက်လက်၍" }
+  ],
+  bank: [
+    { test: /\b(bank account|bank branch|deposit|withdraw|loan|cash|financial)\b/i, meaning: "a financial institution", my: "ဘဏ်" },
+    { test: /\b(river|water|shore|flood|stone near the bank|near the bank|riverbank|river bank)\b/i, meaning: "the land alongside a river", my: "မြစ်ကမ်းပါး" }
+  ],
+  current: [
+    { test: /\bcurrent (?:contact|phone|telephone|emergency|mobile) (?:number|details|information)\b/i, meaning: "up-to-date and presently valid", my: "လက်ရှိအသုံးပြုနေသော၊ နောက်ဆုံးအခြေအနေနှင့်ကိုက်ညီသော" },
+    { test: /\b(?:river|water|stream)\s+current\b|\bcurrent (?:was|is|became|grew|too strong|strong)\b/i, meaning: "the flow of water in a river or stream", my: "ရေစီးကြောင်း၊ ရေစီးအား" },
+    { test: /\bcurrent (?:river|water|level|conditions|status|plan|year|information)\b/i, meaning: "happening or existing now", my: "လက်ရှိဖြစ်နေသော" }
+  ],
+  level: [
+    { test: /\b(?:river|water|flood|gauge|measurements?|rise|rose|rising)\b/i, meaning: "the height or amount of water", my: "ရေအမြင့်၊ ရေပမာဏ" }
+  ],
+  staff: [
+    { test: /\bstaff gauge\b|\b(?:read|fixed|painted|installed)\s+(?:a|the)?\s*staff\b/i, meaning: "a marked pole or measuring device used to read water level", my: "ရေအမြင့်တိုင်းတာရန် အမှတ်အသားပါသော တိုင်" },
+    { test: /\b(?:school|library|clinic|office|town) staff\b|\bstaff (?:and|members|checked|explained|helped)\b/i, meaning: "people who work for an organisation", my: "ဝန်ထမ်းများ" }
+  ],
+  screen: [
+    { test: /\bdrainage screen\b|\b(?:damaged|blocked|repaired|replace[dt]?)\s+(?:the|a)?\s*screen\b/i, meaning: "a grate or barrier fitted over an opening to catch debris", my: "ရေထုတ်ပေါက်တွင် အမှိုက်များ မဝင်စေရန် တပ်ဆင်ထားသော ဇကာ" },
+    { test: /\b(?:computer|phone|television|display|touch) screen\b/i, meaning: "a surface that displays images or information", my: "မျက်နှာပြင်" }
+  ],
+  matter: [
+    { test: /\b(?:open area|area|place|safety|evidence|observation|community)\b.*\b(?:matter|matters|mattered)\b|\b(?:matter|matters|mattered)\b.*\b(?:important|difference|effect)\b/i, meaning: "to be important or have an effect", my: "အရေးပါသည်၊ အရေးပါခဲ့သည်" }
+  ],
+  hard: [
+    { test: /\bhard work\b/i, meaning: "requiring effort; effort put into work", my: "ကြိုးစားအားထုတ်မှု" },
+    { test: /\bhard (?:to|for|task|problem|decision)\b/i, meaning: "difficult and requiring effort", my: "ခက်ခဲသော" }
+  ],
+  water: [
+    { test: /\b(?:more than|too much|much|clean|drinking|river|flood|upstream|fast|dangerous|safe|fresh|clear|warm|cold|rain|brown|moving|running|dirty)\s+water\b|\bwater\s+(?:moving|entered|was|had|rose|level|rushed|soaked|moved|might|would|looked|travelled|could|is|in|from|into|under|across|ran|carried|to|for)\b|\b(?:dish|bowl|cup|source|supply|amount|quality|sample|samples|pot|glass|body|flow)\s+of water\b/i, meaning: "the clear liquid essential to life", my: "ရေ" },
+    { test: /\bwater(?:s|ed|ing)?\s+(?:the|each|every|my|your|their|these|those|plants|flowers|garden|soil|them|it)\b|\bwaters\s+(?:the|each|every|plants|flowers|garden|soil|them|it)\b/i, meaning: "to give water to a plant or living thing", my: "ရေလောင်းသည်" }
+  ],
+  watered: [
+    { test: /\bwatered\s+(?:the|each|every|plants|flowers|garden|soil|them|it)\b/i, meaning: "gave water to a plant or living thing", my: "ရေလောင်းခဲ့သည်" }
+  ],
+  plant: [
+    { test: /\b(?:a|an|the|each|every|young|healthy|weak|small|one|this|that|other|another)\s+plant\b|\bplants?\s+(?:need|needs|needed|looked|was|is|are|can|could|has|had|grew|grows)\b/i, meaning: "a living thing that grows in soil", my: "အပင်" },
+    { test: /\bplant(?:s|ed|ing)?\s+(?:trees|flowers|seeds|native|suitable|a|the|some|vegetables|crops|them|more)\b/i, meaning: "to put a plant or seed into the ground", my: "စိုက်ပျိုးသည်" }
+  ],
+  planted: [
+    { test: /\bplanted\s+(?:trees|flowers|seeds|native|suitable|a|the|some|vegetables|crops|them|more)\b/i, meaning: "put a plant or seed into the ground", my: "စိုက်ပျိုးခဲ့သည်" }
+  ],
+  records: [
+    { test: /\b(?:the|official|town|water-level|repair|flood|written|old|public|medical|these|their|early|reliable)\s+records\b|\brecords\s+(?:and|of|for|from|were|show|include|contained|remained|had|helped|indicate)\b/i, meaning: "written accounts or stored information", my: "မှတ်တမ်းများ" },
+    { test: /\b(?:they|students|team|Lina|she|he|we|officials|Mr Daniel)\s+records\b|\brecords\s+(?:the|each|every|date|amount|reading|change|information)\b/i, meaning: "to write down or store information", my: "မှတ်တမ်းတင်သည်" }
+  ],
+  changed: [
+    { test: /\bchanged\s+(?:my|your|his|her|their|people's|many people's)\s+lives\b/i, meaning: "affected or altered people's lives", my: "ဘဝများကို ပြောင်းလဲစေခဲ့သည်" },
+    { test: /\b(?:routine|plan|weather|different|become|decide|way|shape|colour|color)\b/i, meaning: "became or made something different", my: "ပြောင်းလဲခဲ့သည်" }
+  ],
+  changes: [
+    { test: /\b(?:these|many|several|some|small|major|recent|important|noticeable|the)\s+changes\b|\bchanges\s+(?:in|to|over|after|include|were|could|show)\b/i, meaning: "differences or developments over time", my: "ပြောင်းလဲမှုများ" }
+  ],
+  closed: [
+    { test: /\bclosed\s+(?:shop|store|gate|door|window|room|library|road|bridge)\b/i, meaning: "not open; shut", my: "ပိတ်ထားသော" },
+    { test: /\b(?:was|were|had been|has been|is|are)\s+closed\b/i, meaning: "was or were shut", my: "ပိတ်ထားသည်၊ ပိတ်ထားခဲ့သည်" }
+  ],
+  called: [
+    { test: /\b(?:bell|alarm|signal|announcement|school bell)\s+(?:called|calls)\b|\bcalled\s+(?:children|students|people|residents|everyone)\s+(?:to|for)\b/i, meaning: "summoned or signaled people to come or act", my: "ခေါ်ယူခဲ့သည်၊ အသိပေးခေါ်ဆိုခဲ့သည်" },
+    { test: /\bcalled\s+(?:the number|a number|the office|the service|a neighbour|a neighbor|the owner)\b/i, meaning: "contacted someone or a service by phone", my: "ဖုန်းဆက်ခဲ့သည်" },
+    { test: /\bcalled\s+(?:its|his|her|the puppy|the animal)\s+(?:name|Milo|a name)\b/i, meaning: "used a name to call someone or something", my: "အမည်ဖြင့် ခေါ်ခဲ့သည်" }
+  ],
+  presented: [
+    { test: /\bpresented\b.{0,100}\b(findings|results|report|information|proposal|map|idea)\b/i, meaning: "showed or explained information to others", my: "တင်ပြခဲ့သည်" }
+  ],
+  mattered: [
+    { test: /\b(?:open area|area|place|safety|evidence|observation|community)\b.*\bmattered\b|\bmattered\b.*\b(?:important|difference|effect)\b/i, meaning: "was important or had an effect", my: "အရေးပါခဲ့သည်" }
+  ],
+  meeting: [
+    { test: /\bmeeting point\b/i, meaning: "a place where people arrange to meet", my: "တွေ့ဆုံရာနေရာ၊ စုဝေးရာနေရာ" }
+  ],
+  drinking: [
+    { test: /\bdrinking[- ]water\b/i, meaning: "water intended for people to drink", my: "သောက်သုံးရေ" }
+  ],
+  standing: [
+    { test: /\bstill standing\b|\b(?:bridge|building|wall|structure|tree)\s+(?:was|were|is|are)\s+standing\b/i, meaning: "remaining upright and not having fallen", my: "မပြိုမလဲ ကျန်ရှိနေသော" },
+    { test: /\bstanding\b/i, meaning: "being upright on one's feet", my: "ရပ်နေခြင်း" }
+  ],
+  moving: [
+    { test: /\bwater moving\b|\bmoving water\b|\bwater\s+(?:moved|moves|flowed)\b/i, meaning: "water flowing or changing position", my: "စီးဆင်းနေသော၊ ရွေ့လျားနေသော" },
+    { test: /\bmoving (?:the|a|some|these|those|books|furniture|goods)\b/i, meaning: "taking something to another place", my: "ရွှေ့ပြောင်းခြင်း" }
+  ],
+  addresses: [
+    { test: /\b(?:home|private|postal|mailing|street|office|email)\s+addresses\b|\baddresses\s+(?:were|are|for|of)\b/i, meaning: "locations where people live or receive mail", my: "လိပ်စာများ" },
+    { test: /\b(?:plan|report|map|notice|policy|solution|team|school)\s+addresses\b|\baddresses\s+(?:the|a|an|this|that|need|problem|issue|question|concern|risk)\b/i, meaning: "deals with or takes action on an issue", my: "ကိုင်တွယ်ဖြေရှင်းသည်" }
+  ],
+  mistake: [
+    { test: /\b(?:a|the|its|many|some|several|few|major|small|past|same|serious|honest)\s+mistakes?\b|\bmistakes?\s+(?:and|were|show|revealed|happened|in)\b/i, meaning: "an error or incorrect action", my: "အမှား" },
+    { test: /\bmistake\s+(?:one|it|them|someone|something)\s+for\b/i, meaning: "to understand or identify something incorrectly", my: "မှားယွင်းယူဆသည်" }
+  ]
+});
+
+function pluralNounMeaning(value, context, entry, dictionary) {
+  const word = normalizeWord(value);
+  if (!word.endsWith("s") || word.endsWith("'s") || Object.prototype.hasOwnProperty.call(dictionary, word)) return null;
+  const meaning = String(entry?.my ?? "").trim();
+  if (!meaning || meaning.includes("ဝါကျအလိုက်")) return null;
+
+  // Story vocabulary is normalized to letters, apostrophes, and hyphens, so it
+  // can be inserted into this word-boundary expression without regex escaping.
+  const nounClues = [
+    "the", "these", "those", "many", "some", "several", "few", "two", "three", "four", "five", "six",
+    "all", "both", "other", "their", "our", "your", "my", "its", "local", "new", "old", "small", "large",
+    "young", "healthy", "damaged", "public", "important", "reliable", "official", "remaining", "suitable",
+    "simple", "short", "long", "easy", "difficult", "careful", "useful", "accurate", "safe", "safer", "correct", "right", "wrong", "clearer", "private", "home", "written", "spoken", "necessary", "possible", "first", "second", "last", "next", "additional", "wooden", "firm", "ripe", "shallow", "quiet", "red", "yellow", "green", "blue", "brown", "white", "black", "grey", "gray", "pink", "orange", "separate", "basic", "older", "younger", "fresh", "cold", "warm", "strong", "weak", "busy", "crowded", "narrow", "wide", "clean", "dirty", "dry", "wet", "high", "low",
+    "native", "different", "various", "visible", "common", "early", "current", "flood", "river", "town",
+    "trusted", "responsible", "experienced", "shop", "fruit", "book", "picture", "science", "safety", "library", "garden", "warning", "health", "meeting",
+    "school", "family", "community", "nearby", "certain", "clear", "market", "water-level", "high-water",
+    "and", "or", "but", "while", "with", "among", "between", "including", "from", "to", "of", "for", "by",
+    "near", "beside", "around", "above", "below", "under", "across", "through", "after", "before", "during",
+    "inside", "outside", "following", "compared", "showed", "checked", "collected", "recorded", "counted",
+    "photographed", "observed", "measured", "planted", "moved", "repaired", "inspected", "reviewed", "updated",
+    "displayed", "shared", "asked", "provided", "included", "contained", "found", "gathered", "separated",
+    "selected", "used", "created", "built", "made", "placed", "took", "brought", "returned", "added", "marked",
+    "visited", "helped", "needed", "required", "gave", "offered", "wrote", "read", "borrowed", "requested",
+    "received", "donated", "kept", "preserved", "protected", "followed", "warned", "encouraged", "told",
+    "invited", "explained", "mentioned", "described", "presented", "announced", "confirmed", "supported",
+    "reduced", "prevented", "changed", "improved", "cleaned", "removed", "called", "showing", "making"
+  ].join("|");
+  const pattern = new RegExp("(?:^|[.!?]\\s+|[,;:]\\s*|\\b(?:" + nounClues + ")\\s+)" + word + "\\b", "i");
+  if (!pattern.test(String(context ?? ""))) return null;
+  const pluralParts = meaning.split("၊").map((part) => {
+    const trimmed = part.trim();
+    if (!trimmed || trimmed.includes("များ") || /(?:သည်|သော|ခြင်း|တယ်|နေသည်|နေသော)$/.test(trimmed)) return trimmed;
+    return trimmed + "များ";
+  });
+  return pluralParts.join("၊ ");
+}
+
+export function lookupWordInContext(value, context = "", dictionary = DICTIONARY) {
+  const word = normalizeWord(value);
+  const entry = lookupWord(word, dictionary);
+  if (!entry) return null;
+
+  // Context rules belong to dictionary headwords. Reuse them for possessives
+  // and inflected forms that resolve through lookupWord (for example Rose's,
+  // changed, and presented) instead of falling back to a mixed-sense entry.
+  const possessiveBase = word.endsWith("'s") ? word.slice(0, -2) : word;
+  const candidates = [possessiveBase, word];
+  if (word.endsWith("ed") && word.length > 4) {
+    const stem = word.slice(0, -2);
+    candidates.push(stem, stem + "e");
+    if (stem.length > 2 && stem.at(-1) === stem.at(-2)) candidates.push(stem.slice(0, -1));
+  }
+  if (word.endsWith("ing") && word.length > 5) {
+    const stem = word.slice(0, -3);
+    candidates.push(stem, stem + "e");
+    if (stem.length > 2 && stem.at(-1) === stem.at(-2)) candidates.push(stem.slice(0, -1));
+  }
+  if (word.endsWith("s") && word.length > 3) candidates.push(word.slice(0, -1));
+
+  let senses;
+  for (const candidate of candidates) {
+    if (CONTEXTUAL_SENSES[candidate]) {
+      senses = CONTEXTUAL_SENSES[candidate];
+      break;
+    }
+  }
+  if (!senses) {
+    const contextualHeadword = Object.keys(CONTEXTUAL_SENSES)
+      .find((headword) => dictionary[headword] === entry);
+    if (contextualHeadword) senses = CONTEXTUAL_SENSES[contextualHeadword];
+  }
+  const sentence = String(context ?? "");
+  const selected = senses?.find((sense) => sense.test.test(sentence));
+  const resolved = selected ? { ...entry, meaning: selected.meaning, my: selected.my } : entry;
+  const pluralMeaning = pluralNounMeaning(word, sentence, resolved, dictionary);
+  return pluralMeaning ? { ...resolved, my: pluralMeaning } : resolved;
+}
+
+export function splitEnglishSentences(value) {
+  const text = String(value ?? "");
+  const sentences = [];
+  let start = 0;
+
+  for (let index = 0; index < text.length; index += 1) {
+    const punctuation = text[index];
+    if (punctuation !== "." && punctuation !== "!" && punctuation !== "?") continue;
+    if (punctuation === "." && text[index + 1] === ".") continue;
+
+    const candidate = text.slice(start, index + 1).trimEnd();
+    if (punctuation === "." && /\b(?:Mr|Mrs|Ms|Dr|Prof|St|Jr|Sr|Mt|No|vs|etc)\.$/i.test(candidate)) {
+      continue;
+    }
+
+    let end = index + 1;
+    while (end < text.length && /["'”’)}\]]/.test(text[end])) end += 1;
+    const sentenceText = text.slice(start, end).trim();
+    if (sentenceText) {
+      const leadingWhitespace = text.slice(start, end).search(/\S/);
+      const sentenceStart = start + Math.max(0, leadingWhitespace);
+      sentences.push({ text: sentenceText, index: sentences.length, start: sentenceStart, end });
+    }
+
+    start = end;
+    while (start < text.length && /\s/.test(text[start])) start += 1;
+    index = start - 1;
+  }
+
+  const remainder = text.slice(start).trim();
+  if (remainder) {
+    const leadingWhitespace = text.slice(start).search(/\S/);
+    const sentenceStart = start + Math.max(0, leadingWhitespace);
+    sentences.push({ text: remainder, index: sentences.length, start: sentenceStart, end: text.length });
+  }
+  return sentences;
 }
 
 export function tokenizeStory(text) {

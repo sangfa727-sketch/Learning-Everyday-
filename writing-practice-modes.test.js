@@ -6,7 +6,7 @@ const html = readFileSync(new URL("./index.html", import.meta.url), "utf8");
 const ui = readFileSync(new URL("./curriculum-ui.js", import.meta.url), "utf8");
 const app = readFileSync(new URL("./app.js", import.meta.url), "utf8");
 const css = readFileSync(new URL("./styles.css", import.meta.url), "utf8");
-const fallbackDictionarySource = readFileSync(new URL("./learning-core.js", import.meta.url), "utf8");
+const fallbackDictionarySource = readFileSync(new URL("./dictionary.js", import.meta.url), "utf8");
 
 test("Writing Practice exposes exactly Print and Handwriting mode controls", () => {
   assert.ok(html.includes('id="writing-mode-print"'));
@@ -154,7 +154,7 @@ test("Story narration tracks and visibly highlights the currently spoken word", 
   assert.match(app, /function stopStoryNarration\(\)/);
   assert.match(app, /function clearSpeechHighlight\(\)/);
   assert.match(app, /function highlightSpeechWord\(charIndex\)/);
-  assert.match(app, /function stopStoryNarration\(\) \{\s*activeStoryUtterance = null;\s*if \("speechSynthesis" in window\) window\.speechSynthesis\.cancel\(\);\s*clearSpeechHighlight\(\);\s*const playButton = \$\("#play-button"\);\s*if \(playButton\) playButton\.disabled = false;/);
+  assert.match(app, /function stopStoryNarration\(\) \{\s*activeStoryUtterance = null;\s*activeWordUtterance = null;\s*if \("speechSynthesis" in window\) window\.speechSynthesis\.cancel\(\);\s*clearSpeechHighlight\(\);\s*const playButton = \$\("#play-button"\);\s*if \(playButton\) playButton\.disabled = false;/);
   assert.match(app, /\$\("#stop-button"\)\.addEventListener\("click", \(\) => \{\s*stopStoryNarration\(\);/);
   assert.match(app, /if \(activeListeningStoryId\) stopStoryNarration\(\);/);
   assert.match(app, /button\.dataset\.speechStart = String\(partStart\)/);
@@ -162,7 +162,7 @@ test("Story narration tracks and visibly highlights the currently spoken word", 
   assert.match(app, /utterance\.onboundary = \(event\) =>/);
   assert.match(app, /let activeStoryUtterance = null/);
   assert.match(app, /if \(activeStoryUtterance !== utterance\) return/);
-  assert.match(app, /activeStoryUtterance = null;\s*clearSpeechHighlight\(\);\s*\$\("#play-button"\)\.disabled = false;\s*window\.speechSynthesis\.cancel\(\)/);
+  assert.match(app, /activeStoryUtterance = null;\s*activeWordUtterance = null;\s*window\.speechSynthesis\.cancel\(\);\s*clearSpeechHighlight\(\)/);
   assert.match(app, /highlightSpeechWord\(paragraph\.start \+ event\.charIndex\)/);
   assert.match(app, /active\.setAttribute\("aria-current", "true"\)/);
   assert.match(css, /\.lesson-word\.speech-current-word/);

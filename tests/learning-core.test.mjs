@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { DICTIONARY, normalizeWord, lookupWord, tokenizeStory, countCharacters, clampSpeechRate } from "../learning-core.js";
+import { DICTIONARY, normalizeWord, lookupWord, lookupWordInContext, tokenizeStory, countCharacters, clampSpeechRate } from "../learning-core.js";
 import { readLocalValue, writeLocalValue } from "../local-state.js";
 
 test("normalizes punctuation and case for word lookup", () => {
@@ -17,7 +17,9 @@ test("dictionary is a local, non-empty source for the sample story", () => {
 
 test("looks up common inflected forms without a network request", () => {
   assert.equal(lookupWord("flowers")?.my, "ပန်း");
-  assert.equal(lookupWord("waters")?.my, "ရေလောင်းသည်");
+  assert.equal(lookupWord("waters")?.my, "ရေ၊ ရေလောင်းသည် (ဝါကျအလိုက် အဓိပ္ပာယ်ကွဲသည်)");
+  assert.equal(lookupWordInContext("water", "The river gave the town drinking water.")?.my, "ရေ");
+  assert.equal(lookupWordInContext("waters", "Maya waters the flowers.")?.my, "ရေလောင်းသည်");
   assert.equal(lookupWord("visits")?.my, "လာရောက်လည်ပတ်သည်");
   assert.equal(lookupWord("singing")?.my, "သီချင်းဆိုသည်");
   assert.equal(lookupWord("unknowns"), null);
