@@ -404,6 +404,14 @@ test("context-aware lookup keeps possessive names and inflected verbs context-co
   assert.match(lookupWordInContext("changed", "She changed her daily routine.").my, /ပြောင်းလဲ/);
 });
 
+test("context-aware lookup distinguishes common story senses for kind, left, mean, like, and still", () => {
+  assert.match(lookupWordInContext("kind", "Lina's grandmother offered another kind of evidence.").my, /အမျိုးအစား/);
+  assert.match(lookupWordInContext("left", "She planted flowers and left a small patch of soil for insects.").my, /ချန်ထားခဲ့သည်/);
+  assert.match(lookupWordInContext("mean", "Her notes helped explain why sunshine did not mean the river was safe.").my, /ဆိုလိုသည်/);
+  assert.match(lookupWordInContext("like", "Wetlands acted like natural bowls.").my, /ကဲ့သို့/);
+  assert.match(lookupWordInContext("still", "Maya made sure there was still room for every visitor.").my, /ကျန်ရှိနေသေးသော/);
+});
+
 test("context-aware word lookup selects the sense supported by the tapped sentence", () => {
   assert.match(lookupWordInContext("rose", "The river rose after heavy rain.").my, /မြင့်တက်လာခဲ့သည်/);
   assert.match(lookupWordInContext("rose", "A red rose grew in the garden.").my, /နှင်းဆီပန်း/);
