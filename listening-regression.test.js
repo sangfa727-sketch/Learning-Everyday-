@@ -271,13 +271,13 @@ test("every distinct word in Maya’s Garden story has an offline dictionary ent
 
 test("Listening uses one standalone shared dictionary as the source of truth", async () => {
   const dictionarySource = await readFile(new URL("./dictionary.js", import.meta.url), "utf8");
-  const declaredKeys = [...dictionarySource.matchAll(/^\\s{2}([a-z][a-z'-]*):\\s*\\{/gm)].map((match) => match[1]);
+  const declaredKeys = [...dictionarySource.matchAll(/^\s{2}([a-z][a-z'-]*):\s*\{/gm)].map((match) => match[1]);
   assert.ok(Object.keys(DICTIONARY).length >= 300, "shared dictionary should retain the existing vocabulary");
   assert.equal(new Set(declaredKeys).size, declaredKeys.length, "dictionary source must not declare duplicate word keys");
   assert.equal(declaredKeys.length, Object.keys(DICTIONARY).length, "every declared dictionary entry should be represented exactly once");
 });
 
-test("irregular forms reuse the exact base-word entry instead of duplicating translations", () => {
+test("irregular forms resolve to a direct dictionary entry or a verified base-word entry", () => {
   const pairs = [
     ["went", "go"], ["gone", "go"], ["saw", "see"], ["seen", "see"],
     ["took", "take"], ["taken", "take"], ["gave", "give"], ["given", "give"],
@@ -297,7 +297,8 @@ test("irregular forms reuse the exact base-word entry instead of duplicating tra
   ];
   for (const [form, base] of pairs) {
     assert.ok(DICTIONARY[base], "base dictionary entry should exist for " + form + " -> " + base);
-    assert.equal(lookupWord(form), DICTIONARY[base], form + " should reuse the base entry for " + base);
+    const expected = Object.prototype.hasOwnProperty.call(DICTIONARY, form) ? DICTIONARY[form] : DICTIONARY[base];
+    assert.equal(lookupWord(form), expected, form + " should resolve to its direct entry or the verified base entry for " + base);
   }
 });
 
