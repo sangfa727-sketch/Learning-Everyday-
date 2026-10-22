@@ -59,7 +59,7 @@ test("Listening narration queues paragraph chunks with story-global highlight of
   assert.match(source, /const paragraphPattern = \/\[\^\\n\]\+\/g;/);
   assert.match(source, /paragraphs\.push\(\{ text, start: match\.index \+ match\[0\]\.indexOf\(text\) \}\)/);
   assert.match(source, /highlightSpeechWord\(paragraph\.start \+ event\.charIndex\)/);
-  assert.match(source, /utterance\.onend = \(\) => \{\s*if \(activeStoryUtterance !== utterance\) return;\s*speakNextParagraph\(\);/);
+  assert.match(source, /utterance\.onend = \(\) => \{\s*if \(activeStoryUtterance !== utterance\) return;\s*clearSpeechHighlightTimer\(\);\s*speakNextParagraph\(\);/);
 });
 
 test("Listening narration falls back to approximate word highlighting when TTS omits boundary events", () => {
