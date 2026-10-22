@@ -37,6 +37,19 @@ test("Listening story selection accepts the existing joined text and legacy para
   assert.match(source, /renderStory\(\);/);
 });
 
+test("paragraph translation refreshes during manual navigation and automatic narration", () => {
+  assert.match(app, /function refreshCurrentStoryTranslation\(\) \{\s*const selected = LISTENING_STORIES\.find\(\(item\) => item\.id === activeListeningStoryId\);\s*if \(selected\) renderStoryTranslation\(selected\);\s*\}/);
+  const speakStart = app.indexOf("function speakStory()");
+  const speakEnd = app.indexOf("\\nfunction startSpeakingPractice()", speakStart);
+  const speak = app.slice(speakStart, speakEnd);
+  assert.match(speak, /currentStoryParagraphIndex = paragraph\.index;[\s\S]*?renderStory\(\);\s*refreshCurrentStoryTranslation\(\);/);
+  const prevStart = app.indexOf('$("#story-previous").addEventListener("click"');
+  const nextStart = app.indexOf('$("#story-next").addEventListener("click"');
+  const closeStart = app.indexOf('$("#close-word").addEventListener("click"');
+  assert.match(app.slice(prevStart, nextStart), /renderStory\(\);\s*refreshCurrentStoryTranslation\(\);/);
+  assert.match(app.slice(nextStart, closeStart), /renderStory\(\);\s*refreshCurrentStoryTranslation\(\);/);
+});
+
 test("Listening narration queues paragraph chunks with story-global highlight offsets", () => {
   const start = app.indexOf("function speakStory()");
   const end = app.indexOf("\nfunction startSpeakingPractice()", start);
