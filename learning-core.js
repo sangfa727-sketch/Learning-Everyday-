@@ -14,8 +14,6 @@ export const DICTIONARY = Object.freeze({
   song: { meaning: "a short piece of music with words or melody", usage: "Maya hears the bird's song.", my: "သီချင်း" },
   hear: { meaning: "to notice a sound with your ears", usage: "She hears a bird sing.", my: "ကြားသည်" },
   feel: { meaning: "to experience an emotion or sensation", usage: "Maya feels happy.", my: "ခံစားရသည်" }
-});
-  grandmother: { meaning: "the mother of someone's parent", usage: "Her grandmother started the garden.", my: "အဘွား" },
   carefully: { meaning: "in a way that shows attention", usage: "She checks each plant carefully.", my: "ဂရုတစိုက်" },
   soil: { meaning: "the top layer of earth where plants grow", usage: "Healthy soil helps plants grow.", my: "မြေဆီလွှာ" },
   sunlight: { meaning: "light that comes from the sun", usage: "Plants need sunlight.", my: "နေရောင်ခြည်" },
@@ -82,7 +80,7 @@ export const DICTIONARY = Object.freeze({
   choose: { meaning: "to decide which thing you want", usage: "Choose one object for the project.", my: "ရွေးချယ်သည်" },
   common: { meaning: "happening often or found in many places", usage: "Modern machines became common.", my: "အများအားဖြင့်တွေ့ရသော" },
   ordinary: { meaning: "normal and not special", usage: "History tells us about ordinary people.", my: "သာမန်" },
-
+});
 export function normalizeWord(value) {
   return String(value ?? "").toLocaleLowerCase("en").replace(/^[^a-z'-]+|[^a-z'-]+$/g, "");
 }
