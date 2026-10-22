@@ -413,10 +413,13 @@ function renderStoryTranslation(selected) {
     ? (isMyanmar ? "မြန်မာဘာသာပြန်ကို ပြရန်" : "Show Myanmar translation")
     : (isMyanmar ? "မြန်မာဘာသာပြန်ကို ဖျောက်ရန်" : "Hide Myanmar translation");
   paragraphs.replaceChildren();
-  for (const translation of selected.paragraphTranslations || []) {
+  for (const [index, translation] of (selected.paragraphTranslations || []).entries()) {
     const paragraph = document.createElement("p");
     paragraph.className = "story-translation-paragraph";
-    paragraph.textContent = translation;
+    const number = document.createElement("span");
+    number.className = "story-translation-number";
+    number.textContent = `${index + 1}.`;
+    paragraph.append(number, document.createTextNode(` ${translation}`));
     paragraphs.append(paragraph);
   }
 }
