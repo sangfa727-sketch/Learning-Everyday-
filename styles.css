@@ -695,3 +695,137 @@ body[data-page="reading"] #curriculum-workbench .curriculum-header .section-inde
   .vocabulary-topic-picker{grid-template-columns:minmax(0,1fr)}
   .vocabulary-topic-shell .vocabulary-list{grid-template-columns:minmax(0,1fr)}
 }
+
+
+/* Vocabulary category navigation: preserve the established card visual language. */
+.vocabulary-topic-picker {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.vocabulary-topic-shell { min-width: 0; }
+.vocabulary-topic-card {
+  grid-template-columns: 36px minmax(0, 1fr) 20px;
+  grid-template-rows: minmax(0, 1fr);
+  align-items: center;
+  column-gap: 10px;
+  row-gap: 0;
+  min-height: 82px;
+  height: 100%;
+  padding: 12px 14px;
+  border: 1px solid #e2e9df;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #fff 0%, #f8faf5 100%);
+  box-shadow: 0 3px 10px rgba(25,53,41,.035);
+}
+.vocabulary-topic-card:hover {
+  transform: translateY(-2px);
+  border-color: #b8cbb5;
+  background: linear-gradient(145deg, #fff 0%, #f2f7ee 100%);
+  box-shadow: 0 8px 18px rgba(25,53,41,.08);
+}
+.vocabulary-topic-card[aria-pressed="true"] {
+  border-color: #e2e9df;
+  background: linear-gradient(145deg, #fff 0%, #f8faf5 100%);
+  box-shadow: 0 3px 10px rgba(25,53,41,.035);
+}
+.vocabulary-topic-icon {
+  grid-column: 1;
+  grid-row: 1;
+  width: 36px;
+  height: 36px;
+  font-size: 20px;
+}
+.vocabulary-topic-label {
+  grid-column: 2;
+  grid-row: 1;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  font-size: clamp(11px, 1.15vw, 13px);
+  line-height: 1.55;
+  letter-spacing: 0;
+  word-break: normal;
+  overflow-wrap: break-word;
+  hyphens: none;
+  text-wrap: pretty;
+}
+.vocabulary-topic-marker {
+  grid-column: 3;
+  grid-row: 1;
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  background: #eaf1e4;
+  color: #315b43;
+  font-size: 13px;
+  line-height: 1;
+}
+.vocabulary-back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  margin: 0 0 16px;
+  padding: 0 14px;
+  border: 1px solid #dce7d8;
+  border-radius: 11px;
+  background: #f6faf2;
+  color: #315b43;
+  font-size: 13px;
+  font-weight: 750;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.vocabulary-back-button:hover { background: #eaf3e4; border-color: #b8cbb5; }
+.vocabulary-back-button:focus-visible { outline: 3px solid #9bbd69; outline-offset: 3px; }
+.vocabulary-back-button[hidden] { display: none !important; }
+
+body[data-page="reading"][data-vocabulary-category] #curriculum-workbench > .curriculum-header { display: none; }
+body[data-page="reading"][data-vocabulary-category] #curriculum-workbench .curriculum-grid { grid-template-columns: minmax(0, 1fr); }
+body[data-page="reading"][data-vocabulary-category] #curriculum-workbench .curriculum-grid > .curriculum-card:nth-child(2),
+body[data-page="reading"][data-vocabulary-category] #curriculum-workbench .vocabulary-topic-picker,
+body[data-page="reading"][data-vocabulary-category] #curriculum-workbench #vocabulary-heading,
+body[data-page="reading"][data-vocabulary-category] #curriculum-workbench #vocabulary-heading + .curriculum-muted,
+body[data-page="reading"][data-vocabulary-category] #curriculum-workbench .letter-practice,
+body[data-page="reading"][data-vocabulary-category] #curriculum-workbench .progress-tools,
+body[data-page="reading"][data-vocabulary-category] #curriculum-workbench #curriculum-status { display: none !important; }
+body[data-page="reading"][data-vocabulary-category] #curriculum-workbench .curriculum-card[aria-labelledby="vocabulary-heading"] {
+  width: 100%;
+  max-width: 920px;
+  margin-inline: auto;
+  padding: clamp(16px, 3vw, 26px);
+}
+body[data-page="reading"][data-vocabulary-category] #vocabulary-category-title {
+  margin: 0 0 14px;
+  padding: 0 0 12px;
+  border-bottom: 1px solid #e4ebdf;
+  font-size: clamp(18px, 3vw, 22px);
+}
+body[data-page="reading"][data-vocabulary-category] #vocabulary-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+@media (max-width: 760px) {
+  .vocabulary-topic-picker { gap: 9px; margin: 10px 0 18px; }
+  .vocabulary-topic-card {
+    grid-template-columns: 30px minmax(0, 1fr) 18px;
+    gap: 7px;
+    min-height: 76px;
+    padding: 10px;
+    border-radius: 14px;
+  }
+  .vocabulary-topic-icon { width: 30px; height: 30px; font-size: 18px; }
+  .vocabulary-topic-label { font-size: 12px; line-height: 1.55; }
+  .vocabulary-topic-marker { width: 18px; height: 18px; }
+  body[data-page="reading"][data-vocabulary-category] #vocabulary-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 360px) {
+  .vocabulary-topic-picker { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vocabulary-topic-card { transition: none; }
+}

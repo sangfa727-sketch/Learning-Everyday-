@@ -22,7 +22,7 @@ test("practice card title follows the selected skill instead of repeating the fo
 });
 
 
-test("vocabulary topic picker and word-card speaker stay integrated with animated toggle details", async () => {
+test("vocabulary topic cards navigate to dedicated pages and retain word audio details", async () => {
   const [html, ui, css, worker] = await Promise.all([
     readFile(new URL("./index.html", import.meta.url), "utf8"),
     readFile(new URL("./curriculum-ui.js", import.meta.url), "utf8"),
@@ -30,11 +30,13 @@ test("vocabulary topic picker and word-card speaker stay integrated with animate
     readFile(new URL("./sw.js", import.meta.url), "utf8")
   ]);
   assert.match(html, /id="vocabulary-category"/);
+  assert.match(html, /id="vocabulary-back-to-categories"/);
   assert.match(ui, /id = "vocabulary-topic-picker"/);
   assert.match(ui, /className = "vocabulary-topic-card"/);
-  assert.match(ui, /className = selected \? "vocabulary-topic-shell is-selected" : "vocabulary-topic-shell"/);
-  assert.match(ui, /shell\.append\(title, list\)/);
-  assert.match(css, /\.vocabulary-topic-shell\.is-selected\{grid-column:1\/-1/);
+  assert.match(ui, /location\.hash = `#\/reading\/\$\{category\.id\}`/);
+  assert.match(ui, /function syncVocabularyRoute\(\)/);
+  assert.doesNotMatch(ui, /shell\.append\(title, list\)/);
+  assert.match(css, /\.vocabulary-topic-picker\s*\{\s*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/);
   assert.match(css, /\.vocabulary-topic-label\{[^}]*overflow-wrap:break-word/s);
   assert.match(css, /word-break:normal/);
   assert.match(ui, /selectedWord === word/);
@@ -43,5 +45,5 @@ test("vocabulary topic picker and word-card speaker stay integrated with animate
   assert.match(css, /\.vocabulary-speaker\{position:absolute/);
   assert.match(css, /@keyframes vocabulary-detail-out/);
   assert.match(css, /prefers-reduced-motion:reduce/);
-  assert.match(worker, /learning-everyday-shell-v37/);
+  assert.match(worker, /learning-everyday-shell-v38/);
 });

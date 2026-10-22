@@ -110,60 +110,83 @@ function renderCategoryOptions() {
     select.insertAdjacentElement("afterend", picker);
   }
 
-  const title = vocabularyTitleNode || $("#vocabulary-category-title");
-  const list = vocabularyListNode || $("#vocabulary-list");
-  vocabularyTitleNode = title;
-  vocabularyListNode = list;
-  picker.replaceChildren();
   const topicIcons = {
     home: "⌂", electrical: "ϟ", kitchen: "♨", food: "◉", clothing: "◇",
     school: "✎", bathroom: "◌", transport: "↗", weather: "☼", work: "▣",
     health: "✚", family: "♡", shopping: "♧", technology: "⌘", town: "⌖", time: "◷"
   };
+  picker.replaceChildren();
   for (const category of VOCABULARY_CATEGORIES) {
-    const selected = category.id === selectedCategory;
     const shell = document.createElement("section");
-    shell.className = selected ? "vocabulary-topic-shell is-selected" : "vocabulary-topic-shell";
-
+    shell.className = "vocabulary-topic-shell";
     const button = document.createElement("button");
     button.type = "button";
     button.className = "vocabulary-topic-card";
-    button.setAttribute("aria-pressed", String(selected));
-    button.setAttribute("aria-expanded", String(selected));
-    button.setAttribute("aria-label", categoryLabel(category));
+    button.setAttribute("aria-label", language === "my"
+      ? `${categoryLabel(category)} — ဝေါဟာရစာမျက်နှာသို့ ဝင်ရန်`
+      : `Open ${categoryLabel(category)} vocabulary`);
+
     const icon = document.createElement("span");
     icon.className = "vocabulary-topic-icon";
     icon.setAttribute("aria-hidden", "true");
     icon.textContent = topicIcons[category.id] || "✦";
+
     const label = document.createElement("span");
     label.className = "vocabulary-topic-label";
     label.textContent = categoryLabel(category);
+
     const marker = document.createElement("span");
     marker.className = "vocabulary-topic-marker";
     marker.setAttribute("aria-hidden", "true");
-    marker.textContent = selected ? "⌄" : "+";
+    marker.textContent = "↗";
+
     button.append(icon, label, marker);
     button.addEventListener("click", () => {
-      selectedCategory = selected ? null : category.id;
       selectedWord = null;
-      select.value = selectedCategory || "";
-      renderCategoryOptions();
-      renderVocabulary();
+      location.hash = `#/reading/${category.id}`;
+      if (location.hash === `#/reading/${category.id}`) syncVocabularyRoute();
     });
     shell.append(button);
-
-    if (selected) {
-      title.hidden = false;
-      list.hidden = false;
-      title.textContent = categoryLabel(category);
-      shell.append(title, list);
-    }
     picker.append(shell);
   }
-  if (!selectedCategory) {
-    title.hidden = true;
-    list.hidden = true;
+}
+
+function syncVocabularyRoute() {
+  const route = location.hash.slice(1).split("/").filter(Boolean);
+  const requestedId = route[0] === "reading" ? route[1] : null;
+  const category = VOCABULARY_CATEGORIES.find((item) => item.id === requestedId) || null;
+  const nextCategory = category?.id || null;
+  if (selectedCategory !== nextCategory) selectedWord = null;
+  selectedCategory = nextCategory;
+
+  if (category) document.body.dataset.vocabularyCategory = category.id;
+  else delete document.body.dataset.vocabularyCategory;
+
+  const heading = $("#vocabulary-heading");
+  const intro = heading?.nextElementSibling;
+  if (heading) heading.hidden = Boolean(category);
+  if (intro) intro.hidden = Boolean(category);
+  const back = $("#vocabulary-back-to-categories");
+  if (back) {
+    back.hidden = !category;
+    back.textContent = language === "my" ? "← အမျိုးအစားများသို့ ပြန်သွားရန်" : "← Back to topics";
   }
+
+  if (category) {
+    const pageTitle = $("#page-title");
+    const pageDescription = $("#page-description");
+    const pageEyebrow = $("#page-navigation .eyebrow");
+    if (pageTitle) pageTitle.textContent = categoryLabel(category);
+    if (pageDescription) pageDescription.textContent = language === "my"
+      ? "သက်ဆိုင်ရာ ဝေါဟာရ ၂၀ လုံး၏ အဓိပ္ပာယ်၊ အသံထွက်နှင့် ဥပမာဝါကျများကို လေ့လာပါ။"
+      : "Explore 20 words with meanings, pronunciation and example sentences.";
+    if (pageEyebrow) pageEyebrow.textContent = language === "my" ? "ဝေါဟာရ · အဓိပ္ပာယ် · အသံထွက်" : "VOCABULARY · MEANING · PRONUNCIATION";
+    document.title = `${categoryLabel(category)} — Learning Everyday`;
+    const categoryTitle = $("#vocabulary-category-title");
+    if (categoryTitle) categoryTitle.textContent = categoryLabel(category);
+  }
+  renderCategoryOptions();
+  renderVocabulary();
 }
 
 function speakVocabulary(text, label) {
@@ -697,15 +720,20 @@ syncSkillLevelPage();
 window.addEventListener("hashchange", () => {
   const page = location.hash.slice(1).split("/").filter(Boolean)[0];
   syncSkillLevelPage();
+  syncVocabularyRoute();
   if (["reading", "listening", "writing", "speaking"].includes(page)) {
     activeSkill = page;
     renderPractice();
   }
 });
 $("#vocabulary-category").addEventListener("change", (event) => {
-  selectedCategory = event.target.value;
+  const categoryId = event.target.value;
   selectedWord = null;
-  renderVocabulary();
+  location.hash = categoryId ? `#/reading/${categoryId}` : "#/reading";
+});
+$("#vocabulary-back-to-categories").addEventListener("click", () => {
+  selectedWord = null;
+  location.hash = "#/reading";
 });
 
 $("#next-practice").addEventListener("click", () => {
@@ -834,8 +862,7 @@ languageButton.addEventListener("click", () => window.setTimeout(() => setLangua
 new MutationObserver(() => setLanguage(document.documentElement.lang === "my" ? "my" : "en"))
   .observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
 
-renderCategoryOptions();
-renderVocabulary();
+syncVocabularyRoute();
 renderLevelOptions();
 renderLetterOptions();
 renderScriptLetterPicker();
