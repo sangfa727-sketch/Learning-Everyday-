@@ -3,7 +3,10 @@ import { DICTIONARY } from "./dictionary.js";
 export { DICTIONARY };
 
 export function normalizeWord(value) {
-  return String(value ?? "").toLocaleLowerCase("en").replace(/^[^a-z'-]+|[^a-z'-]+$/g, "");
+  return String(value ?? "")
+    .toLocaleLowerCase("en")
+    .replace(/[’‘]/g, "'")
+    .replace(/^[^a-z'-]+|[^a-z'-]+$/g, "");
 }
 
 const IRREGULAR_WORD_BASES = Object.freeze({
@@ -42,6 +45,12 @@ export function lookupWord(value, dictionary = DICTIONARY) {
   const word = normalizeWord(value);
   if (!word) return null;
   if (Object.prototype.hasOwnProperty.call(dictionary, word)) return dictionary[word];
+  // Curly/straight possessives should remain tappable as a whole word and reuse
+  // the noun/name entry instead of producing an untranslated token.
+  if (word.endsWith("'s")) {
+    const possessiveBase = word.slice(0, -2);
+    if (Object.prototype.hasOwnProperty.call(dictionary, possessiveBase)) return dictionary[possessiveBase];
+  }
   const irregularBase = IRREGULAR_WORD_BASES[word];
   if (irregularBase && Object.prototype.hasOwnProperty.call(dictionary, irregularBase)) return dictionary[irregularBase];
 
