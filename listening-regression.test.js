@@ -203,3 +203,18 @@ test("story-card navigation is committed before speech cleanup so cleanup errors
   assert.ok(navigation >= 0 && cleanup > navigation, "route must change before speech cleanup");
   assert.match(source, /try\s*\{\s*stopStoryNarration\(\);\s*\}\s*catch\s*\{/);
 });
+
+test("tapping an English story word speaks it aloud and translation follows the current paragraph", () => {
+  const renderStart = app.indexOf("function renderStory()");
+  const renderEnd = app.indexOf("\nfunction pronounceWord", renderStart);
+  assert.ok(renderStart >= 0 && renderEnd > renderStart, "story renderer should exist");
+  assert.match(app.slice(renderStart, renderEnd), /showWord\(part\.word, wordParagraphIndex\);\s*pronounceWord\(part\.word\);/);
+  const translationStart = app.indexOf("function renderStoryTranslation(selected)");
+  const translationEnd = app.indexOf("\nfunction stopStoryNarration", translationStart);
+  assert.ok(translationStart >= 0 && translationEnd > translationStart, "translation renderer should exist");
+  const translationSource = app.slice(translationStart, translationEnd);
+  assert.match(translationSource, /\[currentStoryParagraphIndex\]/);
+  assert.match(translationSource, /currentStoryParagraphIndex \+ 1/);
+  assert.doesNotMatch(translationSource, /paragraphTranslations\s*\|\|\s*\[\]\)\.entries\(\)/);
+  assert.match(app.slice(renderStart, renderEnd), /if \(selected\) renderStoryTranslation\(selected\)/);
+});
