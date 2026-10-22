@@ -803,7 +803,7 @@ body[data-page="reading"][data-vocabulary-category] #vocabulary-category-title {
   border-bottom: 1px solid #e4ebdf;
   font-size: clamp(18px, 3vw, 22px);
 }
-body[data-page="reading"][data-vocabulary-category] .vocabulary-topic-shell .vocabulary-list {
+body[data-page="reading"][data-vocabulary-category] #vocabulary-list {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
 }
@@ -819,7 +819,7 @@ body[data-page="reading"][data-vocabulary-category] .vocabulary-topic-shell .voc
   .vocabulary-topic-icon { width: 30px; height: 30px; font-size: 18px; }
   .vocabulary-topic-label { font-size: 12px; line-height: 1.55; }
   .vocabulary-topic-marker { width: 18px; height: 18px; }
-  body[data-page="reading"][data-vocabulary-category] .vocabulary-topic-shell .vocabulary-list {
+  body[data-page="reading"][data-vocabulary-category] #vocabulary-list {
     grid-template-columns: minmax(0, 1fr);
   }
 }
