@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { lookupWord } from "./learning-core.js";
 import { readFile } from "node:fs/promises";
 
 const app = await readFile(new URL("./app.js", import.meta.url), "utf8");
@@ -253,4 +254,17 @@ test("Listening word lookup prioritizes Myanmar meaning and includes common Maya
     assert.ok(entry, "offline dictionary should define " + word);
     assert.ok(entry[1].includes(meaningText), word + " should have a Myanmar meaning");
   }
+});
+
+
+test("every distinct word in Maya’s Garden story has an offline dictionary entry", async () => {
+  const app = await readFile(new URL("./app.js", import.meta.url), "utf8");
+  const storyStart = app.indexOf('id: "garden-bird"');
+  const storyEnd = app.indexOf('id: "market-morning"', storyStart);
+  assert.ok(storyStart >= 0 && storyEnd > storyStart, "Maya’s Garden story should exist");
+  const story = app.slice(storyStart, storyEnd);
+  const paragraphs = countArrayStringEntries(story, "text");
+  const words = [...new Set(paragraphs.join(" ").match(/[A-Za-z]+(?:['-][A-Za-z]+)*/g) || [])];
+  const missing = words.filter((word) => !lookupWord(word));
+  assert.deepEqual(missing, [], "Every word in Maya’s Garden should have a Myanmar dictionary entry");
 });
