@@ -518,7 +518,7 @@ test("sentence-by-sentence Myanmar translation aligns with every English sentenc
     const char = storiesSource[index];
     if (quote) {
       if (escaped) escaped = false;
-      else if (char === "\\\\") escaped = true;
+      else if (char === "\\") escaped = true;
       else if (char === quote) quote = null;
       continue;
     }
@@ -540,7 +540,7 @@ test("sentence-by-sentence Myanmar translation aligns with every English sentenc
 
   assert.equal(storyBlocks.length, 7, "all seven Listening stories should be checked");
   for (const block of storyBlocks) {
-    const id = block.match(/id:\\s*"([^"]+)"/)?.[1] ?? "unknown";
+    const id = block.match(/id:\s*"([^"]+)"/)?.[1] ?? "unknown";
     const english = countArrayStringEntries(block, "text");
     const myanmar = countArrayStringEntries(block, "paragraphTranslations");
     assert.equal(myanmar.length, english.length, id + " should translate every paragraph");
