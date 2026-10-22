@@ -21,12 +21,16 @@ function availableEnglishVoices() {
 function voiceForGender(gender) {
   const english = availableEnglishVoices();
   if (!english.length) return null;
-  const preferred = gender === "female" ? FEMALE_VOICE_HINTS : MALE_VOICE_HINTS;
-  const matched = english.find((voice) => preferred.test(voice.name));
-  if (matched) return matched;
+
+  const female = english.find((voice) => FEMALE_VOICE_HINTS.test(voice.name));
+  const male = english.find((voice) => MALE_VOICE_HINTS.test(voice.name));
   const natural = english.find((voice) => /natural|neural|online/i.test(voice.name));
-  // If names do not expose gender, prefer distinct installed English voices where possible.
-  if (gender === "female") return natural || english[0];
+
+  if (gender === "female") return female || natural || english[0];
+
+  // Prefer a genuinely different installed voice for the other speaker.
+  if (male && male !== female) return male;
+  if (female) return english.find((voice) => voice !== female) || female;
   if (natural) return english.find((voice) => voice !== natural) || natural;
   return english[1] || english[0];
 }
@@ -53,7 +57,8 @@ function speakLine(line, onend = null) {
   utterance.rate = Number($("#speaking-speed")?.value || 0.88);
   const voice = voiceForGender(line[1]);
   if (voice) utterance.voice = voice;
-  utterance.onend = () => { if (onend) onend(); };
+  // A short pause makes each turn easier to follow instead of sounding rushed.
+  utterance.onend = () => { if (onend) window.setTimeout(onend, 700); };
   utterance.onerror = (event) => {
     if (event.error === "canceled" || event.error === "interrupted") return;
     const status = $("#speaking-status");
