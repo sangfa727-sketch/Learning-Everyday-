@@ -370,8 +370,10 @@ test("shared dictionary covers multiple senses used by Listening story context",
 test("context-aware word lookup selects the sense supported by the tapped sentence", () => {
   assert.match(lookupWordInContext("rose", "The river rose after heavy rain.").my, /မြင့်တက်လာခဲ့သည်/);
   assert.match(lookupWordInContext("rose", "A red rose grew in the garden.").my, /နှင်းဆီပန်း/);
+  assert.match(lookupWordInContext("looking", "Looking back, I learned from my mistake.").my, /အတိတ်ကို ပြန်လည်စဉ်းစားကြည့်ခြင်း/);
   assert.match(lookupWordInContext("back", "Looking back, I learned from my mistake.").my, /အတိတ်ကို ပြန်လည်စဉ်းစားကြည့်သည်/);
-  assert.match(lookupWordInContext("back", "She turned back and looked at the house.").my, /နောက်ဘက်/);
+  assert.match(lookupWordInContext("looked", "She looked back at the house.").my, /နောက်ဘက်သို့ လှည့်ကြည့်ခဲ့သည်/);
+  assert.match(lookupWordInContext("back", "She looked back at the house.").my, /နောက်ဘက်/);
   assert.match(lookupWordInContext("saw", "They saw the bird in the tree.").my, /မြင်တွေ့ခဲ့သည်/);
   assert.match(lookupWordInContext("saw", "The carpenter used a saw to cut wood.").my, /လွှ/);
   assert.match(lookupWordInContext("well", "The village well supplied water.").my, /ရေတွင်း/);
