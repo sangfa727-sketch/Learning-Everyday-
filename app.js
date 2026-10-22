@@ -329,9 +329,13 @@ function syncListeningView(page = currentPage()) {
   const library = $("#listening-library");
   const panel = $("#practice-panel");
   const back = $("#back-to-story-library");
+  const translationToggle = $("#toggle-story-translation");
+  const translationPanel = $("#story-translation");
   if (!library || !panel || !back) return;
   const route = location.hash.slice(1).split("/").filter(Boolean);
   if (page !== "listening") {
+    if (translationToggle) translationToggle.hidden = true;
+    if (translationPanel) translationPanel.hidden = true;
     library.hidden = true;
     panel.hidden = false;
     back.hidden = true;
@@ -346,6 +350,8 @@ function syncListeningView(page = currentPage()) {
   }
   const selected = LISTENING_STORIES.find((item) => item.id === route[1]);
   if (!selected) {
+    if (translationToggle) translationToggle.hidden = true;
+    if (translationPanel) translationPanel.hidden = true;
     stopStoryNarration();
     activeListeningStoryId = null;
     story = readingStory;
@@ -359,6 +365,8 @@ function syncListeningView(page = currentPage()) {
   }
   if (activeListeningStoryId !== selected.id) {
     if (activeListeningStoryId) stopStoryNarration();
+    if (translationPanel) translationPanel.hidden = true;
+    if (translationToggle) translationToggle.setAttribute("aria-expanded", "false");
     activeListeningStoryId = selected.id;
     story = selected.text;
     activeStoryTranslations = selected.paragraphTranslations || [];
@@ -369,10 +377,37 @@ function syncListeningView(page = currentPage()) {
   library.hidden = true;
   panel.hidden = false;
   back.hidden = false;
+  renderStoryTranslation(selected);
   $("#panel-title").textContent = language === "my" ? selected.myTitle : selected.title;
   $(".panel-heading .eyebrow").textContent = language === "my" ? "နားထောင်လေ့ကျင့်ခန်း" : "LISTENING STORY";
   $("#lesson-level-tag").textContent = `${selected.level} · ${selected.level === "A1" ? (language === "my" ? "အစပြုသူ" : "Beginner") : selected.level === "A2" ? (language === "my" ? "အခြေခံ" : "Elementary") : (language === "my" ? "အလယ်အလတ်" : "Intermediate")}`;
   $(".lesson-number").textContent = language === "my" ? "ပုံပြင်" : "STORY";
+}
+
+function renderStoryTranslation(selected) {
+  const toggle = $("#toggle-story-translation");
+  const panel = $("#story-translation");
+  const title = $("#story-translation-title");
+  const paragraphs = $("#story-translation-paragraphs");
+  if (!toggle || !panel || !title || !paragraphs) return;
+  toggle.hidden = !selected;
+  if (!selected) {
+    panel.hidden = true;
+    toggle.setAttribute("aria-expanded", "false");
+    return;
+  }
+  const isMyanmar = language === "my";
+  title.textContent = isMyanmar ? "မြန်မာဘာသာပြန်" : "Myanmar translation";
+  toggle.textContent = panel.hidden
+    ? (isMyanmar ? "မြန်မာဘာသာပြန်ကို ပြရန်" : "Show Myanmar translation")
+    : (isMyanmar ? "မြန်မာဘာသာပြန်ကို ဖျောက်ရန်" : "Hide Myanmar translation");
+  paragraphs.replaceChildren();
+  for (const translation of selected.paragraphTranslations || []) {
+    const paragraph = document.createElement("p");
+    paragraph.className = "story-translation-paragraph";
+    paragraph.textContent = translation;
+    paragraphs.append(paragraph);
+  }
 }
 
 function stopStoryNarration() {
@@ -610,6 +645,15 @@ document.querySelectorAll("[data-skill]").forEach((button) => button.addEventLis
   updateSkill(page);
 }));
 $("#language-toggle").addEventListener("click", () => setLanguage(language === "en" ? "my" : "en"));
+$("#toggle-story-translation").addEventListener("click", () => {
+  const panel = $("#story-translation");
+  panel.hidden = !panel.hidden;
+  $("#toggle-story-translation").setAttribute("aria-expanded", String(!panel.hidden));
+  if (activeListeningStoryId) {
+    const selected = LISTENING_STORIES.find((item) => item.id === activeListeningStoryId);
+    renderStoryTranslation(selected);
+  }
+});
 $("#play-button").addEventListener("click", speakStory);
 $("#back-to-story-library").addEventListener("click", () => {
   stopStoryNarration();
