@@ -176,7 +176,8 @@ function renderStory() {
     button.className = "lesson-word";
     button.textContent = part.text;
     button.setAttribute("aria-label", `Look up ${part.word}`);
-    button.addEventListener("click", () => showWord(part.word, paragraphIndex));
+    const wordParagraphIndex = paragraphIndex;
+    button.addEventListener("click", () => showWord(part.word, wordParagraphIndex));
     container.append(button);
   }
 }
