@@ -515,3 +515,86 @@ body[data-page="listening"] #practice-panel { max-width: 100%; }
   .story-card-summary { grid-column: 2; }
   .story-card-action { grid-column: 2; margin-top: 9px; }
 }
+
+
+/* Word lookup: instant device pronunciation and an explicit Myanmar translation line. */
+.word-myanmar-translation { margin: 8px 0 14px; padding: 10px 12px; border-radius: 10px; background: #f0f5eb; color: #315b40; line-height: 1.75; }
+.word-card-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.word-card-actions .secondary-button { min-height: 40px; }
+@media (max-width: 480px) { .word-card-actions { align-items: stretch; flex-direction: column; } .word-card-actions button { width: 100%; } }
+
+.word-context-translation { margin: 8px 0 14px; padding: 12px; border: 1px solid #dce7d8; border-radius: 10px; color: #334d3b; line-height: 1.8; white-space: normal; }
+
+
+/* Vocabulary is the focused replacement for the former Reading card. */
+body[data-page="reading"] #practice-panel{display:none}
+body[data-page="reading"] #curriculum-workbench .curriculum-card:nth-child(2){display:none}
+body[data-page="reading"] #curriculum-workbench .curriculum-grid{grid-template-columns:minmax(0,1fr)}
+body[data-page="reading"] #curriculum-workbench .curriculum-header .section-index{display:none}
+@media(max-width:720px){body[data-page="reading"] #curriculum-workbench .curriculum-grid{grid-template-columns:minmax(0,1fr)}}
+
+
+/* Live narration tracking: keep the word spoken by English voice visibly selected. */
+#lesson-text .lesson-word.speech-current-word {
+  position: relative;
+  border-radius: 5px;
+  background: #ffe58a;
+  color: #183b2c;
+  box-shadow: 0 0 0 2px #e2ad31;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  transition: background-color .08s ease, box-shadow .08s ease;
+}
+#lesson-text .lesson-word.speech-current-word:focus-visible {
+  outline: 3px solid #315b40;
+  outline-offset: 3px;
+}
+
+/* Optional full-story translation, aligned paragraph-by-paragraph with the English text. */
+.story-translation-tools { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+#toggle-story-translation { min-height: 42px; }
+.story-translation { margin: 14px 0 18px; padding: 18px; border: 1px solid #dce7d8; border-radius: 14px; background: #f7faf3; }
+.story-translation h3 { margin: 0 0 12px; color: #315b40; font-size: 15px; }
+.story-translation-paragraph { margin: 0; color: #3f5847; font-size: 14px; line-height: 1.95; }
+.story-translation-paragraph + .story-translation-paragraph { margin-top: 14px; padding-top: 14px; border-top: 1px solid #e3ebdd; }
+@media (max-width: 480px) {
+  .story-translation { padding: 14px; }
+  .story-translation-paragraph { font-size: 14px; }
+}
+
+.story-translation-number { display: inline-block; min-width: 1.8em; color: #66805c; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+
+/* Listening word lookup: keep meanings readable on wide screens and phones. */
+.word-card {
+  grid-template-columns: minmax(0, .72fr) minmax(0, 1.28fr);
+  align-items: start;
+}
+.word-card-head { grid-column: 1; }
+#word-definition { grid-column: 2; }
+.word-card .word-myanmar-translation,
+.word-card .word-context-translation {
+  grid-column: 1 / -1;
+  overflow-wrap: anywhere;
+}
+.word-card-actions {
+  grid-column: 1 / -1;
+  justify-content: flex-end;
+}
+@media (max-width: 760px) {
+  .word-card { grid-template-columns: minmax(0, 1fr); }
+  .word-card-head,
+  #word-definition,
+  .word-card .word-myanmar-translation,
+  .word-card .word-context-translation,
+  .word-card-actions {
+    grid-column: 1;
+    grid-row: auto;
+    min-width: 0;
+  }
+}
+.story-translation-paragraph {
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
