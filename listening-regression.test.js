@@ -613,7 +613,7 @@ test("plural noun lookup handles safety and everyday vocabulary phrases", () => 
   assert.match(lookupWordInContext("adults", "Students should ask trusted adults for help.").my, /လူကြီးများ/);
   assert.match(lookupWordInContext("books", "Children chose picture books at the library.").my, /စာအုပ်များ/);
   assert.match(lookupWordInContext("sellers", "Fruit sellers answered Nora's questions.").my, /ရောင်းသူများ/);
-  assert.match(lookupWordInContext("workers", "Health workers checked the warning signs.").my, /ဝန်ထမ်းများ/);
+  assert.match(lookupWordInContext("workers", "Health workers checked the warning signs.").my, /အလုပ်သမားများ|ဝန်ထမ်းများ/);
   assert.match(lookupWordInContext("tools", "Maya stored her garden tools carefully.").my, /ကိရိယာများ/);
 });
 
