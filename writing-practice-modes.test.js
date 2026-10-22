@@ -69,7 +69,7 @@ test("Tapping a story word exposes pronunciation and Myanmar meaning controls", 
   assert.match(html, /id="word-myanmar-translation"/);
   assert.match(app, /function pronounceWord\(word\)/);
   assert.match(app, /new SpeechSynthesisUtterance\(word\)/);
-  assert.match(app, /function showWord\\(word, paragraphIndex = 0\\)/);
+  assert.match(app, /function showWord\(word, paragraphIndex = 0\)/);
   assert.match(app, /entry\?\.my/);
   assert.match(app, /pronounceWord\(word\)/);
   assert.match(app, /#pronounce-word.*pronounceWord/);
@@ -82,7 +82,7 @@ test("Word lookup displays the selected story paragraph translation when availab
   assert.match(html, /id="word-context-translation"/);
   assert.match(app, /let activeStoryTranslations = \[\]/);
   assert.match(app, /activeStoryTranslations = selected\.paragraphTranslations \|\| \[\]/);
-  assert.match(app, /showWord\(part\.word, paragraphIndex\)/);
+  assert.match(app, /showWord\(part\.word, wordParagraphIndex\)/);
   assert.match(app, /activeStoryTranslations\[paragraphIndex\]/);
   assert.match(css, /\.word-context-translation/);
 });
