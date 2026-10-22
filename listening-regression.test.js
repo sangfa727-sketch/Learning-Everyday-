@@ -172,8 +172,8 @@ test("Listening reader renders one paragraph at a time with working previous/nex
   assert.match(app, /function getStoryParagraphs\(\)/);
   assert.match(app, /const paragraph = paragraphs\[currentStoryParagraphIndex\]/);
   assert.match(app, /currentStoryParagraphIndex = paragraph\.index/);
-  assert.match(app, /$("#story-next")\.addEventListener\("click"/);
-  assert.match(app, /$("#story-previous")\.addEventListener\("click"/);
+  assert.match(app, /\$\("#story-next"\)\.addEventListener\("click"/);
+  assert.match(app, /\$\("#story-previous"\)\.addEventListener\("click"/);
 });
 
 test("word meaning card is anchored as an overlay and closes on outside tap or Escape", () => {
