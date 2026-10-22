@@ -1,4 +1,4 @@
-import { lookupWord, lookupWordInContext, tokenizeStory, countCharacters, clampSpeechRate } from "./learning-core.js";
+import { lookupWord, lookupWordInContext, tokenizeStory, splitEnglishSentences, countCharacters, clampSpeechRate } from "./learning-core.js";
 import { readLocalValue, writeLocalValue } from "./local-state.js";
 import { extractPdfText } from "./pdf-import.js";
 
@@ -566,9 +566,9 @@ function pronounceWord(word) {
 }
 
 function sentenceAtOffset(paragraph, offset) {
-  const sentences = [...paragraph.matchAll(/[^.!?]+(?:[.!?]+|$)/g)];
-  const found = sentences.find((match) => offset >= match.index && offset <= match.index + match[0].length);
-  return found ? { text: found[0].trim(), index: sentences.indexOf(found) } : { text: paragraph, index: 0 };
+  const sentences = splitEnglishSentences(paragraph);
+  const found = sentences.find((sentence) => offset >= sentence.start && offset <= sentence.end);
+  return found ? { text: found.text, index: found.index } : { text: paragraph, index: 0 };
 }
 
 function showWord(word, paragraphIndex = 0) {
@@ -588,7 +588,7 @@ function showWord(word, paragraphIndex = 0) {
   if (contextTranslation) {
     const translatedParagraph = activeStoryTranslations[paragraphIndex] || "";
     const translatedSentences = translatedParagraph.split("။").map((part) => part.trim()).filter(Boolean).map((part) => part + "။");
-    const englishSentences = [...paragraph.matchAll(/[^.!?]+(?:[.!?]+|$)/g)].map((match) => match[0].trim()).filter(Boolean);
+    const englishSentences = splitEnglishSentences(paragraph);
     if (translatedParagraph && translatedSentences.length === englishSentences.length && translatedSentences[sentence.index]) {
       contextTranslation.textContent = "ဝါကျဘာသာပြန် — " + translatedSentences[sentence.index];
     } else {
