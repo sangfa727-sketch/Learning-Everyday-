@@ -69,7 +69,7 @@ test("Tapping a story word exposes pronunciation and Myanmar meaning controls", 
   assert.match(html, /id="word-myanmar-translation"/);
   assert.match(app, /function pronounceWord\(word\)/);
   assert.match(app, /new SpeechSynthesisUtterance\(word\)/);
-  assert.match(app, /function showWord\(word\)/);
+  assert.match(app, /function showWord\\(word, paragraphIndex = 0\\)/);
   assert.match(app, /entry\?\.my/);
   assert.match(app, /pronounceWord\(word\)/);
   assert.match(app, /#pronounce-word.*pronounceWord/);
