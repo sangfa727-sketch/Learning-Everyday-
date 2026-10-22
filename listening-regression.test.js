@@ -163,3 +163,30 @@ test("every Listening story has one non-empty Myanmar translation per English pa
     });
   }
 });
+
+
+test("Listening reader renders one paragraph at a time with working previous/next controls", () => {
+  assert.match(html, /id="story-pagination"[^>]*hidden/);
+  assert.match(html, /id="story-previous"/);
+  assert.match(html, /id="story-next"/);
+  assert.match(app, /function getStoryParagraphs\(\)/);
+  assert.match(app, /const paragraph = paragraphs\[currentStoryParagraphIndex\]/);
+  assert.match(app, /currentStoryParagraphIndex = paragraph\.index/);
+  assert.match(app, /$("#story-next")\.addEventListener\("click"/);
+  assert.match(app, /$("#story-previous")\.addEventListener\("click"/);
+});
+
+test("word meaning card is anchored as an overlay and closes on outside tap or Escape", () => {
+  assert.match(html, /id="word-sentence-context"/);
+  assert.match(app, /card\.classList\.add\("word-card-floating"\)/);
+  assert.match(app, /document\.addEventListener\("pointerdown"/);
+  assert.match(app, /event\.key === "Escape"/);
+  assert.match(css, /\.word-card\.word-card-floating\s*\{[^}]*position:\s*fixed/s);
+  assert.match(css, /\.word-card\.word-card-floating\s*\{[^}]*z-index:\s*1000/s);
+});
+
+test("sentence translation is shown only when sentence counts align; otherwise paragraph translation is labelled honestly", () => {
+  assert.match(app, /translatedSentences\.length === englishSentences\.length/);
+  assert.match(app, /ဝါကျဘာသာပြန်/);
+  assert.match(app, /စာပိုဒ်ဘာသာပြန်/);
+});
