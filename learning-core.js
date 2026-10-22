@@ -79,6 +79,7 @@ export function lookupWord(value, dictionary = DICTIONARY) {
 
 const CONTEXTUAL_SENSES = Object.freeze({
   rose: [
+    { test: /\b(ms|mr|mrs|miss|teacher|class)\s+rose\b/i, meaning: "Rose, a person's name", my: "ရို့စ် (လူအမည်)" },
     { test: /\b(river|water|level|flood|sun|temperature|price|number|smoke|mist|voice|hand|head|from .*seat|early)\b/i, meaning: "past tense of rise; moved upward or increased", my: "မြင့်တက်လာခဲ့သည်၊ မြင့်တက်ခဲ့သည်" },
     { test: /\b(garden|flower|petal|stem|bloom|red|pink|thorn|plant|bouquet|vase)\b/i, meaning: "a rose, a kind of flowering plant", my: "နှင်းဆီပန်း" }
   ],
@@ -99,6 +100,7 @@ const CONTEXTUAL_SENSES = Object.freeze({
     { test: /\b(means|mean|means that|means asking|means making|means doing)\b/i, meaning: "indicates or expresses an idea; involves", my: "ဆိုလိုသည်၊ ပါဝင်သည်" }
   ],
   well: [
+    { test: /\bwell[- ]intentioned\b/i, meaning: "having good intentions", my: "ရည်ရွယ်ချက်ကောင်းရှိသော" },
     { test: /\b(water|village|deep|dug|hole|bucket|drawn from)\b/i, meaning: "a deep hole from which water is obtained", my: "ရေတွင်း" },
     { test: /\b(healthy|sick|ill|feel|looks|doing|worked|spoke|performed|together)\b/i, meaning: "in a good or satisfactory way; healthy", my: "ကောင်းစွာ၊ ကျန်းမာသော" }
   ],
@@ -111,16 +113,19 @@ const CONTEXTUAL_SENSES = Object.freeze({
     { test: /\blooked back at\b/i, meaning: "turned one's eyes toward something behind", my: "နောက်ဘက်သို့ လှည့်ကြည့်ခဲ့သည်" }
   ],
   back: [
+    { test: /\bback at (school|home|work|the office)\b/i, meaning: "returned to a place", my: "ပြန်လည်ရောက်ရှိသောအခါ" },
+    { test: /\bon (its|his|her|their) back\b/i, meaning: "the rear side of a body or object", my: "နောက်ကျောဘက်တွင်" },
     { test: /\b(looking back(?: on\b|,\s*(?:i|we|they|she|he)\b)|look back on|thinking back)\b/i, meaning: "to think about or reflect on the past", my: "အတိတ်ကို ပြန်လည်စဉ်းစားကြည့်သည်" },
     { test: /\b(turned back|turn back|look back at|looked back at|looking back at|looked back toward|behind|back door|back of)\b/i, meaning: "the rear part; toward the rear", my: "နောက်ဘက်၊ နောက်သို့" }
   ],
   light: [
+    { test: /\blight (shower|rain|rainfall)\b/i, meaning: "small in amount or intensity", my: "မိုးဖွဲဖွဲ၊ မိုးနည်းနည်း" },
     { test: /\b(heavy|carry|weight|bag|basket|box)\b/i, meaning: "not heavy", my: "ပေါ့ပါးသော" },
     { test: /\b(sun|lamp|bright|dark|see|shine|torch)\b/i, meaning: "brightness that makes things visible", my: "အလင်းရောင်" }
   ],
   close: [
     { test: /\b(door|gate|window|shut|open|lid|book)\b/i, meaning: "to shut or cover an opening", my: "ပိတ်သည်" },
-    { test: /\b(near|distance|nearby|house|school|shop|friend)\b/i, meaning: "near in distance or relationship", my: "နီးသော၊ ရင်းနှီးသော" }
+    { test: /\b(near|distance|nearby|house|school|shop|friend|river|water|walkway|doorway|riverbank)\b/i, meaning: "near in distance or relationship", my: "နီးသော၊ ရင်းနှီးသော" }
   ],
   change: [
     { test: /\b(returned|coins|money|cash|pay|price)\b/i, meaning: "money returned after paying more than the cost", my: "ပြန်အမ်းငွေ" },
@@ -128,6 +133,7 @@ const CONTEXTUAL_SENSES = Object.freeze({
   ],
   present: [
     { test: /\b(gift|birthday|wrapped|gave|receive|Christmas)\b/i, meaning: "a gift", my: "လက်ဆောင်" },
+    { test: /\b(adult|teacher|parent|someone)\s+present\b|\bwith .* present\b/i, meaning: "being there at a particular time", my: "ရှိနေသော၊ ရောက်ရှိနေသော" },
     { test: /\b(attend|in the room|being|there|at school|currently)\b/i, meaning: "being in a place; existing now", my: "ရှိနေသော၊ လက်ရှိ" }
   ]
 });
