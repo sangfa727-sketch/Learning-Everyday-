@@ -190,3 +190,14 @@ test("sentence translation is shown only when sentence counts align; otherwise p
   assert.match(app, /ဝါကျဘာသာပြန်/);
   assert.match(app, /စာပိုဒ်ဘာသာပြန်/);
 });
+
+test("story-card navigation is committed before speech cleanup so cleanup errors cannot block opening", () => {
+  const start = app.indexOf('card.addEventListener("click", () => {', app.indexOf("function renderListeningLibrary()"));
+  const end = app.indexOf("\n    });", start);
+  assert.ok(start >= 0 && end > start, "story card click handler should exist");
+  const source = app.slice(start, end);
+  const navigation = source.indexOf('location.hash = `#/listening/${item.id}`;');
+  const cleanup = source.indexOf("stopStoryNarration();");
+  assert.ok(navigation >= 0 && cleanup > navigation, "route must change before speech cleanup");
+  assert.match(source, /try\s*\{\s*stopStoryNarration\(\);\s*\}\s*catch\s*\{/);
+});
