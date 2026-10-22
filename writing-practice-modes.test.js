@@ -152,6 +152,9 @@ test("Story narration tracks and visibly highlights the currently spoken word", 
   assert.match(app, /button\.dataset\.speechStart = String\(partStart\)/);
   assert.match(app, /button\.dataset\.speechEnd = String\(speechOffset\)/);
   assert.match(app, /utterance\.onboundary = \(event\) =>/);
+  assert.match(app, /let activeStoryUtterance = null/);
+  assert.match(app, /if \(activeStoryUtterance !== utterance\) return/);
+  assert.match(app, /activeStoryUtterance = null;\s*clearSpeechHighlight\(\);\s*\$\("#play-button"\)\.disabled = false;\s*window\.speechSynthesis\.cancel\(\)/);
   assert.match(app, /highlightSpeechWord\(event\.charIndex\)/);
   assert.match(app, /active\.setAttribute\("aria-current", "true"\)/);
   assert.match(css, /\.lesson-word\.speech-current-word/);
