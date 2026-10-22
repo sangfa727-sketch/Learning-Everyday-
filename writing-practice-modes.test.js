@@ -86,3 +86,14 @@ test("Word lookup displays the selected story paragraph translation when availab
   assert.match(app, /activeStoryTranslations\[paragraphIndex\]/);
   assert.match(css, /\.word-context-translation/);
 });
+
+
+test("Former Reading card is now a focused Vocabulary page, while stories stay in Listening", () => {
+  assert.match(html, /data-i18n="reading">Vocabulary<\/span>/);
+  assert.match(html, /data-i18n="listening">Listening<\/span>/);
+  assert.match(app, /title: "Vocabulary", description: "Explore everyday words by topic/);
+  assert.match(app, /if \(page === "reading"\)/);
+  assert.match(css, /body\[data-page="reading"\] #practice-panel\{display:none\}/);
+  assert.match(css, /body\[data-page="reading"\] #curriculum-workbench \.curriculum-card:nth-child\(2\)\{display:none\}/);
+  assert.match(app, /Stories to listen to and read/);
+});
