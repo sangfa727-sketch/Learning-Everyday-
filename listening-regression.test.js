@@ -40,7 +40,7 @@ test("Listening story selection accepts the existing joined text and legacy para
 test("paragraph translation refreshes during manual navigation and automatic narration", () => {
   assert.match(app, /function refreshCurrentStoryTranslation\(\) \{\s*const selected = LISTENING_STORIES\.find\(\(item\) => item\.id === activeListeningStoryId\);\s*if \(selected\) renderStoryTranslation\(selected\);\s*\}/);
   const speakStart = app.indexOf("function speakStory()");
-  const speakEnd = app.indexOf("\\nfunction startSpeakingPractice()", speakStart);
+  const speakEnd = app.indexOf("\nfunction startSpeakingPractice()", speakStart);
   const speak = app.slice(speakStart, speakEnd);
   assert.match(speak, /currentStoryParagraphIndex = paragraph\.index;[\s\S]*?renderStory\(\);\s*refreshCurrentStoryTranslation\(\);/);
   const prevStart = app.indexOf('$("#story-previous").addEventListener("click"');
