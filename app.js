@@ -424,14 +424,22 @@ function renderStoryTranslation(selected) {
     ? (isMyanmar ? "မြန်မာဘာသာပြန်ကို ပြရန်" : "Show Myanmar translation")
     : (isMyanmar ? "မြန်မာဘာသာပြန်ကို ဖျောက်ရန်" : "Hide Myanmar translation");
   paragraphs.replaceChildren();
-  for (const [index, translation] of (selected.paragraphTranslations || []).entries()) {
+  const translation = (selected.paragraphTranslations || [])[currentStoryParagraphIndex];
+  if (translation) {
     const paragraph = document.createElement("p");
     paragraph.className = "story-translation-paragraph";
     const number = document.createElement("span");
     number.className = "story-translation-number";
-    number.textContent = `${index + 1}.`;
+    number.textContent = `${currentStoryParagraphIndex + 1}.`;
     paragraph.append(number, document.createTextNode(` ${translation}`));
     paragraphs.append(paragraph);
+  } else {
+    const fallback = document.createElement("p");
+    fallback.className = "story-translation-paragraph";
+    fallback.textContent = language === "my"
+      ? "ဤစာပိုဒ်အတွက် ဘာသာပြန်မရရှိသေးပါ။"
+      : "Translation is not available for this paragraph yet.";
+    paragraphs.append(fallback);
   }
 }
 
@@ -509,6 +517,7 @@ function renderStory() {
     button.addEventListener("click", () => {
       activeWordButton = button;
       showWord(part.word, wordParagraphIndex);
+      pronounceWord(part.word);
     });
     container.append(button);
   }
@@ -527,6 +536,10 @@ function renderStory() {
   if (next) {
     next.disabled = currentStoryParagraphIndex >= paragraphs.length - 1;
     next.textContent = language === "my" ? "နောက်စာပိုဒ် →" : "Next →";
+  }
+  if (activeListeningStoryId) {
+    const selected = LISTENING_STORIES.find((item) => item.id === activeListeningStoryId);
+    if (selected) renderStoryTranslation(selected);
   }
 }
 
