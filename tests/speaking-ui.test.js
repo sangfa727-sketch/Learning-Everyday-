@@ -34,7 +34,7 @@ test("speaking UI keeps two topic cards per row on narrow screens and hides the 
 });
 
 test("speaking assets are included in the offline app shell with a new cache version", () => {
-  assert.match(worker, /learning-everyday-shell-v40/);
+  assert.match(worker, /learning-everyday-shell-v41/);
   assert.match(worker, /"\.\/speaking\.js"/);
   assert.match(worker, /"\.\/speaking-data\.js"/);
 });
