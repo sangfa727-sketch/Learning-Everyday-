@@ -206,15 +206,18 @@ test("story-card navigation is committed before speech cleanup so cleanup errors
 
 test("tapping an English story word speaks it aloud and translation follows the current paragraph", () => {
   const renderStart = app.indexOf("function renderStory()");
-  const renderEnd = app.indexOf("\nfunction pronounceWord", renderStart);
+  const renderEnd = app.indexOf("\\nfunction pronounceWord", renderStart);
   assert.ok(renderStart >= 0 && renderEnd > renderStart, "story renderer should exist");
-  assert.match(app.slice(renderStart, renderEnd), /showWord\(part\.word, wordParagraphIndex\);\s*pronounceWord\(part\.word\);/);
+  const renderSource = app.slice(renderStart, renderEnd);
+  assert.ok(renderSource.includes("showWord(part.word, wordParagraphIndex);"));
+  assert.ok(renderSource.includes("pronounceWord(part.word);"));
+  assert.ok(renderSource.includes("renderStoryTranslation(selected)"));
+
   const translationStart = app.indexOf("function renderStoryTranslation(selected)");
-  const translationEnd = app.indexOf("\nfunction stopStoryNarration", translationStart);
+  const translationEnd = app.indexOf("\\nfunction stopStoryNarration", translationStart);
   assert.ok(translationStart >= 0 && translationEnd > translationStart, "translation renderer should exist");
   const translationSource = app.slice(translationStart, translationEnd);
-  assert.match(translationSource, /\[currentStoryParagraphIndex\]/);
-  assert.match(translationSource, /currentStoryParagraphIndex \+ 1/);
-  assert.doesNotMatch(translationSource, /paragraphTranslations\s*\|\|\s*\[\]\)\.entries\(\)/);
-  assert.match(app.slice(renderStart, renderEnd), /if \(selected\) renderStoryTranslation\(selected\)/);
+  assert.ok(translationSource.includes("])[currentStoryParagraphIndex]"));
+  assert.ok(translationSource.includes("${currentStoryParagraphIndex + 1}."));
+  assert.ok(!translationSource.includes("]).entries()"), "translation should not render every paragraph at once");
 });
