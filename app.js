@@ -447,6 +447,11 @@ function renderStoryTranslation(selected) {
   }
 }
 
+function refreshCurrentStoryTranslation() {
+  const selected = LISTENING_STORIES.find((item) => item.id === activeListeningStoryId);
+  if (selected) renderStoryTranslation(selected);
+}
+
 function stopStoryNarration() {
   activeStoryUtterance = null;
   if ("speechSynthesis" in window) window.speechSynthesis.cancel();
@@ -750,6 +755,7 @@ function speakStory() {
       currentStoryParagraphIndex = paragraph.index;
       $("#word-card").hidden = true;
       renderStory();
+      refreshCurrentStoryTranslation();
     }
     const utterance = new SpeechSynthesisUtterance(paragraph.text);
     activeStoryUtterance = utterance;
@@ -834,6 +840,7 @@ $("#story-previous").addEventListener("click", () => {
   currentStoryParagraphIndex -= 1;
   $("#word-card").hidden = true;
   renderStory();
+  refreshCurrentStoryTranslation();
 });
 $("#story-next").addEventListener("click", () => {
   if (currentStoryParagraphIndex >= getStoryParagraphs().length - 1) return;
@@ -841,6 +848,7 @@ $("#story-next").addEventListener("click", () => {
   currentStoryParagraphIndex += 1;
   $("#word-card").hidden = true;
   renderStory();
+  refreshCurrentStoryTranslation();
 });
 $("#close-word").addEventListener("click", () => { $("#word-card").hidden = true; });
 document.addEventListener("pointerdown", (event) => {
