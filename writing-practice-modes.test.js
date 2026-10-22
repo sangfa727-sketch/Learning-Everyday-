@@ -53,7 +53,7 @@ test("Listening Practice opens with a story library before the story reader", ()
   assert.match(html, /id="listening-story-grid"/);
   assert.match(html, /id="back-to-story-library"[^>]*hidden/);
   assert.match(app, /const LISTENING_STORIES = \[/);
-  assert.equal((app.match(/\{\s*id: "/g) ?? []).length, 6);
+  assert.equal((app.match(/\{\s*id: "/g) ?? []).length, 7);
   assert.match(app, /function renderListeningLibrary\(\)/);
   assert.match(app, /function syncListeningView\(/);
   assert.match(app, /location\.hash = `#\/listening\/\$\{item\.id\}`/);
@@ -124,7 +124,7 @@ test("Offline dictionary includes key vocabulary from all listening stories", ()
 
 test("Expanded listening stories include further learning scenes and aligned Myanmar translations", () => {
   const storySection = app.slice(app.indexOf("const LISTENING_STORIES = ["), app.indexOf("function renderListeningLibrary"));
-  assert.equal((storySection.match(/paragraphTranslations: \[/g) ?? []).length, 6);
+  assert.equal((storySection.match(/paragraphTranslations: \[/g) ?? []).length, 7);
   assert.match(storySection, /careful observation was just as important as hard work/);
   assert.match(storySection, /buying fruit in season often meant better flavour/);
   assert.match(storySection, /asking who took a photograph, when it was taken/);
@@ -157,14 +157,14 @@ test("Story narration tracks and visibly highlights the currently spoken word", 
 
 test("The River That Remembered is a long story with one Myanmar translation per paragraph", () => {
   const start = app.indexOf('id: "river-remembers"');
-  const end = app.indexOf("\\n  }\\n];\\nconst translations =", start);
+  const end = app.indexOf("const translations =", start);
   assert.ok(start >= 0 && end > start);
   const story = app.slice(start, end);
   const textStart = story.indexOf("text: [");
   const textEnd = story.indexOf("].join", textStart);
   const textParts = [...story.slice(textStart, textEnd).matchAll(/"((?:[^"\\\\]|\\\\.)*)"/g)].map((match) => JSON.parse('"' + match[1] + '"'));
   const englishText = textParts.join(" ");
-  assert.ok(englishText.trim().split(/\\s+/).length >= 5000, "long story should contain at least 5,000 whitespace-separated English words");
+  assert.ok(englishText.trim().split(/\s+/).length >= 5000, "long story should contain at least 5,000 whitespace-separated English words");
   const translationStart = story.indexOf("paragraphTranslations: [");
   const translationText = story.slice(translationStart);
   const translations = [...translationText.matchAll(/"((?:[^"\\\\]|\\\\.)*)"/g)].map((match) => JSON.parse('"' + match[1] + '"'));
@@ -175,6 +175,6 @@ test("The River That Remembered is a long story with one Myanmar translation per
 
 test("Offline dictionary includes vocabulary for the long river story", () => {
   for (const word of ["watershed", "wetland", "resilience", "drainage", "gauge", "upstream", "downstream", "rainfall", "verify", "reliable", "evacuate", "forecast", "vulnerable", "coordinate", "maintenance", "survey"]) {
-    assert.match(fallbackDictionarySource, new RegExp("\\\\b" + word + ": \\\\{"));
+    assert.match(fallbackDictionarySource, new RegExp("\\b" + word + ": \\{"));
   }
 });
