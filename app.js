@@ -316,8 +316,13 @@ function renderListeningLibrary() {
     action.textContent = isMyanmar ? "ဖတ်ရှုနားထောင်ရန် →" : "Read & listen →";
     card.append(art, meta, title, summary, action);
     card.addEventListener("click", () => {
-      stopStoryNarration();
+      // Commit navigation first so a device-specific speech API error cannot block story opening.
       location.hash = `#/listening/${item.id}`;
+      try {
+        stopStoryNarration();
+      } catch {
+        // Navigation must still succeed even if speech cleanup fails on this browser.
+      }
     });
     grid.append(card);
   }
