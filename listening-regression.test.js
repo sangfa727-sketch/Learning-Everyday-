@@ -382,6 +382,13 @@ test("context-aware word lookup selects the sense supported by the tapped senten
   assert.match(lookupWordInContext("change", "Mr Lin returned the correct change.").my, /ပြန်အမ်းငွေ/);
   assert.match(lookupWordInContext("change", "She changed her daily routine.").my, /ပြောင်းလဲသည်/);
   assert.match(lookupWordInContext("means", "Caring for nature means asking questions.").my, /ဆိုလိုသည်/);
+  assert.match(lookupWordInContext("rose", "Ms Rose's class visited the town museum.").my, /လူအမည်/);
+  assert.match(lookupWordInContext("well", "a well-intentioned warning").my, /ရည်ရွယ်ချက်ကောင်း/);
+  assert.match(lookupWordInContext("light", "After a light shower, streams ran across the earth.").my, /မိုးဖွဲဖွဲ/);
+  assert.match(lookupWordInContext("close", "new houses were built close to the water").my, /နီးသော/);
+  assert.match(lookupWordInContext("present", "With their teacher present, they spoke to shopkeepers.").my, /ရောက်ရှိနေသော/);
+  assert.match(lookupWordInContext("back", "Back at school, the class shared what they had learned.").my, /ပြန်လည်ရောက်ရှိသောအခါ/);
+  assert.match(lookupWordInContext("back", "the year written on its back").my, /နောက်ကျောဘက်တွင်/);
 });
 
 test("shared dictionary preserves common ambiguous word senses found in Listening stories", () => {
