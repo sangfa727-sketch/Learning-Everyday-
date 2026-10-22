@@ -769,3 +769,22 @@ test("contextual dictionary distinguishes looking at something from looking a ce
   assert.match(changedLives.meaning, /affected or altered people's lives/);
   assert.match(changedLives.my, /ဘဝများကို ပြောင်းလဲစေခဲ့သည်/);
 });
+
+
+test("river-story vocabulary distinguishes a staff gauge from school staff and a drainage screen from a display screen", () => {
+  const gauge = lookupWordInContext("staff", "Ms Khin showed them a safe staff gauge fixed beside a protected viewing platform.");
+  assert.match(gauge.meaning, /marked pole or measuring device/);
+  assert.match(gauge.my, /ရေအမြင့်တိုင်းတာရန်/);
+
+  const workers = lookupWordInContext("staff", "The school staff checked the emergency plan.");
+  assert.match(workers.meaning, /people who work for an organisation/);
+  assert.match(workers.my, /ဝန်ထမ်းများ/);
+
+  const drainScreen = lookupWordInContext("screen", "The town council agreed to repair the damaged drainage screen.");
+  assert.match(drainScreen.meaning, /grate or barrier/);
+  assert.match(drainScreen.my, /ဇကာကာ/);
+
+  const displayScreen = lookupWordInContext("screen", "She looked at the computer screen.");
+  assert.match(displayScreen.meaning, /surface that displays images or information/);
+  assert.match(displayScreen.my, /မျက်နှာပြင်/);
+});
