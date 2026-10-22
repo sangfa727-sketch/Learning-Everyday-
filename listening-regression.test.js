@@ -72,7 +72,7 @@ function findBalancedBlock(source, start, openChar, closeChar) {
     const char = source[index];
     if (quote) {
       if (escaped) escaped = false;
-      else if (char === "\\\\") escaped = true;
+      else if (char === "\\") escaped = true;
       else if (char === quote) quote = null;
       continue;
     }
@@ -95,7 +95,7 @@ function countArrayStringEntries(source, property) {
   const arrayStart = source.indexOf("[", propertyIndex);
   const arraySource = findBalancedBlock(source, arrayStart, "[", "]");
   assert.ok(arraySource, `Unclosed ${property} array`);
-  return [...arraySource.matchAll(/"(?:\\\\.|[^"\\\\])*"/g)].map(([entry]) => JSON.parse(entry));
+  return [...arraySource.matchAll(/"(?:\\.|[^"\\])*"/g)].map(([entry]) => JSON.parse(entry));
 }
 
 test("every Listening story has one non-empty Myanmar translation per English paragraph", () => {
@@ -114,7 +114,7 @@ test("every Listening story has one non-empty Myanmar translation per English pa
     const char = storiesSource[index];
     if (quote) {
       if (escaped) escaped = false;
-      else if (char === "\\\\") escaped = true;
+      else if (char === "\\") escaped = true;
       else if (char === quote) quote = null;
       continue;
     }
