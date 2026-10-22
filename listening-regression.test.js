@@ -62,3 +62,96 @@ test("Listening word lookup remains readable and non-overlapping on mobile", () 
   assert.match(css, /\.word-card \.word-myanmar-translation,\s*\.word-card \.word-context-translation,\s*\.word-card-actions\s*\{\s*grid-column:\s*1;\s*grid-row:\s*auto/);
   assert.match(css, /\.story-translation-paragraph\s*\{[^}]*overflow-wrap:\s*anywhere/s);
 });
+
+
+function findBalancedBlock(source, start, openChar, closeChar) {
+  let depth = 0;
+  let quote = null;
+  let escaped = false;
+  for (let index = start; index < source.length; index += 1) {
+    const char = source[index];
+    if (quote) {
+      if (escaped) escaped = false;
+      else if (char === "\\\\") escaped = true;
+      else if (char === quote) quote = null;
+      continue;
+    }
+    if (char === "\"" || char === "'" || char === "`") {
+      quote = char;
+      continue;
+    }
+    if (char === openChar) depth += 1;
+    if (char === closeChar) {
+      depth -= 1;
+      if (depth === 0) return source.slice(start, index + 1);
+    }
+  }
+  return "";
+}
+
+function countArrayStringEntries(source, property) {
+  const propertyIndex = source.indexOf(property + ": [");
+  assert.ok(propertyIndex >= 0, `Missing ${property} array`);
+  const arrayStart = source.indexOf("[", propertyIndex);
+  const arraySource = findBalancedBlock(source, arrayStart, "[", "]");
+  assert.ok(arraySource, `Unclosed ${property} array`);
+  return [...arraySource.matchAll(/"(?:\\\\.|[^"\\\\])*"/g)].map(([entry]) => JSON.parse(entry));
+}
+
+test("every Listening story has one non-empty Myanmar translation per English paragraph", () => {
+  const storiesStart = app.indexOf("const LISTENING_STORIES = [");
+  assert.ok(storiesStart >= 0, "Listening story collection should exist");
+  const arrayStart = app.indexOf("[", storiesStart);
+  const storiesSource = findBalancedBlock(app, arrayStart, "[", "]");
+  assert.ok(storiesSource, "Listening story collection should be closed");
+
+  const storyBlocks = [];
+  let quote = null;
+  let escaped = false;
+  let objectDepth = 0;
+  let objectStart = -1;
+  for (let index = 0; index < storiesSource.length; index += 1) {
+    const char = storiesSource[index];
+    if (quote) {
+      if (escaped) escaped = false;
+      else if (char === "\\\\") escaped = true;
+      else if (char === quote) quote = null;
+      continue;
+    }
+    if (char === "\"" || char === "'" || char === "`") {
+      quote = char;
+      continue;
+    }
+    if (char === "{") {
+      if (objectDepth === 0) objectStart = index;
+      objectDepth += 1;
+    } else if (char === "}") {
+      objectDepth -= 1;
+      if (objectDepth === 0 && objectStart >= 0) {
+        storyBlocks.push(storiesSource.slice(objectStart, index + 1));
+        objectStart = -1;
+      }
+    }
+  }
+
+  assert.ok(storyBlocks.length > 0, "At least one Listening story should be defined");
+  const storyIds = new Set();
+  for (const block of storyBlocks) {
+    const id = block.match(/\\bid:\\s*"([^"]+)"/)?.[1];
+    assert.ok(id, "Each Listening story should have an ID");
+    assert.ok(!storyIds.has(id), `Duplicate Listening story ID: ${id}`);
+    storyIds.add(id);
+
+    const englishParagraphs = countArrayStringEntries(block, "text");
+    const translations = countArrayStringEntries(block, "paragraphTranslations");
+    assert.ok(englishParagraphs.length > 0, `${id} should have English paragraphs`);
+    assert.equal(
+      translations.length,
+      englishParagraphs.length,
+      `${id} must have one Myanmar translation for each English paragraph`
+    );
+    translations.forEach((translation, index) => {
+      assert.ok(translation.trim().length > 0, `${id} paragraph ${index + 1} translation must not be empty`);
+    });
+  }
+});
