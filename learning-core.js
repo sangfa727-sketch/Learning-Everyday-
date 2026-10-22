@@ -211,6 +211,20 @@ const CONTEXTUAL_SENSES = Object.freeze({
   ],
   mattered: [
     { test: /\b(?:open area|area|place|safety|evidence|observation|community)\b.*\bmattered\b|\bmattered\b.*\b(?:important|difference|effect)\b/i, meaning: "was important or had an effect", my: "အရေးပါခဲ့သည်" }
+  ],
+  meeting: [
+    { test: /\bmeeting point\b/i, meaning: "a place where people arrange to meet", my: "တွေ့ဆုံရာနေရာ၊ စုဝေးရာနေရာ" }
+  ],
+  drinking: [
+    { test: /\bdrinking[- ]water\b/i, meaning: "water intended for people to drink", my: "သောက်သုံးရေ" }
+  ],
+  standing: [
+    { test: /\bstill standing\b|\b(?:bridge|building|wall|structure|tree)\s+(?:was|were|is|are)\s+standing\b/i, meaning: "remaining upright and not having fallen", my: "မပြိုမလဲ ကျန်ရှိနေသော" },
+    { test: /\bstanding\b/i, meaning: "being upright on one's feet", my: "ရပ်နေခြင်း" }
+  ],
+  moving: [
+    { test: /\bwater moving\b|\bmoving water\b|\bwater\s+(?:moved|moves|flowed)\b/i, meaning: "water flowing or changing position", my: "စီးဆင်းနေသော၊ ရွေ့လျားနေသော" },
+    { test: /\bmoving (?:the|a|some|these|those|books|furniture|goods)\b/i, meaning: "taking something to another place", my: "ရွှေ့ပြောင်းခြင်း" }
   ]
 });
 
