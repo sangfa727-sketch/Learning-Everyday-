@@ -1,4 +1,4 @@
-import { lookupWord, tokenizeStory, countCharacters, clampSpeechRate } from "./learning-core.js";
+import { lookupWord, lookupWordInContext, tokenizeStory, countCharacters, clampSpeechRate } from "./learning-core.js";
 import { readLocalValue, writeLocalValue } from "./local-state.js";
 import { extractPdfText } from "./pdf-import.js";
 
@@ -574,12 +574,12 @@ function sentenceAtOffset(paragraph, offset) {
 function showWord(word, paragraphIndex = 0) {
   const wordButton = activeWordButton;
   activeWordParagraphIndex = paragraphIndex;
-  const entry = lookupWord(word);
   const paragraphs = getStoryParagraphs();
   const paragraph = paragraphs[paragraphIndex] || "";
   const paragraphStart = getStoryParagraphStart(paragraphIndex, paragraphs);
   const localOffset = wordButton ? Math.max(0, Number(wordButton.dataset.speechStart) - paragraphStart) : 0;
   const sentence = sentenceAtOffset(paragraph, localOffset);
+  const entry = lookupWordInContext(word, sentence.text);
   $("#word-title").textContent = word;
   $("#word-definition").textContent = entry ? entry.meaning + ". " + entry.usage : translations[language].unknown;
   const sentenceContext = $("#word-sentence-context");
