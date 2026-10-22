@@ -62,6 +62,23 @@ test("Listening narration queues paragraph chunks with story-global highlight of
   assert.match(source, /utterance\.onend = \(\) => \{\s*if \(activeStoryUtterance !== utterance\) return;\s*speakNextParagraph\(\);/);
 });
 
+test("Listening narration falls back to approximate word highlighting when TTS omits boundary events", () => {
+  const start = app.indexOf("function speakStory()");
+  const end = app.indexOf("\nfunction startSpeakingPractice()", start);
+  const source = app.slice(start, end);
+  assert.match(source, /let receivedBoundaryEvent = false/);
+  assert.match(source, /estimatedDurationMs = Math\.max\(/);
+  assert.match(source, /activeSpeechHighlightTimer = window\.setInterval\(/);
+  assert.match(source, /if \(receivedBoundaryEvent\) \{\s*clearSpeechHighlightTimer\(\);\s*return;/);
+  assert.match(source, /receivedBoundaryEvent = true;\s*clearSpeechHighlightTimer\(\);\s*highlightSpeechWord/);
+  assert.match(source, /utterance\.onend = \(\) => \{\s*if \(activeStoryUtterance !== utterance\) return;\s*clearSpeechHighlightTimer\(\);\s*speakNextParagraph\(\);/);
+  assert.match(source, /utterance\.onerror = \(\) => \{\s*if \(activeStoryUtterance !== utterance\) return;\s*clearSpeechHighlightTimer\(\);/);
+  assert.match(app, /function clearSpeechHighlightTimer\(\)/);
+  const stopStart = app.indexOf("function stopStoryNarration()");
+  const stopEnd = app.indexOf("\nfunction clearSpeechHighlight()", stopStart);
+  assert.match(app.slice(stopStart, stopEnd), /clearSpeechHighlightTimer\(\)/);
+});
+
 test("spoken-word highlighting is visibly styled, accessible, and scrolls into view", () => {
   const start = app.indexOf("function highlightSpeechWord(charIndex)");
   const end = app.indexOf("\nfunction getStoryParagraphs()", start);
@@ -828,7 +845,7 @@ test("tapping another story word dismisses the open card without opening a repla
 
 test("service worker refreshes the app shell cache and includes the shared offline dictionary", async () => {
   const sw = await readFile(new URL("./sw.js", import.meta.url), "utf8");
-  assert.match(sw, /CACHE_NAME\s*=\s*"learning-everyday-shell-v41"/);
+  assert.match(sw, /CACHE_NAME\s*=\s*"learning-everyday-shell-v42"/);
   assert.match(sw, /APP_SHELL\s*=\s*\[[^\]]*"\.\/dictionary\.js"/s);
 });
 
