@@ -239,3 +239,18 @@ test("tapping a Listening story card immediately renders the selected story read
   assert.ok(routeStart >= 0 && routeEnd > routeStart, "story route renderer should exist");
   assert.match(app.slice(routeStart, routeEnd), /library\.hidden = true;\s*panel\.hidden = false;\s*back\.hidden = false;/);
 });
+
+
+test("Listening word lookup prioritizes Myanmar meaning and includes common Maya story vocabulary", async () => {
+  const html = await readFile(new URL("./index.html", import.meta.url), "utf8");
+  const core = await readFile(new URL("./learning-core.js", import.meta.url), "utf8");
+  const head = html.indexOf('<div class="word-card-head">');
+  const meaning = html.indexOf('id="word-myanmar-translation"', head);
+  const definition = html.indexOf('id="word-definition"', head);
+  assert.ok(head >= 0 && meaning > head && definition > meaning, "Myanmar meaning should appear directly after the selected word, before English definition");
+  for (const [word, meaningText] of [["small", "သေးငယ်သော"], ["house", "အိမ်"], ["garden", "ပန်းပင်"]]) {
+    const entry = core.match(new RegExp("\\b" + word + ": \\{[^}]*my: \\"([^\\"]+)\\""));
+    assert.ok(entry, "offline dictionary should define " + word);
+    assert.ok(entry[1].includes(meaningText), word + " should have a Myanmar meaning");
+  }
+});
