@@ -504,3 +504,51 @@ test("shared dictionary contains no duplicate English headword declarations", ()
   }
   assert.deepEqual(duplicates, [], "duplicate headwords cause silent last-entry-wins translation changes");
 });
+
+test("sentence-by-sentence Myanmar translation aligns with every English sentence in all Listening stories", () => {
+  const storiesStart = app.indexOf("const LISTENING_STORIES = [");
+  const arrayStart = app.indexOf("[", storiesStart);
+  const storiesSource = findBalancedBlock(app, arrayStart, "[", "]");
+  const storyBlocks = [];
+  let quote = null;
+  let escaped = false;
+  let depth = 0;
+  let objectStart = -1;
+  for (let index = 0; index < storiesSource.length; index += 1) {
+    const char = storiesSource[index];
+    if (quote) {
+      if (escaped) escaped = false;
+      else if (char === "\\\\") escaped = true;
+      else if (char === quote) quote = null;
+      continue;
+    }
+    if (char === '"' || char === "'" || char === "`") {
+      quote = char;
+      continue;
+    }
+    if (char === "{") {
+      if (depth === 0) objectStart = index;
+      depth += 1;
+    } else if (char === "}") {
+      depth -= 1;
+      if (depth === 0 && objectStart >= 0) {
+        storyBlocks.push(storiesSource.slice(objectStart, index + 1));
+        objectStart = -1;
+      }
+    }
+  }
+
+  assert.equal(storyBlocks.length, 7, "all seven Listening stories should be checked");
+  for (const block of storyBlocks) {
+    const id = block.match(/id:\\s*"([^"]+)"/)?.[1] ?? "unknown";
+    const english = countArrayStringEntries(block, "text");
+    const myanmar = countArrayStringEntries(block, "paragraphTranslations");
+    assert.equal(myanmar.length, english.length, id + " should translate every paragraph");
+    for (let index = 0; index < english.length; index += 1) {
+      const englishCount = splitEnglishSentences(english[index]).length;
+      const myanmarCount = myanmar[index].split(/[။.]+/).map((part) => part.trim()).filter(Boolean).length;
+      assert.equal(myanmarCount, englishCount, id + " paragraph " + (index + 1) + " must have one Myanmar translation segment per English sentence");
+    }
+  }
+});
+
