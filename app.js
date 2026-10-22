@@ -318,6 +318,10 @@ function renderListeningLibrary() {
     card.addEventListener("click", () => {
       // Commit navigation first so a device-specific speech API error cannot block story opening.
       location.hash = `#/listening/${item.id}`;
+      // Render immediately instead of relying only on a later hashchange event.
+      // This guarantees the reader panel opens even if a webview delays hashchange.
+      renderPage();
+      window.scrollTo({ top: 0, behavior: "auto" });
       try {
         stopStoryNarration();
       } catch {
