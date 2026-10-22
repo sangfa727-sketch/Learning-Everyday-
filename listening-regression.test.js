@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { DICTIONARY, lookupWord } from "./learning-core.js";
+import { DICTIONARY, lookupWord, tokenizeStory } from "./learning-core.js";
 import { readFile } from "node:fs/promises";
 
 const app = await readFile(new URL("./app.js", import.meta.url), "utf8");
@@ -423,4 +423,27 @@ test("shared dictionary covers key vocabulary from The River That Remembered", (
     assert.ok(entry.usage.trim(), word + " should have an example sentence");
     assert.ok(entry.my.trim(), word + " should have a Myanmar meaning");
   }
+});
+
+
+test("every tappable word in The River That Remembered resolves to an offline dictionary entry", () => {
+  const storyStart = app.indexOf('id: "river-remembers"');
+  assert.ok(storyStart >= 0, "River story should exist in Listening");
+  const storyEnd = app.indexOf("\\n  },", storyStart);
+  const story = app.slice(storyStart, storyEnd);
+  const textStart = story.indexOf("text: [");
+  const textEnd = story.indexOf("].join", textStart);
+  assert.ok(textStart >= 0 && textEnd > textStart, "River story text should be readable by the regression check");
+  const paragraphs = [...story.slice(textStart, textEnd).matchAll(/^\\s*("(?:\\\\.|[^"\\\\])*")\\s*,?\\s*$/gm)]
+    .map((match) => JSON.parse(match[1]));
+  assert.equal(paragraphs.length, 35, "River story paragraphs should remain available for vocabulary audit");
+  const missing = [...new Set(tokenizeStory(paragraphs.join(" ")).filter((token) => token.word).map((token) => token.word).filter((word) => !lookupWord(word)))];
+  assert.deepEqual(missing, [], "Every clickable River story word must have an offline dictionary entry");
+});
+
+test("curly apostrophe possessives remain tappable and reuse the base-word meaning", () => {
+  const tokens = tokenizeStory("Lina’s notebook and the river’s level.");
+  assert.equal(tokens.find((token) => token.text === "Lina’s").word, "lina's");
+  assert.equal(lookupWord("Lina’s"), DICTIONARY.lina);
+  assert.equal(lookupWord("river’s"), DICTIONARY.river);
 });
