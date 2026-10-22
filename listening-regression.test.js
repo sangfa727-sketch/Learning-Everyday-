@@ -620,6 +620,15 @@ test("context-aware lookup distinguishes address nouns and verbs and plural noun
   assert.match(lookupWordInContext("mistakes", "The town learned from its mistakes.").my, /အမှားများ/);
 });
 
+test("common Listening participles and gerunds have standalone dictionary entries", () => {
+  assert.match(lookupWord("rising")?.my ?? "", /မြင့်တက်လာသော/);
+  assert.match(lookupWord("missing")?.my ?? "", /ပျောက်ဆုံးနေသော/);
+  assert.match(lookupWord("meeting")?.my ?? "", /အစည်းအဝေး/);
+  assert.match(lookupWord("recording")?.my ?? "", /မှတ်တမ်းတင်ခြင်း/);
+  assert.match(lookupWord("learning")?.my ?? "", /သင်ယူခြင်း/);
+  assert.match(lookupWord("children")?.my ?? "", /^ကလေးများ$/);
+});
+
 test("sentence-by-sentence Myanmar translation aligns with every English sentence in all Listening stories", () => {
   const storiesStart = app.indexOf("const LISTENING_STORIES = [");
   const arrayStart = app.indexOf("[", storiesStart);
