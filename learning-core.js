@@ -250,6 +250,7 @@ function pluralNounMeaning(value, context, entry, dictionary) {
     "young", "healthy", "damaged", "public", "important", "reliable", "official", "remaining", "suitable",
     "simple", "short", "long", "easy", "difficult", "careful", "useful", "accurate", "safe", "safer", "correct", "right", "wrong", "clearer", "private", "home", "written", "spoken", "necessary", "possible", "first", "second", "last", "next", "additional", "wooden", "firm", "ripe", "shallow", "quiet", "red", "yellow", "green", "blue", "brown", "white", "black", "grey", "gray", "pink", "orange", "separate", "basic", "older", "younger", "fresh", "cold", "warm", "strong", "weak", "busy", "crowded", "narrow", "wide", "clean", "dirty", "dry", "wet", "high", "low",
     "native", "different", "various", "visible", "common", "early", "current", "flood", "river", "town",
+    "trusted", "responsible", "experienced", "shop", "fruit", "book", "picture", "science", "safety", "library", "garden", "warning", "health", "meeting",
     "school", "family", "community", "nearby", "certain", "clear", "market", "water-level", "high-water",
     "and", "or", "but", "while", "with", "among", "between", "including", "from", "to", "of", "for", "by",
     "near", "beside", "around", "above", "below", "under", "across", "through", "after", "before", "during",
