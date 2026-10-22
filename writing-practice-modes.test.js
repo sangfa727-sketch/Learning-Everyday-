@@ -140,3 +140,17 @@ test("Expanded listening vocabulary remains available offline", () => {
     assert.match(fallbackDictionarySource, new RegExp("\\b" + word + ": \\{"));
   }
 });
+
+
+test("Story narration tracks and visibly highlights the currently spoken word", () => {
+  assert.match(app, /function clearSpeechHighlight\(\)/);
+  assert.match(app, /function highlightSpeechWord\(charIndex\)/);
+  assert.match(app, /button\.dataset\.speechStart = String\(partStart\)/);
+  assert.match(app, /button\.dataset\.speechEnd = String\(speechOffset\)/);
+  assert.match(app, /utterance\.onboundary = \(event\) =>/);
+  assert.match(app, /highlightSpeechWord\(event\.charIndex\)/);
+  assert.match(app, /active\.setAttribute\("aria-current", "true"\)/);
+  assert.match(css, /\.lesson-word\.speech-current-word/);
+  assert.match(css, /background: #ffe58a/);
+  assert.match(app, /active\.scrollIntoView\(\{ block: "nearest", behavior: "smooth" \}\)/);
+});
