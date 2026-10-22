@@ -132,6 +132,7 @@ const CONTEXTUAL_SENSES = Object.freeze({
     { test: /\b(change|routine|plan|weather|become|different|decide|changed)\b/i, meaning: "to make or become different", my: "ပြောင်းလဲသည်၊ ပြောင်းလဲမှု" }
   ],
   present: [
+    { test: /\b(present|presented|presenting)\b.{0,100}\b(findings|results|report|information|proposal|map|idea)\b/i, meaning: "to show or explain information to others", my: "တင်ပြသည်" },
     { test: /\b(gift|birthday|wrapped|gave|receive|Christmas)\b/i, meaning: "a gift", my: "လက်ဆောင်" },
     { test: /\b(adult|teacher|parent|someone)\s+present\b|\bwith .* present\b/i, meaning: "being there at a particular time", my: "ရှိနေသော၊ ရောက်ရှိနေသော" },
     { test: /\b(attend|in the room|being|there|at school|currently)\b/i, meaning: "being in a place; existing now", my: "ရှိနေသော၊ လက်ရှိ" }
