@@ -44,8 +44,8 @@ test("stale speech events cannot change the current playback or highlight state"
 test("Listening translation control exists and keeps its expanded state synchronized", () => {
   assert.match(html, /id="toggle-story-translation"/);
   assert.match(html, /id="story-translation"[^>]*hidden/);
-  const start = app.indexOf('$("\#toggle-story-translation").addEventListener("click"');
-  const end = app.indexOf('\n$("\#play-button")', start);
+  const start = app.indexOf('$("#toggle-story-translation").addEventListener("click"');
+  const end = app.indexOf('\n$("#play-button")', start);
   assert.ok(start >= 0 && end > start, "translation toggle click handler should exist");
   const source = app.slice(start, end);
   assert.match(source, /panel\.hidden = !panel\.hidden/);
