@@ -606,7 +606,7 @@ test("plural noun lookup handles adjective-led story phrases", () => {
   assert.match(lookupWordInContext("questions", "They prepared a short questionnaire with simple questions.").my, /မေးခွန်းများ/);
   assert.match(lookupWordInContext("apples", "Nora picked firm apples without bruises.").my, /ပန်းသီးများ/);
   assert.match(lookupWordInContext("desks", "Children learned in a classroom with wooden desks.").my, /စားပွဲများ/);
-  assert.match(lookupWordInContext("routes", "The map showed safe routes to higher ground.").my, /လမ်းများ/);
+  assert.match(lookupWordInContext("routes", "The map showed safe routes to higher ground.").my, /လမ်းကြောင်းများ/);
 });
 
 test("context-aware lookup preserves plural nouns without pluralizing third-person verbs", () => {
