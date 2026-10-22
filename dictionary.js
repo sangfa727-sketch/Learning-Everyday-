@@ -1,4 +1,5 @@
 export const DICTIONARY = Object.freeze({
+  children: { meaning: "plural of child; young people who are not yet adults", usage: "Children listened to stories at the library.", my: "ကလေးများ" },
   meeting: { meaning: "a gathering of people to discuss or decide something", usage: "The town meeting began after lunch.", my: "အစည်းအဝေး" },
   learning: { meaning: "the process of gaining knowledge or a skill", usage: "Learning often begins with a question.", my: "သင်ယူခြင်း၊ သင်ယူနေခြင်း" },
   making: { meaning: "the act of creating or doing something", usage: "Making a careful plan takes time.", my: "ပြုလုပ်ခြင်း၊ ဖန်တီးခြင်း" },
