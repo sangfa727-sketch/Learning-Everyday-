@@ -297,8 +297,6 @@ export function lookupWordInContext(value, context = "", dictionary = DICTIONARY
       .find((headword) => dictionary[headword] === entry);
     if (contextualHeadword) senses = CONTEXTUAL_SENSES[contextualHeadword];
   }
-  if (!senses) return entry;
-
   const sentence = String(context ?? "");
   const selected = senses?.find((sense) => sense.test.test(sentence));
   const resolved = selected ? { ...entry, meaning: selected.meaning, my: selected.my } : entry;
