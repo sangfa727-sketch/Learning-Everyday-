@@ -542,3 +542,15 @@ body[data-page="listening"] #practice-panel { max-width: 100%; }
   outline: 3px solid #315b40;
   outline-offset: 3px;
 }
+
+/* Optional full-story translation, aligned paragraph-by-paragraph with the English text. */
+.story-translation-tools { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+#toggle-story-translation { min-height: 42px; }
+.story-translation { margin: 14px 0 18px; padding: 18px; border: 1px solid #dce7d8; border-radius: 14px; background: #f7faf3; }
+.story-translation h3 { margin: 0 0 12px; color: #315b40; font-size: 15px; }
+.story-translation-paragraph { margin: 0; color: #3f5847; font-size: 14px; line-height: 1.95; }
+.story-translation-paragraph + .story-translation-paragraph { margin-top: 14px; padding-top: 14px; border-top: 1px solid #e3ebdd; }
+@media (max-width: 480px) {
+  .story-translation { padding: 14px; }
+  .story-translation-paragraph { font-size: 14px; }
+}
