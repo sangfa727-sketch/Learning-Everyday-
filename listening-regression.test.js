@@ -602,6 +602,13 @@ test("context-aware lookup resolves gerunds and participles in common Listening 
   assert.match(lookupWordInContext("moving", "They listened to water moving under thin sheets of ice.").my, /စီးဆင်းနေသော/);
 });
 
+test("context-aware lookup preserves plural nouns without pluralizing third-person verbs", () => {
+  assert.match(lookupWordInContext("students", "The students compared maps and photographs.").my, /^ကျောင်းသားများ$/);
+  assert.match(lookupWordInContext("trees", "They planted suitable trees along the bank.").my, /^သစ်ပင်များ$/);
+  assert.match(lookupWordInContext("flowers", "Maya waters the flowers.").my, /^ပန်းများ$/);
+  assert.match(lookupWordInContext("waters", "Maya waters the flowers.").my, /^ရေလောင်းသည်$/);
+});
+
 test("sentence-by-sentence Myanmar translation aligns with every English sentence in all Listening stories", () => {
   const storiesStart = app.indexOf("const LISTENING_STORIES = [");
   const arrayStart = app.indexOf("[", storiesStart);
