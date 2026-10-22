@@ -289,7 +289,7 @@ export const DICTIONARY = Object.freeze({
   grandmother: { meaning: "the mother of someone's parent", usage: "Her grandmother started the garden.", my: "အဘွား" },
   garden: { meaning: "a place where flowers, fruit, or vegetables are grown", usage: "Maya has a small garden.", my: "ပန်းပင်၊ ဟင်းသီးဟင်းရွက် စိုက်ပျိုးရာနေရာ" },
   morning: { meaning: "the early part of the day", usage: "Every morning, she waters the flowers.", my: "မနက်ခင်း" },
-  water: { meaning: "to give water to a plant or living thing", usage: "She waters the flowers.", my: "ရေလောင်းသည်" },
+  water: { meaning: "the clear liquid essential to life; also, to give water to a plant or living thing", usage: "Clean water is important. She waters the flowers.", my: "ရေ၊ ရေလောင်းသည် (ဝါကျအလိုက် အဓိပ္ပာယ်ကွဲသည်)" },
   flower: { meaning: "the colorful part of a plant", usage: "The flowers are beautiful.", my: "ပန်း" },
   bird: { meaning: "an animal with feathers, wings, and a beak", usage: "A yellow bird visits the garden.", my: "ငှက်" },
   visit: { meaning: "to go to see a person or place", usage: "A bird visits the garden.", my: "လာရောက်လည်ပတ်သည်" },
