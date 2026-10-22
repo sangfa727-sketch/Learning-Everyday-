@@ -350,3 +350,17 @@ test("ambiguous Listening vocabulary includes the story-relevant senses", () => 
   assert.match(rose.my, /မြင့်တက်လာခဲ့သည်/);
   assert.match(rose.my, /နှင်းဆီပန်း/);
 });
+
+
+test("shared dictionary covers multiple senses used by Listening story context", () => {
+  assert.match(DICTIONARY.close.meaning, /near in distance/i);
+  assert.match(DICTIONARY.close.meaning, /shut something/i);
+  assert.match(DICTIONARY.light.meaning, /not heavy/i);
+  assert.match(DICTIONARY.light.meaning, /small in amount/i);
+  assert.match(DICTIONARY.kind.meaning, /type or sort/i);
+  assert.match(DICTIONARY.kind.meaning, /care and concern/i);
+  assert.match(DICTIONARY.change.meaning, /become different/i);
+  assert.match(DICTIONARY.change.meaning, /money returned/i);
+  assert.match(DICTIONARY.present.meaning, /being in a place/i);
+  assert.match(DICTIONARY.present.meaning, /show or explain/i);
+});
