@@ -463,6 +463,7 @@ test("context-aware lookup distinguishes water, plant, records, and changes by u
 test("context-aware word lookup selects the sense supported by the tapped sentence", () => {
   assert.match(lookupWordInContext("rose", "The river rose after heavy rain.").my, /မြင့်တက်လာခဲ့သည်/);
   assert.match(lookupWordInContext("rose", "A red rose grew in the garden.").my, /နှင်းဆီပန်း/);
+  assert.match(lookupWordInContext("rose", "A beautiful rose near the river looked lovely.").my, /နှင်းဆီပန်း/);
   assert.match(lookupWordInContext("looking", "Looking back, I learned from my mistake.").my, /အတိတ်ကို ပြန်လည်စဉ်းစားကြည့်ခြင်း/);
   assert.match(lookupWordInContext("back", "Looking back, I learned from my mistake.").my, /အတိတ်ကို ပြန်လည်စဉ်းစားကြည့်သည်/);
   assert.match(lookupWordInContext("looked", "She looked back at the house.").my, /နောက်ဘက်သို့ လှည့်ကြည့်ခဲ့သည်/);
