@@ -399,3 +399,28 @@ test("shared dictionary covers village-library vocabulary and irregular shelf pl
   assert.ok(lookupWord("dictionaries"));
   assert.ok(lookupWord("activities"));
 });
+
+
+test("shared dictionary covers key vocabulary from The River That Remembered", () => {
+  const words = [
+    "access", "accuracy", "accurate", "accurately", "accuse", "actually", "affect", "affected", "aid", "alerts",
+    "amount", "appear", "authorities", "available", "bare", "barrier", "bicycle", "blame", "blockage", "blocked",
+    "boat", "careless", "cause", "channel", "chemicals", "collapsed", "communication", "comparison", "conditions",
+    "confirm", "construction", "contain", "contaminated", "council", "crates", "crops", "danger", "decision",
+    "directly", "ditch", "documents", "downhill", "earth", "engineer", "engineering", "fertile", "flow", "former",
+    "frightening", "generations", "grassy", "hillside", "ice", "identified", "improve", "include", "increase",
+    "information", "investigate", "investigation", "litter", "measurement", "medicine", "muddy", "operator",
+    "organisation", "overflowing", "platform", "plastic", "ponds", "postponed", "predict", "predictable",
+    "protection", "questionnaire", "rainfall", "rainwater", "readings", "reliable", "replace", "replaced",
+    "responsibility", "risk", "safety", "sanitation", "scale", "shore", "solution", "solutions", "storm", "streams",
+    "suggest", "suggestion", "supplies", "temporary", "timber", "unstable", "valley", "vegetables", "visible",
+    "warning", "wetland"
+  ];
+  for (const word of words) {
+    const entry = lookupWord(word);
+    assert.ok(entry, "shared dictionary should resolve River story word: " + word);
+    assert.ok(entry.meaning.trim(), word + " should have an English meaning");
+    assert.ok(entry.usage.trim(), word + " should have an example sentence");
+    assert.ok(entry.my.trim(), word + " should have a Myanmar meaning");
+  }
+});
