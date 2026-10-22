@@ -1,12 +1,31 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { DICTIONARY, lookupWord, lookupWordInContext, tokenizeStory } from "./learning-core.js";
+import { DICTIONARY, lookupWord, lookupWordInContext, tokenizeStory, splitEnglishSentences } from "./learning-core.js";
 import { readFile } from "node:fs/promises";
 
 const app = await readFile(new URL("./app.js", import.meta.url), "utf8");
 const html = await readFile(new URL("./index.html", import.meta.url), "utf8");
 const css = await readFile(new URL("./styles.css", import.meta.url), "utf8");
 const dictionarySource = await readFile(new URL("./dictionary.js", import.meta.url), "utf8");
+
+test("sentence segmentation does not split English titles or quoted sentence endings", () => {
+  const sentences = splitEnglishSentences('Mr. Daniel spoke to Ms. Khin. "Be careful!" Lina said. The river rose.');
+  assert.deepEqual(sentences.map((sentence) => sentence.text), [
+    "Mr. Daniel spoke to Ms. Khin.",
+    '"Be careful!"',
+    "Lina said.",
+    "The river rose."
+  ]);
+  assert.deepEqual(sentences.map((sentence) => sentence.index), [0, 1, 2, 3]);
+  for (const sentence of sentences) {
+    assert.equal(sentence.text, 'Mr. Daniel spoke to Ms. Khin. "Be careful!" Lina said. The river rose.'.slice(sentence.start, sentence.end).trim());
+  }
+});
+
+test("Listening word context and sentence translation use the same sentence segmentation helper", () => {
+  assert.match(app, /function sentenceAtOffset\\(paragraph, offset\\) \\{\\s*const sentences = splitEnglishSentences\\(paragraph\\)/);
+  assert.match(app, /const englishSentences = splitEnglishSentences\\(paragraph\\)/);
+});
 
 test("Listening story selection accepts the existing joined text and legacy paragraph arrays", () => {
   const routeStart = app.indexOf('if (activeListeningStoryId !== selected.id)');
