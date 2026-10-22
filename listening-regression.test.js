@@ -543,6 +543,14 @@ test("shared dictionary contains no duplicate English headword declarations", ()
   assert.deepEqual(duplicates, [], "duplicate headwords cause silent last-entry-wins translation changes");
 });
 
+test("Listening Myanmar translations preserve key safety and everyday meanings", () => {
+  assert.match(app, /လိုက်ဖမ်းရင်း ယာဉ်သွားလာနေသော လမ်းထဲသို့ မလိုက်သွားရန်/);
+  assert.doesNotMatch(app, /ယာဉ်အသွားအလာထဲသို့ မောင်းလိုက်ခြင်း/);
+  assert.match(app, /မည်မျှမကြာခဏ တီးလေ့ရှိခဲ့သလဲ/);
+  assert.match(app, /စာအုပ်ငှားရန်သာမက အခြားလုပ်ငန်းများအတွက်ပါ အသုံးဝင်သောနေရာ/);
+  assert.match(app, /ရေထည့်ထားသော ပန်းကန်တိမ်တိမ်မှ ရေသောက်ရန်/);
+});
+
 test("sentence-by-sentence Myanmar translation aligns with every English sentence in all Listening stories", () => {
   const storiesStart = app.indexOf("const LISTENING_STORIES = [");
   const arrayStart = app.indexOf("[", storiesStart);
