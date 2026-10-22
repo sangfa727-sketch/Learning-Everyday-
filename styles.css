@@ -554,3 +554,5 @@ body[data-page="listening"] #practice-panel { max-width: 100%; }
   .story-translation { padding: 14px; }
   .story-translation-paragraph { font-size: 14px; }
 }
+
+.story-translation-number { display: inline-block; min-width: 1.8em; color: #66805c; font-weight: 800; font-variant-numeric: tabular-nums; }
