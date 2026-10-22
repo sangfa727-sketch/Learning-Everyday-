@@ -309,3 +309,13 @@ test("every clickable word in every Listening story resolves in the shared offli
     assert.deepEqual(missing, [], storyRefs[i][2] + " has clickable words missing from the shared dictionary");
   }
 });
+
+
+test("word tap triggers only one pronunciation request", () => {
+  const showStart = app.indexOf("function showWord(");
+  const showEnd = app.indexOf("\nfunction setLanguage(", showStart);
+  const showSource = app.slice(showStart, showEnd);
+  assert.ok(showStart >= 0 && showEnd > showStart, "word detail renderer should exist");
+  assert.ok(!showSource.includes("pronounceWord(word)"), "showWord should not speak automatically because the click handler owns pronunciation");
+  assert.ok(app.includes("showWord(part.word, wordParagraphIndex);\n      pronounceWord(part.word);"), "tapping a word should display its details and request pronunciation exactly once");
+});
