@@ -739,3 +739,18 @@ test("Listening Myanmar translations preserve the meaning of nearby people and m
   assert.doesNotMatch(museum, /ခေတ်မီစက်များ မပေါ်ပေါက်မီ/);
   assert.match(puppy, /ခွေးကလေးသည် တုန်နေခြင်း ရပ်သွားပြီး/);
 });
+
+
+test("contextual dictionary distinguishes a current contact number from river current and a bell calling people", () => {
+  const contact = lookupWordInContext("current", "Her family put a current contact number on their own pet's tag.");
+  assert.match(contact.meaning, /up-to-date/);
+  assert.match(contact.my, /လက်ရှိအသုံးပြုနေသော/);
+
+  const river = lookupWordInContext("current", "The bridge was closed because the current was too strong.");
+  assert.match(river.meaning, /flow of water/);
+  assert.match(river.my, /ရေစီးအား/);
+
+  const bell = lookupWordInContext("called", "He learned that the bell called children to lessons and warned people when a meeting was about to begin.");
+  assert.match(bell.meaning, /summoned or signaled people/);
+  assert.match(bell.my, /ခေါ်ယူခဲ့သည်/);
+});
