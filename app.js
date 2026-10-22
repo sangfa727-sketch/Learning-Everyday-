@@ -334,7 +334,10 @@ function syncListeningView(page = currentPage()) {
   if (!library || !panel || !back) return;
   const route = location.hash.slice(1).split("/").filter(Boolean);
   if (page !== "listening") {
-    if (translationToggle) translationToggle.hidden = true;
+    if (translationToggle) {
+      translationToggle.hidden = true;
+      translationToggle.setAttribute("aria-expanded", "false");
+    }
     if (translationPanel) translationPanel.hidden = true;
     library.hidden = true;
     panel.hidden = false;
