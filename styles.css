@@ -598,3 +598,24 @@ body[data-page="reading"] #curriculum-workbench .curriculum-header .section-inde
   overflow-wrap: anywhere;
   hyphens: auto;
 }
+
+
+/* Listening reader: one paragraph per page and anchored word-lookup overlay. */
+.story-pagination { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:16px 0 4px; color:var(--muted,#647568); font-size:12px; }
+.story-pagination[hidden] { display:none; }
+.story-page-button { min-height:38px; padding:0 12px; border:1px solid var(--line,#dfe7da); border-radius:10px; background:var(--surface,#fff); color:var(--forest,#20352b); font:700 12px "DM Sans",sans-serif; cursor:pointer; }
+.story-page-button:disabled { opacity:.42; cursor:default; }
+.lesson-text { overflow-wrap:anywhere; }
+.word-card.word-card-floating { display:grid; position:fixed; z-index:1000; max-height:min(68vh,520px); overflow-y:auto; margin:0; padding:14px; gap:10px; grid-template-columns:minmax(0,1fr); align-items:start; box-shadow:0 14px 44px rgba(17,43,31,.24); border:1px solid #d3dfc8; border-radius:15px; }
+.word-card.word-card-floating .word-card-head,
+.word-card.word-card-floating #word-definition,
+.word-card.word-card-floating .word-sentence-context,
+.word-card.word-card-floating .word-myanmar-translation,
+.word-card.word-card-floating .word-context-translation,
+.word-card.word-card-floating .word-card-actions { grid-column:1; grid-row:auto; min-width:0; }
+.word-card.word-card-floating .word-sentence-context { padding:9px 10px; border-left:3px solid #b9c99e; background:rgba(255,255,255,.68); border-radius:6px; overflow-wrap:anywhere; }
+@media (max-width:480px) {
+  .word-card.word-card-floating { max-height:min(62vh,440px); padding:12px; }
+  .story-pagination { gap:6px; font-size:11px; }
+  .story-page-button { padding:0 8px; min-height:40px; }
+}
