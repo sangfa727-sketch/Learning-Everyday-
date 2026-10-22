@@ -142,6 +142,14 @@ test("Expanded listening vocabulary remains available offline", () => {
 });
 
 
+test("Long story narration is queued paragraph by paragraph with global word offsets", () => {
+  assert.ok(app.includes("const paragraphPattern = /[^\\n]+/g;"));
+  assert.match(app, /story\.matchAll\(paragraphPattern\)/);
+  assert.match(app, /highlightSpeechWord\(paragraph\.start \+ event\.charIndex\)/);
+  assert.match(app, /speakNextParagraph\(\);/);
+  assert.match(app, /utterance\.onerror = \(\) => \{/);
+});
+
 test("Story narration tracks and visibly highlights the currently spoken word", () => {
   assert.match(app, /function stopStoryNarration\(\)/);
   assert.match(app, /function clearSpeechHighlight\(\)/);
