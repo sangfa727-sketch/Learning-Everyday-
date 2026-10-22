@@ -174,7 +174,7 @@ const CONTEXTUAL_SENSES = Object.freeze({
     { test: /\b(?:school|library|clinic|office|town) staff\b|\bstaff (?:and|members|checked|explained|helped)\b/i, meaning: "people who work for an organisation", my: "ဝန်ထမ်းများ" }
   ],
   screen: [
-    { test: /\bdrainage screen\b|\b(?:damaged|blocked|repaired|replace[dt]?)\s+(?:the|a)?\s*screen\b/i, meaning: "a grate or barrier fitted over an opening to catch debris", my: "အမှိုက်နှင့် အရာဝတ္ထုများကို တားဆီးဖမ်းယူသည့် ဇကာကာ" },
+    { test: /\bdrainage screen\b|\b(?:damaged|blocked|repaired|replace[dt]?)\s+(?:the|a)?\s*screen\b/i, meaning: "a grate or barrier fitted over an opening to catch debris", my: "ရေထုတ်ပေါက်တွင် အမှိုက်များ မဝင်စေရန် တပ်ဆင်ထားသော ဇကာ" },
     { test: /\b(?:computer|phone|television|display|touch) screen\b/i, meaning: "a surface that displays images or information", my: "မျက်နှာပြင်" }
   ],
   matter: [
