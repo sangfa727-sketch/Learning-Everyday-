@@ -25,9 +25,10 @@ function voiceForGender(gender) {
   const matched = english.find((voice) => preferred.test(voice.name));
   if (matched) return matched;
   const natural = english.find((voice) => /natural|neural|online/i.test(voice.name));
-  if (natural && (gender === "female" || english.length === 1)) return natural;
-  // If names do not expose gender, use distinct installed English voices where possible.
-  return gender === "male" && english.length > 1 ? english[1] : (natural || english[0]);
+  // If names do not expose gender, prefer distinct installed English voices where possible.
+  if (gender === "female") return natural || english[0];
+  if (natural) return english.find((voice) => voice !== natural) || natural;
+  return english[1] || english[0];
 }
 
 function stopPlayback() {
