@@ -364,3 +364,19 @@ test("shared dictionary covers multiple senses used by Listening story context",
   assert.match(DICTIONARY.present.meaning, /being in a place/i);
   assert.match(DICTIONARY.present.meaning, /show or explain/i);
 });
+
+
+test("shared dictionary preserves common ambiguous word senses found in Listening stories", () => {
+  assert.match(DICTIONARY.lives.meaning, /is alive|resides/i);
+  assert.match(DICTIONARY.lives.meaning, /plural of life/i);
+  assert.match(DICTIONARY.saw.meaning, /past tense of see/i);
+  assert.match(DICTIONARY.saw.meaning, /tool used for cutting wood/i);
+  assert.match(DICTIONARY.found.meaning, /past tense of find/i);
+  assert.match(DICTIONARY.means.meaning, /method or way/i);
+  assert.match(DICTIONARY.well.meaning, /good or satisfactory way/i);
+  assert.match(DICTIONARY.well.meaning, /hole for water/i);
+  assert.ok(lookupWord("lives") === DICTIONARY.lives, "exact inflected form should win over the generic irregular mapping");
+  assert.ok(lookupWord("saw") === DICTIONARY.saw, "exact word should retain its contextual senses");
+  assert.ok(lookupWord("found") === DICTIONARY.found, "exact word should retain its contextual senses");
+  assert.ok(lookupWord("means") === DICTIONARY.means, "exact word should retain its contextual senses");
+});
