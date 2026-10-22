@@ -1372,4 +1372,5 @@ export const DICTIONARY = Object.freeze({
   yet: { meaning: "up to the present time; nevertheless", usage: "The town had not yet agreed on every part of the plan.", my: "ယခုအချိန်ထိ၊ သို့သော်" },
   ba: { meaning: "a name used in the story as part of a Burmese personal name", usage: "U Ba helped the students search old town records.", my: "ဦးဘ (လူအမည်၏ အစိတ်အပိုင်း)" },
   u: { meaning: "a Burmese honorific used before a man’s name", usage: "U Ba was the librarian who helped the students.", my: "ဦး (အမျိုးသားအမည်ရှေ့ ဂုဏ်ပြုခေါ်ဝေါ်မှု)" },
+  sad: { meaning: "feeling unhappy or sorrowful", usage: "Some residents felt sad when they saw how the riverbank had changed.", my: "ဝမ်းနည်းသော" },
 });
