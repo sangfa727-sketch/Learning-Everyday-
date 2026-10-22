@@ -32,11 +32,16 @@ test("vocabulary topic picker and word-card speaker stay integrated with animate
   assert.match(html, /id="vocabulary-category"/);
   assert.match(ui, /id = "vocabulary-topic-picker"/);
   assert.match(ui, /className = "vocabulary-topic-card"/);
+  assert.match(ui, /className = selected \? "vocabulary-topic-shell is-selected" : "vocabulary-topic-shell"/);
+  assert.match(ui, /shell\.append\(title, list\)/);
+  assert.match(css, /\.vocabulary-topic-shell\.is-selected\{grid-column:1\/-1/);
+  assert.match(css, /\.vocabulary-topic-label\{[^}]*overflow-wrap:break-word/s);
+  assert.match(css, /word-break:normal/);
   assert.match(ui, /selectedWord === word/);
   assert.match(ui, /classList\.add\("is-closing"\)/);
   assert.match(ui, /className = "vocabulary-speaker"/);
   assert.match(css, /\.vocabulary-speaker\{position:absolute/);
   assert.match(css, /@keyframes vocabulary-detail-out/);
   assert.match(css, /prefers-reduced-motion:reduce/);
-  assert.match(worker, /learning-everyday-shell-v36/);
+  assert.match(worker, /learning-everyday-shell-v37/);
 });
