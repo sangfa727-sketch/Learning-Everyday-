@@ -330,3 +330,21 @@ test("shared dictionary covers common A1 market vocabulary and resolves the irre
   assert.ok(lookupWord("apples"), "regular plural forms should reuse the shared apple entry");
   assert.ok(lookupWord("counted"), "regular past forms should reuse the shared count entry");
 });
+
+test("shared dictionary covers key rainy-afternoon vocabulary and common inflected forms", () => {
+  const words = [
+    "lunch", "dark", "air", "cool", "rise", "hang", "clothes", "indoors",
+    "minute", "tap", "roof", "window", "silver", "football", "wet", "field",
+    "watch", "wait", "front", "grow", "tall", "paper", "colour", "pencil",
+    "cross", "beneath", "example", "life", "miss", "drawing", "discuss",
+    "original", "version", "proud", "rainy", "continue", "late", "listen", "weekend"
+  ];
+  for (const word of words) {
+    const entry = lookupWord(word);
+    assert.ok(entry, "shared dictionary should resolve " + word);
+    assert.ok(entry.meaning.trim() && entry.usage.trim() && entry.my.trim(), word + " should have all dictionary fields");
+  }
+  assert.equal(lookupWord("grown"), DICTIONARY.grow);
+  assert.equal(lookupWord("tapped"), DICTIONARY.tap);
+  assert.equal(lookupWord("coloured"), DICTIONARY.colour);
+});
