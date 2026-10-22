@@ -666,3 +666,32 @@ body[data-page="reading"] #curriculum-workbench .curriculum-header .section-inde
 @keyframes vocabulary-detail-out{from{opacity:1;max-height:260px;transform:translateY(0) scale(1)}to{opacity:0;max-height:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;transform:translateY(-5px) scale(.985)}}
 @media(max-width:760px){.vocabulary-topic-picker{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.vocabulary-topic-card{min-height:54px;padding:8px;grid-template-columns:31px minmax(0,1fr) 12px;gap:7px;border-radius:13px}.vocabulary-topic-icon{width:31px;height:31px;border-radius:10px}.vocabulary-topic-label{font-size:11px}.vocabulary-word{min-height:76px;padding:12px 43px 12px 10px}.vocabulary-speaker{top:7px;right:7px;width:29px;height:29px;min-height:29px;font-size:15px}}
 @media(prefers-reduced-motion:reduce){.vocabulary-topic-card,.vocabulary-word,.vocabulary-speaker{transition:none}.vocabulary-detail-in,.vocabulary-detail.is-closing{animation-duration:.01ms}}
+
+
+/* Expanded topic cards: vocabulary is revealed inside the selected category. */
+.vocabulary-topic-shell{min-width:0;align-self:start;display:flex;flex-direction:column;gap:0}
+.vocabulary-topic-shell.is-selected{grid-column:1/-1;padding:0 0 14px;border:1px solid #cbdcc4;border-radius:18px;background:linear-gradient(160deg,#f7fbf3 0%,#fff 72%);box-shadow:0 8px 22px rgba(25,53,41,.055);overflow:hidden}
+.vocabulary-topic-card{width:100%;grid-template-columns:minmax(0,1fr) 22px;grid-template-rows:auto auto;align-items:center;column-gap:10px;row-gap:8px;min-height:0;padding:12px 14px;border:0;border-radius:0;background:transparent;box-shadow:none;transform:none}
+.vocabulary-topic-card:hover{transform:none;box-shadow:none;background:#f5f9f1}
+.vocabulary-topic-card[aria-pressed=true]{background:linear-gradient(135deg,#edf6e9,#e3efdf);box-shadow:inset 0 -1px 0 #d5e4cf;border-color:transparent}
+.vocabulary-topic-icon{grid-column:1;grid-row:1;width:32px;height:32px}
+.vocabulary-topic-marker{grid-column:2;grid-row:1;justify-self:end;width:22px;height:22px;display:grid;place-items:center;border-radius:8px;background:#eaf1e4;font-size:18px;line-height:1}
+.vocabulary-topic-label{grid-column:1/-1;grid-row:2;display:block;min-width:0;width:100%;font-size:13px;line-height:1.65;letter-spacing:normal;white-space:normal;word-break:normal;overflow-wrap:break-word;hyphens:none;text-wrap:pretty}
+.vocabulary-topic-shell.is-selected .vocabulary-topic-label{font-size:14px;color:#24483b}
+.curriculum-category-title{margin:0;padding:4px 14px 10px;font-size:14px;line-height:1.6;overflow-wrap:break-word;word-break:normal}
+.vocabulary-topic-shell .vocabulary-list{padding:0 12px 4px;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.vocabulary-topic-shell .vocabulary-entry{min-width:0}
+.vocabulary-topic-shell .vocabulary-word strong{overflow-wrap:break-word;word-break:normal}
+@media(max-width:760px){
+  .vocabulary-topic-picker{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px}
+  .vocabulary-topic-card{grid-template-columns:minmax(0,1fr) 20px;row-gap:7px;padding:10px 11px}
+  .vocabulary-topic-icon{width:30px;height:30px}
+  .vocabulary-topic-label{font-size:12px;line-height:1.7}
+  .vocabulary-topic-shell.is-selected{padding-bottom:10px;border-radius:16px}
+  .vocabulary-topic-shell .vocabulary-list{padding:0 8px 3px;gap:8px}
+  .curriculum-category-title{padding:3px 10px 9px}
+}
+@media(max-width:360px){
+  .vocabulary-topic-picker{grid-template-columns:minmax(0,1fr)}
+  .vocabulary-topic-shell .vocabulary-list{grid-template-columns:minmax(0,1fr)}
+}
