@@ -233,7 +233,9 @@ function renderSpeakingRoute() {
   if (panel) panel.hidden = isSpeaking;
   section.hidden = !isSpeaking;
   if (!isSpeaking) {
-    stopPlayback();
+    // Speech synthesis is shared by Listening and Vocabulary. Only cancel it
+    // when leaving an active Speaking conversation, not on every hash change.
+    if (activeConversation) stopPlayback();
     activeConversation = null;
     return;
   }
