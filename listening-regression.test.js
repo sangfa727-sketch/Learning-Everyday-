@@ -338,3 +338,15 @@ test("shared dictionary keys are unique and every entry has complete English and
     assert.ok(entry.my.trim(), `${key} Myanmar meaning must not be empty`);
   }
 });
+
+
+test("ambiguous Listening vocabulary includes the story-relevant senses", () => {
+  const rose = DICTIONARY.rose;
+  assert.ok(rose, "rose should be available in the shared dictionary");
+  assert.match(rose.meaning, /past tense of rise/i);
+  assert.match(rose.meaning, /flower/i);
+  assert.match(rose.usage, /river rose/i);
+  assert.match(rose.usage, /rose grew in the garden/i);
+  assert.match(rose.my, /မြင့်တက်လာခဲ့သည်/);
+  assert.match(rose.my, /နှင်းဆီပန်း/);
+});
