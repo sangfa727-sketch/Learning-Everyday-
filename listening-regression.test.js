@@ -823,3 +823,17 @@ test("tapping another story word dismisses the open card without opening a repla
   assert.match(app, /if \(dismissedWordButton === button\) \{\s*dismissedWordButton = null;\s*return;/);
   assert.match(app, /if \(tappedWord\) \{\s*\/\/ Dismiss the existing card on this tap; require a separate tap to open another word\.\s*dismissedWordButton = tappedWord;\s*card\.hidden = true;\s*return;/);
 });
+
+
+test("service worker refreshes the app shell cache and includes the shared offline dictionary", async () => {
+  const sw = await readFile(new URL("./sw.js", import.meta.url), "utf8");
+  assert.match(sw, /CACHE_NAME\s*=\s*"learning-everyday-shell-v33"/);
+  assert.match(sw, /APP_SHELL\s*=\s*\[[^\]]*"\.\/dictionary\.js"/s);
+});
+
+test("every shared dictionary entry has a non-empty Myanmar meaning", () => {
+  const missing = Object.entries(DICTIONARY)
+    .filter(([word, entry]) => !entry || typeof entry.my !== "string" || !entry.my.trim())
+    .map(([word]) => word);
+  assert.deepEqual(missing, [], "all offline dictionary entries should include a Myanmar meaning");
+});
