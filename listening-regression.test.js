@@ -816,3 +816,10 @@ test("river-story vocabulary distinguishes a staff gauge from school staff and a
   assert.match(displayScreen.meaning, /surface that displays images or information/);
   assert.match(displayScreen.my, /မျက်နှာပြင်/);
 });
+
+
+test("tapping another story word dismisses the open card without opening a replacement on the same tap", () => {
+  assert.match(app, /let dismissedWordButton = null/);
+  assert.match(app, /if \(dismissedWordButton === button\) \{\s*dismissedWordButton = null;\s*return;/);
+  assert.match(app, /if \(tappedWord\) \{\s*\/\/ Dismiss the existing card on this tap; require a separate tap to open another word\.\s*dismissedWordButton = tappedWord;\s*card\.hidden = true;\s*return;/);
+});
