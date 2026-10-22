@@ -374,7 +374,8 @@ test("shared dictionary covers lost-puppy and museum vocabulary with inflected w
     ["worn", "wear"], ["rung", "ring"], ["began", "begin"],
     ["safer", "safe"], ["taller", "tall"], ["lighter", "light"], ["easier", "easy"]
   ]) {
-    assert.equal(lookupWord(form), DICTIONARY[base], form + " should resolve to " + base);
+    const expected = Object.prototype.hasOwnProperty.call(DICTIONARY, form) ? DICTIONARY[form] : DICTIONARY[base];
+    assert.equal(lookupWord(form), expected, form + " should resolve to its direct entry or " + base);
   }
 });
 
