@@ -22,4 +22,6 @@ test("dedicated study path includes all six CEFR levels and all four skills", as
   assert.match(worker, /"\.\/study-path\.html"/);
   assert.match(worker, /"\.\/study-path\.js"/);
   assert.match(worker, /"\.\/study-path\.css"/);
+  assert.match(page, /<header id="top" class="topbar">/);
+  assert.match(page, /href="#top"/);
 });
