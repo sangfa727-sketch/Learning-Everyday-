@@ -906,3 +906,8 @@ body[data-page="speaking"] #practice-panel { display: none !important; }
   .speaking-myanmar-line { font-size: 12px; }
 }
 @media (prefers-reduced-motion: reduce) { .speaking-category-card { transition: none; } .speaking-category-card:hover { transform: none; } }
+
+
+/* Home headline: refined Myanmar type, slightly smaller and easier to read. */
+.hero h1[data-i18n="headline"]{font-family:"Noto Sans Myanmar","Myanmar Text",ui-sans-serif,sans-serif;font-size:clamp(30px,3.4vw,40px);font-weight:750;line-height:1.65;letter-spacing:0;max-width:650px;overflow-wrap:anywhere}
+@media(max-width:760px){.hero h1[data-i18n="headline"]{font-size:clamp(25px,6.4vw,32px);line-height:1.85;letter-spacing:0}}
