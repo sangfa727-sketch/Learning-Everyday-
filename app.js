@@ -803,9 +803,11 @@ function speakStory() {
     let lastBoundaryCharIndex = -1;
     let increasingBoundaryCount = 0;
     let receivedReliableBoundaryEvents = false;
+    let narrationPaused = false;
 
     utterance.onstart = () => {
       if (activeStoryUtterance !== utterance) return;
+      narrationPaused = false;
       $("#play-button").disabled = true;
       $("#status-message").textContent = language === "my" ? "နားထောင်နေသည်…" : "Playing story…";
       // Never guess word timing. Until the voice reports reliable word positions,
@@ -813,7 +815,7 @@ function speakStory() {
       highlightSpeechParagraph();
     };
     utterance.onboundary = (event) => {
-      if (activeStoryUtterance !== utterance) return;
+      if (activeStoryUtterance !== utterance || narrationPaused) return;
       if (!Number.isFinite(event.charIndex)) return;
       // Ignore the first boundary: some mobile engines emit only a single
       // initial event and then no usable word timing.
@@ -830,10 +832,12 @@ function speakStory() {
     };
     utterance.onpause = () => {
       if (activeStoryUtterance !== utterance) return;
-      // No timer is running: the paragraph or last confirmed word stays still.
+      narrationPaused = true;
+      // Ignore any late boundary events while paused; keep the last confirmed highlight still.
     };
     utterance.onresume = () => {
       if (activeStoryUtterance !== utterance) return;
+      narrationPaused = false;
       // Resume follows actual boundary events; do not estimate progress.
     };
     utterance.onend = () => {
