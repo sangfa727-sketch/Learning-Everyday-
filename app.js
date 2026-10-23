@@ -813,7 +813,8 @@ function speakStory() {
       highlightSpeechParagraph();
     };
     utterance.onboundary = (event) => {
-      if (activeStoryUtterance !== utterance || !Number.isFinite(event.charIndex)) return;
+      if (activeStoryUtterance !== utterance) return;
+      if (!Number.isFinite(event.charIndex)) return;
       // Ignore the first boundary: some mobile engines emit only a single
       // initial event and then no usable word timing.
       if (event.charIndex > lastBoundaryCharIndex) {
