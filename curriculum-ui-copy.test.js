@@ -50,7 +50,7 @@ test("vocabulary topic cards navigate to dedicated pages and retain word audio d
   assert.match(css, /\.vocabulary-speaker\{position:absolute/);
   assert.match(css, /@keyframes vocabulary-detail-out/);
   assert.match(css, /prefers-reduced-motion:reduce/);
-  assert.match(worker, /learning-everyday-shell-v43/);
+  assert.match(worker, /learning-everyday-shell-v44/);
 });
 test("Home Myanmar headline uses the requested wording and refined type styling", async () => {
   const [app, css] = await Promise.all([
@@ -78,4 +78,21 @@ test("About page exposes the requested social links with safe external-link attr
   assert.match(app, /aboutLink:"အကြောင်း"/);
   assert.match(css, /body\[data-page="about"\] #about-page\{display:block\}/);
   assert.match(css, /\.about-social-link:focus-visible/);
+});
+
+test("skill and level selection previews the matching exercise and opens a level-specific practice route", async () => {
+  const [html, ui, app] = await Promise.all([
+    readFile(new URL("./index.html", import.meta.url), "utf8"),
+    readFile(new URL("./curriculum-ui.js", import.meta.url), "utf8"),
+    readFile(new URL("./app.js", import.meta.url), "utf8")
+  ]);
+  assert.ok(html.includes('id="selected-path-preview"'));
+  assert.ok(html.includes('id="selected-path-objective"'));
+  assert.ok(ui.includes("function renderSelectionPreview()"));
+  assert.ok(ui.includes("skillObjectives[activeSkill][language]"));
+  assert.ok(ui.includes('location.hash = `#/${activeSkill}/${selectedLevel}`'));
+  assert.ok(ui.includes("function syncStudyRoute()"));
+  assert.ok(ui.includes("selectedLevel = route[1]"));
+  assert.ok(app.includes('title: "Choose your skill and level"'));
+  for (const skill of ["reading", "listening", "writing", "speaking"]) assert.ok(ui.includes(skill + ": {"));
 });

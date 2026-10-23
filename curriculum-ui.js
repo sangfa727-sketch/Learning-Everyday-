@@ -324,9 +324,65 @@ function renderLevelOptions() {
       selectedExerciseIndex = 0;
       renderLevelOptions();
       renderPractice();
+      renderSelectionPreview();
     });
     container.append(button);
   }
+}
+
+const skillObjectives = {
+  reading: {
+    en: ["Recognise familiar words and understand very short sentences.", "Understand simple everyday descriptions and short connected texts.", "Find main ideas and relevant details in clear, connected texts.", "Understand longer texts and compare viewpoints with more detail.", "Interpret complex texts, implied meaning and tone.", "Analyse demanding texts with precision, nuance and flexibility."],
+    my: ["ရင်းနှီးပြီးသား စကားလုံးများနှင့် အလွန်တိုသော ဝါကျများကို နားလည်ရန်။", "နေ့စဉ်သုံး ဖော်ပြချက်များနှင့် ဆက်စပ်နေသော စာတိုများကို နားလည်ရန်။", "စာပိုဒ်၏ အဓိကအကြောင်းအရာနှင့် သက်ဆိုင်သော အသေးစိတ်ကို ရှာဖွေရန်။", "ပိုရှည်သောစာများနှင့် အမြင်ကွဲပြားမှုများကို နှိုင်းယှဉ်နားလည်ရန်။", "ရှုပ်ထွေးသောစာများ၏ သွယ်ဝိုက်အဓိပ္ပာယ်နှင့် လေသံကို နားလည်ရန်။", "ခက်ခဲသောစာများကို တိကျမှုနှင့် အဓိပ္ပာယ်နက်ရှိုင်းမှုဖြင့် သုံးသပ်ရန်။"]
+  },
+  listening: {
+    en: ["Catch familiar words and the main point of slow, clear speech.", "Understand common phrases and short everyday messages.", "Follow the main points of clear speech on familiar topics.", "Follow longer speech, explanations and most discussions.", "Understand extended speech, attitude and implied meaning.", "Understand demanding speech with subtle distinctions and little effort."],
+    my: ["ဖြည်းဖြည်းနှင့် ရှင်းလင်းစွာပြောသော စကားထဲမှ ရင်းနှီးသည့်စကားလုံးများနှင့် အဓိကအချက်ကို ဖမ်းယူရန်။", "နေ့စဉ်သုံး စကားစုများနှင့် စာတိုပြောဆိုမှုများကို နားလည်ရန်။", "ရင်းနှီးသောအကြောင်းအရာများအကြောင်း ရှင်းလင်းသည့် စကား၏ အဓိကအချက်များကို လိုက်နာရန်။", "ပိုရှည်သော ပြောဆိုမှု၊ ရှင်းလင်းချက်နှင့် ဆွေးနွေးချက်အများစုကို လိုက်နာရန်။", "ရှည်လျားသောစကား၏ သဘောထားနှင့် သွယ်ဝိုက်အဓိပ္ပာယ်ကို နားလည်ရန်။", "သိမ်မွေ့သော ကွဲပြားချက်များပါဝင်သည့် ခက်ခဲသောစကားကို လွယ်ကူတိကျစွာ နားလည်ရန်။"]
+  },
+  writing: {
+    en: ["Write familiar words and very short personal sentences.", "Write simple connected sentences about everyday needs.", "Write a clear short text about familiar topics and experiences.", "Organise detailed text and explain reasons for an opinion.", "Write well-structured text on complex subjects with a clear tone.", "Write precise, fluent, well-structured text for complex purposes."],
+    my: ["ရင်းနှီးသော စကားလုံးများနှင့် ကိုယ်ရေးအကြောင်း အလွန်တိုသော ဝါကျများကို ရေးရန်။", "နေ့စဉ်လိုအပ်ချက်များအကြောင်း ရိုးရှင်းသော ဆက်စပ်ဝါကျများ ရေးရန်။", "ရင်းနှီးသောအကြောင်းအရာနှင့် အတွေ့အကြုံများအကြောင်း စာတိုတစ်ပုဒ် ရှင်းလင်းစွာ ရေးရန်။", "အသေးစိတ်ပါသော စာကို စနစ်တကျဖွဲ့စည်းပြီး မိမိအမြင်၏ အကြောင်းရင်းကို ရှင်းပြရန်။", "ရှုပ်ထွေးသောအကြောင်းအရာများအတွက် ဖွဲ့စည်းပုံကောင်းပြီး လေသံသင့်တော်သောစာ ရေးရန်။", "ရည်ရွယ်ချက်ရှုပ်ထွေးသည့် စာများကို တိကျ၊ သွက်လက်ပြီး စနစ်တကျ ရေးသားရန်။"]
+  },
+  speaking: {
+    en: ["Say familiar words and give simple personal information.", "Ask and answer simple questions in familiar situations.", "Describe experiences and explain simple opinions.", "Speak clearly at length and support a viewpoint with reasons.", "Express ideas fluently and adapt language to the situation.", "Communicate fluently and precisely with flexible nuance."],
+    my: ["ရင်းနှီးသောစကားလုံးများကို ပြောပြီး ကိုယ်ရေးအချက်အလက် ရိုးရိုးဖော်ပြရန်။", "ရင်းနှီးသောအခြေအနေများတွင် ရိုးရှင်းသည့်မေးခွန်းများ မေးဖြေပြုလုပ်ရန်။", "အတွေ့အကြုံများကို ဖော်ပြပြီး ရိုးရှင်းသောအမြင်ကို ရှင်းပြရန်။", "အကြောင်းပြချက်များဖြင့် မိမိအမြင်ကို ရှင်းလင်းစွာ အချိန်ကြာကြာပြောရန်။", "အတွေးအမြင်များကို သွက်လက်စွာဖော်ပြပြီး အခြေအနေနှင့်ကိုက်ညီအောင် ဘာသာစကားအသုံးပြုရန်။", "သိမ်မွေ့သော အဓိပ္ပာယ်ကွဲပြားမှုများကို ထိန်းညှိ၍ သွက်လက်တိကျစွာ ဆက်သွယ်ရန်။"]
+  }
+};
+function renderSelectionPreview() {
+  const levelIndex = Math.max(0, LEVELS.findIndex((level) => level.id === selectedLevel));
+  const level = LEVELS[levelIndex];
+  const practice = activePractice();
+  const skillNames = language === "my" ? { reading: "စာဖတ်ခြင်း", listening: "နားထောင်ခြင်း", writing: "စာရေးခြင်း", speaking: "စကားပြောခြင်း" } : { reading: "Reading", listening: "Listening", writing: "Writing", speaking: "Speaking" };
+  const title = $("#selected-path-title");
+  const levelLabel = $("#selected-path-level");
+  const objective = $("#selected-path-objective");
+  const exerciseTitle = $("#selected-path-exercise-title");
+  const prompt = $("#selected-path-exercise-prompt");
+  if (!title || !levelLabel || !objective || !exerciseTitle || !prompt) return;
+  title.textContent = `${skillNames[activeSkill]} · ${level.id}`;
+  levelLabel.textContent = `${level.id} · ${labelForLevel(level)}`;
+  objective.textContent = skillObjectives[activeSkill][language][levelIndex];
+  exerciseTitle.textContent = language === "my" ? practice.my : practice.title;
+  prompt.textContent = practice.prompt;
+}
+function syncStudyRoute() {
+  const route = location.hash.slice(1).split("/").filter(Boolean);
+  const page = route[0] || "home";
+  if (["reading", "listening", "writing", "speaking"].includes(page)) {
+    activeSkill = page;
+    if (LEVELS.some((level) => level.id === route[1])) selectedLevel = route[1];
+    selectedExerciseIndex = 0;
+    renderLevelOptions();
+    renderPractice();
+    const levelIndex = Math.max(0, LEVELS.findIndex((item) => item.id === selectedLevel));
+    const level = LEVELS[levelIndex];
+    const skillNames = language === "my" ? { reading: "စာဖတ်ခြင်း", listening: "နားထောင်ခြင်း", writing: "စာရေးခြင်း", speaking: "စကားပြောခြင်း" } : { reading: "Reading", listening: "Listening", writing: "Writing", speaking: "Speaking" };
+    const pageTitle = $("#page-title");
+    const pageDescription = $("#page-description");
+    if (pageTitle) pageTitle.textContent = `${skillNames[activeSkill]} · ${level.id}`;
+    if (pageDescription) pageDescription.textContent = skillObjectives[activeSkill][language][levelIndex];
+  }
+  renderSelectionPreview();
 }
 
 function syncSkillButtons() {
@@ -704,6 +760,7 @@ function setLanguage(next) {
   renderVocabulary();
   renderLevelOptions();
   renderPractice();
+  renderSelectionPreview();
   renderLetterGuide();
 }
 
@@ -716,9 +773,10 @@ document.querySelectorAll("[data-skill]").forEach((button) => button.addEventLis
     return;
   }
   renderPractice();
+  renderSelectionPreview();
 }));
 $("#start-selected-practice").addEventListener("click", () => {
-  location.hash = `#/${activeSkill}`;
+  location.hash = `#/${activeSkill}/${selectedLevel}`;
 });
 function syncSkillLevelPage() {
   const page = location.hash.slice(1).split("/").filter(Boolean)[0] || "home";
@@ -728,13 +786,9 @@ function syncSkillLevelPage() {
 }
 syncSkillLevelPage();
 window.addEventListener("hashchange", () => {
-  const page = location.hash.slice(1).split("/").filter(Boolean)[0];
   syncSkillLevelPage();
   syncVocabularyRoute();
-  if (["reading", "listening", "writing", "speaking"].includes(page)) {
-    activeSkill = page;
-    renderPractice();
-  }
+  syncStudyRoute();
 });
 $("#vocabulary-category").addEventListener("change", (event) => {
   const categoryId = event.target.value;
@@ -873,6 +927,7 @@ new MutationObserver(() => setLanguage(document.documentElement.lang === "my" ? 
   .observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
 
 syncVocabularyRoute();
+syncStudyRoute();
 renderLevelOptions();
 renderLetterOptions();
 renderScriptLetterPicker();
