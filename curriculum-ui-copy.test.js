@@ -79,3 +79,20 @@ test("About page exposes the requested social links with safe external-link attr
   assert.match(css, /body\[data-page="about"\] #about-page\{display:block\}/);
   assert.match(css, /\.about-social-link:focus-visible/);
 });
+
+test("skill and level selection previews the matching exercise and opens a level-specific practice route", async () => {
+  const [html, ui, app] = await Promise.all([
+    readFile(new URL("./index.html", import.meta.url), "utf8"),
+    readFile(new URL("./curriculum-ui.js", import.meta.url), "utf8"),
+    readFile(new URL("./app.js", import.meta.url), "utf8")
+  ]);
+  assert.match(html, /id="selected-path-preview"/);
+  assert.match(html, /id="selected-path-objective"/);
+  assert.match(ui, /function renderSelectionPreview\(\)/);
+  assert.match(ui, /skillObjectives\[activeSkill\]\[language\]/);
+  assert.match(ui, /location\.hash = `#\/\$\{activeSkill\}\/\$\{selectedLevel\}`/);
+  assert.match(ui, /function syncStudyRoute\(\)/);
+  assert.match(ui, /selectedLevel = route\[1\]/);
+  assert.match(app, /title: "Choose your skill and level"/);
+  for (const skill of ["reading", "listening", "writing", "speaking"]) assert.ok(ui.includes(skill + ": {"));
+});
