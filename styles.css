@@ -541,31 +541,7 @@ body[data-page="reading"] #curriculum-workbench .curriculum-header .section-inde
 @media(max-width:720px){body[data-page="reading"] #curriculum-workbench .curriculum-grid{grid-template-columns:minmax(0,1fr)}}
 
 
-/* Conservative narration fallback: highlight the active paragraph, never guessed word timing. */
-#lesson-text.speech-current-paragraph {
-  border-radius: 10px;
-  background: #f5f8ed;
-  box-shadow: inset 3px 0 0 #8aa477;
-  padding: 8px 10px;
-}
-
-/* Live narration tracking: keep the word spoken by English voice visibly selected. */
-#lesson-text .lesson-word.speech-current-word {
-  position: relative;
-  border-radius: 5px;
-  background: #ffe58a;
-  color: #183b2c;
-  box-shadow: 0 0 0 2px #e2ad31;
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 3px;
-  transition: background-color .08s ease, box-shadow .08s ease;
-}
-#lesson-text .lesson-word.speech-current-word:focus-visible {
-  outline: 3px solid #315b40;
-  outline-offset: 3px;
-}
-
+/* Speech-synchronized visual highlighting is disabled because browser timing drifts on phones. */
 /* Optional full-story translation, aligned paragraph-by-paragraph with the English text. */
 .story-translation-tools { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
 #toggle-story-translation { min-height: 42px; }
@@ -957,3 +933,15 @@ footer{grid-template-columns:auto auto 1fr auto}
   footer>span{grid-column:1/-1;grid-row:2}
   footer>.back-top{grid-column:2;grid-row:3}
 }
+
+/* Selected skill/level preview on the dedicated Skills & Levels route. */
+.selected-path-preview{margin-top:18px;padding:18px;border:1px solid #dfe8d9;border-radius:17px;background:linear-gradient(135deg,#f3f7ed,#fff)}
+.selected-path-topline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.selected-path-kicker{font-size:9px;font-weight:850;letter-spacing:1.4px;color:#71806f}
+.selected-path-preview h3{margin:0;color:var(--forest);font:800 20px/1.3 Manrope,ui-sans-serif,sans-serif;letter-spacing:-.4px}
+.selected-path-objective{margin:8px 0 0;color:#627367;font-size:12px;line-height:1.8}
+.selected-path-exercise{margin-top:14px;padding:13px;border-radius:12px;background:#fff;border:1px solid #e6ece2}
+.selected-path-exercise>span{display:block;margin-bottom:7px;font-size:9px;font-weight:800;letter-spacing:1.2px;color:#849180}
+.selected-path-exercise strong{display:block;color:#294437;font-size:14px;line-height:1.5}
+.selected-path-exercise p{margin:6px 0 0;color:#718076;font-size:12px;line-height:1.7;overflow-wrap:anywhere}
+@media(max-width:760px){.level-choice-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.selected-path-preview{padding:15px}.selected-path-preview h3{font-size:18px}}
