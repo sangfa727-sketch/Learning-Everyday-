@@ -790,6 +790,8 @@ function speakStory() {
     if (voice) utterance.voice = voice;
     utterance.rate = rate;
     let receivedBoundaryEvent = false;
+    let lastBoundaryCharIndex = -1;
+    let increasingBoundaryCount = 0;
     let utteranceStartedAt = 0;
     const estimatedDurationMs = Math.max(
       1000,
@@ -823,8 +825,16 @@ function speakStory() {
     utterance.onboundary = (event) => {
       if (activeStoryUtterance !== utterance) return;
       if (Number.isFinite(event.charIndex)) {
-        receivedBoundaryEvent = true;
-        clearSpeechHighlightTimer();
+        // A single boundary (often charIndex 0) is not enough to prove that
+        // this TTS engine will keep reporting word positions.
+        if (event.charIndex > lastBoundaryCharIndex) {
+          increasingBoundaryCount += 1;
+          lastBoundaryCharIndex = event.charIndex;
+        }
+        if (increasingBoundaryCount >= 2) {
+          receivedBoundaryEvent = true;
+          clearSpeechHighlightTimer();
+        }
         highlightSpeechWord(paragraph.start + event.charIndex);
       }
     };
