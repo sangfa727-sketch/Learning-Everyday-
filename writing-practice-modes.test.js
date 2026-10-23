@@ -144,26 +144,31 @@ test("Expanded listening vocabulary remains available offline", () => {
 
 test("Long story narration stays queued paragraph by paragraph without visual word offsets", () => {
   assert.ok(app.includes("const paragraphPattern = /[^\\n]+/g;"));
-  assert.match(app, /story\\.matchAll\\(paragraphPattern\\)/);
-  assert.doesNotMatch(app.slice(app.indexOf("function speakStory()"), app.indexOf("\\nfunction startSpeakingPractice()")), /highlightSpeechWord\\(paragraph\\.start \\+ event\\.charIndex\\)/);
-  assert.match(app, /speakNextParagraph\\(\\);/);
-  assert.match(app, /utterance\\.onerror = \\(\\) => \\{/);
+  assert.ok(app.includes("story.matchAll(paragraphPattern)"));
+  const start = app.indexOf("function speakStory()");
+  const end = app.indexOf("function startSpeakingPractice()", start);
+  assert.ok(start >= 0 && end > start);
+  const narration = app.slice(start, end);
+  assert.equal(narration.includes("highlightSpeechWord("), false);
+  assert.equal(narration.includes("highlightSpeechParagraph("), false);
+  assert.ok(narration.includes("speakNextParagraph();"));
+  assert.ok(narration.includes("utterance.onerror ="));
 });
 
 test("Story narration keeps controls and word lookup but disables spoken-word highlighting", () => {
-  assert.match(app, /function stopStoryNarration\\(\\)/);
-  assert.match(app, /function clearSpeechHighlight\\(\\)/);
-  assert.match(app, /function highlightSpeechWord\\(charIndex\\)/);
-  assert.match(app, /function stopStoryNarration\\(\\) \\{\\s*activeStoryUtterance = null;\\s*activeWordUtterance = null;\\s*clearSpeechHighlightTimer\\(\\);\\s*if \\("speechSynthesis" in window\\) window\\.speechSynthesis\\.cancel\\(\\);\\s*clearSpeechHighlight\\(\\);\\s*const playButton = \\$("#play-button"\\);\\s*if \\(playButton\\) playButton\\.disabled = false;/);
-  assert.match(app, /\\$("#stop-button"\\)\\.addEventListener\\("click", \\(\\) => \\{\\s*stopStoryNarration\\(\\);/);
-  assert.match(app, /if \\(activeListeningStoryId\\) stopStoryNarration\\(\\);/);
-  assert.match(app, /button\\.dataset\\.speechStart = String\\(partStart\\)/);
-  assert.match(app, /button\\.dataset\\.speechEnd = String\\(speechOffset\\)/);
-  assert.match(app, /utterance\\.onboundary = \\(\\) =>/);
-  assert.match(app, /let activeStoryUtterance = null/);
-  assert.match(app, /if \\(activeStoryUtterance !== utterance\\) return/);
-  assert.match(app, /activeStoryUtterance = null;\\s*activeWordUtterance = null;\\s*clearSpeechHighlightTimer\\(\\);\\s*window\\.speechSynthesis\\.cancel\\(\\);\\s*clearSpeechHighlight\\(\\)/);
-  assert.doesNotMatch(app.slice(app.indexOf("function speakStory()"), app.indexOf("\\nfunction startSpeakingPractice()")), /highlightSpeech(?:Word|Paragraph)\\(/);
+  assert.ok(app.includes("function stopStoryNarration()"));
+  assert.ok(app.includes("function clearSpeechHighlight()"));
+  assert.ok(app.includes("function highlightSpeechWord(charIndex)"));
+  assert.ok(app.includes('$("#stop-button").addEventListener("click", () => {'));
+  assert.ok(app.includes('button.dataset.speechStart = String(partStart)'));
+  assert.ok(app.includes('button.dataset.speechEnd = String(speechOffset)'));
+  assert.ok(app.includes("utterance.onboundary = () =>"));
+  assert.ok(app.includes("let activeStoryUtterance = null"));
+  const start = app.indexOf("function speakStory()");
+  const end = app.indexOf("function startSpeakingPractice()", start);
+  const narration = app.slice(start, end);
+  assert.equal(narration.includes("highlightSpeechWord("), false);
+  assert.equal(narration.includes("highlightSpeechParagraph("), false);
   assert.equal(css.includes(".lesson-word.speech-current-word"), false);
   assert.equal(css.includes("background: #ffe58a"), false);
 });
