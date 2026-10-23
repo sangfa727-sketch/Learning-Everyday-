@@ -112,11 +112,20 @@ test("stale speech events cannot change the current playback or highlight state"
     assert.ok(handlerStart >= 0, `${handler} handler should exist`);
     const handlerEnd = source.indexOf("\n    };", handlerStart);
     assert.ok(handlerEnd > handlerStart, `${handler} handler should close`);
-    assert.match(
-      source.slice(handlerStart, handlerEnd),
-      /if \(activeStoryUtterance !== utterance\) return;/,
-      `${handler} should ignore events from canceled or superseded utterances`
-    );
+    const handlerSource = source.slice(handlerStart, handlerEnd);
+    if (handler === "onboundary") {
+      assert.match(
+        handlerSource,
+        /if \(activeStoryUtterance !== utterance \|\| narrationPaused\) return;/,
+        "onboundary should ignore stale events and late events while paused"
+      );
+    } else {
+      assert.match(
+        handlerSource,
+        /if \(activeStoryUtterance !== utterance\) return;/,
+        `${handler} should ignore events from canceled or superseded utterances`
+      );
+    }
   }
 
   const stopStart = app.indexOf("function stopStoryNarration()");
