@@ -329,7 +329,16 @@ function renderLevelOptions() {
   }
 }
 
+function syncSkillButtons() {
+  document.querySelectorAll("[data-skill]").forEach((button) => {
+    const selected = button.dataset.skill === activeSkill;
+    button.classList.toggle("active", selected);
+    button.setAttribute("aria-pressed", String(selected));
+  });
+}
+
 function renderPractice() {
+  syncSkillButtons();
   const practice = activePractice();
   const level = LEVELS.find((item) => item.id === selectedLevel);
   const skillLabels = language === "my"
@@ -700,6 +709,7 @@ function setLanguage(next) {
 
 document.querySelectorAll("[data-skill]").forEach((button) => button.addEventListener("click", () => {
   activeSkill = button.dataset.skill;
+  syncSkillButtons();
   selectedExerciseIndex = 0;
   if (location.hash.slice(1).split("/").filter(Boolean)[0] === "home" || !location.hash || location.hash === "#") {
     location.hash = `#/${activeSkill}`;
