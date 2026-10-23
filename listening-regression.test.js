@@ -70,7 +70,9 @@ test("Listening narration falls back to approximate word highlighting when TTS o
   assert.match(source, /estimatedDurationMs = Math\.max\(/);
   assert.match(source, /activeSpeechHighlightTimer = window\.setInterval\(/);
   assert.match(source, /if \(receivedBoundaryEvent\) \{\s*clearSpeechHighlightTimer\(\);\s*return;/);
-  assert.match(source, /receivedBoundaryEvent = true;\s*clearSpeechHighlightTimer\(\);\s*highlightSpeechWord/);
+  assert.match(source, /if \(event\.charIndex > lastBoundaryCharIndex\) \{\s*increasingBoundaryCount \+= 1;\s*lastBoundaryCharIndex = event\.charIndex;\s*\}\s*if \(increasingBoundaryCount >= 2\) \{\s*receivedBoundaryEvent = true;\s*clearSpeechHighlightTimer\(\);/);
+  assert.match(source, /let lastBoundaryCharIndex = -1/);
+  assert.match(source, /let increasingBoundaryCount = 0/);
   assert.match(source, /utterance\.onend = \(\) => \{\s*if \(activeStoryUtterance !== utterance\) return;\s*clearSpeechHighlightTimer\(\);\s*speakNextParagraph\(\);/);
   assert.match(source, /utterance\.onerror = \(\) => \{\s*if \(activeStoryUtterance !== utterance\) return;\s*clearSpeechHighlightTimer\(\);/);
   assert.match(app, /function clearSpeechHighlightTimer\(\)/);
