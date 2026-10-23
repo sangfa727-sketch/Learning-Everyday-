@@ -86,13 +86,13 @@ test("skill and level selection previews the matching exercise and opens a level
     readFile(new URL("./curriculum-ui.js", import.meta.url), "utf8"),
     readFile(new URL("./app.js", import.meta.url), "utf8")
   ]);
-  assert.match(html, /id="selected-path-preview"/);
-  assert.match(html, /id="selected-path-objective"/);
-  assert.match(ui, /function renderSelectionPreview\(\)/);
-  assert.match(ui, /skillObjectives\[activeSkill\]\[language\]/);
-  assert.match(ui, /location\.hash = `#\/\$\{activeSkill\}\/\$\{selectedLevel\}`/);
-  assert.match(ui, /function syncStudyRoute\(\)/);
-  assert.match(ui, /selectedLevel = route\[1\]/);
-  assert.match(app, /title: "Choose your skill and level"/);
+  assert.ok(html.includes('id="selected-path-preview"'));
+  assert.ok(html.includes('id="selected-path-objective"'));
+  assert.ok(ui.includes("function renderSelectionPreview()"));
+  assert.ok(ui.includes("skillObjectives[activeSkill][language]"));
+  assert.ok(ui.includes('location.hash = `#/${activeSkill}/${selectedLevel}`'));
+  assert.ok(ui.includes("function syncStudyRoute()"));
+  assert.ok(ui.includes("selectedLevel = route[1]"));
+  assert.ok(app.includes('title: "Choose your skill and level"'));
   for (const skill of ["reading", "listening", "writing", "speaking"]) assert.ok(ui.includes(skill + ": {"));
 });
