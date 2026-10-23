@@ -51,56 +51,26 @@ test("paragraph translation refreshes during manual navigation and automatic nar
   assert.match(app.slice(nextStart, closeStart), /renderStory\(\);\s*refreshCurrentStoryTranslation\(\);/);
 });
 
-test("Listening narration queues paragraph chunks with story-global highlight offsets", () => {
+test("Listening narration keeps paragraph playback but does not apply visual highlights", () => {
   const start = app.indexOf("function speakStory()");
-  const end = app.indexOf("\nfunction startSpeakingPractice()", start);
+  const end = app.indexOf("\\nfunction startSpeakingPractice()", start);
   assert.ok(start >= 0 && end > start, "speakStory should be defined");
   const source = app.slice(start, end);
-  assert.match(source, /const paragraphPattern = \/\[\^\\n\]\+\/g;/);
-  assert.match(source, /paragraphs\.push\(\{ text, start: match\.index \+ match\[0\]\.indexOf\(text\) \}\)/);
-  assert.match(source, /highlightSpeechWord\(paragraph\.start \+ event\.charIndex\)/);
-  assert.match(source, /utterance\.onend = \(\) => \{\s*if \(activeStoryUtterance !== utterance\) return;\s*clearSpeechHighlightTimer\(\);\s*speakNextParagraph\(\);/);
+  assert.match(source, /const paragraphPattern/);
+  assert.match(source, /Intentionally no visual highlight/);
+  assert.doesNotMatch(source, /highlightSpeech(?:Word|Paragraph)\\(/);
+  assert.doesNotMatch(source, /estimatedDurationMs|startFallbackHighlightTimer|window\\.setInterval/);
+  assert.match(source, /utterance\\.onpause = \\(\\) => \\{\\s*if \\(activeStoryUtterance !== utterance\\) return;\\s*narrationPaused = true;/);
+  assert.match(source, /utterance\\.onresume = \\(\\) => \\{\\s*if \\(activeStoryUtterance !== utterance\\) return;\\s*narrationPaused = false;/);
+  assert.match(source, /utterance\\.onend = \\(\\) => \\{\\s*if \\(activeStoryUtterance !== utterance\\) return;\\s*clearSpeechHighlightTimer\\(\\);\\s*speakNextParagraph\\(\\);/);
+  assert.doesNotMatch(css, /#lesson-text\\.speech-current-paragraph/);
+  assert.doesNotMatch(css, /#lesson-text \\.lesson-word\\.speech-current-word/);
 });
 
-test("Listening narration uses paragraph fallback instead of guessed word timing", () => {
-  const start = app.indexOf("function speakStory()");
-  const end = app.indexOf("\nfunction startSpeakingPractice()", start);
-  const source = app.slice(start, end);
-  assert.match(source, /highlightSpeechParagraph\(\)/);
-  assert.match(source, /Never guess word timing/);
-  assert.match(source, /utterance\.onstart = \(\) => \{[\s\S]*?highlightSpeechParagraph\(\);/);
-  assert.doesNotMatch(source, /estimatedDurationMs/);
-  assert.doesNotMatch(source, /startFallbackHighlightTimer/);
-  assert.doesNotMatch(source, /window\.setInterval/);
-  assert.match(source, /let lastBoundaryCharIndex = -1/);
-  assert.match(source, /let narrationPaused = false/);
-  assert.match(source, /utterance\.onboundary = \(event\) => \{\s*if \(activeStoryUtterance !== utterance \|\| narrationPaused\) return;/);
-  assert.match(source, /utterance\.onpause = \(\) => \{\s*if \(activeStoryUtterance !== utterance\) return;\s*narrationPaused = true;/);
-  assert.match(source, /utterance\.onresume = \(\) => \{\s*if \(activeStoryUtterance !== utterance\) return;\s*narrationPaused = false;/);
-  assert.match(source, /let increasingBoundaryCount = 0/);
-  assert.match(source, /if \(increasingBoundaryCount >= 2\) \{\s*receivedReliableBoundaryEvents = true;\s*highlightSpeechWord\(paragraph\.start \+ event\.charIndex\);/);
-  assert.match(source, /utterance\.onpause = \(\) => \{[\s\S]*?keep the last confirmed highlight still/);
-  assert.match(source, /utterance\.onresume = \(\) => \{[\s\S]*?do not estimate progress/);
-  assert.match(source, /utterance\.onend = \(\) => \{\s*if \(activeStoryUtterance !== utterance\) return;\s*clearSpeechHighlightTimer\(\);\s*speakNextParagraph\(\);/);
-  assert.match(source, /utterance\.onerror = \(\) => \{\s*if \(activeStoryUtterance !== utterance\) return;\s*clearSpeechHighlightTimer\(\);/);
-  assert.match(app, /function clearSpeechHighlightTimer\(\)/);
-  assert.match(app, /function highlightSpeechParagraph\(\)/);
-  const stopStart = app.indexOf("function stopStoryNarration()");
-  const stopEnd = app.indexOf("\nfunction clearSpeechHighlight()", stopStart);
-  assert.match(app.slice(stopStart, stopEnd), /clearSpeechHighlightTimer\(\)/);
-  assert.match(css, /#lesson-text\.speech-current-paragraph/);
-});
-
-test("spoken-word highlighting is visibly styled, accessible, and scrolls into view", () => {
-  const start = app.indexOf("function highlightSpeechWord(charIndex)");
-  const end = app.indexOf("\nfunction getStoryParagraphs()", start);
-  assert.ok(start >= 0 && end > start, "speech highlight helper should exist");
-  const source = app.slice(start, end);
-  assert.match(source, /active\.classList\.add\("speech-current-word"\)/);
-  assert.match(source, /active\.setAttribute\("aria-current", "true"\)/);
-  assert.match(source, /scrollIntoView\(\{ block: "nearest", behavior: "smooth" \}\)/);
-  assert.match(css, /\.speech-current-word\s*\{[^}]*background:\s*#ffe58a/s);
-  assert.match(css, /#lesson-text \.lesson-word\.speech-current-word:focus-visible/);
+test("word lookup remains available independently of speech highlighting", () => {
+  assert.match(app, /button\\.dataset\\.speechStart = String\\(partStart\\)/);
+  assert.match(app, /showWord\\(part\\.word, wordParagraphIndex\\)/);
+  assert.doesNotMatch(css, /#lesson-text \\.lesson-word\\.speech-current-word/);
 });
 
 test("stale speech events cannot change the current playback or highlight state", () => {
