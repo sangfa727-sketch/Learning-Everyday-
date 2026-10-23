@@ -58,3 +58,21 @@ test("Home Myanmar headline uses the requested wording and refined type styling"
   assert.match(css, /\.hero h1\[data-i18n="headline"\]\{[^}]*font-family:"Noto Sans Myanmar"/);
   assert.match(css, /font-size:clamp\(25px,6\.4vw,32px\)/);
 });
+
+
+test("About page exposes the requested social links with safe external-link attributes", async () => {
+  const [html, app, css] = await Promise.all([
+    readFile(new URL("./index.html", import.meta.url), "utf8"),
+    readFile(new URL("./app.js", import.meta.url), "utf8"),
+    readFile(new URL("./styles.css", import.meta.url), "utf8")
+  ]);
+  assert.match(html, /id="about-page"[^>]*hidden/);
+  assert.match(html, /href="#\/about" data-i18n="aboutLink"/);
+  assert.match(html, /href="https:\/\/www\.tiktok\.com\/@saiihar0" target="_blank" rel="noopener noreferrer"/);
+  assert.match(html, /href="https:\/\/t\.me\/saryaedhi01" target="_blank" rel="noopener noreferrer"/);
+  assert.match(html, /href="https:\/\/www\.facebook\.com\/share\/1Hj82kKydx\/" target="_blank" rel="noopener noreferrer"/);
+  assert.match(app, /new Set\(\["home", "skills", "reading", "listening", "writing", "speaking", "progress", "about"\]\)/);
+  assert.match(app, /aboutLink:"အကြောင်း"/);
+  assert.match(css, /body\[data-page="about"\] #about-page\{display:block\}/);
+  assert.match(css, /\.about-social-link:focus-visible/);
+});
