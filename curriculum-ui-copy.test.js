@@ -45,5 +45,5 @@ test("vocabulary topic cards navigate to dedicated pages and retain word audio d
   assert.match(css, /\.vocabulary-speaker\{position:absolute/);
   assert.match(css, /@keyframes vocabulary-detail-out/);
   assert.match(css, /prefers-reduced-motion:reduce/);
-  assert.match(worker, /learning-everyday-shell-v41/);
+  assert.match(worker, /learning-everyday-shell-v42/);
 });

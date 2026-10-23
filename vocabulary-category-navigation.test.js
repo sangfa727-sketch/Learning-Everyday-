@@ -25,5 +25,5 @@ test("category cards remain two columns and the selected topic gets a focused pa
 });
 
 test("service worker shell cache is bumped for the navigation change", () => {
-  assert.match(sw, /learning-everyday-shell-v41/);
+  assert.match(sw, /learning-everyday-shell-v42/);
 });
