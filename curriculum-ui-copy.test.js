@@ -69,7 +69,7 @@ test("About page exposes the requested social links with safe external-link attr
   assert.match(html, /id="about-page"[^>]*hidden/);
   assert.match(html, /href="#\/about" data-i18n="aboutLink"/);
   assert.match(html, /href="https:\/\/www\.tiktok\.com\/@saiihar0" target="_blank" rel="noopener noreferrer"/);
-  assert.match(html, /href="https:\/\/t\.me\/saryaedhi01" target="_blank" rel="noopener noreferrer"/);
+  assert.match(html, /href="https:\/\/t\.me\/scmss01" target="_blank" rel="noopener noreferrer"/);
   assert.match(html, /href="https:\/\/www\.facebook\.com\/share\/1Hj82kKydx\/" target="_blank" rel="noopener noreferrer"/);
   assert.match(app, /new Set\(\["home", "skills", "reading", "listening", "writing", "speaking", "progress", "about"\]\)/);
   assert.match(app, /aboutLink:"အကြောင်း"/);
