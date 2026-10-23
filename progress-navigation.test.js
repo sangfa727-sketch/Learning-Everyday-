@@ -12,7 +12,7 @@ test("progress has a reachable bilingual route and dedicated page layout", async
   assert.match(app, /progressLink:"Progress"/);
   assert.match(app, /progressLink:"လေ့လာမှုတိုးတက်မှု"/);
   assert.match(html, /href="#\/progress"[^>]*data-i18n="progressLink"/);
-  assert.match(html, /href="#\/skills"[^>]*data-i18n="skillsLink"/);
+  assert.match(html, /href="\.\/study-path\.html"[^>]*data-i18n="skillsLink"/);
   assert.match(app, /skillsLink:"Skills & Levels"/);
   assert.match(css, /body\[data-page="skills"\] #skills-level-page\{display:block\}/);
   assert.match(css, /body\[data-page="progress"\] #curriculum-workbench \.progress-tools\{display:block/);
