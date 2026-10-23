@@ -14,6 +14,11 @@ test("practice card title follows the selected skill instead of repeating the fo
   assert.match(html, /id="skills-level-page"/);
   assert.match(html, /id="level-options"/);
   assert.match(ui, /button\.dataset\.level = level\.id/);
+  assert.match(ui, /function syncSkillButtons\(\)/);
+  assert.match(ui, /button\.classList\.toggle\("active", selected\)/);
+  assert.match(ui, /button\.setAttribute\("aria-pressed", String\(selected\)\)/);
+  assert.match(ui, /function renderPractice\(\) \{\s*syncSkillButtons\(\);/);
+  assert.match(ui, /activeSkill = button\.dataset\.skill;\s*syncSkillButtons\(\);/);
   assert.match(ui, /ကျွမ်းကျင်မှုအလိုက် လေ့ကျင့်ခန်း/);
   assert.match(ui, /စာဖတ်ခြင်း/);
   assert.match(ui, /နားထောင်ခြင်း/);
