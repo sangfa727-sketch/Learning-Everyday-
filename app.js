@@ -241,7 +241,7 @@ let speechRecognition = null;
 
 const pageCopy = {
   home: { en: { title: "Learn at your own pace", description: "Choose a skill and continue with a focused practice page.", eyebrow: "YOUR DAILY LEARNING PATH" }, my: { title: "မိမိနှုန်းထားအတိုင်း လေ့လာပါ", description: "ကျွမ်းကျင်မှုတစ်ခုကို ရွေးချယ်ပြီး သက်ဆိုင်ရာစာမျက်နှာတွင် အာရုံစိုက်လေ့ကျင့်ပါ။", eyebrow: "နေ့စဉ်လေ့လာမှု လမ်းကြောင်း" } },
-  skills: { en: { title: "Four skills · Six levels", description: "Choose a skill and a CEFR level here. Your practice pages stay focused on the exercise.", eyebrow: "CHOOSE YOUR LEARNING PATH" }, my: { title: "ကျွမ်းကျင်မှု ၄ မျိုး · အဆင့် ၆ ဆင့်", description: "ကျွမ်းကျင်မှုနှင့် CEFR အဆင့်ကို ဤနေရာတွင် ရွေးပါ။ လေ့ကျင့်ခန်းစာမျက်နှာများတွင် လေ့ကျင့်မှုကိုသာ အာရုံစိုက်နိုင်သည်။", eyebrow: "သင်ယူမှုလမ်းကြောင်း ရွေးချယ်ပါ" } },
+  skills: { en: { title: "Choose your skill and level", description: "Select one skill and any CEFR level, then start a focused practice session.", eyebrow: "CHOOSE YOUR LEARNING PATH" }, my: { title: "ကျွမ်းကျင်မှုနှင့် အဆင့်ရွေးချယ်ပါ", description: "ကျွမ်းကျင်မှုတစ်ခုနှင့် CEFR အဆင့်တစ်ခုကို ရွေးပြီး သီးသန့်လေ့ကျင့်မှုကို စတင်ပါ။", eyebrow: "သင်ယူမှုလမ်းကြောင်း ရွေးချယ်ပါ" } },
   progress: { en: { title: "Your learning progress", description: "Review your completed skill-level practices. Your progress stays on this device unless you export it.", eyebrow: "YOUR LEARNING JOURNEY" }, my: { title: "လေ့လာမှုတိုးတက်မှု", description: "ပြီးမြောက်ထားသော ကျွမ်းကျင်မှုလေ့ကျင့်ခန်းများကို ကြည့်ပါ။ Export မလုပ်ပါက မှတ်တမ်းကို ဤစက်ပေါ်တွင်သာ သိမ်းထားသည်။", eyebrow: "သင်ယူမှုခရီးစဉ်" } },
   about: { en: { title: "About Learning Everyday", description: "Learn a little every day, and connect with us through our social pages.", eyebrow: "ABOUT THE APP" }, my: { title: "Learning Everyday အကြောင်း", description: "နေ့စဉ် နည်းနည်းစီ လေ့လာပါ။ ကျွန်ုပ်တို့၏ လူမှုကွန်ရက်စာမျက်နှာများမှလည်း ဆက်သွယ်နိုင်ပါသည်။", eyebrow: "APP အကြောင်း" } },
   reading: { en: { title: "Vocabulary", description: "Explore everyday words by topic, with meanings and example sentences.", eyebrow: "WORDS · MEANING · EXAMPLES" }, my: { title: "ဝေါဟာရ", description: "နေ့စဉ်သုံး စကားလုံးများကို အမျိုးအစားအလိုက် လေ့လာပြီး အဓိပ္ပာယ်နှင့် ဥပမာဝါကျများကို ကြည့်ပါ။", eyebrow: "စကားလုံး · အဓိပ္ပာယ် · ဥပမာ" } },
@@ -800,9 +800,6 @@ function speakStory() {
     utterance.lang = voice?.lang || "en-US";
     if (voice) utterance.voice = voice;
     utterance.rate = rate;
-    let lastBoundaryCharIndex = -1;
-    let increasingBoundaryCount = 0;
-    let receivedReliableBoundaryEvents = false;
     let narrationPaused = false;
 
     utterance.onstart = () => {
@@ -810,35 +807,21 @@ function speakStory() {
       narrationPaused = false;
       $("#play-button").disabled = true;
       $("#status-message").textContent = language === "my" ? "နားထောင်နေသည်…" : "Playing story…";
-      // Never guess word timing. Until the voice reports reliable word positions,
-      // keep one calm highlight on the paragraph currently being spoken.
-      highlightSpeechParagraph();
+      // Audio playback is independent of visual word/paragraph highlighting.
     };
-    utterance.onboundary = (event) => {
+    utterance.onboundary = () => {
+      // Intentionally no visual highlight: mobile speech boundary timing is unreliable.
       if (activeStoryUtterance !== utterance || narrationPaused) return;
-      if (!Number.isFinite(event.charIndex)) return;
-      // Ignore the first boundary: some mobile engines emit only a single
-      // initial event and then no usable word timing.
-      if (event.charIndex > lastBoundaryCharIndex) {
-        increasingBoundaryCount += 1;
-        lastBoundaryCharIndex = event.charIndex;
-      }
-      if (increasingBoundaryCount >= 2) {
-        receivedReliableBoundaryEvents = true;
-        highlightSpeechWord(paragraph.start + event.charIndex);
-      } else if (!receivedReliableBoundaryEvents) {
-        highlightSpeechParagraph();
-      }
     };
     utterance.onpause = () => {
       if (activeStoryUtterance !== utterance) return;
       narrationPaused = true;
-      // Ignore any late boundary events while paused; keep the last confirmed highlight still.
+      // Keep playback paused; visual tracking is disabled.
     };
     utterance.onresume = () => {
       if (activeStoryUtterance !== utterance) return;
       narrationPaused = false;
-      // Resume follows actual boundary events; do not estimate progress.
+      // Resume audio without attempting to estimate visual progress.
     };
     utterance.onend = () => {
       if (activeStoryUtterance !== utterance) return;
