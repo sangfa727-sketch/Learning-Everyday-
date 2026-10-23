@@ -47,7 +47,7 @@ function renderLevelChoices(){
   const code=document.createElement("strong"); code.textContent=level.id;
   const name=document.createElement("span"); name.textContent=localName(level);
   const hint=document.createElement("small"); hint.textContent=level.id==="A1"?(language==="my"?"အခြေခံမှ စတင်ရန်":"Start with the basics"):level.id==="C2"?(language==="my"?"ကျွမ်းကျင်အဆင့်":"Mastery and nuance"):(language==="my"?"အဆင့်အလိုက် လေ့လာရန်":"Level-matched lessons");
-  button.append(code,name,hint); button.addEventListener("click",()=>{levelId=level.id;renderLevelChoices();renderStudyPath();}); host.append(button);
+  button.append(code,name,hint); button.addEventListener("click",()=>{levelId=level.id;syncPathUrl();renderLevelChoices();renderStudyPath();}); host.append(button);
  }
 }
 function renderStudyPath(){
@@ -84,6 +84,7 @@ function renderLessonAction(lesson,t){
   const note=document.createElement("p");note.className="study-action-note";note.textContent=language==="my"?"စာပိုဒ်ကို ဖတ်ပြီး အဓိကအချက်ကို ကိုယ်တိုင်ပြန်ပြောကြည့်ပါ။":"Read the passage, then explain its main idea in your own words.";host.append(note);
  }
 }
+function syncPathUrl(){try{const url=new URL(window.location.href);url.searchParams.set("level",levelId);url.searchParams.set("skill",skill);window.history.replaceState({}, "", url);}catch{}}
 function answerKey(){return "le.studyPath.answer."+levelId+"."+skill;}
 function readAnswer(){try{return localStorage.getItem(answerKey())||"";}catch{return "";}}
 function renderVocabulary(t){
@@ -104,7 +105,8 @@ function startRecognition(){
  try{const recognition=new Recognition();recognition.lang="en-US";recognition.interimResults=false;recognition.maxAlternatives=1;result.textContent=t.micReady;recognition.onresult=event=>{result.textContent=t.micResult+" "+event.results[0][0].transcript;};recognition.onerror=()=>{result.textContent=t.micError;};recognition.start();}catch{result.textContent=t.micError;}
 }
 function setLanguage(next){language=next;document.documentElement.lang=next==="my"?"my":"en";$("#study-language-toggle").textContent=next==="en"?"မြန်မာ":"English";document.querySelectorAll("[data-copy]").forEach(node=>{const value=copy[next][node.dataset.copy];if(value)node.textContent=value;});renderLevelChoices();renderStudyPath();}
-document.querySelectorAll("[data-study-skill]").forEach(button=>button.addEventListener("click",()=>{skill=button.dataset.studySkill;renderStudyPath();}));
+document.querySelectorAll("[data-study-skill]").forEach(button=>button.addEventListener("click",()=>{skill=button.dataset.studySkill;syncPathUrl();renderStudyPath();}));
 $("#study-language-toggle").addEventListener("click",()=>setLanguage(language==="en"?"my":"en"));
+try{const params=new URL(window.location.href).searchParams;const requestedLevel=params.get("level");const requestedSkill=params.get("skill");if(LEVELS.some(item=>item.id===requestedLevel))levelId=requestedLevel;if(Object.hasOwn(skillNames,requestedSkill))skill=requestedSkill;}catch{}
 renderLevelChoices();renderStudyPath();
 window.addEventListener("pagehide",()=>{if("speechSynthesis" in window)window.speechSynthesis.cancel();});
