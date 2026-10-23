@@ -69,7 +69,7 @@ test("Listening narration falls back to approximate word highlighting when TTS o
   assert.match(source, /let receivedBoundaryEvent = false/);
   assert.match(source, /estimatedDurationMs = Math\.max\(/);
   assert.match(source, /\(paragraph\.text\.trim\(\)\.split\(\/\\s\+\/\)\.length \/ \(3\.1 \* rate\)\) \* 1000/);
-  assert.match(source, /highlightSpeechWord\(paragraph\.start\);[\s\S]*?\}, 80\);/);
+  assert.match(source, /utterance\.onstart = \(\) => \{[\s\S]*?highlightSpeechWord\(paragraph\.start\);[\s\S]*?startFallbackHighlightTimer\(\);/);
   assert.match(source, /activeSpeechHighlightTimer = window\.setInterval\(/);
   assert.match(source, /let fallbackElapsedMs = 0/);
   assert.match(source, /utterance\.onpause = \(\) => \{[\s\S]*?fallbackElapsedMs \+= Date\.now\(\) - utteranceStartedAt;[\s\S]*?clearSpeechHighlightTimer\(\);/);
