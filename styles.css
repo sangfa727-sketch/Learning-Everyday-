@@ -541,6 +541,14 @@ body[data-page="reading"] #curriculum-workbench .curriculum-header .section-inde
 @media(max-width:720px){body[data-page="reading"] #curriculum-workbench .curriculum-grid{grid-template-columns:minmax(0,1fr)}}
 
 
+/* Conservative narration fallback: highlight the active paragraph, never guessed word timing. */
+#lesson-text.speech-current-paragraph {
+  border-radius: 10px;
+  background: #f5f8ed;
+  box-shadow: inset 3px 0 0 #8aa477;
+  padding: 8px 10px;
+}
+
 /* Live narration tracking: keep the word spoken by English voice visibly selected. */
 #lesson-text .lesson-word.speech-current-word {
   position: relative;

@@ -62,29 +62,29 @@ test("Listening narration queues paragraph chunks with story-global highlight of
   assert.match(source, /utterance\.onend = \(\) => \{\s*if \(activeStoryUtterance !== utterance\) return;\s*clearSpeechHighlightTimer\(\);\s*speakNextParagraph\(\);/);
 });
 
-test("Listening narration falls back to approximate word highlighting when TTS omits boundary events", () => {
+test("Listening narration uses paragraph fallback instead of guessed word timing", () => {
   const start = app.indexOf("function speakStory()");
   const end = app.indexOf("\nfunction startSpeakingPractice()", start);
   const source = app.slice(start, end);
-  assert.match(source, /let receivedBoundaryEvent = false/);
-  assert.match(source, /estimatedDurationMs = Math\.max\(/);
-  assert.match(source, /\(paragraph\.text\.trim\(\)\.split\(\/\\s\+\/\)\.length \/ \(3\.1 \* rate\)\) \* 1000/);
-  assert.match(source, /utterance\.onstart = \(\) => \{[\s\S]*?highlightSpeechWord\(paragraph\.start\);[\s\S]*?startFallbackHighlightTimer\(\);/);
-  assert.match(source, /activeSpeechHighlightTimer = window\.setInterval\(/);
-  assert.match(source, /let fallbackElapsedMs = 0/);
-  assert.match(source, /utterance\.onpause = \(\) => \{[\s\S]*?fallbackElapsedMs \+= Date\.now\(\) - utteranceStartedAt;[\s\S]*?clearSpeechHighlightTimer\(\);/);
-  assert.match(source, /utterance\.onresume = \(\) => \{[\s\S]*?startFallbackHighlightTimer\(\);/);
-  assert.match(source, /const elapsedMs = fallbackElapsedMs \+ \(Date\.now\(\) - utteranceStartedAt\)/);
-  assert.match(source, /if \(receivedBoundaryEvent\) \{\s*clearSpeechHighlightTimer\(\);\s*return;/);
-  assert.match(source, /if \(event\.charIndex > lastBoundaryCharIndex\) \{\s*increasingBoundaryCount \+= 1;\s*lastBoundaryCharIndex = event\.charIndex;\s*\}\s*if \(increasingBoundaryCount >= 2\) \{\s*receivedBoundaryEvent = true;\s*clearSpeechHighlightTimer\(\);/);
+  assert.match(source, /highlightSpeechParagraph\(\)/);
+  assert.match(source, /Never guess word timing/);
+  assert.match(source, /utterance\.onstart = \(\) => \{[\s\S]*?highlightSpeechParagraph\(\);/);
+  assert.doesNotMatch(source, /estimatedDurationMs/);
+  assert.doesNotMatch(source, /startFallbackHighlightTimer/);
+  assert.doesNotMatch(source, /window\.setInterval/);
   assert.match(source, /let lastBoundaryCharIndex = -1/);
   assert.match(source, /let increasingBoundaryCount = 0/);
+  assert.match(source, /if \(increasingBoundaryCount >= 2\) \{\s*receivedReliableBoundaryEvents = true;\s*highlightSpeechWord\(paragraph\.start \+ event\.charIndex\);/);
+  assert.match(source, /utterance\.onpause = \(\) => \{[\s\S]*?last confirmed word stays still/);
+  assert.match(source, /utterance\.onresume = \(\) => \{[\s\S]*?do not estimate progress/);
   assert.match(source, /utterance\.onend = \(\) => \{\s*if \(activeStoryUtterance !== utterance\) return;\s*clearSpeechHighlightTimer\(\);\s*speakNextParagraph\(\);/);
   assert.match(source, /utterance\.onerror = \(\) => \{\s*if \(activeStoryUtterance !== utterance\) return;\s*clearSpeechHighlightTimer\(\);/);
   assert.match(app, /function clearSpeechHighlightTimer\(\)/);
+  assert.match(app, /function highlightSpeechParagraph\(\)/);
   const stopStart = app.indexOf("function stopStoryNarration()");
   const stopEnd = app.indexOf("\nfunction clearSpeechHighlight()", stopStart);
   assert.match(app.slice(stopStart, stopEnd), /clearSpeechHighlightTimer\(\)/);
+  assert.match(css, /#lesson-text\.speech-current-paragraph/);
 });
 
 test("spoken-word highlighting is visibly styled, accessible, and scrolls into view", () => {

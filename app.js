@@ -478,6 +478,14 @@ function clearSpeechHighlight() {
     element.classList.remove("speech-current-word");
     element.removeAttribute("aria-current");
   });
+  $("#lesson-text")?.classList.remove("speech-current-paragraph");
+}
+
+function highlightSpeechParagraph() {
+  const container = $("#lesson-text");
+  if (!container) return;
+  clearSpeechHighlight();
+  container.classList.add("speech-current-paragraph");
 }
 
 function highlightSpeechWord(charIndex) {
@@ -792,72 +800,41 @@ function speakStory() {
     utterance.lang = voice?.lang || "en-US";
     if (voice) utterance.voice = voice;
     utterance.rate = rate;
-    let receivedBoundaryEvent = false;
     let lastBoundaryCharIndex = -1;
     let increasingBoundaryCount = 0;
-    let utteranceStartedAt = 0;
-    let fallbackElapsedMs = 0;
-    const estimatedDurationMs = Math.max(
-      1000,
-      (paragraph.text.trim().split(/\s+/).length / (3.1 * rate)) * 1000
-    );
-    const startFallbackHighlightTimer = () => {
-      if (receivedBoundaryEvent || activeStoryUtterance !== utterance) return;
-      clearSpeechHighlightTimer();
-      utteranceStartedAt = Date.now();
-      activeSpeechHighlightTimer = window.setInterval(() => {
-        if (activeStoryUtterance !== utterance) {
-          clearSpeechHighlightTimer();
-          return;
-        }
-        if (receivedBoundaryEvent) {
-          clearSpeechHighlightTimer();
-          return;
-        }
-        const elapsedMs = fallbackElapsedMs + (Date.now() - utteranceStartedAt);
-        const progress = Math.min(0.96, elapsedMs / estimatedDurationMs);
-        const estimatedCharIndex = Math.min(
-          paragraph.text.length - 1,
-          Math.max(0, Math.floor(progress * paragraph.text.length))
-        );
-        highlightSpeechWord(paragraph.start + estimatedCharIndex);
-      }, 80);
-    };
+    let receivedReliableBoundaryEvents = false;
+
     utterance.onstart = () => {
       if (activeStoryUtterance !== utterance) return;
       $("#play-button").disabled = true;
       $("#status-message").textContent = language === "my" ? "နားထောင်နေသည်…" : "Playing story…";
-      fallbackElapsedMs = 0;
-      // Show the first word immediately; fallback timing follows only active speech time.
-      highlightSpeechWord(paragraph.start);
-      startFallbackHighlightTimer();
-    };
-    utterance.onpause = () => {
-      if (activeStoryUtterance !== utterance) return;
-      if (!receivedBoundaryEvent && activeSpeechHighlightTimer !== null) {
-        fallbackElapsedMs += Date.now() - utteranceStartedAt;
-        clearSpeechHighlightTimer();
-      }
-    };
-    utterance.onresume = () => {
-      if (activeStoryUtterance !== utterance) return;
-      startFallbackHighlightTimer();
+      // Never guess word timing. Until the voice reports reliable word positions,
+      // keep one calm highlight on the paragraph currently being spoken.
+      highlightSpeechParagraph();
     };
     utterance.onboundary = (event) => {
       if (activeStoryUtterance !== utterance) return;
-      if (Number.isFinite(event.charIndex)) {
-        // A single boundary (often charIndex 0) is not enough to prove that
-        // this TTS engine will keep reporting word positions.
-        if (event.charIndex > lastBoundaryCharIndex) {
-          increasingBoundaryCount += 1;
-          lastBoundaryCharIndex = event.charIndex;
-        }
-        if (increasingBoundaryCount >= 2) {
-          receivedBoundaryEvent = true;
-          clearSpeechHighlightTimer();
-        }
-        highlightSpeechWord(paragraph.start + event.charIndex);
+      if (!Number.isFinite(event.charIndex)) return;
+      // Ignore the first boundary: some mobile engines emit only a single
+      // initial event and then no usable word timing.
+      if (event.charIndex > lastBoundaryCharIndex) {
+        increasingBoundaryCount += 1;
+        lastBoundaryCharIndex = event.charIndex;
       }
+      if (increasingBoundaryCount >= 2) {
+        receivedReliableBoundaryEvents = true;
+        highlightSpeechWord(paragraph.start + event.charIndex);
+      } else if (!receivedReliableBoundaryEvents) {
+        highlightSpeechParagraph();
+      }
+    };
+    utterance.onpause = () => {
+      if (activeStoryUtterance !== utterance) return;
+      // No timer is running: the paragraph or last confirmed word stays still.
+    };
+    utterance.onresume = () => {
+      if (activeStoryUtterance !== utterance) return;
+      // Resume follows actual boundary events; do not estimate progress.
     };
     utterance.onend = () => {
       if (activeStoryUtterance !== utterance) return;
