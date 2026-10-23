@@ -45,5 +45,16 @@ test("vocabulary topic cards navigate to dedicated pages and retain word audio d
   assert.match(css, /\.vocabulary-speaker\{position:absolute/);
   assert.match(css, /@keyframes vocabulary-detail-out/);
   assert.match(css, /prefers-reduced-motion:reduce/);
-  assert.match(worker, /learning-everyday-shell-v41/);
+  assert.match(worker, /learning-everyday-shell-v42/);
+});
+
+
+test("Home Myanmar headline uses the requested wording and refined type styling", async () => {
+  const [app, css] = await Promise.all([
+    readFile(new URL("./app.js", import.meta.url), "utf8"),
+    readFile(new URL("./styles.css", import.meta.url), "utf8")
+  ]);
+  assert.match(app, /headline:"အင်္ဂလိပ်စာ ကောင်းလာဖို့<br>နေ့စဉ် တစ်လှမ်းချင်း သင်ယူစို့။"/);
+  assert.match(css, /\.hero h1\[data-i18n="headline"\]\{[^}]*font-family:"Noto Sans Myanmar"/);
+  assert.match(css, /font-size:clamp\(25px,6\.4vw,32px\)/);
 });
