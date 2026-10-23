@@ -71,6 +71,10 @@ test("Listening narration falls back to approximate word highlighting when TTS o
   assert.match(source, /\(paragraph\.text\.trim\(\)\.split\(\/\\s\+\/\)\.length \/ \(3\.1 \* rate\)\) \* 1000/);
   assert.match(source, /highlightSpeechWord\(paragraph\.start\);[\s\S]*?\}, 80\);/);
   assert.match(source, /activeSpeechHighlightTimer = window\.setInterval\(/);
+  assert.match(source, /let fallbackElapsedMs = 0/);
+  assert.match(source, /utterance\.onpause = \(\) => \{[\s\S]*?fallbackElapsedMs \+= Date\.now\(\) - utteranceStartedAt;[\s\S]*?clearSpeechHighlightTimer\(\);/);
+  assert.match(source, /utterance\.onresume = \(\) => \{[\s\S]*?startFallbackHighlightTimer\(\);/);
+  assert.match(source, /const elapsedMs = fallbackElapsedMs \+ \(Date\.now\(\) - utteranceStartedAt\)/);
   assert.match(source, /if \(receivedBoundaryEvent\) \{\s*clearSpeechHighlightTimer\(\);\s*return;/);
   assert.match(source, /if \(event\.charIndex > lastBoundaryCharIndex\) \{\s*increasingBoundaryCount \+= 1;\s*lastBoundaryCharIndex = event\.charIndex;\s*\}\s*if \(increasingBoundaryCount >= 2\) \{\s*receivedBoundaryEvent = true;\s*clearSpeechHighlightTimer\(\);/);
   assert.match(source, /let lastBoundaryCharIndex = -1/);
@@ -99,7 +103,7 @@ test("stale speech events cannot change the current playback or highlight state"
   const start = app.indexOf("function speakStory()");
   const end = app.indexOf("\nfunction startSpeakingPractice()", start);
   const source = app.slice(start, end);
-  for (const handler of ["onstart", "onboundary", "onend", "onerror"]) {
+  for (const handler of ["onstart", "onboundary", "onpause", "onresume", "onend", "onerror"]) {
     const handlerStart = source.indexOf("utterance." + handler);
     assert.ok(handlerStart >= 0, `${handler} handler should exist`);
     const handlerEnd = source.indexOf("\n    };", handlerStart);
