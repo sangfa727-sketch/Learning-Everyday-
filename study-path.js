@@ -65,8 +65,12 @@ function renderStudyPath(){
 function renderLessonAction(lesson,t){
  const host=$("#study-lesson-action-wrap");host.replaceChildren();
  if(skill==="listening"){
+  const controls=document.createElement("div");controls.className="study-audio-controls";
   const play=document.createElement("button");play.className="primary-button";play.type="button";play.textContent=t.play;
-  play.addEventListener("click",()=>speak(lesson.text,t));host.append(play);
+  play.addEventListener("click",()=>speak(lesson.text,t));
+  const stop=document.createElement("button");stop.className="secondary-button";stop.type="button";stop.textContent=t.stop;
+  stop.addEventListener("click",()=>{if("speechSynthesis" in window)window.speechSynthesis.cancel();speech=null;$("#study-status").textContent=t.speechReady;});
+  controls.append(play,stop);host.append(controls);
   const note=document.createElement("p");note.className="study-action-note";note.textContent=language==="my"?"အသံဖတ်ခြင်းသည် သင့်စက်ရှိ English voice ကို အသုံးပြုသည်။":"Uses the English voice available on your device.";host.append(note);
  } else if(skill==="writing"){
   const label=document.createElement("label");label.className="study-answer-label";label.htmlFor="study-writing-answer";label.textContent=language==="my"?"မိမိအဖြေ":"Your response";
