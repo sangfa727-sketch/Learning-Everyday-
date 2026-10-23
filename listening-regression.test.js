@@ -828,7 +828,7 @@ test("tapping another story word dismisses the open card without opening a repla
 
 test("service worker refreshes the app shell cache and includes the shared offline dictionary", async () => {
   const sw = await readFile(new URL("./sw.js", import.meta.url), "utf8");
-  assert.match(sw, /CACHE_NAME\s*=\s*"learning-everyday-shell-v41"/);
+  assert.match(sw, /CACHE_NAME\s*=\s*"learning-everyday-shell-v42"/);
   assert.match(sw, /APP_SHELL\s*=\s*\[[^\]]*"\.\/dictionary\.js"/s);
 });
 
