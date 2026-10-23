@@ -16,6 +16,9 @@ test("dedicated study path includes all six CEFR levels and all four skills", as
     assert.match(script, new RegExp("\\b" + level + "\\s*:"));
   }
   assert.match(script, /studyPath\.answer\./);
+  assert.match(script, /params\.get\("level"\)/);
+  assert.match(script, /params\.get\("skill"\)/);
+  assert.match(script, /history\.replaceState/);
   assert.match(worker, /"\.\/study-path\.html"/);
   assert.match(worker, /"\.\/study-path\.js"/);
   assert.match(worker, /"\.\/study-path\.css"/);
