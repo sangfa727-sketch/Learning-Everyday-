@@ -938,3 +938,15 @@ body[data-page="about"] #about-page{display:block}
 .about-social-link small{color:#7b877e;font-size:11px;overflow-wrap:anywhere}
 .about-external{margin-left:auto;color:#829181;font-size:16px}
 @media(max-width:760px){.about-nav-link{min-height:38px;padding:0 10px;font-size:11px}.about-page{margin-top:2px}.about-card{border-radius:20px}.about-intro>p:last-child{font-size:13px}}
+
+
+.about-footer-link{justify-self:start;color:#65786a;text-decoration:none;font-size:10px;font-weight:750}
+.about-footer-link:hover{text-decoration:underline;text-underline-offset:3px}
+footer{grid-template-columns:auto auto 1fr auto}
+@media(max-width:760px){
+  .about-nav-link{display:none}
+  footer{grid-template-columns:1fr auto}
+  footer>.about-footer-link{grid-column:2;grid-row:1;align-self:center}
+  footer>span{grid-column:1/-1;grid-row:2}
+  footer>.back-top{grid-column:2;grid-row:3}
+}
