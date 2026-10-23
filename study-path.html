@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#173c35">
+  <meta name="description" content="Choose a CEFR level and practise Reading, Listening, Writing and Speaking with level-specific vocabulary.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./study-path.css">
+  <title>Choose your CEFR level — Learning Everyday</title>
+</head>
+<body class="study-path-body">
+  <header id="top" class="topbar">
+    <a class="brand" href="./" aria-label="Learning Everyday home"><span class="brand-mark" aria-hidden="true"><span>le</span><i></i></span><span class="brand-copy"><span>Learning</span><b>Everyday</b></span></a>
+    <div class="header-actions">
+      <a class="skills-nav-link" href="./study-path.html" aria-current="page">Skill &amp; Level</a>
+      <button id="study-language-toggle" class="language-toggle" type="button" aria-label="Switch interface language">မြန်မာ</button>
+    </div>
+  </header>
+  <main class="study-shell">
+    <a class="study-back-link" href="./">← <span data-copy="back">Home</span></a>
+    <section class="study-intro">
+      <p class="eyebrow"><span class="eyebrow-line"></span><span data-copy="eyebrow">GET STARTED</span></p>
+      <h1 data-copy="heading">Choose your CEFR level</h1>
+      <p data-copy="subheading">Select one of the six levels, then study all four skills with lessons and new vocabulary matched to your level.</p>
+    </section>
+    <section class="level-picker-panel" aria-labelledby="level-picker-title">
+      <div class="study-section-heading"><div><p class="eyebrow" data-copy="step">STEP 01</p><h2 id="level-picker-title" data-copy="levels">Choose your CEFR level</h2><p data-copy="levelHelp">Start with the level that feels comfortable. You can change it at any time.</p></div><span class="level-tag">A1–C2</span></div>
+      <div id="study-level-options" class="study-level-grid" role="group" aria-label="Choose CEFR level"></div>
+    </section>
+    <section id="selected-path-preview" class="study-path-panel" aria-live="polite" aria-labelledby="selected-path-title">
+      <div class="study-path-overline"><span data-copy="selected">YOUR SELECTED PATH</span><span id="selected-path-level" class="level-tag">A1 · Beginner</span></div>
+      <h2 id="selected-path-title">Reading · A1</h2>
+      <p id="selected-path-objective" class="study-objective">Recognise familiar words and understand very short sentences.</p>
+      <div class="study-skill-tabs" role="group" aria-label="Choose a skill">
+        <button type="button" class="study-skill-tab is-active" data-study-skill="reading" aria-pressed="true">Reading</button>
+        <button type="button" class="study-skill-tab" data-study-skill="listening" aria-pressed="false">Listening</button>
+        <button type="button" class="study-skill-tab" data-study-skill="writing" aria-pressed="false">Writing</button>
+        <button type="button" class="study-skill-tab" data-study-skill="speaking" aria-pressed="false">Speaking</button>
+      </div>
+      <div class="study-lesson-grid">
+        <article class="study-lesson-card">
+          <p class="eyebrow" data-copy="lesson">LEVEL-BASED LESSON</p>
+          <h3 id="study-lesson-title">My everyday life</h3>
+          <p id="study-lesson-text" class="study-lesson-text"></p>
+          <div id="study-lesson-action-wrap" class="study-lesson-action-wrap"></div>
+        </article>
+        <article class="study-vocabulary-card">
+          <div class="study-vocab-heading"><div><p class="eyebrow" data-copy="newWords">NEW WORDS</p><h3 data-copy="vocabTitle">Vocabulary for this level</h3></div><span id="study-vocab-count" class="level-tag">8 words</span></div>
+          <p class="study-vocab-note" data-copy="vocabNote">These words are selected for your chosen level. Select a word to reveal its meaning and example.</p>
+          <div id="study-vocabulary-list" class="study-vocabulary-list"></div>
+        </article>
+      </div>
+      <p id="study-status" class="study-status" role="status" aria-live="polite">Choose a level to begin.</p>
+    </section>
+  </main>
+  <footer class="study-footer"><a class="footer-brand" href="./"><span class="footer-mark">le</span> Learning Everyday</a><span data-copy="footer">Learn · Practise · Grow — at your own pace.</span><a class="back-top" href="#top" data-copy="top">Back to top ↑</a></footer>
+  <script type="module" src="./study-path.js"></script>
+  <script>
+    if ("serviceWorker" in navigator && location.protocol !== "file:") {
+      window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
+    }
+  </script>
+</body>
+</html>

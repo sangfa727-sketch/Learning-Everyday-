@@ -50,7 +50,7 @@ test("vocabulary topic cards navigate to dedicated pages and retain word audio d
   assert.match(css, /\.vocabulary-speaker\{position:absolute/);
   assert.match(css, /@keyframes vocabulary-detail-out/);
   assert.match(css, /prefers-reduced-motion:reduce/);
-  assert.match(worker, /learning-everyday-shell-v44/);
+  assert.match(worker, /learning-everyday-shell-v45/);
 });
 test("Home Myanmar headline uses the requested wording and refined type styling", async () => {
   const [app, css] = await Promise.all([

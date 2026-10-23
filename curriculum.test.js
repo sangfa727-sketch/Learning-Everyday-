@@ -99,5 +99,5 @@ test("vocabulary UI places example sentences inside the selected card and provid
   assert.doesNotMatch(html, /id="vocabulary-detail"/, "obsolete bottom-of-list detail panel should be removed");
   assert.match(css, /\.vocabulary-entry-row/);
   assert.match(css, /\.vocabulary-sentence-row/);
-  assert.match(worker, /learning-everyday-shell-v44/);
+  assert.match(worker, /learning-everyday-shell-v45/);
 });
