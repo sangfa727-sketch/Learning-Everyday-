@@ -259,6 +259,8 @@ function renderPage() {
   document.body.dataset.page = page;
   const navigation = $("#page-navigation");
   navigation.hidden = page === "home";
+  const aboutPage = $("#about-page");
+  if (aboutPage) aboutPage.hidden = page !== "about";
   $("#page-title").textContent = copy.title;
   $("#page-description").textContent = copy.description;
   navigation.querySelector(".eyebrow").textContent = copy.eyebrow;
