@@ -796,20 +796,15 @@ function speakStory() {
     let lastBoundaryCharIndex = -1;
     let increasingBoundaryCount = 0;
     let utteranceStartedAt = 0;
+    let fallbackElapsedMs = 0;
     const estimatedDurationMs = Math.max(
       1000,
       (paragraph.text.trim().split(/\s+/).length / (3.1 * rate)) * 1000
     );
-    utterance.onstart = () => {
-      if (activeStoryUtterance !== utterance) return;
-      $("#play-button").disabled = true;
-      $("#status-message").textContent = language === "my" ? "နားထောင်နေသည်…" : "Playing story…";
-      utteranceStartedAt = Date.now();
-      // Show the first word immediately; the timer then tracks the faster mobile TTS cadence.
-      highlightSpeechWord(paragraph.start);
-      // Some mobile TTS engines never emit word-boundary events. Use an
-      // approximate character-position fallback only until a real boundary arrives.
+    const startFallbackHighlightTimer = () => {
+      if (receivedBoundaryEvent || activeStoryUtterance !== utterance) return;
       clearSpeechHighlightTimer();
+      utteranceStartedAt = Date.now();
       activeSpeechHighlightTimer = window.setInterval(() => {
         if (activeStoryUtterance !== utterance) {
           clearSpeechHighlightTimer();
@@ -819,13 +814,34 @@ function speakStory() {
           clearSpeechHighlightTimer();
           return;
         }
-        const progress = Math.min(0.96, (Date.now() - utteranceStartedAt) / estimatedDurationMs);
+        const elapsedMs = fallbackElapsedMs + (Date.now() - utteranceStartedAt);
+        const progress = Math.min(0.96, elapsedMs / estimatedDurationMs);
         const estimatedCharIndex = Math.min(
           paragraph.text.length - 1,
           Math.max(0, Math.floor(progress * paragraph.text.length))
         );
         highlightSpeechWord(paragraph.start + estimatedCharIndex);
       }, 80);
+    };
+    utterance.onstart = () => {
+      if (activeStoryUtterance !== utterance) return;
+      $("#play-button").disabled = true;
+      $("#status-message").textContent = language === "my" ? "နားထောင်နေသည်…" : "Playing story…";
+      fallbackElapsedMs = 0;
+      // Show the first word immediately; fallback timing follows only active speech time.
+      highlightSpeechWord(paragraph.start);
+      startFallbackHighlightTimer();
+    };
+    utterance.onpause = () => {
+      if (activeStoryUtterance !== utterance) return;
+      if (!receivedBoundaryEvent && activeSpeechHighlightTimer !== null) {
+        fallbackElapsedMs += Date.now() - utteranceStartedAt;
+        clearSpeechHighlightTimer();
+      }
+    };
+    utterance.onresume = () => {
+      if (activeStoryUtterance !== utterance) return;
+      startFallbackHighlightTimer();
     };
     utterance.onboundary = (event) => {
       if (activeStoryUtterance !== utterance) return;
