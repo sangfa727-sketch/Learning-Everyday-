@@ -74,12 +74,12 @@ test("Listening narration uses paragraph fallback instead of guessed word timing
   assert.doesNotMatch(source, /window\.setInterval/);
   assert.match(source, /let lastBoundaryCharIndex = -1/);
   assert.match(source, /let narrationPaused = false/);
-  assert.match(source, /utterance\\.onboundary = \\(event\\) => \\{\\s*if \\(activeStoryUtterance !== utterance \\|\\| narrationPaused\\) return;/);
-  assert.match(source, /utterance\\.onpause = \\(\\) => \\{\\s*if \\(activeStoryUtterance !== utterance\\) return;\\s*narrationPaused = true;/);
-  assert.match(source, /utterance\\.onresume = \\(\\) => \\{\\s*if \\(activeStoryUtterance !== utterance\\) return;\\s*narrationPaused = false;/);
+  assert.match(source, /utterance\.onboundary = \(event\) => \{\s*if \(activeStoryUtterance !== utterance \|\| narrationPaused\) return;/);
+  assert.match(source, /utterance\.onpause = \(\) => \{\s*if \(activeStoryUtterance !== utterance\) return;\s*narrationPaused = true;/);
+  assert.match(source, /utterance\.onresume = \(\) => \{\s*if \(activeStoryUtterance !== utterance\) return;\s*narrationPaused = false;/);
   assert.match(source, /let increasingBoundaryCount = 0/);
   assert.match(source, /if \(increasingBoundaryCount >= 2\) \{\s*receivedReliableBoundaryEvents = true;\s*highlightSpeechWord\(paragraph\.start \+ event\.charIndex\);/);
-  assert.match(source, /utterance\.onpause = \(\) => \{[\s\S]*?last confirmed word stays still/);
+  assert.match(source, /utterance\.onpause = \(\) => \{[\s\S]*?keep the last confirmed highlight still/);
   assert.match(source, /utterance\.onresume = \(\) => \{[\s\S]*?do not estimate progress/);
   assert.match(source, /utterance\.onend = \(\) => \{\s*if \(activeStoryUtterance !== utterance\) return;\s*clearSpeechHighlightTimer\(\);\s*speakNextParagraph\(\);/);
   assert.match(source, /utterance\.onerror = \(\) => \{\s*if \(activeStoryUtterance !== utterance\) return;\s*clearSpeechHighlightTimer\(\);/);
