@@ -1,0 +1,68 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { readFile, access } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+import path from "node:path";
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const read = (file) => readFile(path.join(root, file), "utf8");
+const exists = async (file) => {
+  try {
+    await access(path.join(root, file));
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+test("PWA manifest is valid and points to local install assets", async () => {
+  const manifest = JSON.parse(await read("manifest.webmanifest"));
+  assert.equal(manifest.name, "Learning Everyday");
+  assert.equal(manifest.display, "standalone");
+  assert.ok(manifest.start_url, "start_url must be set");
+  assert.ok(manifest.scope, "scope must be set");
+  assert.ok(Array.isArray(manifest.icons) && manifest.icons.length > 0, "at least one app icon is required");
+
+  for (const icon of manifest.icons) {
+    assert.ok(icon.src && !/^https?:/i.test(icon.src), "app icons should be bundled locally");
+    assert.ok(await exists(icon.src.replace(/^\.\//, "")), `manifest icon missing: ${icon.src}`);
+  }
+});
+
+test("every local asset in the service-worker app shell exists", async () => {
+  const sw = await read("sw.js");
+  const match = sw.match(/const APP_SHELL = (\[[\s\S]*?\]);/);
+  assert.ok(match, "service worker must declare APP_SHELL");
+  const assets = JSON.parse(match[1]);
+  assert.ok(assets.includes("./index.html"), "offline shell must cache index.html");
+  assert.ok(assets.includes("./manifest.webmanifest"), "offline shell must cache the manifest");
+  assert.ok(assets.includes("./styles.css"), "offline shell must cache the stylesheet");
+  assert.equal(new Set(assets).size, assets.length, "app shell must not contain duplicate paths");
+
+  for (const asset of assets) {
+    const localPath = asset.replace(/^\.\//, "") || "index.html";
+    assert.ok(await exists(localPath), `service-worker app-shell asset missing: ${asset}`);
+  }
+});
+
+test("entry HTML references existing local resources", async () => {
+  const html = await read("index.html");
+  const refs = [...html.matchAll(/\b(?:href|src)="(\.\/[^"?#]*)"/g)].map((match) => match[1]);
+  assert.ok(refs.includes("./styles.css"), "entry page must load the main stylesheet");
+  assert.ok(refs.includes("./manifest.webmanifest"), "entry page must link the PWA manifest");
+
+  for (const ref of refs) {
+    const localPath = ref.replace(/^\.\//, "") || "index.html";
+    assert.ok(await exists(localPath), `entry HTML local resource missing: ${ref}`);
+  }
+});
+
+test("service worker uses a versioned cache and only targets the app's cache namespace", async () => {
+  const sw = await read("sw.js");
+  const cacheName = sw.match(/const CACHE_NAME = "([^"]+)";/)?.[1];
+  const cachePrefix = sw.match(/const APP_CACHE_PREFIX = "([^"]+)";/)?.[1];
+  assert.ok(cacheName, "a versioned cache name is required");
+  assert.ok(cachePrefix, "a cache namespace is required");
+  assert.ok(cacheName.startsWith(cachePrefix), "cache name must use the app cache namespace");
+  assert.match(cacheName, /v\d+$/, "cache name must end with a version number");
+});
