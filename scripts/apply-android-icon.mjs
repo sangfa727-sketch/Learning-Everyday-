@@ -42,7 +42,7 @@ const drawable = path.join(androidRes, "drawable");
 await mkdir(drawable, { recursive: true });
 const splashXml = `<?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="#f5f7f3" />
+    <item android:drawable="@color/splash_background" />
     <item>
         <bitmap android:src="@mipmap/ic_launcher" android:gravity="center" />
     </item>
@@ -53,6 +53,20 @@ await writeFile(path.join(drawable, "app_launch_splash.xml"), splashXml, "utf8")
 // Point the app's base theme at the splash drawable for older Android versions.
 const valuesDir = path.join(androidRes, "values");
 await mkdir(valuesDir, { recursive: true });
+const colorsPath = path.join(valuesDir, "colors.xml");
+let colors = "";
+try {
+  colors = await readFile(colorsPath, "utf8");
+} catch {
+  colors = '<?xml version="1.0" encoding="utf-8"?>\n<resources>\n</resources>\n';
+}
+for (const [name, value] of [["ic_launcher_background", "#183b35"], ["splash_background", "#f5f7f3"]]) {
+  const colorItem = new RegExp(`<color\\s+name=["']${name}["'][^>]*>[^<]*</color>`);
+  const replacement = `<color name="${name}">${value}</color>`;
+  if (colorItem.test(colors)) colors = colors.replace(colorItem, replacement);
+  else colors = colors.replace("</resources>", `    ${replacement}\\n</resources>`);
+}
+await writeFile(colorsPath, colors, "utf8");
 const stylesPath = path.join(valuesDir, "styles.xml");
 let styles = await readFile(stylesPath, "utf8");
 const appThemeOpen = /(<style\b[^>]*name=["'][^"']*AppTheme[^"']*["'][^>]*>)/;
