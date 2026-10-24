@@ -115,14 +115,19 @@ test("Android APK build applies the existing launcher artwork to native icon res
 test("Android APK build applies the original icon to launcher and native splash resources", async () => {
   const workflow = await read(".github/workflows/android-apk.yml");
   const iconScript = await read("scripts/apply-android-icon.mjs");
-  assert.match(workflow, /Apply the existing Learning Everyday launcher icon[\\s\\S]*apply-android-icon\\.mjs/);
-  assert.match(iconScript, /icon\\.svg/);
-  assert.match(iconScript, /ic_launcher\\.png/);
-  assert.match(iconScript, /ic_launcher_round\\.png/);
-  assert.match(iconScript, /ic_launcher_foreground\\.png/);
-  assert.match(iconScript, /splash\\.png/);
-  assert.match(iconScript, /windowSplashScreenAnimatedIcon/);
-  assert.match(iconScript, /windowSplashScreenBackground/);
+  assert.ok(workflow.includes("Apply the existing Learning Everyday launcher icon"));
+  assert.ok(workflow.includes("node scripts/apply-android-icon.mjs"));
+  for (const resource of [
+    "icon.svg",
+    "ic_launcher.png",
+    "ic_launcher_round.png",
+    "ic_launcher_foreground.png",
+    "splash.png",
+    "windowSplashScreenAnimatedIcon",
+    "windowSplashScreenBackground"
+  ]) {
+    assert.ok(iconScript.includes(resource), `missing icon resource configuration: ${resource}`);
+  }
   for (const density of ["mdpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi"]) {
     assert.ok(iconScript.includes(`"${density}"`), `missing ${density} launcher icon density`);
   }
