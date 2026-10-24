@@ -23,7 +23,7 @@ npm test
 - [ ] Rotate between portrait and landscape; verify no clipped controls or horizontal overflow at narrow widths.
 - [ ] Test English/Myanmar toggle, saved language, exercise completion, progress export and clear-progress confirmation.
 - [ ] Test Reading word lookup, Listening play/pause/resume/stop, speech-rate control, Writing draft persistence and Speaking fallback when browser recognition is unavailable.
-- [ ] Import a normal text PDF and a scanned/image-only PDF; confirm the latter explains the OCR limitation without crashing.
+- [ ] PDF upload/read-aloud is intentionally hidden in this version; do not treat it as a supported release feature.
 - [ ] Test storage denied/full, missing speech voices, repeated taps, navigation during speech, and reload during offline use.
 - [ ] Check keyboard navigation, visible focus, screen-reader names, contrast, reduced-motion behavior and touch targets.
 - [ ] Confirm no lesson text, PDF contents, or learning progress is sent to a server unexpectedly.

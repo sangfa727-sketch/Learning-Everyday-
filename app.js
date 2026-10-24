@@ -691,7 +691,8 @@ function updateSkill(skill) {
   $("#writing-exercise").hidden = skill !== "writing";
   $("#speaking-exercise").hidden = skill !== "speaking";
   $("#player-controls").hidden = skill === "writing" || skill === "speaking";
-  $("#pdf-note").hidden = skill !== "reading" && skill !== "listening";
+  // PDF upload/read-aloud is deferred until end-to-end device testing is complete.
+  $("#pdf-note").hidden = true;
   const title = { reading:"readTitle", listening:"listeningTitle", writing:"writingTitle", speaking:"speakingTitle" }[skill];
   $("#panel-title").textContent = translations[language][title];
   const lessonLabels = {

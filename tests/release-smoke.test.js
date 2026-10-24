@@ -66,3 +66,22 @@ test("service worker uses a versioned cache and only targets the app's cache nam
   assert.ok(cacheName.startsWith(cachePrefix), "cache name must use the app cache namespace");
   assert.match(cacheName, /v\d+$/, "cache name must end with a version number");
 });
+
+test("unverified PDF upload and read-aloud UI remains hidden in this release", async () => {
+  const app = await read("app.js");
+  assert.match(
+    app,
+    /PDF upload\/read-aloud is deferred[\s\S]{0,160}\$\("#pdf-note"\)\.hidden = true;/,
+    "PDF upload/read-aloud must stay hidden until device acceptance is completed"
+  );
+});
+
+test("Android packaging converts in-app profile marks to uppercase E and preserves the launcher icon", async () => {
+  const prepare = await read("scripts/prepare-android.mjs");
+  const icon = await read("icon.svg");
+  assert.match(prepare, /class="about-mark"/);
+  assert.match(prepare, /class="brand-mark"/);
+  assert.match(prepare, /class="footer-mark"/);
+  assert.match(prepare, /"\$1E\$2"/, "all targeted marks should be replaced with uppercase E");
+  assert.match(icon, /<svg[\s\S]*viewBox="0 0 192 192"/, "keep the current launcher icon artwork");
+});
