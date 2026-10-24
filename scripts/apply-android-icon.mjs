@@ -60,7 +60,7 @@ try {
 } catch {
   colors = '<?xml version="1.0" encoding="utf-8"?>\n<resources>\n</resources>\n';
 }
-for (const [name, value] of [["ic_launcher_background", "#183b35"], ["splash_background", "#f5f7f3"]]) {
+for (const [name, value] of [["splash_background", "#f5f7f3"]]) {
   const colorItem = new RegExp(`<color\\s+name=["']${name}["'][^>]*>[^<]*</color>`);
   const replacement = `<color name="${name}">${value}</color>`;
   if (colorItem.test(colors)) colors = colors.replace(colorItem, replacement);
