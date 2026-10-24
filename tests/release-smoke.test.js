@@ -66,3 +66,12 @@ test("service worker uses a versioned cache and only targets the app's cache nam
   assert.ok(cacheName.startsWith(cachePrefix), "cache name must use the app cache namespace");
   assert.match(cacheName, /v\d+$/, "cache name must end with a version number");
 });
+
+test("unverified PDF upload and read-aloud UI remains hidden in this release", async () => {
+  const app = await read("app.js");
+  assert.match(
+    app,
+    /PDF upload\/read-aloud is deferred[\s\S]{0,160}\$\("#pdf-note"\)\.hidden = true;/,
+    "PDF upload/read-aloud must stay hidden until device acceptance is completed"
+  );
+});
