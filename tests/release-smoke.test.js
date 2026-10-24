@@ -85,3 +85,55 @@ test("Android packaging converts in-app profile marks to uppercase E and preserv
   assert.match(prepare, /"\$1E\$2"/, "all targeted marks should be replaced with uppercase E");
   assert.match(icon, /<svg[\s\S]*viewBox="0 0 192 192"/, "keep the current launcher icon artwork");
 });
+
+
+test("Android package stages a native TTS bridge before loading app modules", async () => {
+  const prepare = await read("scripts/prepare-android.mjs");
+  const bridge = await read("native-tts-bridge.js");
+  assert.match(prepare, /native-tts-bridge\.js/);
+  assert.match(prepare, /native-tts\.js/);
+  assert.match(bridge, /@capacitor-community\/text-to-speech/);
+  assert.match(bridge, /TextToSpeech\.speak/);
+  assert.match(bridge, /speechSynthesis/);
+});
+
+
+test("Android APK build applies the existing launcher artwork to native icon resources", async () => {
+  const workflow = await read(".github/workflows/android-apk.yml");
+  const iconScript = await read("scripts/apply-android-icon.mjs");
+  assert.match(workflow, /Apply the existing Learning Everyday launcher icon[\s\S]*apply-android-icon\.mjs/);
+  assert.match(iconScript, /icon\.svg/);
+  assert.match(iconScript, /ic_launcher\.png/);
+  assert.match(iconScript, /ic_launcher_round\.png/);
+  assert.match(iconScript, /ic_launcher_foreground\.png/);
+  for (const density of ["mdpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi"]) {
+    assert.ok(iconScript.includes(`"${density}"`), `missing ${density} launcher icon density`);
+  }
+});
+
+
+test("Android APK build applies the original icon to launcher and native splash resources", async () => {
+  const workflow = await read(".github/workflows/android-apk.yml");
+  const iconScript = await read("scripts/apply-android-icon.mjs");
+  assert.ok(workflow.includes("Apply the existing Learning Everyday launcher icon"));
+  assert.ok(workflow.includes("node scripts/apply-android-icon.mjs"));
+  for (const resource of [
+    "icon.svg",
+    "ic_launcher.png",
+    "ic_launcher_round.png",
+    "ic_launcher_foreground.png",
+    "app_launch_splash.xml",
+    "mipmap-anydpi-v26",
+    "ic_launcher.xml",
+    "windowBackground",
+    "ic_launcher_foreground",
+    "windowSplashScreenAnimatedIcon",
+    "windowSplashScreenBackground",
+    "values-v31"
+  ]) {
+    assert.ok(iconScript.includes(resource), `missing icon resource configuration: ${resource}`);
+  }
+  for (const density of ["mdpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi"]) {
+    assert.ok(iconScript.includes(`"${density}"`), `missing ${density} launcher icon density`);
+  }
+});
