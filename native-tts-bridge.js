@@ -6,6 +6,7 @@ import { TextToSpeech } from "@capacitor-community/text-to-speech";
 const capacitor = window.Capacitor;
 if (capacitor?.isNativePlatform?.() && capacitor.getPlatform?.() === "android") {
   let voices = [];
+  let nativeVoices = [];
   let playbackToken = 0;
   let speech = window.speechSynthesis;
 
@@ -64,7 +65,9 @@ if (capacitor?.isNativePlatform?.() && capacitor.getPlatform?.() === "android") 
         volume: Math.min(1, Math.max(0, Number(utterance?.volume ?? 1)))
       };
       if (utterance?.voice) {
-        const voiceIndex = voices.findIndex((voice) =>
+        // The plugin's voice option indexes the complete native voice list,
+        // not the English-only list exposed to the existing app.
+        const voiceIndex = nativeVoices.findIndex((voice) =>
           voice.voiceURI === utterance.voice.voiceURI || voice.name === utterance.voice.name
         );
         if (voiceIndex >= 0) options.voice = voiceIndex;
@@ -84,10 +87,12 @@ if (capacitor?.isNativePlatform?.() && capacitor.getPlatform?.() === "android") 
 
   void TextToSpeech.getSupportedVoices()
     .then((result) => {
-      voices = (result?.voices || []).filter((voice) => /^en([_-]|$)/i.test(voice.lang || ""));
+      nativeVoices = result?.voices || [];
+      voices = nativeVoices.filter((voice) => /^en([_-]|$)/i.test(voice.lang || ""));
       dispatchVoicesChanged();
     })
     .catch(() => {
+      nativeVoices = [];
       voices = [];
       dispatchVoicesChanged();
     });
