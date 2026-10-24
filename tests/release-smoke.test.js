@@ -122,9 +122,14 @@ test("Android APK build applies the original icon to launcher and native splash 
     "ic_launcher.png",
     "ic_launcher_round.png",
     "ic_launcher_foreground.png",
-    "splash.png",
+    "splash.xml",
+    "mipmap-anydpi-v26",
+    "ic_launcher.xml",
+    "windowBackground",
+    "ic_launcher_foreground",
     "windowSplashScreenAnimatedIcon",
-    "windowSplashScreenBackground"
+    "windowSplashScreenBackground",
+    "values-v31"
   ]) {
     assert.ok(iconScript.includes(resource), `missing icon resource configuration: ${resource}`);
   }
