@@ -24,36 +24,81 @@ for (const density of densities) {
     .toFile(path.join(directory, "ic_launcher_foreground.png"));
 }
 
-// Provide the same original artwork to the pre-Android-12 launch screen.
-// Keep the logo centered on the app's light background rather than stretching it full-screen.
+// Explicitly configure Android 8+ adaptive launcher icons. This prevents the
+// generated Capacitor template's default icon XML from overriding our artwork.
+const adaptiveDir = path.join(androidRes, "mipmap-anydpi-v26");
+await mkdir(adaptiveDir, { recursive: true });
+const adaptiveIcon = `<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/ic_launcher_background" />
+    <foreground android:drawable="@mipmap/ic_launcher_foreground" />
+</adaptive-icon>
+`;
+await writeFile(path.join(adaptiveDir, "ic_launcher.xml"), adaptiveIcon, "utf8");
+await writeFile(path.join(adaptiveDir, "ic_launcher_round.xml"), adaptiveIcon, "utf8");
+
+// Use the original icon on pre-Android-12 splash screens without stretching it.
 const drawable = path.join(androidRes, "drawable");
 await mkdir(drawable, { recursive: true });
-const splashIcon = await sharp(svg).resize(192, 192).png().toBuffer();
-await sharp({
-  create: { width: 432, height: 768, channels: 4, background: "#f5f7f3" }
-})
-  .composite([{ input: splashIcon, left: 120, top: 288 }])
-  .png()
-  .toFile(path.join(drawable, "splash.png"));
+const splashXml = `<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="#f5f7f3" />
+    <item>
+        <bitmap android:src="@mipmap/ic_launcher" android:gravity="center" />
+    </item>
+</layer-list>
+`;
+await writeFile(path.join(drawable, "splash.xml"), splashXml, "utf8");
 
-// Android 12+ reads its launch icon/background from the app theme.
+// Point the app's base theme at the splash drawable for older Android versions.
 const valuesDir = path.join(androidRes, "values");
 await mkdir(valuesDir, { recursive: true });
 const stylesPath = path.join(valuesDir, "styles.xml");
 let styles = await readFile(stylesPath, "utf8");
-const splashItems = [
-  ['windowSplashScreenBackground', '#f5f7f3'],
-  ['windowSplashScreenAnimatedIcon', '@mipmap/ic_launcher']
-];
-for (const [name, value] of splashItems) {
-  const item = new RegExp(`<item\\s+name=["'](?:android:)?${name}["'][^>]*>[^<]*</item>`);
-  const replacement = `<item name="android:${name}">${value}</item>`;
-  if (item.test(styles)) {
-    styles = styles.replace(item, replacement);
-  } else {
-    styles = styles.replace(/(<style\b[^>]*name=["'][^"']*AppTheme[^"']*["'][^>]*>)/, `$1\n        ${replacement}`);
-  }
+const appThemeOpen = /(<style\b[^>]*name=["'][^"']*AppTheme[^"']*["'][^>]*>)/;
+if (!appThemeOpen.test(styles)) {
+  throw new Error("Could not find AppTheme in android/app/src/main/res/values/styles.xml");
+}
+const windowBackground = /<item\s+name=["']android:windowBackground["'][^>]*>[^<]*<\/item>/;
+if (windowBackground.test(styles)) {
+  styles = styles.replace(windowBackground, '<item name="android:windowBackground">@drawable/splash</item>');
+} else {
+  styles = styles.replace(appThemeOpen, '$1\n        <item name="android:windowBackground">@drawable/splash</item>');
 }
 await writeFile(stylesPath, styles, "utf8");
 
-console.log("Applied the existing icon.svg artwork to Android launcher icons and native launch screens.");
+// Android 12+ splash attributes belong in values-v31 so older devices do not
+// depend on API 31 theme attributes. Preserve the generated AppTheme parent.
+const valuesV31 = path.join(androidRes, "values-v31");
+await mkdir(valuesV31, { recursive: true });
+const stylesV31Path = path.join(valuesV31, "styles.xml");
+let stylesV31;
+try {
+  stylesV31 = await readFile(stylesV31Path, "utf8");
+} catch {
+  stylesV31 = `<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#f5f7f3</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>
+    </style>
+</resources>
+`;
+}
+const splashV31Items = [
+  ["windowSplashScreenBackground", "#f5f7f3"],
+  ["windowSplashScreenAnimatedIcon", "@mipmap/ic_launcher"]
+];
+for (const [name, value] of splashV31Items) {
+  const item = new RegExp(`<item\\s+name=["'](?:android:)?${name}["'][^>]*>[^<]*</item>`);
+  const replacement = `<item name="${name}">${value}</item>`;
+  if (item.test(stylesV31)) {
+    stylesV31 = stylesV31.replace(item, replacement);
+  } else {
+    stylesV31 = stylesV31.replace(/(<style\b[^>]*name=["'][^"']*AppTheme[^"']*["'][^>]*>)/, `$1\n        ${replacement}`);
+  }
+}
+await writeFile(stylesV31Path, stylesV31, "utf8");
+
+console.log("Applied icon.svg to raster/adaptive launcher icons and wired native splash screens for Android 7+ and Android 12+.");
