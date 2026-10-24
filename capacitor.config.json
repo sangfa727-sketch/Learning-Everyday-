@@ -1,0 +1,11 @@
+{
+  "appId": "com.learningeveryday.app",
+  "appName": "Learning Everyday",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false
+  }
+}
