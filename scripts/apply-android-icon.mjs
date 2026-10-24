@@ -51,7 +51,7 @@ for (const [name, value] of splashItems) {
   if (item.test(styles)) {
     styles = styles.replace(item, replacement);
   } else {
-    styles = styles.replace(/(<style\\b[^>]*name=["'][^"']*AppTheme[^"']*["'][^>]*>)/, `$1\\n        ${replacement}`);
+    styles = styles.replace(/(<style\b[^>]*name=["'][^"']*AppTheme[^"']*["'][^>]*>)/, `$1\n        ${replacement}`);
   }
 }
 await writeFile(stylesPath, styles, "utf8");
