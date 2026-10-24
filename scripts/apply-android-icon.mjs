@@ -1,4 +1,4 @@
-import { mkdir, readFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
@@ -24,4 +24,36 @@ for (const density of densities) {
     .toFile(path.join(directory, "ic_launcher_foreground.png"));
 }
 
-console.log("Applied the existing icon.svg artwork to Android launcher icon resources.");
+// Provide the same original artwork to the pre-Android-12 launch screen.
+// Keep the logo centered on the app's light background rather than stretching it full-screen.
+const drawable = path.join(androidRes, "drawable");
+await mkdir(drawable, { recursive: true });
+const splashIcon = await sharp(svg).resize(192, 192).png().toBuffer();
+await sharp({
+  create: { width: 432, height: 768, channels: 4, background: "#f5f7f3" }
+})
+  .composite([{ input: splashIcon, left: 120, top: 288 }])
+  .png()
+  .toFile(path.join(drawable, "splash.png"));
+
+// Android 12+ reads its launch icon/background from the app theme.
+const valuesDir = path.join(androidRes, "values");
+await mkdir(valuesDir, { recursive: true });
+const stylesPath = path.join(valuesDir, "styles.xml");
+let styles = await readFile(stylesPath, "utf8");
+const splashItems = [
+  ['windowSplashScreenBackground', '#f5f7f3'],
+  ['windowSplashScreenAnimatedIcon', '@mipmap/ic_launcher']
+];
+for (const [name, value] of splashItems) {
+  const item = new RegExp(`<item\\s+name=["'](?:android:)?${name}["'][^>]*>[^<]*</item>`);
+  const replacement = `<item name="android:${name}">${value}</item>`;
+  if (item.test(styles)) {
+    styles = styles.replace(item, replacement);
+  } else {
+    styles = styles.replace(/(<style\\b[^>]*name=["'][^"']*AppTheme[^"']*["'][^>]*>)/, `$1\\n        ${replacement}`);
+  }
+}
+await writeFile(stylesPath, styles, "utf8");
+
+console.log("Applied the existing icon.svg artwork to Android launcher icons and native launch screens.");
