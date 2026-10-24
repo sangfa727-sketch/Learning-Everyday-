@@ -1,4 +1,5 @@
 import { access, cp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { build } from "esbuild";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -37,4 +38,26 @@ const entryHtml = await readFile(path.join(output, "index.html"), "utf8");
 if (!entryHtml.includes('class="about-mark" aria-hidden="true">E</div>')) {
   throw new Error("Android package must show uppercase E in the in-app profile mark.");
 }
-console.log(`Prepared ${copied} root-level web assets in www/ for the Android wrapper; profile marks use E.`);
+
+// Bundle the native Text-to-Speech bridge into the Android-only web asset directory.
+await build({
+  entryPoints: [path.join(root, "native-tts-bridge.js")],
+  bundle: true,
+  platform: "browser",
+  format: "iife",
+  target: "es2020",
+  outfile: path.join(output, "native-tts.js")
+});
+
+// Load the bridge before app modules on every packaged HTML route.
+for (const entry of await readdir(output, { withFileTypes: true })) {
+  if (!entry.isFile() || !entry.name.endsWith(".html")) continue;
+  const target = path.join(output, entry.name);
+  let html = await readFile(target, "utf8");
+  if (!html.includes('src="./native-tts.js"')) {
+    html = html.replace("</body>", '  <script src="./native-tts.js"></script>\n</body>');
+    await writeFile(target, html, "utf8");
+  }
+}
+
+console.log(`Prepared ${copied} root-level web assets in www/ for Android, including the native TTS bridge; profile marks use E.`);
