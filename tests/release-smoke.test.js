@@ -122,7 +122,7 @@ test("Android APK build applies the original icon to launcher and native splash 
     "ic_launcher.png",
     "ic_launcher_round.png",
     "ic_launcher_foreground.png",
-    "splash.xml",
+    "app_launch_splash.xml",
     "mipmap-anydpi-v26",
     "ic_launcher.xml",
     "windowBackground",
