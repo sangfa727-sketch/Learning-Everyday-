@@ -48,7 +48,7 @@ const splashXml = `<?xml version="1.0" encoding="utf-8"?>
     </item>
 </layer-list>
 `;
-await writeFile(path.join(drawable, "splash.xml"), splashXml, "utf8");
+await writeFile(path.join(drawable, "app_launch_splash.xml"), splashXml, "utf8");
 
 // Point the app's base theme at the splash drawable for older Android versions.
 const valuesDir = path.join(androidRes, "values");
@@ -61,9 +61,9 @@ if (!appThemeOpen.test(styles)) {
 }
 const windowBackground = /<item\s+name=["']android:windowBackground["'][^>]*>[^<]*<\/item>/;
 if (windowBackground.test(styles)) {
-  styles = styles.replace(windowBackground, '<item name="android:windowBackground">@drawable/splash</item>');
+  styles = styles.replace(windowBackground, '<item name="android:windowBackground">@drawable/app_launch_splash</item>');
 } else {
-  styles = styles.replace(appThemeOpen, '$1\n        <item name="android:windowBackground">@drawable/splash</item>');
+  styles = styles.replace(appThemeOpen, '$1\n        <item name="android:windowBackground">@drawable/app_launch_splash</item>');
 }
 await writeFile(stylesPath, styles, "utf8");
 
