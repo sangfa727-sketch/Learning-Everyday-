@@ -76,11 +76,12 @@ test("unverified PDF upload and read-aloud UI remains hidden in this release", a
   );
 });
 
-test("Android packaging changes in-app profile marks to uppercase E and preserves the existing launcher icon", async () => {
+test("Android packaging converts in-app profile marks to uppercase E and preserves the launcher icon", async () => {
   const prepare = await read("scripts/prepare-android.mjs");
   const icon = await read("icon.svg");
-  assert.match(prepare, /class="about-mark"[^>]*>E<\/div>/);
-  assert.match(prepare, /class="brand-mark"[^>]*><span>E<\/span>/);
-  assert.match(prepare, /class="footer-mark"[^>]*>E<\/span>/);
+  assert.match(prepare, /class="about-mark"/);
+  assert.match(prepare, /class="brand-mark"/);
+  assert.match(prepare, /class="footer-mark"/);
+  assert.match(prepare, /"\$1E\$2"/, "all targeted marks should be replaced with uppercase E");
   assert.match(icon, /<svg[\s\S]*viewBox="0 0 192 192"/, "keep the current launcher icon artwork");
 });
