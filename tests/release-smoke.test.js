@@ -85,3 +85,14 @@ test("Android packaging converts in-app profile marks to uppercase E and preserv
   assert.match(prepare, /"\$1E\$2"/, "all targeted marks should be replaced with uppercase E");
   assert.match(icon, /<svg[\s\S]*viewBox="0 0 192 192"/, "keep the current launcher icon artwork");
 });
+
+
+test("Android package stages a native TTS bridge before loading app modules", async () => {
+  const prepare = await read("scripts/prepare-android.mjs");
+  const bridge = await read("native-tts-bridge.js");
+  assert.match(prepare, /native-tts-bridge\.js/);
+  assert.match(prepare, /native-tts\.js/);
+  assert.match(bridge, /@capacitor-community\/text-to-speech/);
+  assert.match(bridge, /TextToSpeech\.speak/);
+  assert.match(bridge, /speechSynthesis/);
+});
