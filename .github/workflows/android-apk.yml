@@ -34,6 +34,8 @@ jobs:
         run: npm run prepare:android
       - name: Generate Android wrapper
         run: npx cap add android
+      - name: Apply the existing Learning Everyday launcher icon
+        run: node scripts/apply-android-icon.mjs
       - name: Sync Capacitor assets
         run: npx cap sync android
       - name: Build debug APK
