@@ -5,9 +5,18 @@
   "type": "module",
   "description": "Offline-first English learning PWA for English/Myanmar learners",
   "scripts": {
-    "test": "node --check app.js && node --check learning-core.js && node --check local-state.js && node --check pdf-import.js && node --check curriculum.js && node --check curriculum-ui.js && node --check cursive-paths.js && node --check writing-lab-core.js && node --check speaking.js && node --check speaking-data.js && node --test"
+    "test": "node --check app.js && node --check learning-core.js && node --check local-state.js && node --check pdf-import.js && node --check curriculum.js && node --check curriculum-ui.js && node --check cursive-paths.js && node --check writing-lab-core.js && node --check speaking.js && node --check speaking-data.js && node --test",
+    "prepare:android": "node scripts/prepare-android.mjs",
+    "android:sync": "npm run prepare:android && cap sync android"
   },
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.4.3"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/core": "^7.4.3"
   }
 }
