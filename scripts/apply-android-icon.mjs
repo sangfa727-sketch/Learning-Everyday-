@@ -64,7 +64,7 @@ for (const [name, value] of [["ic_launcher_background", "#183b35"], ["splash_bac
   const colorItem = new RegExp(`<color\\s+name=["']${name}["'][^>]*>[^<]*</color>`);
   const replacement = `<color name="${name}">${value}</color>`;
   if (colorItem.test(colors)) colors = colors.replace(colorItem, replacement);
-  else colors = colors.replace("</resources>", `    ${replacement}\\n</resources>`);
+  else colors = colors.replace("</resources>", `    ${replacement}\n</resources>`);
 }
 await writeFile(colorsPath, colors, "utf8");
 const stylesPath = path.join(valuesDir, "styles.xml");
