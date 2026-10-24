@@ -110,3 +110,20 @@ test("Android APK build applies the existing launcher artwork to native icon res
     assert.ok(iconScript.includes(`"${density}"`), `missing ${density} launcher icon density`);
   }
 });
+
+
+test("Android APK build applies the original icon to launcher and native splash resources", async () => {
+  const workflow = await read(".github/workflows/android-apk.yml");
+  const iconScript = await read("scripts/apply-android-icon.mjs");
+  assert.match(workflow, /Apply the existing Learning Everyday launcher icon[\\s\\S]*apply-android-icon\\.mjs/);
+  assert.match(iconScript, /icon\\.svg/);
+  assert.match(iconScript, /ic_launcher\\.png/);
+  assert.match(iconScript, /ic_launcher_round\\.png/);
+  assert.match(iconScript, /ic_launcher_foreground\\.png/);
+  assert.match(iconScript, /splash\\.png/);
+  assert.match(iconScript, /windowSplashScreenAnimatedIcon/);
+  assert.match(iconScript, /windowSplashScreenBackground/);
+  for (const density of ["mdpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi"]) {
+    assert.ok(iconScript.includes(`"${density}"`), `missing ${density} launcher icon density`);
+  }
+});
