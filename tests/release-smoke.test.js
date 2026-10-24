@@ -75,3 +75,12 @@ test("unverified PDF upload and read-aloud UI remains hidden in this release", a
     "PDF upload/read-aloud must stay hidden until device acceptance is completed"
   );
 });
+
+test("Android packaging changes in-app profile marks to uppercase E and preserves the existing launcher icon", async () => {
+  const prepare = await read("scripts/prepare-android.mjs");
+  const icon = await read("icon.svg");
+  assert.match(prepare, /class="about-mark"[^>]*>E<\/div>/);
+  assert.match(prepare, /class="brand-mark"[^>]*><span>E<\/span>/);
+  assert.match(prepare, /class="footer-mark"[^>]*>E<\/span>/);
+  assert.match(icon, /<svg[\s\S]*viewBox="0 0 192 192"/, "keep the current launcher icon artwork");
+});
